@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F174B3C320BE406900E62F7D /* rs232-linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F174B3C120BE406900E62F7D /* rs232-linux.cpp */; };
+		F174B3C420BE406900E62F7D /* rs232-win.c in Sources */ = {isa = PBXBuildFile; fileRef = F174B3C220BE406900E62F7D /* rs232-win.c */; };
 		F1A57F9520B88A4D003A84FA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A57F9420B88A4D003A84FA /* main.cpp */; };
 		F1A57F9D20B88A84003A84FA /* BLOCK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A57F9C20B88A84003A84FA /* BLOCK.cpp */; };
-		F1A57FA020B89026003A84FA /* ZaberController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A57F9E20B89026003A84FA /* ZaberController.cpp */; };
-		F1A7051920B90812002544FE /* B_Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A7051720B90812002544FE /* B_Serial.cpp */; };
+		F1A57FA020B89026003A84FA /* ZBR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A57F9E20B89026003A84FA /* ZBR.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,15 +27,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F174B3C020BE406900E62F7D /* rs232.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rs232.h; path = rs232/rs232.h; sourceTree = "<group>"; };
+		F174B3C120BE406900E62F7D /* rs232-linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "rs232-linux.cpp"; path = "rs232/rs232-linux.cpp"; sourceTree = "<group>"; };
+		F174B3C220BE406900E62F7D /* rs232-win.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "rs232-win.c"; path = "rs232/rs232-win.c"; sourceTree = "<group>"; };
+		F174B3C520BE408000E62F7D /* rs232 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = rs232; sourceTree = "<group>"; };
 		F1A57F9120B88A4D003A84FA /* GcodeParser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GcodeParser; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1A57F9420B88A4D003A84FA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F1A57F9B20B88A67003A84FA /* BLOCK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLOCK.h; sourceTree = "<group>"; };
 		F1A57F9C20B88A84003A84FA /* BLOCK.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BLOCK.cpp; sourceTree = "<group>"; };
-		F1A57F9E20B89026003A84FA /* ZaberController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZaberController.cpp; sourceTree = "<group>"; };
-		F1A57F9F20B89026003A84FA /* ZaberController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZaberController.h; sourceTree = "<group>"; };
-		F1A7051320B8F696002544FE /* z_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = z_common.h; sourceTree = "<group>"; };
-		F1A7051720B90812002544FE /* B_Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = B_Serial.cpp; sourceTree = "<group>"; };
-		F1A7051820B90812002544FE /* B_Serial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = B_Serial.h; sourceTree = "<group>"; };
+		F1A57F9E20B89026003A84FA /* ZBR.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZBR.cpp; sourceTree = "<group>"; };
+		F1A57F9F20B89026003A84FA /* ZBR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZBR.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,14 +69,15 @@
 		F1A57F9320B88A4D003A84FA /* GcodeParser */ = {
 			isa = PBXGroup;
 			children = (
-				F1A7051320B8F696002544FE /* z_common.h */,
+				F174B3C520BE408000E62F7D /* rs232 */,
+				F174B3C120BE406900E62F7D /* rs232-linux.cpp */,
+				F174B3C220BE406900E62F7D /* rs232-win.c */,
+				F174B3C020BE406900E62F7D /* rs232.h */,
 				F1A57F9420B88A4D003A84FA /* main.cpp */,
 				F1A57F9B20B88A67003A84FA /* BLOCK.h */,
 				F1A57F9C20B88A84003A84FA /* BLOCK.cpp */,
-				F1A57F9E20B89026003A84FA /* ZaberController.cpp */,
-				F1A57F9F20B89026003A84FA /* ZaberController.h */,
-				F1A7051720B90812002544FE /* B_Serial.cpp */,
-				F1A7051820B90812002544FE /* B_Serial.h */,
+				F1A57F9E20B89026003A84FA /* ZBR.cpp */,
+				F1A57F9F20B89026003A84FA /* ZBR.h */,
 			);
 			path = GcodeParser;
 			sourceTree = "<group>";
@@ -135,10 +138,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1A57FA020B89026003A84FA /* ZaberController.cpp in Sources */,
+				F1A57FA020B89026003A84FA /* ZBR.cpp in Sources */,
+				F174B3C420BE406900E62F7D /* rs232-win.c in Sources */,
+				F174B3C320BE406900E62F7D /* rs232-linux.cpp in Sources */,
 				F1A57F9520B88A4D003A84FA /* main.cpp in Sources */,
 				F1A57F9D20B88A84003A84FA /* BLOCK.cpp in Sources */,
-				F1A7051920B90812002544FE /* B_Serial.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
