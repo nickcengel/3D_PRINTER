@@ -27,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F115483420C646AF006220EE /* Body1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Body1.txt; path = GcodeParser/Body1.txt; sourceTree = "<group>"; };
 		F174B3C020BE406900E62F7D /* rs232.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rs232.h; path = rs232/rs232.h; sourceTree = "<group>"; };
 		F174B3C120BE406900E62F7D /* rs232-linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "rs232-linux.cpp"; path = "rs232/rs232-linux.cpp"; sourceTree = "<group>"; };
 		F174B3C220BE406900E62F7D /* rs232-win.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "rs232-win.c"; path = "rs232/rs232-win.c"; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		F1A57F8820B88A4D003A84FA = {
 			isa = PBXGroup;
 			children = (
+				F115483420C646AF006220EE /* Body1.txt */,
 				F1A57F9320B88A4D003A84FA /* GcodeParser */,
 				F1A57F9220B88A4D003A84FA /* Products */,
 			);
