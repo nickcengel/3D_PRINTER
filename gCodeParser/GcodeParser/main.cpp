@@ -36,30 +36,32 @@ int main() {
 //
 //
 //
-// OPEN GCODE FILE
-    ifstream in;    // Create an input file stream.
-    in.open("/Users/nickengel/Documents/github/3D_PRINTER/GcodeParser/GcodeParser/Body1.txt");
-    if (!in){
-        cout << "Error: Can't open the file\n";
-    }
-// READ IN LINES
-    vector<string> lines;
-    while (in){  // Continue if the line was sucessfully read.
-        string oneLine;
-        getline(in,oneLine);   // Try to get another line.
-        if(oneLine.size()>1)
-            lines.push_back(oneLine);   // Add line to vector of lines
-    }
-// CREATE "BLOCKs" from Lines
-     vector<BLOCK> block;
-     for(uint32_t i = 0; i < lines.size()-1; i++){
-       block.push_back(BLOCK(lines[i]));
-     }
+//// OPEN GCODE FILE
+//    ifstream in;    // Create an input file stream.
+//    in.open("/Users/nickengel/Documents/github/3D_PRINTER/GcodeParser/GcodeParser/Body1.txt");
+//    if (!in){
+//        cout << "Error: Can't open the file\n";
+//    }
+//// READ IN LINES
+//    vector<string> lines;
+//    while (in){  // Continue if the line was sucessfully read.
+//        string oneLine;
+//        getline(in,oneLine);   // Try to get another line.
+//        if(oneLine.size()>1)
+//            lines.push_back(oneLine);   // Add line to vector of lines
+//    }
+//// CREATE "BLOCKs" from Lines
+//     vector<BLOCK> block;
+//     for(uint32_t i = 0; i < lines.size()-1; i++){
+//       block.push_back(BLOCK(lines[i]));
+//     }
+//// PRINT BLOCK FOR DEBUGGING
+//    for(uint32_t i = 0; i < block.size(); i++){
+//        block[i].printBlock();
+//    }
     
-//    BLOCK myblock("(This is a comment to test the comments!) G1 X-2 Y2 Z3 A-3 B4 F6 S7 E9");
-//
-    for(uint32_t i = 0; i < block.size(); i++){
-        block[i].printBlock();
-    }
+    BLOCK myblock("(This is a comment to test the comments!) G1 X-2 Y2 Z3 A-3 B4 F6 S7 E9");
+    myblock.printBlock();
+
     
 }   // END MAIN

@@ -345,7 +345,7 @@ void BLOCK::makeBlock(string lineToParse_){
                 else if(aWord == "G28") // HOME AXIS
                     setCode(G28);
                 else
-                    errors.push_back("Did not recognize instruction: \"G"+aWord+"\"\n");
+                    errors.push_back("Did not recognize instruction: \""+aWord+"\"\n");
                 break;
             case 'M':
                 // So setCode with matching enumerated code
@@ -362,7 +362,7 @@ void BLOCK::makeBlock(string lineToParse_){
                     setLaserState(false);
                 }
                 else
-                   errors.push_back("Did not recognize instruction: \"M"+aWord+"\"\n");
+                   errors.push_back("Did not recognize instruction: \""+aWord+"\"\n");
                 break;
                 
                 // If the first character is X,Y,Z,A,or B, we are talking about an axis
