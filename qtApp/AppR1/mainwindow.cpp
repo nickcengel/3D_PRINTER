@@ -20,6 +20,6 @@ void MainWindow::on_pushButton_clicked()
     if (dialog.exec())
         m_fileName = dialog.selectedFiles()[0];
     m_layerStack = BlockIO::convertGcode(m_fileName);
-    qDebug()<<m_layerStack.last().last().printBlock();
+ //   qDebug()<<m_layerStack.last().last().printBlock();
 }
 

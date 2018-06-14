@@ -202,10 +202,10 @@ QString Block::printAxis(axis_t a)
             axisString += " goes home";
         else if(a.position.pending){
             axisString += " moves to ";
-            axisString += a.position.value;
+            axisString += QString::number(a.position.value);
             if(a.speed.pending){
                 axisString += " at a speed of ";
-                axisString += a.speed.value;
+                axisString += QString::number(a.speed.value);
             }
         }
 
@@ -410,7 +410,7 @@ void Block::makeBlock(const QString toParse){
                 if((m_command.code == G0)||(m_command.code == G1))
                 {
                     bool valueValid = false;
-                    float value = token.right(1-token.size()).toFloat(&valueValid);
+                    float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid)
                         setPosition_x(value);
                     else
@@ -428,7 +428,7 @@ void Block::makeBlock(const QString toParse){
                 if((m_command.code == G0)||(m_command.code == G1))
                 {
                     bool valueValid = false;
-                    float value = token.right(1-token.size()).toFloat(&valueValid);
+                    float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid)
                         setPosition_y(value);
                     else
@@ -445,7 +445,7 @@ void Block::makeBlock(const QString toParse){
                 if((m_command.code == G0)||(m_command.code == G1))
                 {
                     bool valueValid = false;
-                    float value = token.right(1-token.size()).toFloat(&valueValid);
+                    float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid)
                         setPosition_z(value);
                     else
@@ -462,7 +462,7 @@ void Block::makeBlock(const QString toParse){
                 if((m_command.code == G0)||(m_command.code == G1))
                 {
                     bool valueValid = false;
-                    float value = token.right(1-token.size()).toFloat(&valueValid);
+                    float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid)
                         setPosition_a(value);
                     else
@@ -479,7 +479,7 @@ void Block::makeBlock(const QString toParse){
                 if((m_command.code == G0)||(m_command.code == G1))
                 {
                     bool valueValid = false;
-                    float value = token.right(1-token.size()).toFloat(&valueValid);
+                    float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid)
                         setPosition_b(value);
                     else
@@ -528,7 +528,7 @@ void Block::makeBlock(const QString toParse){
             case 'P':
             {
                 bool valueValid = false;
-                float value = token.right(1-token.size()).toFloat(&valueValid);
+                float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
                     setDwell(value);
                 else
@@ -541,7 +541,7 @@ void Block::makeBlock(const QString toParse){
             case 'S':
             {
                 bool valueValid = false;
-                float value = token.right(1-token.size()).toFloat(&valueValid);
+                float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
                     setLaserPower(value);
                 else
