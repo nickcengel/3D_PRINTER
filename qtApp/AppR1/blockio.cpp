@@ -175,120 +175,7 @@ void Block::initializeBlock(int lineNumber, int layerNumber){
     m_dwell.pending = 0;
 }
 
-QString Block::printAxis(axis_t a)
-{
-    QString axisString;
-    if(a.goHome.pending||a.position.pending){
-        switch (a.axis) {
-        case X:
-            axisString = "X Axis ";
-            break;
-        case Y:
-            axisString = "Y Axis";
-            break;
-        case Z:
-            axisString = "Z Axis";
-            break;
-        case A:
-            axisString = "A Axis";
-            break;
-        case B:
-            axisString = "B Axis";
-            break;
-        default:
-            break;
-        }
-        if(a.goHome.pending)
-            axisString += " goes home";
-        else if(a.position.pending){
-            axisString += " moves to ";
-            axisString += QString::number(a.position.value);
-            if(a.speed.pending){
-                axisString += " at a speed of ";
-                axisString += QString::number(a.speed.value);
-            }
-        }
 
-    }
-    return axisString;
-}
-
-
-QStringList Block::printBlock(){
-    QStringList blockStrings;
-    blockStrings<<"Comment: " +m_comment;
-    if(m_command.pending){
-        QString commandString = "Command: ";
-        switch (m_command.code) {
-        case M0:
-            commandString += "M0 - PAUSE";
-            break;
-        case M2:
-            commandString += "M2 - END";
-            break;
-        case M3:
-            commandString += "M3 - LASER ON";
-            break;
-        case M5:
-            commandString += "M5 - LASER OFF";
-            break;
-        case G0:
-            commandString += "G0 - RAPID MOVE";
-            break;
-        case G1:
-            commandString += "G1 - LINEAR MOVE";
-            break;
-        case G4:
-            commandString += "G4 - DWELL";
-            break;
-        case G28:
-            commandString += "G28 - HOME";
-            break;
-        case G90:
-            commandString += "G90 - ABSOLUTE POSITIONING";
-            break;
-        case G91:
-            commandString += "G91 - RELATIVE POSITIONING";
-            break;
-        default:
-            commandString += "unknown";
-            break;
-        }
-        blockStrings<<commandString;
-    }
-
-    blockStrings<<"X: " + printAxis(m_x_axis);
-    blockStrings<<"Y: " + printAxis(m_y_axis);
-    blockStrings<<"Z: " + printAxis(m_z_axis);
-    blockStrings<<"A: " + printAxis(m_a_axis);
-    blockStrings<<"B: " + printAxis(m_b_axis);
-
-    if (m_laser.enabled.pending)
-    {
-        QString laserString = "Laser is ";
-        if (m_laser.enabled.state)
-        {
-            laserString += "on. ";
-            if (m_laser.power.pending)
-                laserString += "Laser power = "+ QString::number(m_laser.power.value);
-        }
-        else
-            laserString += "off.";
-        blockStrings<<laserString;
-    }
-
-    if(m_dwell.pending)
-    {
-        QString dwellString = "Delay for "+ QString::number(m_dwell.value);
-        blockStrings<<dwellString;
-    }
-
-    if(m_errors.size() > 0)
-    {
-        blockStrings<<m_errors;
-    }
-    return blockStrings;
-}
 
 
 
@@ -307,8 +194,11 @@ void Block::makeBlock(const QString toParse){
     int endComment;
     int commentSize;
 
+    // For safety, always start by setting the laser off flag
+    setLaserState(false);
+
     if((toParse.indexOf('/') == 0)||(toParse.size()<2)){  // Ignore empty lines or ones that begin with '/'
-        m_comment = "Ignored: " + toParse;
+        m_comment = "Ignored: " + toParse +"\r\n";
         return;
     }
     // deal with (this style) of comment
@@ -319,7 +209,7 @@ void Block::makeBlock(const QString toParse){
         if(endComment == -1)
         {
             endComment = toParse.size();
-            m_errors << "Could not find comment's closing ')'";
+            m_errors << "Could not find comment's closing ')'\r\n";
         }
         commentSize = endComment - startComment - 1;
         c_line = toParse.mid(startComment+1,commentSize);
@@ -414,7 +304,7 @@ void Block::makeBlock(const QString toParse){
                     if(valueValid)
                         setPosition_x(value);
                     else
-                        m_errors<<"Invalid number!";
+                        m_errors<<"Invalid number for X position!\n";
                 }
                 // No position data means we want to return axis to home
                 // check for homing code
@@ -432,7 +322,7 @@ void Block::makeBlock(const QString toParse){
                     if(valueValid)
                         setPosition_y(value);
                     else
-                        m_errors<<"Invalid number!";
+                        m_errors<<"Invalid number for Y position!\n";
                 }
                 else if((token.size() == 1) && (m_command.code == G28))
                     setGoHome_y();
@@ -449,7 +339,7 @@ void Block::makeBlock(const QString toParse){
                     if(valueValid)
                         setPosition_z(value);
                     else
-                        m_errors<<"Invalid number!";
+                        m_errors<<"Invalid number for Z position!\n";
                 }
                 else if((token.size() == 1) && (m_command.code == G28))
                     setGoHome_z();
@@ -466,7 +356,7 @@ void Block::makeBlock(const QString toParse){
                     if(valueValid)
                         setPosition_a(value);
                     else
-                        m_errors<<"Invalid number!";
+                        m_errors<<"Invalid number for A position!\n";
                 }
                 else if((token.size() == 1) && (m_command.code == G28))
                     setGoHome_a();
@@ -483,7 +373,7 @@ void Block::makeBlock(const QString toParse){
                     if(valueValid)
                         setPosition_b(value);
                     else
-                        m_errors<<"Invalid number!";
+                        m_errors<<"Invalid number for B position!\n";
                 }
                 else if((token.size() == 1) && (m_command.code == G28))
                     setGoHome_b();
@@ -507,7 +397,7 @@ void Block::makeBlock(const QString toParse){
             case 'F':
             {
                 bool valueValid = false;
-                float value = token.right(1-token.size()).toFloat(&valueValid);
+                float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid){
                     if(m_x_axis.position.pending)
                         setSpeed_x(value);
@@ -597,6 +487,151 @@ QVector<layer_t> convertGcode(QString fileName)
         qDebug()<<"Could not open file";
 
     return layerStack;
+}
+
+QString Block::printAxis(axis_t a)
+{
+    QString axisString;
+    if(a.goHome.pending||a.position.pending){
+        switch (a.axis) {
+        case X:
+            axisString = "X Axis ";
+            break;
+        case Y:
+            axisString = "Y Axis";
+            break;
+        case Z:
+            axisString = "Z Axis";
+            break;
+        case A:
+            axisString = "A Axis";
+            break;
+        case B:
+            axisString = "B Axis";
+            break;
+        default:
+            break;
+        }
+        if(a.goHome.pending)
+            axisString += " goes home\n";
+        else if(a.position.pending){
+            axisString += " moves to ";
+            axisString += QString::number(a.position.value);
+            if(a.speed.pending)
+            {
+                axisString += " at a speed of ";
+                axisString += QString::number(a.speed.value);
+                axisString += '\n';
+            }
+            else
+                axisString += '\n';
+        }
+    }
+    return axisString;
+}
+
+QStringList Block::printBlock(){
+    QStringList blockStrings;
+    blockStrings<<"\nLayer Number: " + QString::number(m_layerNumber) +"\n";
+    blockStrings<<"Line Number: " + QString::number(m_lineNumber) +"\n";
+
+
+    if(!m_comment.isEmpty())
+        blockStrings<<"Comment: " + m_comment + "\n";
+    if(m_command.pending){
+        QString commandString = "Command: ";
+        switch (m_command.code) {
+        case M0:
+            commandString += "M0 - PAUSE\r\n";
+            break;
+        case M2:
+            commandString += "M2 - END\r\n";
+            break;
+        case M3:
+            commandString += "M3 - LASER ON\r\n";
+            break;
+        case M5:
+            commandString += "M5 - LASER OFF\r\n";
+            break;
+        case G0:
+            commandString += "G0 - RAPID MOVE\r\n";
+            break;
+        case G1:
+            commandString += "G1 - LINEAR MOVE\r\n";
+            break;
+        case G4:
+            commandString += "G4 - DWELL\r\n";
+            break;
+        case G28:
+            commandString += "G28 - HOME\r\n";
+            break;
+        case G90:
+            commandString += "G90 - ABSOLUTE POSITIONING\r\n";
+            break;
+        case G91:
+            commandString += "G91 - RELATIVE POSITIONING\r\n";
+            break;
+        default:
+            commandString += "unknown\r\n";
+            break;
+        }
+            blockStrings<<commandString;
+    }
+
+    if(!printAxis(m_x_axis).isEmpty())
+        blockStrings<<printAxis(m_x_axis);
+    if(!printAxis(m_y_axis).isEmpty())
+        blockStrings<<printAxis(m_y_axis);
+    if(!printAxis(m_z_axis).isEmpty())
+        blockStrings<<printAxis(m_z_axis);
+    if(!printAxis(m_a_axis).isEmpty())
+        blockStrings<<printAxis(m_a_axis);
+    if(!printAxis(m_b_axis).isEmpty())
+        blockStrings<<printAxis(m_b_axis);
+
+    if (m_laser.enabled.pending||m_laser.power.pending)
+    {
+        QString laserString = "Laser is ";
+        if (m_laser.enabled.state)
+        {
+            laserString += "on. ";
+            if (m_laser.power.pending){
+                laserString += "Laser power = "+ QString::number(m_laser.power.value);
+                laserString +="\r\n";
+            }
+            else
+                laserString += "\r\n";
+        }
+        else
+            laserString += "off.\r\n";
+        blockStrings<<laserString;
+    }
+
+    if(m_dwell.pending)
+    {
+        QString dwellString = "Delay for "+ QString::number(m_dwell.value);
+        dwellString += "\r\n";
+        blockStrings<<dwellString;
+    }
+
+    if(m_errors.size() > 0)
+    {
+        blockStrings<<m_errors;
+    }
+    return blockStrings;
+}
+
+QStringList printStack(QVector<layer_t> layerStack){
+    QStringList layerStrings;
+    for(int i = 0; i < layerStack.size(); i++)
+    {
+        for(int j = 0; j <layerStack[i].size(); j++)
+        {
+            layerStrings<<layerStack[i][j].printBlock();
+        }
+
+    }
+    return layerStrings;
 }
 
 }

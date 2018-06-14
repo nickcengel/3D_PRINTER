@@ -160,6 +160,7 @@ typedef QVector<Block> layer_t;
 
 QVector<layer_t> convertGcode(QString fileName);
 
+QStringList printStack(QVector<layer_t> layerStack);
 
 
 }
