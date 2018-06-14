@@ -558,7 +558,8 @@ void Block::makeBlock(const QString toParse){
     }//end if
 }//end makeblock
 
-QVector<layer_t> convertGcode(QString fileName){
+QVector<layer_t> convertGcode(QString fileName)
+{
     QVector<layer_t> layerStack;
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -571,27 +572,24 @@ QVector<layer_t> convertGcode(QString fileName){
 
         while (!in.atEnd())
         {
-//            layer_t *tempLayer = new layer_t;
-//            newLayerFlag = false;
+            layer_t tempLayer;
+            layerFlag = false;
 
-            while(!layerFlag && !in.atEnd()){
+            while(!layerFlag && !in.atEnd())
+            {
                 QString line = in.readLine();
- //                qDebug()<<line;
-                 Block a(line, lineNumber, 0);
-                 lineNumber++;
-                // qDebug()<<a.printBlock();
-                 layerFlag = a.newLayerFlag()
-
-                 }
-
-
-//                tempLayer->append(BlockIO::Block(line, lineNumber, layerNumber));
-
-//                newLayerFlag = tempLayer->last().newLayerFlag();
+                if(line.size() > 1)
+                {
+                    // qDebug()<<line;
+                    // Block a(line, lineNumber, 0);
+                    // qDebug()<<a.printBlock();
+                    tempLayer.append(BlockIO::Block(line, lineNumber, layerNumber));
+                    lineNumber++;
+                    layerFlag = tempLayer.last().newLayerFlag();
+                }
             }
-//            layerStack.append(*tempLayer);
-//            delete tempLayer;
-//            layerNumber++;
+            layerStack.push_back(tempLayer);
+            layerNumber++;
         }
         file.close();
     }
@@ -601,12 +599,6 @@ QVector<layer_t> convertGcode(QString fileName){
     return layerStack;
 }
 
-
-
 }
-
-
-
-
 
 
