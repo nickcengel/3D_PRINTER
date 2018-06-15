@@ -5,9 +5,7 @@
 
 using BlockIO::AxisTitle;
 using BlockIO::axis_settings_t;
-using BlockIO::axis_t;
 using BlockIO::AxisStatus;
-using BlockIO::move_t;
 
 
 
@@ -32,8 +30,6 @@ public:
 
 
 
-    axis_t desiredMove() const;
-    void setDesiredMove(const axis_t &desiredMove);
 
 signals:
     void currentPositionChanged(float currentPosition);
@@ -59,7 +55,6 @@ private:
     float m_currentSpeed;
     float m_currentAcceleration;
 
-    axis_t m_desiredMove;
 
 signals:
 

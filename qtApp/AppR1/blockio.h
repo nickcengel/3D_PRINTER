@@ -32,8 +32,8 @@ enum Code {NO_CODE, M0, M2, M3, M5, G0, G1, G4, G28, G90, G91};
 
 // AxisTitle :  lists the supported axis:
 enum AxisTitle{X,Y,Z,A,B};
-enum AxisStatus {a,b,c,d};
 
+enum AxisStatus{a,bc,d};
 
 struct axis_settings_t
 {
@@ -46,155 +46,129 @@ struct axis_settings_t
     float speedMin;
     float speedMax;
     float homeOffset;
-    axis_settings_t():portNumber(0),deviceNumber(0),axisTitle(X),positionMin(0),
-                    positionMax(0),speedMin(0),speedMax(0),homeOffset(0){}
-
+    axis_settings_t() {}
     axis_settings_t(int portNumber_, int deviceNumber_, AxisTitle axisTitle_,
                     float positionMin_, float positionMax_, float speedMin_,
                     float speedMax_, float homeOffset_);
 };
 
+struct machine_settings_t
+{
+    axis_settings_t x_settings;
+    axis_settings_t y_settings;
+    axis_settings_t z_settings;
+    axis_settings_t a_settings;
+    axis_settings_t b_settings;
 
-
-struct move_t
- {
-    float position;
-    float speed;
-    float acceleration;
+    machine_settings_t() {}
+    machine_settings_t(axis_settings_t x_settings, axis_settings_t y_settings,
+                       axis_settings_t z_settings, axis_settings_t a_settings,
+                       axis_settings_t b_settings);
 };
 
+enum TaskMap{NONE, POS, POS_SP, HOME, REL, EN, EN_POW, POW, DWELL};
 
+struct message_t
+{
+    TaskMap map;
+    float data[2];
 
-
-// When a BLOCK is create from reading in a line of GCODE it populates the collection of struts below.
-// Each struct contains a grouping of data along with a "pending" flag. This flag indicates that the
-// corresponding line of GCODE has modified the respective data. This flag is used by the interpreter
-// in order to pick out the relevant changes represented by the BLOCK and ignore the rest.
-
-// A CODE_COMMAND holds one of the commands enumaerated by CODE_t
-// Commands are cannonical, meaning a valid block can contain only one of these commands
-struct code_t {
-    Code code;
-    bool pending;
+    message_t() : map(NONE), data{0,0} {}
+    message_t(TaskMap aMap, float adata);
 };
-
-// A numerical value, grouped with its pending flag, used by AXiS and LASER structs
-struct num_t {
-    float value;
-    bool pending;
-};
-// A boolean value, grouped with its pending flag, used by AXSS and LASER structs
-struct bin_t {
-    bool state;
-    bool pending;
-};
-
-// Each of the machines axis are represented inside of a BLOCK using the AXIS struct.
-struct axis_t{
-    AxisTitle axis; // which axis are we talking about?
-    bin_t enabled; // Enable or disable motor. Not currently used
-    num_t position; //  The absolute position of the axis
-    num_t speed;   // The speed the axis is to use
-    bin_t goHome;   // This is set true and pending when a blcok contains G28 code and no position data
-};
-
-// Messages from the GCODE document relevant to the laser are represented using the laser_t struct.
-struct laser_t{
-    bin_t enabled;    // Enable or disable the laser
-    num_t power;  // Set the laser power
-};
-
 
 class Block{
 public:
-    // Default constructor creates an empty Block with no data and all pending flags false
     Block();
-    // Constructor automatically populates Block with the data from string toParse_
-    Block(const QString toParse, const int lineNumber, const int layerNumber);
+    Block(const QString toParse, machine_settings_t *settings);
+    void makeBlock(const QString toParse, machine_settings_t *settings);
 
-    // Setters for populating a Block
-    // values are public variables and can be accessed by the interpretor using the dot operator
+    message_t x_axis() const;
+    void set_x_axis(const message_t &x_axis);
+    void set_x_axis(const TaskMap m, const float data0);
+    void set_x_axis(const TaskMap m, const float data0, const float data1);
 
-    void setCode(const Code code);
-    void setDwell(const float time);
+    message_t y_axis() const;
+    void set_y_axis(const message_t &y_axis);
+    void set_y_axis(const TaskMap m, const float data0);
+    void set_y_axis(const TaskMap m, const float data0, const float data1);
 
-    void setLaserState(const bool enable);
-    void setLaserPower(const float power);
+    message_t z_axis() const;
+    void set_z_axis(const message_t &z_axis);
+    void set_z_axis(const TaskMap m, const float data0);
+    void set_z_axis(const TaskMap m, const float data0, const float data1);
 
-    void setState_x(const bool enable);
-    void setState_y(const bool enable);
-    void setState_z(const bool enable);
-    void setState_a(const bool enable);
-    void setState_b(const bool enable);
+    message_t a_axis() const;
+    void set_a_axis(const message_t &a_axis);
+    void set_a_axis(const TaskMap m, const float data0);
+    void set_a_axis(const TaskMap m, const float data0, const float data1);
 
-    void setPosition_x(const float x);
-    void setPosition_y(const float y);
-    void setPosition_z(const float z);
-    void setPosition_a(const float a);
-    void setPosition_b(const float b);
+    message_t b_axis() const;
+    void set_b_axis(const message_t &b_axis);
+    void set_b_axis(const TaskMap m, const float data0);
+    void set_b_axis(const TaskMap m, const float data0, const float data1);
 
-    void setSpeed_x(const float sx);
-    void setSpeed_y(const float sy);
-    void setSpeed_z(const float sz);
-    void setSpeed_a(const float sa);
-    void setSpeed_b(const float sb);
+    message_t laser() const;
+    void set_laser(const message_t &laser);
+    void set_laser(const TaskMap m, const float data0);
+    void set_laser(const TaskMap m, const float data0, const float data1);
 
-    void setGoHome_x();
-    void setGoHome_y();
-    void setGoHome_z();
-    void setGoHome_a();
-    void setGoHome_b();
+    message_t dwell() const;
+    void set_dwell(const message_t &dwell);
+    void set_dwell(const TaskMap m, const float data0);
+    void set_dwell(const TaskMap m, const float data0, const float data1);
 
-    bool newLayerFlag();
+    bool newLayerFlag() const;
+    void setNewLayer(bool flag);
 
-    // Methods for debugging a block. Prints block data and error messages
-    QString printAxis(axis_t a);
-    QStringList printBlock();
+    bool isBlockValid() const;
+    void setBlockValid(bool valid);
+
+    Code code() const;
+    void setCode(const Code &code);
+
+    QString com_err() const;
+    void set_com_err(const QString &com_err);
 
 private:
-    // Contains the single cannonical command
-    int m_lineNumber;
-    int m_layerNumber;
-    bool m_newLayerFlag;
-    code_t m_command;
-
-    // Contains the data for each of the 5 axis
-    axis_t m_x_axis;
-    axis_t m_y_axis;
-    axis_t m_z_axis;
-    axis_t m_a_axis;
-    axis_t m_b_axis;
-
-    // Contains the data for the laser
-    laser_t m_laser;
-
-    // contains gcode comments
-    QString m_comment;
-
-    // Contains the period of time to delay or "dwell"
-    // A dwell can be initiated in two ways
-    //  (1) As an isolate command: G4/'dwelltime' // not implemented
-    //  (2) As a portion of another command using the P parameter: .... P'dwelltime'
-    num_t m_dwell;
-
-    // Put error messages here
-    QStringList m_errors;
-
-    // Initizing a Block sets all data and pending values to 0
-    // The makeBlock method populates a Block with the data from the passed string.
-    // This method does the work of parsing a line of GCODE into usable information.
-    // See .cpp file for further documentation
-    void initializeBlock(int lineNumber, int layerNumber);
-    void makeBlock(const QString toParse);
+    QString m_com_err;
+    message_t m_x_axis;
+    message_t m_y_axis;
+    message_t m_z_axis;
+    message_t m_a_axis;
+    message_t m_b_axis;
+    message_t m_laser;
+    message_t m_dwell;
+    Code m_code;
+    bool m_newLayer;
+    bool m_blockValid;
 };
 
 typedef QVector<Block> layer_t;
 
-QVector<layer_t> convertGcode(QString fileName);
+class Layer
+{
+public:
+    Layer();
+    Layer(layer_t get);
+
+
+
+    layer_t get() const;
+    void set(const layer_t &blockGroup);
+
+private:
+    layer_t m_blockGroup;
+    QStringList m_err_com;
+};
+
+
+QVector<layer_t> convertGcode(QString fileName, machine_settings_t *settings);
 
 QStringList printStack(QVector<layer_t> layerStack);
 
 }
+
 
 
 #endif

@@ -5,196 +5,230 @@
 namespace BlockIO {
 
 Block::Block(){
-    initializeBlock(-1,-1);
+   setBlockValid(false);
 }
 
-Block::Block(const QString toParse, const int lineNumber, const int layerNumber){
-
-    initializeBlock(lineNumber, layerNumber);
-    makeBlock(toParse);
+Block::Block(const QString toParse, machine_settings_t *settings)
+{
+    setBlockValid(true);
+    makeBlock(toParse, settings);
+    if(this->isBlockValid())
+        m_com_err.clear();
 }
 
-void Block::setCode(const Code code){
-    m_command.code = code;
-    m_command.pending = 1;
+message_t Block::x_axis() const
+{
+    return m_x_axis;
 }
 
-void Block::setDwell(const float time){
-    m_dwell.value = time;
-    m_dwell.pending = 1;
+void Block::set_x_axis(const message_t &x_axis){
+    m_x_axis = x_axis;
 }
 
-void Block::setLaserState(const bool enable){
-    m_laser.enabled.state = enable;
-    m_laser.enabled.pending = 1;
+void Block::set_x_axis(const TaskMap m, const float data0)
+{
+    m_x_axis.map = m;
+    m_x_axis.data[0] = data0;
 }
 
-void Block::setLaserPower(const float power){
-    m_laser.power.value = power;
-    m_laser.power.pending = 1;
+void Block::set_x_axis(const TaskMap m, const float data0, const float data1)
+{
+    m_x_axis.map = m;
+    m_x_axis.data[0] = data0;
+    m_x_axis.data[1] = data1;
 }
 
-
-void Block::setState_x(const bool enable){
-    m_x_axis.enabled.state = enable;
-    m_x_axis.enabled.pending = 1;
+message_t Block::y_axis() const
+{
+    return m_y_axis;
 }
 
-void Block::setState_y(const bool enable){
-    m_y_axis.enabled.state = enable;
-    m_y_axis.enabled.pending = 1;
+void Block::set_y_axis(const message_t &y_axis){
+    m_y_axis = y_axis;
 }
 
-void Block::setState_z(const bool enable){
-    m_z_axis.enabled.state = enable;
-    m_z_axis.enabled.pending = 1;
+void Block::set_y_axis(const TaskMap m, const float data0)
+{
+    m_y_axis.map = m;
+    m_y_axis.data[0] = data0;
 }
 
-void Block::setState_a(const bool enable){
-    m_a_axis.enabled.state = enable;
-    m_a_axis.enabled.pending = 1;
+void Block::set_y_axis(const TaskMap m, const float data0, const float data1)
+{
+    m_y_axis.map = m;
+    m_y_axis.data[0] = data0;
+    m_y_axis.data[1] = data1;
 }
 
-void Block::setState_b(const bool enable){
-    m_b_axis.enabled.state = enable;
-    m_b_axis.enabled.pending = 1;
+message_t Block::z_axis() const
+{
+    return m_z_axis;
 }
 
-void Block::setPosition_x(const float x){
-    m_x_axis.position.value = x;
-    m_x_axis.position.pending = 1;
-}
-void Block::setPosition_y(const float y){
-    m_y_axis.position.value = y;
-    m_y_axis.position.pending = 1;
-}
-void Block::setPosition_z(const float z){
-    m_z_axis.position.value = z;
-    m_z_axis.position.pending = 1;
-}
-void Block::setPosition_a(const float a){
-    m_a_axis.position.value = a;
-    m_a_axis.position.pending = 1;
-}
-void Block::setPosition_b(const float b){
-    m_b_axis.position.value = b;
-    m_b_axis.position.pending = 1;
+void Block::set_z_axis(const message_t &z_axis){
+    m_z_axis = z_axis;
 }
 
-void Block::setSpeed_x(const float sx){
-    m_x_axis.speed.value = sx;
-    m_x_axis.speed.pending = 1;
-}
-void Block::setSpeed_y(const float sy){
-    m_y_axis.speed.value = sy;
-    m_y_axis.speed.pending = 1;
-}
-void Block::setSpeed_z(const float sz){
-    m_z_axis.speed.value = sz;
-    m_z_axis.speed.pending = 1;
-}
-void Block::setSpeed_a(const float sa){
-    m_a_axis.speed.value = sa;
-    m_a_axis.speed.pending = 1;
-}
-void Block::setSpeed_b(const float sb){
-    m_b_axis.speed.value = sb;
-    m_b_axis.speed.pending = 1;
+void Block::set_z_axis(const TaskMap m, const float data0)
+{
+    m_z_axis.map = m;
+    m_z_axis.data[0] = data0;
 }
 
-void Block::setGoHome_x(){
-    m_x_axis.goHome.state = 1;
-    m_x_axis.goHome.pending = 1;
-}
-void Block::setGoHome_y(){
-    m_y_axis.goHome.state = 1;
-    m_y_axis.goHome.pending = 1;
-}
-void Block::setGoHome_z(){
-    m_z_axis.goHome.state = 1;
-    m_z_axis.goHome.pending = 1;
-}
-void Block::setGoHome_a(){
-    m_a_axis.goHome.state = 1;
-    m_a_axis.goHome.pending = 1;
-}
-void Block::setGoHome_b(){
-    m_b_axis.goHome.state = 1;
-    m_b_axis.goHome.pending = 1;
+void Block::set_z_axis(const TaskMap m, const float data0, const float data1)
+{
+    m_z_axis.map = m;
+    m_z_axis.data[0] = data0;
+    m_z_axis.data[1] = data1;
 }
 
-bool Block::newLayerFlag(){
-    return m_newLayerFlag;
+message_t Block::a_axis() const
+{
+    return m_a_axis;
 }
 
-
-void Block::initializeBlock(int lineNumber, int layerNumber){
-    m_lineNumber = lineNumber;
-    m_layerNumber = layerNumber;
-    m_newLayerFlag = false;
-    m_command.pending = 0;
-
-    m_x_axis.axis = X;
-    m_x_axis.enabled.pending = 0;
-    m_x_axis.position.pending = 0;
-    m_x_axis.speed.pending = 0;
-    m_x_axis.goHome.pending = 0;
-
-    m_y_axis.axis = Y;
-    m_y_axis.enabled.pending = 0;
-    m_y_axis.position.pending = 0;
-    m_y_axis.speed.pending = 0;
-    m_y_axis.goHome.pending = 0;
-
-
-    m_z_axis.axis = Z;
-    m_z_axis.enabled.pending = 0;
-    m_z_axis.position.pending = 0;
-    m_z_axis.speed.pending = 0;
-    m_z_axis.goHome.pending = 0;
-
-
-    m_a_axis.axis = A;
-    m_a_axis.enabled.pending = 0;
-    m_a_axis.position.pending = 0;
-    m_a_axis.speed.pending = 0;
-    m_a_axis.goHome.pending = 0;
-
-
-    m_b_axis.axis = B;
-    m_b_axis.enabled.pending = 0;
-    m_b_axis.position.pending = 0;
-    m_b_axis.speed.pending = 0;
-    m_b_axis.goHome.pending = 0;
-
-
-    m_laser.enabled.pending = 0;
-    m_laser.power.pending = 0;
-
-    m_dwell.pending = 0;
+void Block::set_a_axis(const message_t &a_axis){
+    m_a_axis = a_axis;
 }
 
+void Block::set_a_axis(const TaskMap m, const float data0)
+{
+    m_a_axis.map = m;
+    m_a_axis.data[0] = data0;
+}
 
-//  The makeBlock method is the heart of the GCODE Parser. It fills a Block with the data from a single line
-//  * NOTE: We require spaces between items, but not between the item and the value itself.
-//      GOOD: G0 X1 Y1.42 Z4.0 (comments look like this)
-//      BAD: G0X1Y1.42Z4.0 comments all over the place
-//      ALSO BAD: G0 X 1 Y 1.42 Z 4.0 *//
-void Block::makeBlock(const QString toParse){
+void Block::set_a_axis(const TaskMap m, const float data0, const float data1)
+{
+    m_a_axis.map = m;
+    m_a_axis.data[0] = data0;
+    m_a_axis.data[1] = data1;
+}
 
-    // BEGIN splitting up comments and commands ///
-    QString c_line; // comments go here
+message_t Block::b_axis() const
+{
+    return m_b_axis;
+}
+
+void Block::set_b_axis(const message_t &b_axis){
+    m_b_axis = b_axis;
+}
+
+void Block::set_b_axis(const TaskMap m, const float data0)
+{
+    m_b_axis.map = m;
+    m_b_axis.data[0] = data0;
+}
+
+void Block::set_b_axis(const TaskMap m, const float data0, const float data1)
+{
+    m_b_axis.map = m;
+    m_b_axis.data[0] = data0;
+    m_b_axis.data[1] = data1;
+}
+
+message_t Block::laser() const
+{
+    return m_laser;
+}
+
+void Block::set_laser(const message_t &laser){
+    m_laser = laser;
+}
+
+void Block::set_laser(const TaskMap m, const float data0)
+{
+    m_laser.map = m;
+    m_laser.data[0] = data0;
+}
+
+void Block::set_laser(const TaskMap m, const float data0, const float data1)
+{
+    m_laser.map = m;
+    m_laser.data[0] = data0;
+    m_laser.data[1] = data1;
+}
+
+message_t Block::dwell() const
+{
+    return m_dwell;
+}
+
+void Block::set_dwell(const message_t &dwell){
+    m_dwell = dwell;
+}
+
+void Block::set_dwell(const TaskMap m, const float data0)
+{
+    m_dwell.map = m;
+    m_dwell.data[0] = data0;
+}
+
+void Block::set_dwell(const TaskMap m, const float data0, const float data1)
+{
+    m_dwell.map = m;
+    m_dwell.data[0] = data0;
+    m_dwell.data[1] = data1;
+}
+
+bool Block::newLayerFlag() const
+{
+    return m_newLayer;
+}
+
+void Block::setNewLayer(bool flag)
+{
+    m_newLayer = flag;
+}
+
+bool Block::isBlockValid() const
+{
+    return m_blockValid;
+}
+
+void Block::setBlockValid(bool valid)
+{
+    m_blockValid = valid;
+}
+
+Code Block::code() const
+{
+    return m_code;
+}
+
+void Block::setCode(const Code &code)
+{
+    m_code = code;
+}
+
+QString Block::com_err() const
+{
+    if(isBlockValid())
+    {
+        return "No errors!\n";
+    }
+    else
+        return m_com_err;
+}
+
+void Block::set_com_err(const QString &value)
+{
+    m_com_err = value;
+}
+
+void Block::makeBlock(const QString toParse, machine_settings_t *settings)
+{
+    //    // BEGIN splitting up comments and commands ///
+    QString c_line; // comments and errors go here
     QString g_line; // commands go here
     int startComment;
     int endComment;
     int commentSize;
-
     // For safety, always start by setting the laser off flag
-    setLaserState(false);
+    set_laser(EN,0);
 
-    if((toParse.indexOf('/') == 0)||(toParse.size()<2)){  // Ignore empty lines or ones that begin with '/'
-        m_comment = "Ignored: " + toParse +"\r\n";
-        return;
+    if((toParse.indexOf('/') == 0)||(toParse.size()<2))  // Ignore empty lines or ones that begin with '/'
+    {
+        c_line = "Ignored: " + toParse +"\n";
     }
     // deal with (this style) of comment
     else if(toParse.contains('('))
@@ -204,7 +238,8 @@ void Block::makeBlock(const QString toParse){
         if(endComment == -1)
         {
             endComment = toParse.size();
-            m_errors << "Could not find comment's closing ')'\r\n";
+            c_line += "Could not find comment's closing ')'\n";
+            setBlockValid(false);
         }
         commentSize = endComment - startComment - 1;
         c_line = toParse.mid(startComment+1,commentSize);
@@ -219,13 +254,16 @@ void Block::makeBlock(const QString toParse){
             g_line = toParse.left(toParse.size() - commentSize - 2);  // ...
     }
     //  ;Deal with this style of comment.
-    else if(toParse.contains(';')){
+    else if(toParse.contains(';'))
+    {
         startComment = toParse.indexOf(';');
-        if(startComment == 0){  // if line starts with ; the rest is a comment
+        if(startComment == 0)
+        {  // if line starts with ; the rest is a comment
             c_line = toParse.right(toParse.size()-1);
             g_line.clear();
         }
-        else{   // pick up a comment after a command
+        else
+        {   // pick up a comment after a command
             commentSize = toParse.size() - startComment - 1;
             c_line = toParse.right(commentSize);
             g_line = toParse.left(toParse.size() - commentSize - 2);
@@ -235,9 +273,9 @@ void Block::makeBlock(const QString toParse){
         g_line = toParse;
 
     if(c_line.contains("NEW_LAYER"))
-        m_newLayerFlag = true;
+        setNewLayer(true);
 
-    m_comment = c_line;
+    c_line += "\n";
 
     // END splitting up comments and commands //
 
@@ -264,11 +302,28 @@ void Block::makeBlock(const QString toParse){
                 else if(token == "G28") // HOME AXIS
                     setCode(G28);
                 else if(token == "G90")  // ABSOLUTE POSITION
+                {
                     setCode(G90);
+                    set_x_axis(REL,0);
+                    set_y_axis(REL,0);
+                    set_z_axis(REL,0);
+                    set_a_axis(REL,0);
+                    set_b_axis(REL,0);
+                }
                 else if(token == "G91") // RELATIVE POSITION
+                {
                     setCode(G91);
+                    set_x_axis(REL,1);
+                    set_y_axis(REL,1);
+                    set_z_axis(REL,1);
+                    set_a_axis(REL,1);
+                    set_b_axis(REL,1);
+                }
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize command: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
             case 'M':
                 // So setCode with matching enumerated code
@@ -276,115 +331,165 @@ void Block::makeBlock(const QString toParse){
                     setCode(M0);
                 else if(token == "M2")  //  END PROGRAM
                     setCode(M2);
-                else if(token == "M3"){  // LASER ON
+                else if(token == "M3")
+                {  // LASER ON
                     setCode(M3);
-                    setLaserState(true);
+                    set_laser(EN,1);
                 }
-                else if(token == "M5"){  // LASER OFF
+                else if(token == "M5")
+                {  // LASER OFF
                     setCode(M5);
-                    setLaserState(false);
+                    set_laser(EN,0);
                 }
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
 
                 // If the first character is X,Y,Z,A,or B, we are talking about an axis
             case 'X':
                 //  Check that a relevant command is requested and set new position
                 //  Check if the position is a valid number
-                if((m_command.code == G0)||(m_command.code == G1))
+                if((code() == G0)||(code() == G1))
                 {
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
-                    if(valueValid)
-                        setPosition_x(value);
+                    if(valueValid && (value < settings->x_settings.positionMax) && (value > settings->x_settings.positionMin))
+                        set_x_axis(POS,value);
                     else
-                        m_errors<<"Invalid number for X position!\n";
+                    {
+                        c_line += "Invalid number for X position!\n";
+                        setBlockValid(false);
+                    }
                 }
                 // No position data means we want to return axis to home
                 // check for homing code
-                else if((token.size() == 1) && (m_command.code == G28))
-                    setGoHome_x();
+                else if((token.size() == 1) && (code() == G28))
+                    set_x_axis(HOME,1);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize X instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
 
             case 'Y':
-                if((m_command.code == G0)||(m_command.code == G1))
+                //  Check that a relevant command is requested and set new position
+                //  Check if the position is a valid number
+                if((code() == G0)||(code() == G1))
                 {
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
-                    if(valueValid)
-                        setPosition_y(value);
+                    if(valueValid && (value < settings->y_settings.positionMax) && (value > settings->y_settings.positionMin))
+                        set_y_axis(POS,value);
                     else
-                        m_errors<<"Invalid number for Y position!\n";
+                    {
+                        c_line += "Invalid number for Y position!\n";
+                        setBlockValid(false);
+                    }
                 }
-                else if((token.size() == 1) && (m_command.code == G28))
-                    setGoHome_y();
+                // No position data means we want to return axis to home
+                // check for homing code
+                else if((token.size() == 1) && (code() == G28))
+                    set_y_axis(HOME,1);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize Y instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
-
 
             case 'Z':
-                if((m_command.code == G0)||(m_command.code == G1))
+                //  Check that a relevant command is requested and set new position
+                //  Check if the position is a valid number
+                if((code() == G0)||(code() == G1))
                 {
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
-                    if(valueValid)
-                        setPosition_z(value);
+                    if(valueValid && (value < settings->z_settings.positionMax) && (value > settings->z_settings.positionMin))
+                        set_z_axis(POS,value);
                     else
-                        m_errors<<"Invalid number for Z position!\n";
+                    {
+                        c_line += "Invalid number for Z position!\n";
+                        setBlockValid(false);
+                    }
                 }
-                else if((token.size() == 1) && (m_command.code == G28))
-                    setGoHome_z();
+                // No position data means we want to return axis to home
+                // check for homing code
+                else if((token.size() == 1) && (code() == G28))
+                    set_z_axis(HOME,1);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize Z instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
-
 
             case 'A':
-                if((m_command.code == G0)||(m_command.code == G1))
+                //  Check that a relevant command is requested and set new position
+                //  Check if the position is a valid number
+                if((code() == G0)||(code() == G1))
                 {
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
-                    if(valueValid)
-                        setPosition_a(value);
+                    if(valueValid && (value < settings->a_settings.positionMax) && (value > settings->a_settings.positionMin))
+                        set_a_axis(POS,value);
                     else
-                        m_errors<<"Invalid number for A position!\n";
+                    {
+                        c_line += "Invalid number for A position!\n";
+                        setBlockValid(false);
+                    }
                 }
-                else if((token.size() == 1) && (m_command.code == G28))
-                    setGoHome_a();
+                // No position data means we want to return axis to home
+                // check for homing code
+                else if((token.size() == 1) && (code() == G28))
+                    set_a_axis(HOME,1);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize A instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
-
 
             case 'B':
-                if((m_command.code == G0)||(m_command.code == G1))
+                //  Check that a relevant command is requested and set new position
+                //  Check if the position is a valid number
+                if((code() == G0)||(code() == G1))
                 {
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
-                    if(valueValid)
-                        setPosition_b(value);
+                    if(valueValid && (value < settings->b_settings.positionMax) && (value > settings->b_settings.positionMin))
+                        set_b_axis(POS,value);
                     else
-                        m_errors<<"Invalid number for B position!\n";
+                    {
+                        c_line += "Invalid number for B position!\n";
+                        setBlockValid(false);
+                    }
                 }
-                else if((token.size() == 1) && (m_command.code == G28))
-                    setGoHome_b();
+                // No position data means we want to return axis to home
+                // check for homing code
+                else if((token.size() == 1) && (code() == G28))
+                    set_b_axis(HOME,1);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize B instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
-
 
                 // E used to indicate the current movement corresponds to an active print command.
                 // This follows from the extrusion printer convention. Where E is used to control
                 // the amount of material extruded. In our cases, we simpply check if a line contains
                 // 'E'. This means we should turn the laser on.
             case 'E':
-                // But first, check that this line will in fact move the x/y axes.
-                if((m_command.code == G1)&&(m_x_axis.position.pending || m_y_axis.position.pending))
-                    setLaserState(true);    // This is equivalent to prefaicing a move with M3/M5
+                // check that there is an XY move
+                if(isBlockValid() && (code() == G1) && ((m_x_axis.map == POS) || (m_x_axis.map == POS_SP))
+                        && ((m_y_axis.map == POS) || (m_y_axis.map == POS_SP)))
+                {
+                    set_laser(EN,1);
+                }
                 break;
 
                 // F used to modify speed. We only want to set the speed for an axis we intend
@@ -394,19 +499,62 @@ void Block::makeBlock(const QString toParse){
                 bool valueValid = false;
                 float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid){
-                    if(m_x_axis.position.pending)
-                        setSpeed_x(value);
-                    if(m_y_axis.position.pending)
-                        setSpeed_y(value);
-                    if(m_z_axis.position.pending)
-                        setSpeed_z(value);
-                    if(m_a_axis.position.pending)
-                        setSpeed_a(value);
-                    if(m_b_axis.position.pending)
-                        setSpeed_b(value);
+                    if((m_x_axis.map == POS) && (value < settings->x_settings.speedMax) && (value > settings->x_settings.speedMin))
+                    {
+                        m_x_axis.map = POS_SP;
+                        m_x_axis.data[1] = value;
+                    }
+                    else
+                    {
+                        c_line += "X speed out of range.\n";
+                        setBlockValid(false);
+                    }
+                    if((m_y_axis.map == POS) && (value < settings->y_settings.speedMax) && (value > settings->y_settings.speedMin))
+                    {
+                        m_y_axis.map = POS_SP;
+                        m_y_axis.data[1] = value;
+                    }
+                    else
+                    {
+                        c_line += "Y speed out of range.\n";
+                        setBlockValid(false);
+                    }
+                    if((m_z_axis.map == POS) && (value < settings->z_settings.speedMax) && (value > settings->z_settings.speedMin))
+                    {
+                        m_z_axis.map = POS_SP;
+                        m_z_axis.data[1] = value;
+                    }
+                    else
+                    {
+                        c_line += "Z speed out of range.\n";
+                        setBlockValid(false);
+                    }
+                    if((m_a_axis.map == POS) && (value < settings->a_settings.speedMax) && (value > settings->a_settings.speedMin))
+                    {
+                        m_a_axis.map = POS_SP;
+                        m_a_axis.data[1] = value;
+                    }
+                    else
+                    {
+                        c_line += "A speed out of range.\n";
+                        setBlockValid(false);
+                    }
+                    if((m_b_axis.map == POS) && (value < settings->b_settings.speedMax) && (value > settings->b_settings.speedMin))
+                    {
+                        m_b_axis.map = POS_SP;
+                        m_b_axis.data[1] = value;
+                    }
+                    else
+                    {
+                        c_line += "B speed out of range.\n";
+                        setBlockValid(false);
+                    }
                 }
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize speed instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
             }
                 // P signals a dwell time is to be set and observed.
@@ -415,9 +563,12 @@ void Block::makeBlock(const QString toParse){
                 bool valueValid = false;
                 float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
-                    setDwell(value);
+                    set_dwell(DWELL,value);
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
+                {
+                    c_line += "Did not recognize dwell instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
 
                 break;
             }
@@ -428,22 +579,36 @@ void Block::makeBlock(const QString toParse){
                 bool valueValid = false;
                 float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
-                    setLaserPower(value);
+                {
+                    if(m_laser.map == EN)
+                    {
+                        m_laser.map = EN_POW;
+                        m_laser.data[1] = value;
+                    }
+                    else
+                        set_laser(POW,0,value);
+                }
                 else
-                    m_errors<<"Did not recognize instruction: \""+token+"\"";
-
+                {
+                    c_line += "Did not recognize laser power instruction: \""+token+"\"\n";
+                    setBlockValid(false);
+                }
                 break;
             }
 
             default:
-                m_errors<<"Did not recognize instruction: \""+token+"\"";
+            {
+                c_line += "Did not recognize instruction: \""+token+"\"\n";
+                setBlockValid(false);
+            }
                 break;
             } //end switch
         }//end token
     }//end if
-}//end makeblock
+    set_com_err(c_line);
+}
 
-QVector<layer_t> convertGcode(QString fileName)
+QVector<layer_t> convertGcode(QString fileName, machine_settings_t *settings)
 {
     QVector<layer_t> layerStack;
     QFile file(fileName);
@@ -454,7 +619,7 @@ QVector<layer_t> convertGcode(QString fileName)
         int lineNumber = 0;
         int layerNumber = 0;
         bool layerFlag = false;
-
+        bool blockValid = false;
         while (!in.atEnd())
         {
             layer_t tempLayer;
@@ -466,15 +631,17 @@ QVector<layer_t> convertGcode(QString fileName)
                 if(line.size() > 1)
                 {
                     // qDebug()<<line;
-                    // Block a(line, lineNumber, 0);
-                    // qDebug()<<a.printBlock();
-                    tempLayer.append(BlockIO::Block(line, lineNumber, layerNumber));
+
+                    tempLayer.append(BlockIO::Block(line, settings));
                     lineNumber++;
                     layerFlag = tempLayer.last().newLayerFlag();
+                    blockValid = tempLayer.last().isBlockValid();
+
                 }
             }
             layerStack.push_back(tempLayer);
             layerNumber++;
+            tempLayer.clear();
         }
         file.close();
     }
@@ -484,150 +651,15 @@ QVector<layer_t> convertGcode(QString fileName)
     return layerStack;
 }
 
-QString Block::printAxis(axis_t a)
-{
-    QString axisString;
-    if(a.goHome.pending||a.position.pending){
-        switch (a.axis) {
-        case X:
-            axisString = "X Axis ";
-            break;
-        case Y:
-            axisString = "Y Axis";
-            break;
-        case Z:
-            axisString = "Z Axis";
-            break;
-        case A:
-            axisString = "A Axis";
-            break;
-        case B:
-            axisString = "B Axis";
-            break;
-        default:
-            break;
-        }
-        if(a.goHome.pending)
-            axisString += " goes home\n";
-        else if(a.position.pending){
-            axisString += " moves to ";
-            axisString += QString::number(a.position.value);
-            if(a.speed.pending)
-            {
-                axisString += " at a speed of ";
-                axisString += QString::number(a.speed.value);
-                axisString += '\n';
-            }
-            else
-                axisString += '\n';
-        }
-    }
-    return axisString;
-}
-
-QStringList Block::printBlock(){
-    QStringList blockStrings;
-    blockStrings<<"\nLayer Number: " + QString::number(m_layerNumber) +"\n";
-    blockStrings<<"Line Number: " + QString::number(m_lineNumber) +"\n";
-
-
-    if(!m_comment.isEmpty())
-        blockStrings<<"Comment: " + m_comment + "\n";
-    if(m_command.pending){
-        QString commandString = "Command: ";
-        switch (m_command.code) {
-        case M0:
-            commandString += "M0 - PAUSE\r\n";
-            break;
-        case M2:
-            commandString += "M2 - END\r\n";
-            break;
-        case M3:
-            commandString += "M3 - LASER ON\r\n";
-            break;
-        case M5:
-            commandString += "M5 - LASER OFF\r\n";
-            break;
-        case G0:
-            commandString += "G0 - RAPID MOVE\r\n";
-            break;
-        case G1:
-            commandString += "G1 - LINEAR MOVE\r\n";
-            break;
-        case G4:
-            commandString += "G4 - DWELL\r\n";
-            break;
-        case G28:
-            commandString += "G28 - HOME\r\n";
-            break;
-        case G90:
-            commandString += "G90 - ABSOLUTE POSITIONING\r\n";
-            break;
-        case G91:
-            commandString += "G91 - RELATIVE POSITIONING\r\n";
-            break;
-        default:
-            commandString += "unknown\r\n";
-            break;
-        }
-            blockStrings<<commandString;
-    }
-
-    if(!printAxis(m_x_axis).isEmpty())
-        blockStrings<<printAxis(m_x_axis);
-    if(!printAxis(m_y_axis).isEmpty())
-        blockStrings<<printAxis(m_y_axis);
-    if(!printAxis(m_z_axis).isEmpty())
-        blockStrings<<printAxis(m_z_axis);
-    if(!printAxis(m_a_axis).isEmpty())
-        blockStrings<<printAxis(m_a_axis);
-    if(!printAxis(m_b_axis).isEmpty())
-        blockStrings<<printAxis(m_b_axis);
-
-    if (m_laser.enabled.pending||m_laser.power.pending)
+    layer_t Layer::get() const
     {
-        QString laserString = "Laser is ";
-        if (m_laser.enabled.state)
-        {
-            laserString += "on. ";
-            if (m_laser.power.pending){
-                laserString += "Laser power = "+ QString::number(m_laser.power.value);
-                laserString +="\r\n";
-            }
-            else
-                laserString += "\r\n";
-        }
-        else
-            laserString += "off.\r\n";
-        blockStrings<<laserString;
+        return m_blockGroup;
     }
 
-    if(m_dwell.pending)
+    void Layer::set(const layer_t &blockGroup)
     {
-        QString dwellString = "Delay for "+ QString::number(m_dwell.value);
-        dwellString += "\r\n";
-        blockStrings<<dwellString;
+        m_blockGroup = blockGroup;
     }
-
-    if(m_errors.size() > 0)
-    {
-        blockStrings<<m_errors;
-    }
-    return blockStrings;
-}
-
-QStringList printStack(QVector<layer_t> layerStack){
-    QStringList layerStrings;
-    for(int i = 0; i < layerStack.size(); i++)
-    {
-        for(int j = 0; j <layerStack[i].size(); j++)
-        {
-            layerStrings<<layerStack[i][j].printBlock();
-        }
-
-    }
-    return layerStrings;
-}
 
 }
 

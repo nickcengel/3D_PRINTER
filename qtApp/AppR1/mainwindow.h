@@ -10,6 +10,10 @@
 #include <QString>
 #include "blockio.h"
 
+using BlockIO::axis_settings_t;
+using BlockIO::machine_settings_t;
+using BlockIO::layer_t;
+
 
 namespace Ui {
 class MainWindow;
@@ -37,6 +41,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QString m_fileName;
+    machine_settings_t m_settings;
 
 };
 

@@ -1,7 +1,6 @@
 #include "qaxis.h"
 #include "blockio.h"
 using BlockIO::axis_settings_t;
-using BlockIO::axis_t;
 
 QAxis::QAxis(const axis_settings_t &initialSettings, QObject *parent) : QObject(parent)
 {
@@ -54,15 +53,5 @@ void QAxis::setCurrentAcceleration(float currentAcceleration)
 {
     m_currentAcceleration = currentAcceleration;
     emit currentAccelerationChanged(m_currentAcceleration);
-}
-
-axis_t QAxis::desiredMove() const
-{
-    return m_desiredMove;
-}
-
-void QAxis::setDesiredMove(const axis_t &desiredMove)
-{
-    m_desiredMove = desiredMove;
 }
 
