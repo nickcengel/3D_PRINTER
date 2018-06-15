@@ -27,12 +27,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     axis.cpp \
-    blockio.cpp
+    blockio.cpp \
+    blockcontroller.cpp \
+    qaxis.cpp
 
 HEADERS += \
         mainwindow.h \
     axis.h \
-    blockio.h
+    blockio.h \
+    blockcontroller.h \
+    qaxis.h
 
 FORMS += \
         mainwindow.ui

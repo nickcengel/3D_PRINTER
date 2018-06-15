@@ -4,7 +4,6 @@
 
 namespace BlockIO {
 
-
 Block::Block(){
     initializeBlock(-1,-1);
 }
@@ -174,10 +173,6 @@ void Block::initializeBlock(int lineNumber, int layerNumber){
 
     m_dwell.pending = 0;
 }
-
-
-
-
 
 
 //  The makeBlock method is the heart of the GCODE Parser. It fills a Block with the data from a single line
@@ -635,5 +630,6 @@ QStringList printStack(QVector<layer_t> layerStack){
 }
 
 }
+
 
 

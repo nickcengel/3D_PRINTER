@@ -1,6 +1,7 @@
 #ifndef BLOCKIO_H
 #define BLOCKIO_H
 
+#include <QObject>
 #include <QTextStream>
 #include <QDebug>
 #include <qfiledialog.h>
@@ -155,14 +156,13 @@ private:
     void makeBlock(const QString toParse);
 };
 
-
 typedef QVector<Block> layer_t;
 
 QVector<layer_t> convertGcode(QString fileName);
 
 QStringList printStack(QVector<layer_t> layerStack);
 
-
 }
+
 
 #endif
