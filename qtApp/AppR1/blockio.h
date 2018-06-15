@@ -32,6 +32,38 @@ enum Code {NO_CODE, M0, M2, M3, M5, G0, G1, G4, G28, G90, G91};
 
 // AxisTitle :  lists the supported axis:
 enum AxisTitle{X,Y,Z,A,B};
+enum AxisStatus {a,b,c,d};
+
+
+struct axis_settings_t
+{
+
+    int portNumber;
+    int deviceNumber;
+    AxisTitle axisTitle;
+    float positionMin;
+    float positionMax;
+    float speedMin;
+    float speedMax;
+    float homeOffset;
+    axis_settings_t():portNumber(0),deviceNumber(0),axisTitle(X),positionMin(0),
+                    positionMax(0),speedMin(0),speedMax(0),homeOffset(0){}
+
+    axis_settings_t(int portNumber_, int deviceNumber_, AxisTitle axisTitle_,
+                    float positionMin_, float positionMax_, float speedMin_,
+                    float speedMax_, float homeOffset_);
+};
+
+
+
+struct move_t
+ {
+    float position;
+    float speed;
+    float acceleration;
+};
+
+
 
 
 // When a BLOCK is create from reading in a line of GCODE it populates the collection of struts below.

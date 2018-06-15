@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "axis.h"
+//#include "axis.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>

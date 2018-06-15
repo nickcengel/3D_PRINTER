@@ -63,6 +63,7 @@ axis_t QAxis::desiredMove() const
 
 void QAxis::setDesiredMove(const axis_t &desiredMove)
 {
+
     m_desiredMove = desiredMove;
 }
 
