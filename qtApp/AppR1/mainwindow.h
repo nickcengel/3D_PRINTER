@@ -12,6 +12,8 @@
 
 using BlockIO::axis_settings_t;
 using BlockIO::machine_settings_t;
+using BlockIO::Part;
+
 
 
 namespace Ui {
@@ -40,6 +42,8 @@ private:
     Ui::MainWindow *ui;
     QString m_fileName;
     machine_settings_t m_settings;
+
+    Part * myPart;
 
 };
 

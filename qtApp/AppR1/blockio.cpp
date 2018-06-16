@@ -358,6 +358,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->x_settings.positionMax) && (value > settings->x_settings.positionMin))
                         set_x_axis(POS,value);
+                    else if(!(value < settings->x_settings.positionMax) || !(value > settings->x_settings.positionMin))
+                    {
+                        c_line += "X position out of range!\n";
+                        setBlockValid(false);
+
+                    }
                     else
                     {
                         c_line += "Invalid number for X position!\n";
@@ -384,6 +390,11 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->y_settings.positionMax) && (value > settings->y_settings.positionMin))
                         set_y_axis(POS,value);
+                    else if(!(value < settings->y_settings.positionMax) || !(value > settings->y_settings.positionMin))
+                    {
+                        c_line += "Y position out of range!\n";
+                        setBlockValid(false);
+                    }
                     else
                     {
                         c_line += "Invalid number for Y position!\n";
@@ -410,6 +421,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->z_settings.positionMax) && (value > settings->z_settings.positionMin))
                         set_z_axis(POS,value);
+                    else if(!(value < settings->z_settings.positionMax) || !(value > settings->z_settings.positionMin))
+                    {
+                        c_line += "Z position out of range!\n";
+                        setBlockValid(false);
+
+                    }
                     else
                     {
                         c_line += "Invalid number for Z position!\n";
@@ -436,6 +453,11 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->a_settings.positionMax) && (value > settings->a_settings.positionMin))
                         set_a_axis(POS,value);
+                    else if(!(value < settings->a_settings.positionMax) || !(value > settings->a_settings.positionMin))
+                    {
+                        c_line += "A position out of range!\n";
+                        setBlockValid(false);
+                    }
                     else
                     {
                         c_line += "Invalid number for A position!\n";
@@ -462,6 +484,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->b_settings.positionMax) && (value > settings->b_settings.positionMin))
                         set_b_axis(POS,value);
+                    else if(!(value < settings->b_settings.positionMax) || !(value > settings->b_settings.positionMin))
+                    {
+                        c_line += "B position out of range!\n";
+                        setBlockValid(false);
+
+                    }
                     else
                     {
                         c_line += "Invalid number for B position!\n";
@@ -485,10 +513,26 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // 'E'. This means we should turn the laser on.
             case 'E':
                 // check that there is an XY move
-                if(isBlockValid() && (code() == G1) && ((m_x_axis.map == POS) || (m_x_axis.map == POS_SP))
-                        && ((m_y_axis.map == POS) || (m_y_axis.map == POS_SP)))
+                if(isBlockValid() && (code() == G1)
+                        && ((m_x_axis.map == POS) || (m_x_axis.map == POS_SP))
+                        && ((m_y_axis.map == POS) || (m_y_axis.map == POS_SP))
+                        && ((m_z_axis.map != POS) || (m_z_axis.map != POS_SP))
+                        && ((m_a_axis.map != POS) || (m_b_axis.map != POS_SP))
+                        && ((m_b_axis.map != POS) || (m_b_axis.map != POS_SP)))
                 {
                     set_laser(EN,1);
+                }
+                else if(code() != G1){
+                    c_line += "Laser can only be enabled during linear movement. Use G1 not G0\n";
+                    setBlockValid(false);
+                }
+                else if((m_x_axis.map != POS) || (m_x_axis.map != POS_SP)||(m_y_axis.map != POS) || (m_y_axis.map != POS_SP)){
+                    c_line += "Laser can only be enbabled in connection with a move in the X or Y axis.\n";
+                    setBlockValid(false);
+                }
+                else{
+                    c_line += "Laser could not be enabled\n";
+                    setBlockValid(false);
                 }
                 break;
 
@@ -609,11 +653,13 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
 }
 
 
+
 Layer::Layer(){
     setLayerValid(false);
 }
 
 Layer::Layer(QVector<Block> someBlocks){
+    setLayerValid(true);
     m_layer = someBlocks;
 }
 
@@ -624,6 +670,16 @@ QVector<Block> Layer::get() const
 
 void Layer::setLayerValid(bool layerValid){
     m_layerValid = layerValid;
+}
+
+bool Layer::validateLayer()
+{
+    for(int i = 0; i < m_layer.size(); i++)
+    {
+        if(m_layer[i].isBlockValid() == false)
+            setLayerValid(false);
+    }
+    return isLayerValid();
 }
 
 Block Layer::getBlock(int blockNumber) const
@@ -644,20 +700,28 @@ bool Layer::isLayerValid() const
 }
 
 
-bool LayerGroup::isGroupValid() const
+
+Part::Part(QString fileName, machine_settings_t settings){
+    m_fileName = fileName;
+    m_settings = settings;
+    makePart();
+}
+
+bool Part::isPartValid() const
 {
     return m_groupValid;
 }
 
-void LayerGroup::validateGroup()
+void Part::validatePart()
 {
-    for(int i = 0; i < m_layerGroup.size(); i++){
+    for(int i = 0; i < m_layerGroup.size(); i++)
+    {
         if(m_layerGroup[i].isLayerValid() == false)
             m_groupValid = false;
     }
 }
 
-void LayerGroup::convertGcode()
+void Part::makePart()
 {
     QFile file(m_fileName);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -683,10 +747,25 @@ void LayerGroup::convertGcode()
             m_layerGroup.append(tempLayer);
         }
         file.close();
-        validateGroup();
+        validatePart();
     }
     else
         qDebug()<<"Could not open file";
+}
+
+QVector<Layer> Part::get() const
+{
+    return m_layerGroup;
+}
+
+Layer Part::getLayer(int layerNumber) const
+{
+    return m_layerGroup[layerNumber];
+}
+
+Block Part::getBlock(int LayerNumber, int blockNumber)
+{
+    return m_layerGroup[LayerNumber].getBlock(blockNumber);
 }
 
 

@@ -48,9 +48,18 @@ struct axis_settings_t
     float speedMax;
     float homeOffset;
     axis_settings_t() {}
-    axis_settings_t(int portNumber_, int deviceNumber_, AxisTitle axisTitle_,
-                    float positionMin_, float positionMax_, float speedMin_,
-                    float speedMax_, float homeOffset_);
+    axis_settings_t(int aPortNumber, int aDeviceNumber, AxisTitle anAxisTitle,
+                    float aPositionMin, float aPositionMax, float aSpeedMin,
+                    float aSpeedMax, float aHomeOffset){
+        portNumber = aPortNumber;
+        deviceNumber = aDeviceNumber;
+        axisTitle = anAxisTitle;
+        positionMin = aPositionMin;
+        positionMax = aPositionMax;
+        speedMin = aSpeedMin;
+        speedMax = aSpeedMax;
+        homeOffset = aHomeOffset;
+    }
 };
 
 struct machine_settings_t
@@ -62,9 +71,15 @@ struct machine_settings_t
     axis_settings_t b_settings;
 
     machine_settings_t() {}
-    machine_settings_t(axis_settings_t x_settings, axis_settings_t y_settings,
-                       axis_settings_t z_settings, axis_settings_t a_settings,
-                       axis_settings_t b_settings);
+    machine_settings_t(axis_settings_t X_settings, axis_settings_t Y_settings,
+                       axis_settings_t Z_settings, axis_settings_t A_settings,
+                       axis_settings_t B_settings){
+        x_settings = X_settings;
+        y_settings = Y_settings;
+        z_settings = Z_settings;
+        a_settings = A_settings;
+        b_settings = B_settings;
+    }
 };
 
 struct message_t
@@ -157,6 +172,7 @@ public:
     void addBlock(Block aBlock);
     bool isLayerValid() const;
     void setLayerValid(bool layerValid);
+    bool validateLayer();
 
 private:
     bool m_layerValid;
@@ -165,14 +181,17 @@ private:
 };
 
 
-class LayerGroup
+class Part
 {
 public:
-    LayerGroup(QString fileName, machine_settings_t settings);
-    void convertGcode();
+    Part(QString fileName, machine_settings_t settings);
+    void makePart();
 
-    bool isGroupValid() const;
-    void validateGroup();
+    QVector<Layer> get() const;
+    Layer getLayer(int layerNumber) const;
+    Block getBlock(int LayerNumber, int blockNumber);
+    bool isPartValid() const;
+    void validatePart();
 
 private:
     bool m_groupValid;

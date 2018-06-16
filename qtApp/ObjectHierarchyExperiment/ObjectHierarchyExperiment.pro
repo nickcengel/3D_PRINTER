@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-06-12T19:47:46
+# Project created by QtCreator 2018-06-16T12:46:18
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = AppR1
+TARGET = ObjectHierarchyExperiment
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -26,21 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    axis.cpp \
-    blockio.cpp \
-    blockcontroller.cpp \
-    qaxis.cpp
+    organizer.cpp
 
 HEADERS += \
         mainwindow.h \
-    axis.h \
-    blockio.h \
-    blockcontroller.h \
-    qaxis.h
+    organizer.h
 
 FORMS += \
         mainwindow.ui
-
-DISTFILES += \
-    test.gcode \
-    simple.gcode
