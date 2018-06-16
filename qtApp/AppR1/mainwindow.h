@@ -12,7 +12,6 @@
 
 using BlockIO::axis_settings_t;
 using BlockIO::machine_settings_t;
-using BlockIO::layer_t;
 
 
 namespace Ui {
@@ -26,7 +25,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    QVector<BlockIO::layer_t> m_layerStack;
 
 
 

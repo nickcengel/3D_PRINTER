@@ -23,7 +23,7 @@ void MainWindow::on_pushButton_clicked()
     dialog.setDirectory("Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1/");
     if (dialog.exec())
         m_fileName = dialog.selectedFiles()[0];
-        m_layerStack = BlockIO::convertGcode(m_fileName, &m_settings);
+        //m_layerStack = BlockIO::convertGcode(m_fileName, &m_settings);
 
 }
 

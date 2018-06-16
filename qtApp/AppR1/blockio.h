@@ -30,10 +30,11 @@ namespace BlockIO {
 //      G91 - RELATIVE POSITIONING
 enum Code {NO_CODE, M0, M2, M3, M5, G0, G1, G4, G28, G90, G91};
 
-// AxisTitle :  lists the supported axis:
 enum AxisTitle{X,Y,Z,A,B};
 
 enum AxisStatus{a,bc,d};
+
+enum TaskMap{NONE, POS, POS_SP, HOME, REL, EN, EN_POW, POW, DWELL};
 
 struct axis_settings_t
 {
@@ -66,8 +67,6 @@ struct machine_settings_t
                        axis_settings_t b_settings);
 };
 
-enum TaskMap{NONE, POS, POS_SP, HOME, REL, EN, EN_POW, POW, DWELL};
-
 struct message_t
 {
     TaskMap map;
@@ -76,6 +75,7 @@ struct message_t
     message_t() : map(NONE), data{0,0} {}
     message_t(TaskMap aMap, float adata);
 };
+
 
 class Block{
 public:
@@ -144,28 +144,43 @@ private:
     bool m_blockValid;
 };
 
-typedef QVector<Block> layer_t;
 
 class Layer
 {
 public:
     Layer();
-    Layer(layer_t get);
+    Layer(QVector <Block> someBlocks);
 
+    QVector<Block> get() const;
+    Block getBlock(int blockNumber) const;
 
-
-    layer_t get() const;
-    void set(const layer_t &blockGroup);
+    void addBlock(Block aBlock);
+    bool isLayerValid() const;
+    void setLayerValid(bool layerValid);
 
 private:
-    layer_t m_blockGroup;
-    QStringList m_err_com;
+    bool m_layerValid;
+    QVector <Block> m_layer;
+
 };
 
 
-QVector<layer_t> convertGcode(QString fileName, machine_settings_t *settings);
+class LayerGroup
+{
+public:
+    LayerGroup(QString fileName, machine_settings_t settings);
+    void convertGcode();
 
-QStringList printStack(QVector<layer_t> layerStack);
+    bool isGroupValid() const;
+    void validateGroup();
+
+private:
+    bool m_groupValid;
+    QString m_fileName;
+    machine_settings_t m_settings;
+    QVector <Layer> m_layerGroup;
+};
+
 
 }
 

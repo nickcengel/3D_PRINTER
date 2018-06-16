@@ -608,60 +608,86 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
     set_com_err(c_line);
 }
 
-QVector<layer_t> convertGcode(QString fileName, machine_settings_t *settings)
+
+Layer::Layer(){
+    setLayerValid(false);
+}
+
+Layer::Layer(QVector<Block> someBlocks){
+    m_layer = someBlocks;
+}
+
+QVector<Block> Layer::get() const
 {
-    QVector<layer_t> layerStack;
-    QFile file(fileName);
+    return m_layer;
+}
+
+void Layer::setLayerValid(bool layerValid){
+    m_layerValid = layerValid;
+}
+
+Block Layer::getBlock(int blockNumber) const
+{
+    return m_layer.at(blockNumber);
+}
+
+void Layer::addBlock(Block aBlock)
+{
+    if(aBlock.isBlockValid() == false)
+        setLayerValid(false);
+    m_layer.append(aBlock);
+}
+
+bool Layer::isLayerValid() const
+{
+    return m_layerValid;
+}
+
+
+bool LayerGroup::isGroupValid() const
+{
+    return m_groupValid;
+}
+
+void LayerGroup::validateGroup()
+{
+    for(int i = 0; i < m_layerGroup.size(); i++){
+        if(m_layerGroup[i].isLayerValid() == false)
+            m_groupValid = false;
+    }
+}
+
+void LayerGroup::convertGcode()
+{
+    QFile file(m_fileName);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream in(&file);
-
-        int lineNumber = 0;
-        int layerNumber = 0;
         bool layerFlag = false;
-        bool blockValid = false;
         while (!in.atEnd())
         {
-            layer_t tempLayer;
             layerFlag = false;
-
+            Layer tempLayer;
             while(!layerFlag && !in.atEnd())
             {
                 QString line = in.readLine();
                 if(line.size() > 1)
                 {
-                    // qDebug()<<line;
-
-                    tempLayer.append(BlockIO::Block(line, settings));
-                    lineNumber++;
-                    layerFlag = tempLayer.last().newLayerFlag();
-                    blockValid = tempLayer.last().isBlockValid();
-
+                    Block tempBlock(line, &m_settings);
+                    layerFlag = tempBlock.newLayerFlag();
+                    if(!layerFlag){
+                        tempLayer.addBlock(tempBlock);
+                    }
                 }
             }
-            layerStack.push_back(tempLayer);
-            layerNumber++;
-            tempLayer.clear();
+            m_layerGroup.append(tempLayer);
         }
         file.close();
+        validateGroup();
     }
     else
         qDebug()<<"Could not open file";
-
-    return layerStack;
-}
-
-    layer_t Layer::get() const
-    {
-        return m_blockGroup;
-    }
-
-    void Layer::set(const layer_t &blockGroup)
-    {
-        m_blockGroup = blockGroup;
-    }
-
 }
 
 
-
+}
