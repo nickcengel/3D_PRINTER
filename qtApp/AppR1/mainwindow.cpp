@@ -38,13 +38,7 @@ void MainWindow::on_pushButton_clicked()
 
     machine_settings_t MySettings(X_Axis, Y_Axis, Z_Axis, A_Axis, B_Axis);
 
-    myPart = new Part(m_fileName, MySettings);
-    QString g = myPart->getLayer(0).getBlock(0).com_err();
-    qDebug()<<g;
-//    if(myPart->isPartValid())
-//        qDebug()<<"myPart is valid";
-//    else
-//        qDebug()<<"myPart is not valid";
-
+    myPart = new Part(m_fileName, &MySettings);
+    qDebug().noquote()<<myPart->debugPart(0);
 }
 

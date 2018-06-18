@@ -5,7 +5,6 @@
 
 using BlockIO::AxisTitle;
 using BlockIO::axis_settings_t;
-using BlockIO::AxisStatus;
 
 
 
