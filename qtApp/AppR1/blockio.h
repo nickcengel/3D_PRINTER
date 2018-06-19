@@ -15,12 +15,11 @@
 ///     We'll use it to build a lightweight and flexible representation of a G code file
 ///     using the following hierarchy.
 ///
-///     (BLOCKIO::) Part::Layer::Block::message
+///     (BLOCKIO::) Part::Layer::Block::messags
 ///
 ///        Where: a Part is a collection of Layers,
 ///               a Layer is a collection Blocks,
-///               a Block contains messages and meta information, and
-///               a message represents the possible tasks a G code line can request of our system
+///               a Block contains messages and meta information
 ///
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -97,9 +96,8 @@ struct machine_settings_t
 };
 
 /// message_t : A task grouped with one or more data values
-///// a seneder of a message will set the task value in order to encode the type of task.
-///// a receiever of a message_t will read the task value in order to interpret the data value.
-///// The receiver must know the identity of the sender, as a message does not contain this info.
+///// a sender of a message will set the task value in order to encode the type of task along with an optional value.
+///// a receiever of a message will read the task value in order to interpret the data value.
 /// TaskMap - Lists the recognized tasks
 ///   [0] NONE : default value
 ///
@@ -121,26 +119,79 @@ struct machine_settings_t
 ///
 ///   [8] DWELL : data[0] -> delay time
 ///
-enum TaskMap{NONE, POSITION, POSITION_SPEED, HOME, RELATIVE, ENABLE, ENABLE_POWER, POWER, DWELL};
-struct message_t
+enum Tasks{NONE, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL};
+class message_t
 {
-    TaskMap map;    /// what to do
-    float data0;  /// how to do it
-    float data1;  /// how to do it
-    /// constructors
-    message_t() : map(NONE), data0(0), data1(0) {}
-    message_t(TaskMap aMap, float d0, float d1)
-    {
-        map = aMap;
-        data0 = d0;
-        data1 = d1;
-    }
-    message_t(TaskMap aMap, float d0)
-    {
-        map = aMap;
-        data0 = d0;
-    }
+public:
+    message_t();
+    message_t(const Tasks aMap);
+    message_t(const Tasks aMap, const float d0);
+    message_t(const Tasks aMap, const float d0, const float d1);
+
+    void set(const Tasks aMap);
+    void set(const Tasks aMap, float d0);
+    void set(const Tasks aMap, const float d0, const float d1);
+
+    void setTask(const Tasks aMap);
+    void setD0(const float d0);
+    void setD1(const float d1);
+
+    Tasks task() const;
+    float D0() const;
+    float D1() const;
+
+    private:
+    Tasks map;
+    float data0;
+    float data1;
 };
+
+
+enum MD_Map{MD_NONE, MD_FAILED, BuildP,HopperP,SpreadB,BuildP_HopperP,BuildP_SpreadB,HopperP_SpreadB,MD_ALL};
+class md_message
+{
+public:
+    md_message();
+    md_message(MD_Map channel, message_t message0);
+    md_message(MD_Map channel, message_t message0, message_t message1);
+    md_message(message_t message0, message_t message1, message_t message2);
+
+    message_t *buildPlate_message();
+    message_t *hopperPlate_message();
+    message_t *spreadBlade_message();
+
+    void setMap();
+    MD_Map getMap();
+private:
+    MD_Map m_map;
+    message_t m_buildPlate_message;
+    message_t m_hopperPlate_message;
+    message_t m_spreadBlade_message;
+};
+
+enum LG_Map{LG_NONE, LG_FAILED, Xonly,Yonly,X_Y,Lonly,X_L,Y_L, LG_ALL};
+class lg_message
+{
+public:
+    lg_message();
+    lg_message(LG_Map channel, message_t message0);
+    lg_message(LG_Map channel, message_t message0, message_t message1);
+    lg_message(message_t x_msg, message_t y_msg, message_t laser_msg);
+
+    message_t *x_message();
+    message_t *y_message();
+    message_t *laser_message();
+
+    void setMap();
+    LG_Map getMap();
+private:
+    LG_Map m_map;
+    message_t m_x_message;
+    message_t m_y_message;
+    message_t m_laser_message;
+};
+
+
 /////////////////////////////////// END BLOCKIO BASE TYPES AND ENUMERATIONS ///////////////////////////
 
 
@@ -179,40 +230,8 @@ public:
     Block();
     Block(const QString toParse, machine_settings_t *settings);
 
-    message_t x_axis() const;
-    void set_x_axis(const message_t &x_axis);
-    void set_x_axis(const TaskMap m, const float d0);
-    void set_x_axis(const TaskMap m, const float d0, const float d1);
-
-    message_t y_axis() const;
-    void set_y_axis(const message_t &y_axis);
-    void set_y_axis(const TaskMap m, const float d0);
-    void set_y_axis(const TaskMap m, const float d0, const float d1);
-
-    message_t z_axis() const;
-    void set_z_axis(const message_t &z_axis);
-    void set_z_axis(const TaskMap m, const float d0);
-    void set_z_axis(const TaskMap m, const float d0, const float d1);
-
-    message_t a_axis() const;
-    void set_a_axis(const message_t &a_axis);
-    void set_a_axis(const TaskMap m, const float d0);
-    void set_a_axis(const TaskMap m, const float d0, const float d1);
-
-    message_t b_axis() const;
-    void set_b_axis(const message_t &b_axis);
-    void set_b_axis(const TaskMap m, const float d0);
-    void set_b_axis(const TaskMap m, const float d0, const float d1);
-
-    message_t laser() const;
-    void set_laser(const message_t &laser);
-    void set_laser(const TaskMap m, const float d0);
-    void set_laser(const TaskMap m, const float d0, const float d1);
-
-    message_t dwell() const;
-    void set_dwell(const message_t &dwell);
-    void set_dwell(const TaskMap m, const float d0);
-    void set_dwell(const TaskMap m, const float d0, const float d1);
+    float dwell() const;
+    void setDwell(const float d);
 
     bool newLayerFlag() const;
     void setNewLayer(bool flag);
@@ -226,15 +245,16 @@ public:
     QString com_err() const;
     void set_com_err(const QString &com_err);
 
+    md_message *materialDelivery();
+
+    lg_message *laserGalvo();
+
 private:
     QString m_com_err;
-    message_t m_x_axis;
-    message_t m_y_axis;
-    message_t m_z_axis;
-    message_t m_a_axis;
-    message_t m_b_axis;
-    message_t m_laser;
-    message_t m_dwell;
+    md_message m_materialDelivery;
+    lg_message m_laserGalvo;
+
+    float m_dwell;
     Code m_code;
     bool m_newLayer;
     bool m_blockValid;

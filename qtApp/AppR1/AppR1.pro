@@ -28,15 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     axis.cpp \
     blockio.cpp \
-    blockcontroller.cpp \
-    qaxis.cpp
+    devicemodels.cpp \
+    sample.cpp
 
 HEADERS += \
         mainwindow.h \
     axis.h \
     blockio.h \
-    blockcontroller.h \
-    qaxis.h
+    devicemodels.h \
+    sample.h
 
 FORMS += \
         mainwindow.ui

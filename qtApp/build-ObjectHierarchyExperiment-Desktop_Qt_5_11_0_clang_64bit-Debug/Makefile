@@ -52,11 +52,15 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../ObjectHierarchyExperiment/main.cpp \
 		../ObjectHierarchyExperiment/mainwindow.cpp \
-		../ObjectHierarchyExperiment/organizer.cpp moc_mainwindow.cpp
+		../ObjectHierarchyExperiment/organizer.cpp \
+		../ObjectHierarchyExperiment/myob.cpp moc_mainwindow.cpp \
+		moc_myob.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		organizer.o \
-		moc_mainwindow.o
+		myob.o \
+		moc_mainwindow.o \
+		moc_myob.o
 DIST          = /Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_pre.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/qdevice.pri \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/device_config.prf \
@@ -219,6 +223,7 @@ DIST          = /Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_pre.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/qt_config.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_post.prf \
+		../ObjectHierarchyExperiment/.qmake.stash \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/mac/sdk.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/toolchain.prf \
@@ -247,9 +252,11 @@ DIST          = /Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_pre.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/yacc.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/lex.prf \
 		../ObjectHierarchyExperiment/ObjectHierarchyExperiment.pro ../ObjectHierarchyExperiment/mainwindow.h \
-		../ObjectHierarchyExperiment/organizer.h ../ObjectHierarchyExperiment/main.cpp \
+		../ObjectHierarchyExperiment/organizer.h \
+		../ObjectHierarchyExperiment/myob.h ../ObjectHierarchyExperiment/main.cpp \
 		../ObjectHierarchyExperiment/mainwindow.cpp \
-		../ObjectHierarchyExperiment/organizer.cpp
+		../ObjectHierarchyExperiment/organizer.cpp \
+		../ObjectHierarchyExperiment/myob.cpp
 QMAKE_TARGET  = ObjectHierarchyExperiment
 DESTDIR       = 
 TARGET        = ObjectHierarchyExperiment.app/Contents/MacOS/ObjectHierarchyExperiment
@@ -429,6 +436,7 @@ Makefile: ../ObjectHierarchyExperiment/ObjectHierarchyExperiment.pro /Applicatio
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/qt_config.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/mac/sdk.prf \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/toolchain.prf \
@@ -623,6 +631,7 @@ Makefile: ../ObjectHierarchyExperiment/ObjectHierarchyExperiment.pro /Applicatio
 /Applications/Qt/5.11.0/clang_64/mkspecs/features/qt_config.prf:
 /Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang/qmake.conf:
 /Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Applications/Qt/5.11.0/clang_64/mkspecs/features/exclusive_builds.prf:
 /Applications/Qt/5.11.0/clang_64/mkspecs/features/mac/sdk.prf:
 /Applications/Qt/5.11.0/clang_64/mkspecs/features/toolchain.prf:
@@ -684,8 +693,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../ObjectHierarchyExperiment/mainwindow.h ../ObjectHierarchyExperiment/organizer.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ObjectHierarchyExperiment/main.cpp ../ObjectHierarchyExperiment/mainwindow.cpp ../ObjectHierarchyExperiment/organizer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ObjectHierarchyExperiment/mainwindow.h ../ObjectHierarchyExperiment/organizer.h ../ObjectHierarchyExperiment/myob.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ObjectHierarchyExperiment/main.cpp ../ObjectHierarchyExperiment/mainwindow.cpp ../ObjectHierarchyExperiment/organizer.cpp ../ObjectHierarchyExperiment/myob.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../ObjectHierarchyExperiment/mainwindow.ui $(DISTDIR)/
 
 
@@ -696,6 +705,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r ObjectHierarchyExperiment.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -717,15 +727,22 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.11 -Wall -W -dM -E -o moc_predefs.h /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_myob.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_myob.cpp
 moc_mainwindow.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		../ObjectHierarchyExperiment/mainwindow.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.0/clang_64/bin/moc
 	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/ObjectHierarchyExperiment -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../ObjectHierarchyExperiment/mainwindow.h -o moc_mainwindow.cpp
+
+moc_myob.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../ObjectHierarchyExperiment/myob.h \
+		moc_predefs.h \
+		/Applications/Qt/5.11.0/clang_64/bin/moc
+	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/ObjectHierarchyExperiment -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../ObjectHierarchyExperiment/myob.h -o moc_myob.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -760,14 +777,25 @@ main.o: ../ObjectHierarchyExperiment/main.cpp ../ObjectHierarchyExperiment/mainw
 mainwindow.o: ../ObjectHierarchyExperiment/mainwindow.cpp ../ObjectHierarchyExperiment/mainwindow.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../ObjectHierarchyExperiment/organizer.h \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QDebug \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../ObjectHierarchyExperiment/mainwindow.cpp
 
 organizer.o: ../ObjectHierarchyExperiment/organizer.cpp ../ObjectHierarchyExperiment/organizer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o organizer.o ../ObjectHierarchyExperiment/organizer.cpp
 
+myob.o: ../ObjectHierarchyExperiment/myob.cpp ../ObjectHierarchyExperiment/myob.h \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myob.o ../ObjectHierarchyExperiment/myob.cpp
+
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_myob.o: moc_myob.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_myob.o moc_myob.cpp
 
 ####### Install
 

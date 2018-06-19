@@ -54,19 +54,19 @@ SOURCES       = ../AppR1/main.cpp \
 		../AppR1/mainwindow.cpp \
 		../AppR1/axis.cpp \
 		../AppR1/blockio.cpp \
-		../AppR1/blockcontroller.cpp \
-		../AppR1/qaxis.cpp moc_mainwindow.cpp \
-		moc_blockcontroller.cpp \
-		moc_qaxis.cpp
+		../AppR1/devicemodels.cpp \
+		../AppR1/sample.cpp moc_mainwindow.cpp \
+		moc_devicemodels.cpp \
+		moc_sample.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		axis.o \
 		blockio.o \
-		blockcontroller.o \
-		qaxis.o \
+		devicemodels.o \
+		sample.o \
 		moc_mainwindow.o \
-		moc_blockcontroller.o \
-		moc_qaxis.o
+		moc_devicemodels.o \
+		moc_sample.o
 DIST          = ../AppR1/test.gcode \
 		../AppR1/simple.gcode \
 		/Applications/Qt/5.11.0/clang_64/mkspecs/features/spec_pre.prf \
@@ -262,13 +262,13 @@ DIST          = ../AppR1/test.gcode \
 		../AppR1/AppR1.pro ../AppR1/mainwindow.h \
 		../AppR1/axis.h \
 		../AppR1/blockio.h \
-		../AppR1/blockcontroller.h \
-		../AppR1/qaxis.h ../AppR1/main.cpp \
+		../AppR1/devicemodels.h \
+		../AppR1/sample.h ../AppR1/main.cpp \
 		../AppR1/mainwindow.cpp \
 		../AppR1/axis.cpp \
 		../AppR1/blockio.cpp \
-		../AppR1/blockcontroller.cpp \
-		../AppR1/qaxis.cpp
+		../AppR1/devicemodels.cpp \
+		../AppR1/sample.cpp
 QMAKE_TARGET  = AppR1
 DESTDIR       = 
 TARGET        = AppR1.app/Contents/MacOS/AppR1
@@ -705,8 +705,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../AppR1/mainwindow.h ../AppR1/axis.h ../AppR1/blockio.h ../AppR1/blockcontroller.h ../AppR1/qaxis.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../AppR1/main.cpp ../AppR1/mainwindow.cpp ../AppR1/axis.cpp ../AppR1/blockio.cpp ../AppR1/blockcontroller.cpp ../AppR1/qaxis.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../AppR1/mainwindow.h ../AppR1/axis.h ../AppR1/blockio.h ../AppR1/devicemodels.h ../AppR1/sample.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../AppR1/main.cpp ../AppR1/mainwindow.cpp ../AppR1/axis.cpp ../AppR1/blockio.cpp ../AppR1/devicemodels.cpp ../AppR1/sample.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR1/mainwindow.ui $(DISTDIR)/
 
 
@@ -739,9 +739,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.11 -Wall -W -dM -E -o moc_predefs.h /Applications/Qt/5.11.0/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_blockcontroller.cpp moc_qaxis.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_devicemodels.cpp moc_sample.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_blockcontroller.cpp moc_qaxis.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_devicemodels.cpp moc_sample.cpp
 moc_mainwindow.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QFile \
@@ -763,16 +763,9 @@ moc_mainwindow.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Hea
 		/Applications/Qt/5.11.0/clang_64/bin/moc
 	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1 -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../AppR1/mainwindow.h -o moc_mainwindow.cpp
 
-moc_blockcontroller.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
+moc_devicemodels.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h \
-		../AppR1/blockcontroller.h \
-		moc_predefs.h \
-		/Applications/Qt/5.11.0/clang_64/bin/moc
-	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1 -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../AppR1/blockcontroller.h -o moc_blockcontroller.cpp
-
-moc_qaxis.cpp: ../AppR1/blockio.h \
-		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../AppR1/blockio.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QTextStream \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qtextstream.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QDebug \
@@ -782,10 +775,17 @@ moc_qaxis.cpp: ../AppR1/blockio.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QStringList \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
-		../AppR1/qaxis.h \
+		../AppR1/devicemodels.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.0/clang_64/bin/moc
-	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1 -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../AppR1/qaxis.h -o moc_qaxis.cpp
+	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1 -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../AppR1/devicemodels.h -o moc_devicemodels.cpp
+
+moc_sample.cpp: /Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../AppR1/sample.h \
+		moc_predefs.h \
+		/Applications/Qt/5.11.0/clang_64/bin/moc
+	/Applications/Qt/5.11.0/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.0/clang_64/mkspecs/macx-clang -I/Users/nickengel/Documents/github/3D_PRINTER/qtApp/AppR1 -I/Applications/Qt/5.11.0/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.0/clang_64/lib ../AppR1/sample.h -o moc_sample.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -868,15 +868,10 @@ blockio.o: ../AppR1/blockio.cpp ../AppR1/blockio.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qstringlist.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o blockio.o ../AppR1/blockio.cpp
 
-blockcontroller.o: ../AppR1/blockcontroller.cpp ../AppR1/blockcontroller.h \
-		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o blockcontroller.o ../AppR1/blockcontroller.cpp
-
-qaxis.o: ../AppR1/qaxis.cpp ../AppR1/qaxis.h \
-		../AppR1/blockio.h \
+devicemodels.o: ../AppR1/devicemodels.cpp ../AppR1/devicemodels.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../AppR1/blockio.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QTextStream \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qtextstream.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QDebug \
@@ -886,16 +881,21 @@ qaxis.o: ../AppR1/qaxis.cpp ../AppR1/qaxis.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QStringList \
 		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qstringlist.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qaxis.o ../AppR1/qaxis.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o devicemodels.o ../AppR1/devicemodels.cpp
+
+sample.o: ../AppR1/sample.cpp ../AppR1/sample.h \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.0/clang_64/lib/QtCore.framework/Headers/qobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sample.o ../AppR1/sample.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
-moc_blockcontroller.o: moc_blockcontroller.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_blockcontroller.o moc_blockcontroller.cpp
+moc_devicemodels.o: moc_devicemodels.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_devicemodels.o moc_devicemodels.cpp
 
-moc_qaxis.o: moc_qaxis.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qaxis.o moc_qaxis.cpp
+moc_sample.o: moc_sample.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sample.o moc_sample.cpp
 
 ####### Install
 

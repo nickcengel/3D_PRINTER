@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    organizer.cpp
+    organizer.cpp \
+    myob.cpp
 
 HEADERS += \
         mainwindow.h \
-    organizer.h
+    organizer.h \
+    myob.h
 
 FORMS += \
         mainwindow.ui

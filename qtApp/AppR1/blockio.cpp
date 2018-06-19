@@ -1,8 +1,339 @@
 
 #include "blockio.h"
 
-
 namespace BlockIO {
+
+message_t::message_t()
+{
+    map = NONE;
+    float data0 = 0;
+    float data1 = 0;
+}
+
+message_t::message_t(const Tasks aMap)
+{
+    map = aMap;
+    data0 = 0;
+    data1 = 0;
+}
+
+message_t::message_t(const Tasks aMap, const float d0)
+{
+    map = aMap;
+    data0 = d0;
+    data1 = 0;
+
+}
+
+message_t::message_t(const Tasks aMap, const float d0, const float d1)
+{
+    map = aMap;
+    data0 = d0;
+    data1 = d1;
+}
+
+Tasks message_t::task() const
+{
+    return map;
+}
+
+float message_t::D0() const
+{
+    return data0;
+}
+
+float message_t::D1() const
+{
+    return data1;
+}
+
+void message_t::set(const Tasks aMap)
+{
+    map = aMap;
+}
+
+void message_t::set(const Tasks aMap, const float d0)
+{
+    map = aMap;
+    data0 = d0;
+}
+
+void message_t::set(const Tasks aMap, const float d0, const float d1)
+{
+    map = aMap;
+    data0 = d0;
+    data1 = d1;
+}
+
+void message_t::setTask(const Tasks aMap)
+{
+    map = aMap;
+}
+
+void message_t::setD0(const float d0)
+{
+    data0 = d0;
+}
+
+void message_t::setD1(const float d1)
+{
+    data1 = d1;
+}
+
+
+md_message::md_message()
+{
+    m_map = MD_NONE;
+    m_buildPlate_message.setTask(NONE);
+    m_hopperPlate_message.setTask(NONE);
+    m_spreadBlade_message.setTask(NONE);
+}
+
+
+md_message::md_message(MD_Map channel, message_t message0)
+{
+    m_map = channel;
+    switch (m_map) {
+    case MD_Map::BuildP:
+        m_buildPlate_message = message0;
+        break;
+    case MD_Map::HopperP:
+        m_hopperPlate_message = message0;
+        break;
+    case MD_Map::SpreadB:
+        m_spreadBlade_message = message0;
+        break;
+    default:
+        break;
+    }
+}
+
+md_message::md_message(MD_Map channel, message_t message0, message_t message1)
+{
+    m_map = channel;
+    switch (m_map) {
+    case MD_Map::BuildP_HopperP:
+        m_buildPlate_message = message0;
+        m_hopperPlate_message = message1;
+        break;
+    case MD_Map::BuildP_SpreadB:
+        m_buildPlate_message = message0;
+        m_spreadBlade_message = message1;
+        break;
+    case MD_Map::HopperP_SpreadB:
+        m_hopperPlate_message = message0;
+        m_spreadBlade_message = message1;
+        break;
+    default:
+        break;
+    }
+}
+
+md_message::md_message(message_t buildPlate_msg, message_t hopperPlate_msg, message_t spreadBlade_msg)
+{
+    m_buildPlate_message = buildPlate_msg;
+    m_hopperPlate_message = hopperPlate_msg;
+    m_spreadBlade_message = spreadBlade_msg;
+    if(m_buildPlate_message.task() != NONE)
+    {
+        m_map = BuildP;
+    }
+    if(m_hopperPlate_message.task() != NONE)
+    {
+        if(m_map == BuildP)
+            m_map = BuildP_HopperP;
+        else
+            m_map = HopperP;
+    }
+    if(m_spreadBlade_message.task() != NONE)
+    {
+        if(m_map == BuildP)
+            m_map = BuildP_SpreadB;
+        else if(m_map == HopperP)
+            m_map = HopperP_SpreadB;
+        else if(m_map == BuildP_HopperP)
+            m_map = MD_ALL;
+        else
+            m_map = SpreadB;
+    }
+}
+
+message_t *md_message::buildPlate_message()
+{
+    return &m_buildPlate_message;
+}
+
+message_t *md_message::hopperPlate_message()
+{
+    return &m_hopperPlate_message;
+}
+
+message_t *md_message::spreadBlade_message()
+{
+    return &m_spreadBlade_message;
+}
+
+void md_message::setMap()
+{
+    m_map = MD_NONE;
+    if(m_buildPlate_message.task() != NONE)
+    {
+        m_map = BuildP;
+    }
+    if(m_hopperPlate_message.task() != NONE)
+    {
+        if(m_map == BuildP)
+            m_map = BuildP_HopperP;
+        else
+            m_map = HopperP;
+    }
+    if(m_spreadBlade_message.task() != NONE)
+    {
+        if(m_map == BuildP)
+            m_map = BuildP_SpreadB;
+        else if(m_map == HopperP)
+            m_map = HopperP_SpreadB;
+        else if(m_map == BuildP_HopperP)
+            m_map = MD_ALL;
+        else
+            m_map = SpreadB;
+    }
+}
+
+MD_Map md_message::getMap()
+{
+    if(m_map == MD_NONE)
+        setMap();
+    return m_map;
+}
+
+
+lg_message::lg_message()
+{
+    m_map = LG_NONE;
+    m_x_message.setTask(NONE);
+    m_y_message.setTask(NONE);
+    m_laser_message.setTask(NONE);
+}
+
+lg_message::lg_message(LG_Map channel, message_t message0)
+{
+    m_map = channel;
+    switch (m_map) {
+    case LG_Map::Xonly:
+        m_x_message = message0;
+        break;
+    case LG_Map::Yonly:
+        m_y_message = message0;
+        break;
+    case LG_Map::Lonly:
+        m_laser_message = message0;
+        break;
+    default:
+        break;
+    }
+}
+
+lg_message::lg_message(LG_Map channel, message_t message0, message_t message1)
+{
+    m_map = channel;
+    switch (m_map) {
+    case LG_Map::X_Y:
+        m_x_message = message0;
+        m_y_message = message1;
+        break;
+    case LG_Map::X_L:
+        m_x_message = message0;
+        m_laser_message = message1;
+        break;
+    case LG_Map::Y_L:
+        m_y_message = message0;
+        m_laser_message = message1;
+        break;
+    default:
+        break;
+    }
+}
+
+lg_message::lg_message(message_t x_msg, message_t y_msg, message_t laser_msg)
+{
+    m_x_message = x_msg;
+    m_y_message = y_msg;
+    m_laser_message = laser_msg;
+    if(m_x_message.task() != NONE)
+    {
+        m_map = Xonly;
+    }
+    if(m_y_message.task() != NONE)
+    {
+        if(m_map == Xonly)
+            m_map = X_Y;
+        else
+            m_map = Yonly;
+    }
+    if(m_laser_message.task() != NONE)
+    {
+        if(m_map == Xonly)
+            m_map = X_L;
+        else if(m_map == Yonly)
+            m_map = Y_L;
+        else if(m_map == X_Y)
+            m_map = LG_ALL;
+        else
+            m_map = Lonly;
+    }
+}
+
+message_t *lg_message::x_message()
+{
+    return &m_x_message;
+}
+
+message_t *lg_message::y_message()
+{
+    return &m_y_message;
+}
+
+message_t *lg_message::laser_message()
+{
+    return &m_laser_message;
+}
+
+void lg_message::setMap()
+{
+    m_map = LG_NONE;
+
+    if(m_x_message.task() != NONE)
+    {
+        m_map = Xonly;
+    }
+    if(m_y_message.task() != NONE)
+    {
+        if(m_map == Xonly)
+            m_map = X_Y;
+        else
+            m_map = Yonly;
+    }
+    if(m_laser_message.task() != NONE)
+    {
+        if(m_map == Xonly)
+            m_map = X_L;
+        else if(m_map == Yonly)
+            m_map = Y_L;
+        else if(m_map == X_Y)
+            m_map = LG_ALL;
+        else
+            m_map = Lonly;
+    }
+}
+
+LG_Map lg_message::getMap()
+{
+    if(m_map == LG_NONE)
+        setMap();
+    return m_map;
+}
+
 
 ////////////////////////////////////////// BEGIN BLOCK CLASS //////////////////////////////////////////
 Block::Block(){
@@ -13,168 +344,18 @@ Block::Block(){
 Block::Block(const QString toParse, machine_settings_t *settings)
 {
     setCode(NO_CODE);
-    m_x_axis.map = NONE;
-    m_y_axis.map = NONE;
-    m_z_axis.map = NONE;
-    m_a_axis.map = NONE;
-    m_b_axis.map = NONE;
-    m_laser.map = NONE;
     setBlockValid(true);
     makeBlock(toParse, settings);
 }
 
-message_t Block::x_axis() const
-{
-    return m_x_axis;
-}
-
-void Block::set_x_axis(const message_t &x_axis){
-    m_x_axis = x_axis;
-}
-
-void Block::set_x_axis(const TaskMap m, const float d0)
-{
-    m_x_axis.map = m;
-    m_x_axis.data0 = d0;
-}
-
-void Block::set_x_axis(const TaskMap m, const float d0, const float d1)
-{
-    m_x_axis.map = m;
-    m_x_axis.data0 = d0;
-    m_x_axis.data1 = d1;
-}
-
-message_t Block::y_axis() const
-{
-    return m_y_axis;
-}
-
-void Block::set_y_axis(const message_t &y_axis){
-    m_y_axis = y_axis;
-}
-
-void Block::set_y_axis(const TaskMap m, const float d0)
-{
-    m_y_axis.map = m;
-    m_y_axis.data0 = d0;
-}
-
-void Block::set_y_axis(const TaskMap m, const float d0, const float d1)
-{
-    m_y_axis.map = m;
-    m_y_axis.data0 = d0;
-    m_y_axis.data1 = d1;
-}
-
-message_t Block::z_axis() const
-{
-    return m_z_axis;
-}
-
-void Block::set_z_axis(const message_t &z_axis){
-    m_z_axis = z_axis;
-}
-
-void Block::set_z_axis(const TaskMap m, const float d0)
-{
-    m_z_axis.map = m;
-    m_z_axis.data0 = d0;
-}
-
-void Block::set_z_axis(const TaskMap m, const float d0, const float d1)
-{
-    m_z_axis.map = m;
-    m_z_axis.data0 = d0;
-    m_z_axis.data1 = d1;
-}
-
-message_t Block::a_axis() const
-{
-    return m_a_axis;
-}
-
-void Block::set_a_axis(const message_t &a_axis){
-    m_a_axis = a_axis;
-}
-
-void Block::set_a_axis(const TaskMap m, const float d0)
-{
-    m_a_axis.map = m;
-    m_a_axis.data0 = d0;
-}
-
-void Block::set_a_axis(const TaskMap m, const float d0, const float d1)
-{
-    m_a_axis.map = m;
-    m_a_axis.data0 = d0;
-    m_a_axis.data1 = d1;
-}
-
-message_t Block::b_axis() const
-{
-    return m_b_axis;
-}
-
-void Block::set_b_axis(const message_t &b_axis){
-    m_b_axis = b_axis;
-}
-
-void Block::set_b_axis(const TaskMap m, const float d0)
-{
-    m_b_axis.map = m;
-    m_b_axis.data0 = d0;
-}
-
-void Block::set_b_axis(const TaskMap m, const float d0, const float d1)
-{
-    m_b_axis.map = m;
-    m_b_axis.data0 = d0;
-    m_b_axis.data1 = d1;
-}
-
-message_t Block::laser() const
-{
-    return m_laser;
-}
-
-void Block::set_laser(const message_t &laser){
-    m_laser = laser;
-}
-
-void Block::set_laser(const TaskMap m, const float d0)
-{
-    m_laser.map = m;
-    m_laser.data0 = d0;
-}
-
-void Block::set_laser(const TaskMap m, const float d0, const float d1)
-{
-    m_laser.map = m;
-    m_laser.data0 = d0;
-    m_laser.data1 = d1;
-}
-
-message_t Block::dwell() const
+float Block::dwell() const
 {
     return m_dwell;
 }
 
-void Block::set_dwell(const message_t &dwell){
-    m_dwell = dwell;
-}
-
-void Block::set_dwell(const TaskMap m, const float d0)
+void Block::setDwell(const float d)
 {
-    m_dwell.map = m;
-    m_dwell.data0 = d0;
-}
-
-void Block::set_dwell(const TaskMap m, const float d0, const float d1)
-{
-    m_dwell.map = m;
-    m_dwell.data0 = d0;
-    m_dwell.data1 = d1;
+    m_dwell = d;
 }
 
 bool Block::newLayerFlag() const
@@ -217,6 +398,17 @@ void Block::set_com_err(const QString &value)
     m_com_err = value;
 }
 
+md_message *Block::materialDelivery()
+{
+    return &m_materialDelivery;
+}
+
+lg_message *Block::laserGalvo()
+{
+    return &m_laserGalvo;
+}
+
+
 // the juicy bit...
 void Block::makeBlock(const QString toParse, machine_settings_t *settings)
 {
@@ -229,7 +421,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
     int commentSize;
     setNewLayer(false);
     // For safety, always start by setting the laser off flag
-    set_laser(ENABLE,0);
+    laserGalvo()->laser_message()->set(DISABLE);
     // Ignore empty lines or ones that begin with '/'
     if((toParse.indexOf('/') == 0)||(toParse.size()<2))
     {
@@ -312,20 +504,22 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 else if(token == "G90")  // ABSOLUTE POSITION
                 {
                     setCode(G90);
-                    set_x_axis(RELATIVE,0);
-                    set_y_axis(RELATIVE,0);
-                    set_z_axis(RELATIVE,0);
-                    set_a_axis(RELATIVE,0);
-                    set_b_axis(RELATIVE,0);
+                    laserGalvo()->x_message()->set(RELATIVE,0);
+                    laserGalvo()->y_message()->set(RELATIVE,0);
+
+                    materialDelivery()->buildPlate_message()->set(RELATIVE,0);
+                    materialDelivery()->hopperPlate_message()->set(RELATIVE,0);
+                    materialDelivery()->spreadBlade_message()->set(RELATIVE,0);
                 }
                 else if(token == "G91") // RELATIVE POSITION
                 {
                     setCode(G91);
-                    set_x_axis(RELATIVE,1);
-                    set_y_axis(RELATIVE,1);
-                    set_z_axis(RELATIVE,1);
-                    set_a_axis(RELATIVE,1);
-                    set_b_axis(RELATIVE,1);
+                    laserGalvo()->x_message()->set(RELATIVE,1);
+                    laserGalvo()->y_message()->set(RELATIVE,1);
+
+                    materialDelivery()->buildPlate_message()->set(RELATIVE,1);
+                    materialDelivery()->hopperPlate_message()->set(RELATIVE,1);
+                    materialDelivery()->spreadBlade_message()->set(RELATIVE,1);
                 }
                 else
                 {
@@ -344,13 +538,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 else if(token == "M3")
                 {  // LASER ON
                     setCode(M3);
-                    set_laser(ENABLE,1);
+                    laserGalvo()->laser_message()->set(ENABLE,1);
                 }
                 else if(token == "M5")
                 {  // LASER OFF
                     setCode(M5);
-                    set_laser(ENABLE,0);
-                }
+                    laserGalvo()->laser_message()->set(ENABLE,0);                }
                 else
                 {
                     c_line += "Did not recognize instruction: \""+token+"\"\n";
@@ -369,7 +562,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->x_settings.positionMax) && (value > settings->x_settings.positionMin))
-                        set_x_axis(POSITION,value);
+                        laserGalvo()->x_message()->set(POSITION,value);
                     else if(!(value < settings->x_settings.positionMax) || !(value > settings->x_settings.positionMin))
                     {
                         c_line += "X position out of range!\n";
@@ -385,7 +578,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // No position data means we want to return axis to home
                 // check for homing code
                 else if((token.size() == 1) && (code() == G28))
-                    set_x_axis(HOME,1);
+                    laserGalvo()->x_message()->set(HOME,1);
                 else
                 {
                     c_line += "Did not recognize X instruction: \""+token+"\"\n";
@@ -403,7 +596,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->y_settings.positionMax) && (value > settings->y_settings.positionMin))
-                        set_y_axis(POSITION,value);
+                        laserGalvo()->y_message()->set(POSITION,value);
                     else if(!(value < settings->y_settings.positionMax) || !(value > settings->y_settings.positionMin))
                     {
                         c_line += "Y position out of range!\n";
@@ -418,7 +611,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // No position data means we want to return axis to home
                 // check for homing code
                 else if((token.size() == 1) && (code() == G28))
-                    set_y_axis(HOME,1);
+                    laserGalvo()->y_message()->set(HOME,1);
                 else
                 {
                     c_line += "Did not recognize Y instruction: \""+token+"\"\n";
@@ -436,7 +629,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->z_settings.positionMax) && (value > settings->z_settings.positionMin))
-                        set_z_axis(POSITION,value);
+                        materialDelivery()->buildPlate_message()->set(POSITION,value);
                     else if(!(value < settings->z_settings.positionMax) || !(value > settings->z_settings.positionMin))
                     {
                         c_line += "Z position out of range!\n";
@@ -452,7 +645,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // No position data means we want to return axis to home
                 // check for homing code
                 else if((token.size() == 1) && (code() == G28))
-                    set_z_axis(HOME,1);
+                     materialDelivery()->buildPlate_message()->set(HOME,1);
                 else
                 {
                     c_line += "Did not recognize Z instruction: \""+token+"\"\n";
@@ -470,7 +663,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->a_settings.positionMax) && (value > settings->a_settings.positionMin))
-                        set_a_axis(POSITION,value);
+                        materialDelivery()->hopperPlate_message()->set(POSITION,value);
                     else if(!(value < settings->a_settings.positionMax) || !(value > settings->a_settings.positionMin))
                     {
                         c_line += "A position out of range!\n";
@@ -485,7 +678,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // No position data means we want to return axis to home
                 // check for homing code
                 else if((token.size() == 1) && (code() == G28))
-                    set_a_axis(HOME,1);
+                     materialDelivery()->hopperPlate_message()->set(HOME,1);
                 else
                 {
                     c_line += "Did not recognize A instruction: \""+token+"\"\n";
@@ -503,7 +696,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                     bool valueValid = false;
                     float value = token.right(token.size()-1).toFloat(&valueValid);
                     if(valueValid && (value < settings->b_settings.positionMax) && (value > settings->b_settings.positionMin))
-                        set_b_axis(POSITION,value);
+                        materialDelivery()->spreadBlade_message()->set(POSITION,value);
                     else if(!(value < settings->b_settings.positionMax) || !(value > settings->b_settings.positionMin))
                     {
                         c_line += "B position out of range!\n";
@@ -519,7 +712,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 // No position data means we want to return axis to home
                 // check for homing code
                 else if((token.size() == 1) && (code() == G28))
-                    set_b_axis(HOME,1);
+                    materialDelivery()->spreadBlade_message()->set(HOME,1);
                 else
                 {
                     c_line += "Did not recognize B instruction: \""+token+"\"\n";
@@ -536,20 +729,21 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
             {
                 // check that there is an XY move
                 if(isBlockValid() && (code() == G1)
-                        && ((m_x_axis.map == POSITION) || (m_x_axis.map == POSITION_SPEED))
-                        && ((m_y_axis.map == POSITION) || (m_y_axis.map == POSITION_SPEED))
-                        && ((m_z_axis.map != POSITION) && (m_z_axis.map != POSITION_SPEED))
-                        && ((m_a_axis.map != POSITION) && (m_a_axis.map != POSITION_SPEED))
-                        && ((m_b_axis.map != POSITION) && (m_b_axis.map != POSITION_SPEED)))
+                        && ((laserGalvo()->x_message()->task() == POSITION) || (laserGalvo()->x_message()->task() == POSITION_SPEED))
+                        && ((laserGalvo()->y_message()->task() == POSITION) || (laserGalvo()->y_message()->task() == POSITION_SPEED))
+                        && ((materialDelivery()->buildPlate_message()->task() != POSITION) && (materialDelivery()->buildPlate_message()->task() != POSITION_SPEED))
+                        && ((materialDelivery()->hopperPlate_message()->task() != POSITION) && (materialDelivery()->hopperPlate_message()->task() != POSITION_SPEED))
+                        && ((materialDelivery()->spreadBlade_message()->task() != POSITION) && (materialDelivery()->spreadBlade_message()->task() != POSITION_SPEED)))
                 {
-                    set_laser(ENABLE,1);
+                    laserGalvo()->laser_message()->set(ENABLE,1);
                 }
                 else if(code() != G1)
                 {
                     c_line += "Laser can only be enabled during linear movement. Use G1 not G0\n";
                     setBlockValid(false);
                 }
-                else if((m_x_axis.map != POSITION) || (m_x_axis.map != POSITION_SPEED)||(m_y_axis.map != POSITION) || (m_y_axis.map != POSITION_SPEED))
+                else if((laserGalvo()->x_message()->task() != POSITION) || (laserGalvo()->x_message()->task() != POSITION_SPEED)
+                      ||(laserGalvo()->y_message()->task() != POSITION) || (laserGalvo()->y_message()->task() != POSITION_SPEED))
                 {
                     c_line += "Laser can only be enbabled in connection with a move in the X or Y axis.\n";
                     setBlockValid(false);
@@ -571,12 +765,13 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 if(valueValid)
                 {
                 // Find the correct axis to modify. change its task and add d1 to represent speed
-                    if(m_x_axis.map == POSITION)
+                    if(laserGalvo()->x_message()->task() == POSITION)
                     {
                         if((value < settings->x_settings.speedMax) && (value > settings->x_settings.speedMin))
                         {
-                            m_x_axis.map = POSITION_SPEED;
-                            m_x_axis.data1 = value;
+
+                            laserGalvo()->x_message()->setTask(POSITION_SPEED);
+                            laserGalvo()->x_message()->setD1(value);
                         }
                         else
                         {
@@ -585,12 +780,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                         }
                     }
 
-                    if(m_y_axis.map == POSITION)
+                    if(laserGalvo()->y_message()->task() == POSITION)
                     {
                         if((value < settings->y_settings.speedMax) && (value > settings->y_settings.speedMin))
                         {
-                            m_y_axis.map = POSITION_SPEED;
-                            m_y_axis.data1 = value;
+                            laserGalvo()->y_message()->setTask(POSITION_SPEED);
+                            laserGalvo()->y_message()->setD1(value);
                         }
                         else
                         {
@@ -599,12 +794,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                         }
                     }
 
-                    if(m_z_axis.map == POSITION)
+                    if(materialDelivery()->buildPlate_message()->task() == POSITION)
                     {
                         if((value < settings->z_settings.speedMax) && (value > settings->z_settings.speedMin))
                         {
-                            m_z_axis.map = POSITION_SPEED;
-                            m_z_axis.data1 = value;
+                            materialDelivery()->buildPlate_message()->setTask(POSITION_SPEED);
+                            materialDelivery()->buildPlate_message()->setD1(value);
                         }
                         else
                         {
@@ -613,12 +808,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                         }
                     }
 
-                    if(m_a_axis.map == POSITION)
+                    if(materialDelivery()->hopperPlate_message()->task() == POSITION)
                     {
                         if((value < settings->a_settings.speedMax) && (value > settings->a_settings.speedMin))
                         {
-                            m_a_axis.map = POSITION_SPEED;
-                            m_a_axis.data1 = value;
+                            materialDelivery()->hopperPlate_message()->setTask(POSITION_SPEED);
+                            materialDelivery()->hopperPlate_message()->setD1(value);
                         }
                         else
                         {
@@ -627,12 +822,12 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                         }
                     }
 
-                    if(m_b_axis.map == POSITION)
+                    if(materialDelivery()->spreadBlade_message()->task() == POSITION)
                     {
                         if((value < settings->b_settings.speedMax) && (value > settings->b_settings.speedMin))
                         {
-                            m_b_axis.map = POSITION_SPEED;
-                            m_b_axis.data1 = value;
+                            materialDelivery()->spreadBlade_message()->setTask(POSITION_SPEED);
+                            materialDelivery()->spreadBlade_message()->setD1(value);
                         }
                         else
                         {
@@ -656,7 +851,7 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 bool valueValid = false;
                 float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
-                    set_dwell(DWELL,value);
+                    setDwell(value);
                 else
                 {
                     c_line += "Did not recognize dwell instruction: \""+token+"\"\n";
@@ -673,13 +868,10 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
                 float value = token.right(token.size()-1).toFloat(&valueValid);
                 if(valueValid)
                 {
-                    if(m_laser.map == ENABLE)
-                    {
-                        m_laser.map = ENABLE_POWER;
-                        m_laser.data1 = value;
-                    }
+                    if(laserGalvo()->laser_message()->task() == ENABLE)
+                        laserGalvo()->laser_message()->set(POWER,1,value);
                     else
-                        set_laser(POWER,0,value);
+                        laserGalvo()->laser_message()->set(POWER,0,value);
                 }
                 else
                 {
@@ -700,7 +892,8 @@ void Block::makeBlock(const QString toParse, machine_settings_t *settings)
         set_com_err(c_line);
     }//end if
     set_com_err(c_line);
-
+    laserGalvo()->setMap();
+    materialDelivery()->setMap();
 }
 ////////////////////////////////////////// END BLOCK CLASS //////////////////////////////////////////
 
@@ -786,29 +979,29 @@ QString Part::displayAxis(QChar axisTitle, message_t axis)
     QString axisString = "---------- ";
             axisString += (QString)axisTitle;
             axisString += " AXIS ----------\n";
-    switch (axis.map) {
+    switch (axis.task()) {
     case POSITION:
-        axisString += ("  Position: " + QString::number(axis.data0) + "\n");
+        axisString += ("  Position: " + QString::number(axis.D0()) + "\n");
         break;
     case POSITION_SPEED:
-        axisString += ("  Position: " + QString::number(axis.data0) + "\n");
-        axisString += ("  Speed: " + QString::number(axis.data1) + "\n");
+        axisString += ("  Position: " + QString::number(axis.D0()) + "\n");
+        axisString += ("  Speed: " + QString::number(axis.D0()) + "\n");
         break;
     case HOME:
-        if(axis.data0 != 0)
+        if(axis.D0() != 0)
             axisString += "  Axis executes HOME command.\n";
         break;
     case RELATIVE:
-        if(axis.data0 != 0)
-            axisString += "  Relative motion instructions to follow.\n";
-        else if (axis.data1 == 0)
-            axisString += "  Absolutie motion instructions to follow\n";
-         break;
+        axisString += "  Relative motion instructions to follow.\n";
+        break;
+    case ABSOLUTE:
+        axisString += "  Absolutie motion instructions to follow\n";
+        break;
     case ENABLE:
-        if(axis.data0 == 0)
-            axisString += "axis disabled.\n";
-        else if (axis.data1 != 0)
-            axisString += "Axis enabled.\n";
+        axisString += "Axis enabled.\n";
+        break;
+    case DISABLE:
+        axisString += "Axis disabled.\n";
         break;
     case NONE:
         axisString += "  No task assigned.\n";
@@ -853,7 +1046,7 @@ QString Part::displayBlock(Block aBlock, bool errorOnly)
                 blockString += "G1 - LINEAR MOVE\n";
                 break;
             case G4:
-                blockString += ("G4 - DWELL: " + QString::number(aBlock.dwell().data0) + "\n");
+                blockString += ("G4 - DWELL: " + QString::number(aBlock.dwell()) + "\n");
                 break;
             case G28:
                 blockString += "G28 - HOME AXIS\n";
@@ -871,30 +1064,27 @@ QString Part::displayBlock(Block aBlock, bool errorOnly)
             }
         }
         blockString += "---------- LASER ----------\n";
-        switch (aBlock.laser().map) {
+        switch (aBlock.laserGalvo()->laser_message()->task()) {
         case ENABLE:
-            if(aBlock.laser().data0 != 0)
                 blockString += "  State: Enabled\n";
-            else
-                blockString += "  State: Disabled\n";
+            break;
+        case DISABLE:
+            blockString += "  State: Disabled\n";
             break;
         case ENABLE_POWER:
-            if(aBlock.laser().data0 != 0)
-            {
                 blockString += "  State: Enabled\n";
-                blockString += "  Power: " + QString::number(aBlock.laser().data1)+ "\n";
-            }
+                blockString += "  Power: " + QString::number(aBlock.laserGalvo()->laser_message()->D1())+ "\n";
             break;
         case POWER:
-            if(aBlock.laser().data0 != 0)
+            if(aBlock.laserGalvo()->laser_message()->D0() != 0)
             {
                 blockString += "  State: Enabled\n";
-                blockString += "  Power: " + QString::number(aBlock.laser().data1)+ "\n";
+                blockString += "  Power: " + QString::number(aBlock.laserGalvo()->laser_message()->D1())+ "\n";
             }
             else
             {
                 blockString += "  State: Disabled\n";
-                blockString += "  Power: " + QString::number(aBlock.laser().data1)+ "\n";
+                blockString += "  Power: " + QString::number(aBlock.laserGalvo()->laser_message()->D1())+ "\n";
             }
             break;
         default:
@@ -902,16 +1092,16 @@ QString Part::displayBlock(Block aBlock, bool errorOnly)
             break;
         }
 
-        if(!displayAxis('X',aBlock.x_axis()).contains("No task assigned"))
-            blockString += "\n"+ displayAxis('X',aBlock.x_axis());
-        if(!displayAxis('Y',aBlock.y_axis()).contains("No task assigned"))
-            blockString += "\n"+ displayAxis('Y',aBlock.y_axis());
-        if(!displayAxis('Z',aBlock.z_axis()).contains("No task assigned"))
-            blockString += "\n"+ displayAxis('Z',aBlock.z_axis());
-        if(!displayAxis('A',aBlock.a_axis()).contains("No task assigned"))
-            blockString += "\n"+ displayAxis('A',aBlock.a_axis());
-        if(!displayAxis('B',aBlock.b_axis()).contains("No task assigned"))
-            blockString += "\n"+ displayAxis('B',aBlock.b_axis());
+        if(!displayAxis('X',*aBlock.laserGalvo()->x_message()).contains("No task assigned"))
+            blockString += "\n"+ displayAxis('X',*aBlock.laserGalvo()->x_message());
+        if(!displayAxis('Y',*aBlock.laserGalvo()->y_message()).contains("No task assigned"))
+            blockString += "\n"+ displayAxis('Y',*aBlock.laserGalvo()->y_message());
+        if(!displayAxis('Z',*aBlock.materialDelivery()->buildPlate_message()).contains("No task assigned"))
+            blockString += "\n"+ displayAxis('Z',*aBlock.materialDelivery()->buildPlate_message());
+        if(!displayAxis('A',*aBlock.materialDelivery()->hopperPlate_message()).contains("No task assigned"))
+            blockString += "\n"+ displayAxis('A',*aBlock.materialDelivery()->hopperPlate_message());
+        if(!displayAxis('B',*aBlock.materialDelivery()->spreadBlade_message()).contains("No task assigned"))
+            blockString += "\n"+ displayAxis('B',*aBlock.materialDelivery()->spreadBlade_message());
 
         if(aBlock.com_err().size() > 1)
             blockString += ("Comment/Error: " + aBlock.com_err() + "\n");
@@ -1007,6 +1197,8 @@ Block Part::getBlock(int LayerNumber, int blockNumber)
 {
     return m_part[LayerNumber].getBlock(blockNumber);
 }
-////////////////////////////////////////// END PART CLASS //////////////////////////////////////////
 
+////////////////////////////////////////// END PART CLASS //////////////////////////////////////////
 }
+
+
