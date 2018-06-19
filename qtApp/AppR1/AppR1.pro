@@ -26,17 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    axis.cpp \
     blockio.cpp \
     devicemodels.cpp \
-    sample.cpp
 
 HEADERS += \
         mainwindow.h \
-    axis.h \
     blockio.h \
     devicemodels.h \
-    sample.h
 
 FORMS += \
         mainwindow.ui

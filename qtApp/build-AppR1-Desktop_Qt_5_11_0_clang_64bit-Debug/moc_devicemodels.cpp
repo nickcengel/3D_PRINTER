@@ -34,10 +34,10 @@ static const qt_meta_stringdata_SystemController_t qt_meta_stringdata_SystemCont
 QT_MOC_LITERAL(0, 0, 16), // "SystemController"
 QT_MOC_LITERAL(1, 17, 16), // "laserGalvoSignal"
 QT_MOC_LITERAL(2, 34, 0), // ""
-QT_MOC_LITERAL(3, 35, 10), // "lg_message"
+QT_MOC_LITERAL(3, 35, 10), // "LG_Package"
 QT_MOC_LITERAL(4, 46, 6), // "lgsOut"
 QT_MOC_LITERAL(5, 53, 22), // "MaterialDeliverySignal"
-QT_MOC_LITERAL(6, 76, 10), // "md_message"
+QT_MOC_LITERAL(6, 76, 10), // "MD_Package"
 QT_MOC_LITERAL(7, 87, 6), // "mdsOut"
 QT_MOC_LITERAL(8, 94, 15), // "laserGalvoReply"
 QT_MOC_LITERAL(9, 110, 6), // "LG_Map"
@@ -47,8 +47,8 @@ QT_MOC_LITERAL(12, 145, 6) // "MD_Map"
 
     },
     "SystemController\0laserGalvoSignal\0\0"
-    "lg_message\0lgsOut\0MaterialDeliverySignal\0"
-    "md_message\0mdsOut\0laserGalvoReply\0"
+    "LG_Package\0lgsOut\0MaterialDeliverySignal\0"
+    "MD_Package\0mdsOut\0laserGalvoReply\0"
     "LG_Map\0reply\0MaterialDeliveryReply\0"
     "MD_Map"
 };
@@ -92,8 +92,8 @@ void SystemController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         SystemController *_t = static_cast<SystemController *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->laserGalvoSignal((*reinterpret_cast< lg_message(*)>(_a[1]))); break;
-        case 1: _t->MaterialDeliverySignal((*reinterpret_cast< md_message(*)>(_a[1]))); break;
+        case 0: _t->laserGalvoSignal((*reinterpret_cast< LG_Package(*)>(_a[1]))); break;
+        case 1: _t->MaterialDeliverySignal((*reinterpret_cast< MD_Package(*)>(_a[1]))); break;
         case 2: _t->laserGalvoReply((*reinterpret_cast< LG_Map(*)>(_a[1]))); break;
         case 3: _t->MaterialDeliveryReply((*reinterpret_cast< MD_Map(*)>(_a[1]))); break;
         default: ;
@@ -101,14 +101,14 @@ void SystemController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (SystemController::*)(lg_message );
+            using _t = void (SystemController::*)(LG_Package );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&SystemController::laserGalvoSignal)) {
                 *result = 0;
                 return;
             }
         }
         {
-            using _t = void (SystemController::*)(md_message );
+            using _t = void (SystemController::*)(MD_Package );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&SystemController::MaterialDeliverySignal)) {
                 *result = 1;
                 return;
@@ -154,14 +154,14 @@ int SystemController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void SystemController::laserGalvoSignal(lg_message _t1)
+void SystemController::laserGalvoSignal(LG_Package _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1
-void SystemController::MaterialDeliverySignal(md_message _t1)
+void SystemController::MaterialDeliverySignal(MD_Package _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);

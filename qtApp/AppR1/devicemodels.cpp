@@ -3,14 +3,13 @@
 #include <QObject>
 using BlockIO::AxisTitle;
 using BlockIO::Tasks;
-using BlockIO::message_t;
+using BlockIO::Message;
 
-
+////////////////////////////////////////// BEGIN Axis CLASS //////////////////////////////////////////
 Axis::Axis()
 {
     m_portNumber = -1;
     m_deviceNumber = -1;
-    //m_statusPending = false;
     m_homePending = false;
     m_homed = false;
     m_positionPending = false;
@@ -22,13 +21,11 @@ Axis::Axis(int portNumber, int deviceNumber, BlockIO::AxisTitle axisTitle)
     m_portNumber = portNumber;
     m_deviceNumber = deviceNumber;
     m_axisTitle = axisTitle;
-    //m_statusPending = false;
     m_homePending = false;
     m_homed = false;
     m_positionPending = false;
     m_speedPending = false;
 }
-
 
 int Axis::portNumber() const
 {
@@ -50,8 +47,6 @@ void Axis::setDeviceNumber(int deviceNumber)
     m_deviceNumber = deviceNumber;
 }
 
-
-
 void Axis::requestHome()
 {
     m_homePending = true;
@@ -72,29 +67,6 @@ bool Axis::isHomed() const
 {
    return m_homed;
 }
-
-
-
-//void Axis::requestStatus(){
-//    m_statusPending = true;
-//}
-
-//bool Axis::isStatusPending() const
-//{
-//    return m_statusPending;
-//}
-
-//void Axis::setCurrentStatus(const Status currentStatus)
-//{
-//    m_currentStatus = currentStatus;
-//}
-
-//Axis::Status Axis::currentStatus() const
-//{
-//    return m_currentStatus;
-//}
-
-
 
 void Axis::setDesiredPosition(float desiredPosition)
 {
@@ -123,8 +95,6 @@ float Axis::currentPosition() const
     return m_currentPosition;
 }
 
-
-
 void Axis::setDesiredSpeed(float desiredSpeed)
 {
     m_desiredSpeed = desiredSpeed;
@@ -152,8 +122,7 @@ float Axis::currentSpeed() const
     return m_currentSpeed;
 }
 
-
-void Axis::addMessage(BlockIO::message_t aMessage)
+void Axis::addMessage(BlockIO::Message aMessage)
 {
     m_axisTask = aMessage.task();
     switch (m_axisTask) {
@@ -238,6 +207,11 @@ void Axis::setAxisTitle(const AxisTitle &axisTitle)
 {
     m_axisTitle = axisTitle;
 }
+////////////////////////////////////////// END Axis CLASS //////////////////////////////////////////
+
+
+
+////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
 
 Laser::Laser()
 {
@@ -246,7 +220,6 @@ Laser::Laser()
     m_currentPower = 0;
     m_powerPending = false;
 }
-
 
 void Laser::setDesiredPower(const float power)
 {
@@ -295,7 +268,7 @@ void Laser::setDeviceNumber(int value)
     deviceNumber = value;
 }
 
-void Laser::addMessage(BlockIO::message_t aMessage)
+void Laser::addMessage(BlockIO::Message aMessage)
 {
     setLaserTask(aMessage.task());
     switch (m_laserTask) {
@@ -308,7 +281,7 @@ void Laser::addMessage(BlockIO::message_t aMessage)
             setDesiredMode(Tasks::DISABLE);
         break;
     case Tasks::ENABLE_POWER:
-            setDesiredMode(Tasks::ENABLE);
+            setDesiredMode(Tasks::ENABLE_POWER);
             setDesiredPower(aMessage.D1());
         break;
     case Tasks::POWER:
@@ -338,8 +311,6 @@ void Laser::setLaserTask(const Tasks laserTask)
     m_laserTask = laserTask;
 }
 
-
-
 void Laser::setDesiredMode(Tasks m)
 {
     m_desiredMode = m;
@@ -362,6 +333,11 @@ void Laser::setCurrentMode(Tasks m)
     m_currentMode = m;
 }
 
+////////////////////////////////////////// END Laser CLASS //////////////////////////////////////////
+
+
+//////////////////////////////////// BEGIN SystemController CLASS ////////////////////////////////////
+
 
 SystemController::SystemController(QObject *parent) : QObject(parent)
 {
@@ -369,16 +345,16 @@ SystemController::SystemController(QObject *parent) : QObject(parent)
     materialDeliveryMap = MD_Map::MD_NONE;
 }
 
-void SystemController::updateLaserGalvo_model(BlockIO::lg_message laserGalvoMessage)
+void SystemController::updateLaserGalvo_model(BlockIO::LG_Package laserGalvoMessage)
 {
     laserGalvoMap = laserGalvoMessage.getMap();
     switch (laserGalvoMap) {
     case LG_Map::LG_NONE:
         break;
-    case LG_Map::Xonly:
+    case LG_Map::X_ONLY:
         x_axis_model.addMessage(*laserGalvoMessage.x_message());
         break;
-    case LG_Map::Yonly:
+    case LG_Map::Y_ONLY:
         y_axis_model.addMessage(*laserGalvoMessage.y_message());
         break;
     case LG_Map::X_Y:
@@ -390,11 +366,11 @@ void SystemController::updateLaserGalvo_model(BlockIO::lg_message laserGalvoMess
         y_axis_model.addMessage(*laserGalvoMessage.y_message());
         laser_model.addMessage(*laserGalvoMessage.laser_message());
         break;
-    case LG_Map::X_L:
+    case LG_Map::X_LASER:
         x_axis_model.addMessage(*laserGalvoMessage.x_message());
         laser_model.addMessage(*laserGalvoMessage.laser_message());
         break;
-    case LG_Map::Y_L:
+    case LG_Map::Y_LASER:
         y_axis_model.addMessage(*laserGalvoMessage.y_message());
         laser_model.addMessage(*laserGalvoMessage.laser_message());
         break;
@@ -403,30 +379,30 @@ void SystemController::updateLaserGalvo_model(BlockIO::lg_message laserGalvoMess
     }
 }
 
-void SystemController::updateMaterialDelivery_model(BlockIO::md_message MaterialDeliveryMessage)
+void SystemController::updateMaterialDelivery_model(BlockIO::MD_Package MaterialDeliveryMessage)
 {
     switch (MaterialDeliveryMessage.getMap())
     {
     case MD_Map::MD_NONE:
         break;
-    case MD_Map::BuildP:
+    case MD_Map::BUILD_PLATE:
         buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
         break;
-    case MD_Map::HopperP:
+    case MD_Map::HOPPPER_PLATE:
         hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
         break;
-    case MD_Map::SpreadB:
+    case MD_Map::SPREAD_BLADE:
         spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
         break;
-    case MD_Map::BuildP_HopperP:
+    case MD_Map::BUILD_HOPPER:
         buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
         hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
         break;
-    case MD_Map::BuildP_SpreadB:
+    case MD_Map::BUILD_SPREAD:
         buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
         spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
         break;
-    case MD_Map::HopperP_SpreadB:
+    case MD_Map::HOPPER_SPREAD:
         hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
         spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
         break;
@@ -454,15 +430,14 @@ void SystemController::sendBlock(BlockIO::Block block)
     }
 }
 
-
 void SystemController::laserGalvoReply(BlockIO::LG_Map reply)
 {
     switch (reply) {
-    case LG_Map::Xonly:
+    case LG_Map::X_ONLY:
         x_axis_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
         break;
-    case LG_Map::Yonly:
+    case LG_Map::Y_ONLY:
         y_axis_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
         break;
@@ -471,16 +446,16 @@ void SystemController::laserGalvoReply(BlockIO::LG_Map reply)
         y_axis_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
         break;
-    case LG_Map::Lonly:
+    case LG_Map::LASER_ONLY:
         laser_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
         break;
-    case LG_Map::X_L:
+    case LG_Map::X_LASER:
         x_axis_model.clearPending();
         laser_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
         break;
-    case LG_Map::Y_L:
+    case LG_Map::Y_LASER:
         y_axis_model.clearPending();
         laser_model.clearPending();
         laserGalvoMap = LG_Map::LG_NONE;
@@ -503,29 +478,29 @@ void SystemController::laserGalvoReply(BlockIO::LG_Map reply)
 void SystemController::MaterialDeliveryReply(BlockIO::MD_Map reply)
 {
     switch (reply) {
-    case MD_Map::BuildP:
+    case MD_Map::BUILD_PLATE:
         buildPlate_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
         break;
-    case MD_Map::HopperP:
+    case MD_Map::HOPPPER_PLATE:
         hopperPlate_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
         break;
-    case MD_Map::SpreadB:
+    case MD_Map::SPREAD_BLADE:
         spreadBlade_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
         break;
-    case MD_Map::BuildP_HopperP:
+    case MD_Map::BUILD_HOPPER:
         buildPlate_model.clearPending();
         hopperPlate_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
         break;
-    case MD_Map::BuildP_SpreadB:
+    case MD_Map::BUILD_SPREAD:
         buildPlate_model.clearPending();
         spreadBlade_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
         break;
-    case MD_Map::HopperP_SpreadB:
+    case MD_Map::HOPPER_SPREAD:
         hopperPlate_model.clearPending();
         spreadBlade_model.clearPending();
         materialDeliveryMap = MD_Map::MD_NONE;
@@ -545,6 +520,7 @@ void SystemController::MaterialDeliveryReply(BlockIO::MD_Map reply)
     }
 }
 
+//////////////////////////////////// END SystemController CLASS ////////////////////////////////////
 
 
 

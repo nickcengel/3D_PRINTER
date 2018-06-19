@@ -3,21 +3,21 @@
 
 namespace BlockIO {
 
-message_t::message_t()
+Message::Message()
 {
     map = NONE;
     float data0 = 0;
     float data1 = 0;
 }
 
-message_t::message_t(const Tasks aMap)
+Message::Message(const Tasks aMap)
 {
     map = aMap;
     data0 = 0;
     data1 = 0;
 }
 
-message_t::message_t(const Tasks aMap, const float d0)
+Message::Message(const Tasks aMap, const float d0)
 {
     map = aMap;
     data0 = d0;
@@ -25,63 +25,63 @@ message_t::message_t(const Tasks aMap, const float d0)
 
 }
 
-message_t::message_t(const Tasks aMap, const float d0, const float d1)
+Message::Message(const Tasks aMap, const float d0, const float d1)
 {
     map = aMap;
     data0 = d0;
     data1 = d1;
 }
 
-Tasks message_t::task() const
+Tasks Message::task() const
 {
     return map;
 }
 
-float message_t::D0() const
+float Message::D0() const
 {
     return data0;
 }
 
-float message_t::D1() const
+float Message::D1() const
 {
     return data1;
 }
 
-void message_t::set(const Tasks aMap)
+void Message::set(const Tasks aMap)
 {
     map = aMap;
 }
 
-void message_t::set(const Tasks aMap, const float d0)
+void Message::set(const Tasks aMap, const float d0)
 {
     map = aMap;
     data0 = d0;
 }
 
-void message_t::set(const Tasks aMap, const float d0, const float d1)
+void Message::set(const Tasks aMap, const float d0, const float d1)
 {
     map = aMap;
     data0 = d0;
     data1 = d1;
 }
 
-void message_t::setTask(const Tasks aMap)
+void Message::setTask(const Tasks aMap)
 {
     map = aMap;
 }
 
-void message_t::setD0(const float d0)
+void Message::setD0(const float d0)
 {
     data0 = d0;
 }
 
-void message_t::setD1(const float d1)
+void Message::setD1(const float d1)
 {
     data1 = d1;
 }
 
 
-md_message::md_message()
+MD_Package::MD_Package()
 {
     m_map = MD_NONE;
     m_buildPlate_message.setTask(NONE);
@@ -90,17 +90,17 @@ md_message::md_message()
 }
 
 
-md_message::md_message(MD_Map channel, message_t message0)
+MD_Package::MD_Package(MD_Map channel, Message message0)
 {
     m_map = channel;
     switch (m_map) {
-    case MD_Map::BuildP:
+    case MD_Map::BUILD_PLATE:
         m_buildPlate_message = message0;
         break;
-    case MD_Map::HopperP:
+    case MD_Map::HOPPPER_PLATE:
         m_hopperPlate_message = message0;
         break;
-    case MD_Map::SpreadB:
+    case MD_Map::SPREAD_BLADE:
         m_spreadBlade_message = message0;
         break;
     default:
@@ -108,19 +108,19 @@ md_message::md_message(MD_Map channel, message_t message0)
     }
 }
 
-md_message::md_message(MD_Map channel, message_t message0, message_t message1)
+MD_Package::MD_Package(MD_Map channel, Message message0, Message message1)
 {
     m_map = channel;
     switch (m_map) {
-    case MD_Map::BuildP_HopperP:
+    case MD_Map::BUILD_HOPPER:
         m_buildPlate_message = message0;
         m_hopperPlate_message = message1;
         break;
-    case MD_Map::BuildP_SpreadB:
+    case MD_Map::BUILD_SPREAD:
         m_buildPlate_message = message0;
         m_spreadBlade_message = message1;
         break;
-    case MD_Map::HopperP_SpreadB:
+    case MD_Map::HOPPER_SPREAD:
         m_hopperPlate_message = message0;
         m_spreadBlade_message = message1;
         break;
@@ -129,78 +129,78 @@ md_message::md_message(MD_Map channel, message_t message0, message_t message1)
     }
 }
 
-md_message::md_message(message_t buildPlate_msg, message_t hopperPlate_msg, message_t spreadBlade_msg)
+MD_Package::MD_Package(Message buildPlate_msg, Message hopperPlate_msg, Message spreadBlade_msg)
 {
     m_buildPlate_message = buildPlate_msg;
     m_hopperPlate_message = hopperPlate_msg;
     m_spreadBlade_message = spreadBlade_msg;
     if(m_buildPlate_message.task() != NONE)
     {
-        m_map = BuildP;
+        m_map = BUILD_PLATE;
     }
     if(m_hopperPlate_message.task() != NONE)
     {
-        if(m_map == BuildP)
-            m_map = BuildP_HopperP;
+        if(m_map == BUILD_PLATE)
+            m_map = BUILD_HOPPER;
         else
-            m_map = HopperP;
+            m_map = HOPPPER_PLATE;
     }
     if(m_spreadBlade_message.task() != NONE)
     {
-        if(m_map == BuildP)
-            m_map = BuildP_SpreadB;
-        else if(m_map == HopperP)
-            m_map = HopperP_SpreadB;
-        else if(m_map == BuildP_HopperP)
+        if(m_map == BUILD_PLATE)
+            m_map = BUILD_SPREAD;
+        else if(m_map == HOPPPER_PLATE)
+            m_map = HOPPER_SPREAD;
+        else if(m_map == BUILD_HOPPER)
             m_map = MD_ALL;
         else
-            m_map = SpreadB;
+            m_map = SPREAD_BLADE;
     }
 }
 
-message_t *md_message::buildPlate_message()
+Message *MD_Package::buildPlate_message()
 {
     return &m_buildPlate_message;
 }
 
-message_t *md_message::hopperPlate_message()
+Message *MD_Package::hopperPlate_message()
 {
     return &m_hopperPlate_message;
 }
 
-message_t *md_message::spreadBlade_message()
+Message *MD_Package::spreadBlade_message()
 {
     return &m_spreadBlade_message;
 }
 
-void md_message::setMap()
+void MD_Package::setMap()
 {
     m_map = MD_NONE;
     if(m_buildPlate_message.task() != NONE)
     {
-        m_map = BuildP;
+        m_map = BUILD_PLATE;
     }
     if(m_hopperPlate_message.task() != NONE)
     {
-        if(m_map == BuildP)
-            m_map = BuildP_HopperP;
+        if(m_map == BUILD_PLATE)
+            m_map = BUILD_HOPPER;
         else
-            m_map = HopperP;
+            m_map = HOPPPER_PLATE;
     }
     if(m_spreadBlade_message.task() != NONE)
     {
-        if(m_map == BuildP)
-            m_map = BuildP_SpreadB;
-        else if(m_map == HopperP)
-            m_map = HopperP_SpreadB;
-        else if(m_map == BuildP_HopperP)
+        if(m_map == BUILD_PLATE)
+            m_map = BUILD_SPREAD;
+        else if(m_map == HOPPPER_PLATE)
+            m_map = HOPPER_SPREAD;
+        else if(m_map == BUILD_HOPPER)
             m_map = MD_ALL;
         else
-            m_map = SpreadB;
+            m_map = SPREAD_BLADE;
     }
 }
 
-MD_Map md_message::getMap()
+MD_Map MD_Package::getMap()
 {
     if(m_map == MD_NONE)
         setMap();
@@ -208,7 +208,7 @@ MD_Map md_message::getMap()
 }
 
 
-lg_message::lg_message()
+LG_Package::LG_Package()
 {
     m_map = LG_NONE;
     m_x_message.setTask(NONE);
@@ -216,17 +216,17 @@ lg_message::lg_message()
     m_laser_message.setTask(NONE);
 }
 
-lg_message::lg_message(LG_Map channel, message_t message0)
+LG_Package::LG_Package(LG_Map channel, Message message0)
 {
     m_map = channel;
     switch (m_map) {
-    case LG_Map::Xonly:
+    case LG_Map::X_ONLY:
         m_x_message = message0;
         break;
-    case LG_Map::Yonly:
+    case LG_Map::Y_ONLY:
         m_y_message = message0;
         break;
-    case LG_Map::Lonly:
+    case LG_Map::LASER_ONLY:
         m_laser_message = message0;
         break;
     default:
@@ -234,7 +234,7 @@ lg_message::lg_message(LG_Map channel, message_t message0)
     }
 }
 
-lg_message::lg_message(LG_Map channel, message_t message0, message_t message1)
+LG_Package::LG_Package(LG_Map channel, Message message0, Message message1)
 {
     m_map = channel;
     switch (m_map) {
@@ -242,11 +242,11 @@ lg_message::lg_message(LG_Map channel, message_t message0, message_t message1)
         m_x_message = message0;
         m_y_message = message1;
         break;
-    case LG_Map::X_L:
+    case LG_Map::X_LASER:
         m_x_message = message0;
         m_laser_message = message1;
         break;
-    case LG_Map::Y_L:
+    case LG_Map::Y_LASER:
         m_y_message = message0;
         m_laser_message = message1;
         break;
@@ -255,79 +255,79 @@ lg_message::lg_message(LG_Map channel, message_t message0, message_t message1)
     }
 }
 
-lg_message::lg_message(message_t x_msg, message_t y_msg, message_t laser_msg)
+LG_Package::LG_Package(Message x_msg, Message y_msg, Message laser_msg)
 {
     m_x_message = x_msg;
     m_y_message = y_msg;
     m_laser_message = laser_msg;
     if(m_x_message.task() != NONE)
     {
-        m_map = Xonly;
+        m_map = X_ONLY;
     }
     if(m_y_message.task() != NONE)
     {
-        if(m_map == Xonly)
+        if(m_map == X_ONLY)
             m_map = X_Y;
         else
-            m_map = Yonly;
+            m_map = Y_ONLY;
     }
     if(m_laser_message.task() != NONE)
     {
-        if(m_map == Xonly)
-            m_map = X_L;
-        else if(m_map == Yonly)
-            m_map = Y_L;
+        if(m_map == X_ONLY)
+            m_map = X_LASER;
+        else if(m_map == Y_ONLY)
+            m_map = Y_LASER;
         else if(m_map == X_Y)
             m_map = LG_ALL;
         else
-            m_map = Lonly;
+            m_map = LASER_ONLY;
     }
 }
 
-message_t *lg_message::x_message()
+Message *LG_Package::x_message()
 {
     return &m_x_message;
 }
 
-message_t *lg_message::y_message()
+Message *LG_Package::y_message()
 {
     return &m_y_message;
 }
 
-message_t *lg_message::laser_message()
+Message *LG_Package::laser_message()
 {
     return &m_laser_message;
 }
 
-void lg_message::setMap()
+void LG_Package::setMap()
 {
     m_map = LG_NONE;
 
     if(m_x_message.task() != NONE)
     {
-        m_map = Xonly;
+        m_map = X_ONLY;
     }
     if(m_y_message.task() != NONE)
     {
-        if(m_map == Xonly)
+        if(m_map == X_ONLY)
             m_map = X_Y;
         else
-            m_map = Yonly;
+            m_map = Y_ONLY;
     }
     if(m_laser_message.task() != NONE)
     {
-        if(m_map == Xonly)
-            m_map = X_L;
-        else if(m_map == Yonly)
-            m_map = Y_L;
+        if(m_map == X_ONLY)
+            m_map = X_LASER;
+        else if(m_map == Y_ONLY)
+            m_map = Y_LASER;
         else if(m_map == X_Y)
             m_map = LG_ALL;
         else
-            m_map = Lonly;
+            m_map = LASER_ONLY;
     }
 }
 
-LG_Map lg_message::getMap()
+LG_Map LG_Package::getMap()
 {
     if(m_map == LG_NONE)
         setMap();
@@ -398,12 +398,12 @@ void Block::set_com_err(const QString &value)
     m_com_err = value;
 }
 
-md_message *Block::materialDelivery()
+MD_Package *Block::materialDelivery()
 {
     return &m_materialDelivery;
 }
 
-lg_message *Block::laserGalvo()
+LG_Package *Block::laserGalvo()
 {
     return &m_laserGalvo;
 }
@@ -974,7 +974,7 @@ void Part::validatePart()
     }
 }
 
-QString Part::displayAxis(QChar axisTitle, message_t axis)
+QString Part::displayAxis(QChar axisTitle, Message axis)
 {
     QString axisString = "---------- ";
             axisString += (QString)axisTitle;

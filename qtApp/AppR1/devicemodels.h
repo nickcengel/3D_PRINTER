@@ -6,16 +6,29 @@
 
 using BlockIO::AxisTitle;
 using BlockIO::Tasks;
-using BlockIO::message_t;
-using BlockIO::lg_message;
-using BlockIO::md_message;
 using BlockIO::MD_Map;
 using BlockIO::LG_Map;
+using BlockIO::Message;
+using BlockIO::LG_Package;
+using BlockIO::MD_Package;
+
 using BlockIO::Block;
-using BlockIO::Layer;
-using BlockIO::Part;
 
+//////////////////////////////////// *Device Models* ////////////////////////////////////
+/// The Axis class and Laser class provide a means to represent the dynamic state of the
+/// components of our machine.
+///
+/// When a new block is processed, these objects are updated by passing them a message
+/// using the addMessage() method. The object then sets the relevant desired parameters,
+/// and sets a related pending flag high to signal it is waiting for confirmation
+/// that the most recent message has been handled by the hardware.
+///
+/// When a response from the hardware is processed, the clearPending() method should be called.
+/// If the response indicates the transaction was sucesful, the objects current parameters
+/// are updated to their desired values.
 
+////////////////////////////////////////// BEGIN Axis CLASS //////////////////////////////////////////
+/// The Axis class represents the current and desired state of each of the five axis of the system.
 class Axis
 {
 public:
@@ -37,11 +50,6 @@ public:
     void setHomed(bool isHomed);
     bool isHomed() const;
 
-    //void requestStatus();
-    //bool isStatusPending() const;
-    //void setCurrentStatus(const Status currentStatus);
-    //Status currentStatus() const;
-
     void setDesiredPosition(float desiredPosition);
     float desiredPosition() const;
     bool isPositionPending() const;
@@ -62,7 +70,7 @@ public:
     Tasks axisTask() const;
     void setAxisTask(const Tasks axisTask);
 
-    void addMessage(message_t aMessage);
+    void addMessage(Message aMessage);
     void clearPending();
 
 private:
@@ -79,9 +87,6 @@ private:
     bool m_homed;
     bool m_homePending;
 
-    //Status m_currentStatus;`
-    //bool m_statusPending;
-
     float m_currentPosition;
     float m_desiredPosition;
     bool m_positionPending;
@@ -90,7 +95,10 @@ private:
     float m_desiredSpeed;
     bool m_speedPending;
 };
+////////////////////////////////////////// END Axis CLASS //////////////////////////////////////////
 
+////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
+/// The Laser class represents the current and desired state of each of the laser system.
 class Laser
 {
 public:
@@ -116,7 +124,7 @@ public:
     void setLaserTask(const BlockIO::Tasks laserTask);
     Tasks laserTask() const;
 
-    void addMessage(message_t aMessage);
+    void addMessage(Message aMessage);
     void clearPending();
 
 
@@ -135,7 +143,28 @@ private:
     float m_desiredPower;
     bool m_powerPending;
 };
+////////////////////////////////////////// END Laser CLASS //////////////////////////////////////////
 
+
+////    Q_PROPERTY([type] -name- READ -funct- WRITE funct NOTIFY funct)
+
+//////////////////////////////////// BEGIN SystemController CLASS ////////////////////////////////////
+/// The SystemController class uses five Axis objects and a Laser object to represent the current
+/// state of the machine. SystemController is a "QOBject," and inherits the signal/slot paradigm from Qt.
+///
+///  Methods:
+///     void sendBlock(Block block) -
+///         Updates current models by calling updateLaserGalvo_model()/updateMaterialDeliver_model.
+///         Emits an unaltered copy of the incoming messages in block to the hardware level drivers.
+///
+///  Signals: (outgoing)
+///     void laserGalvoSignal(LG_Package lgsOut) - to hardware drivers
+///     void MaterialDeliverySignal(MD_Package mdsOut) - to hardware drivers
+///
+///  Slots: (incoming)
+///         void laserGalvoReply(LG_Map reply) - deal with reply and clear pending parameters if succesful
+///         void MaterialDeliveryReply(MD_Map reply)  - deal with reply and clear pending parameters if succesful
+///
 class SystemController : public QObject
 {
     Q_OBJECT
@@ -146,19 +175,19 @@ public:
     Axis y_axis_model;
     Laser laser_model;
     LG_Map laserGalvoMap;
-    void updateLaserGalvo_model(lg_message laserGalvoMessage);
+    void updateLaserGalvo_model(LG_Package laserGalvoMessage);
 
     Axis buildPlate_model;
     Axis hopperPlate_model;
     Axis spreadBlade_model;
     MD_Map materialDeliveryMap;
-    void updateMaterialDelivery_model(md_message MaterialDeliveryMessage);
+    void updateMaterialDelivery_model(MD_Package MaterialDeliveryMessage);
 
     void sendBlock(Block block);
 
     signals:
-    void laserGalvoSignal(lg_message lgsOut);
-    void MaterialDeliverySignal(md_message mdsOut);
+    void laserGalvoSignal(LG_Package lgsOut);
+    void MaterialDeliverySignal(MD_Package mdsOut);
 
     public slots:
     void laserGalvoReply(LG_Map reply);
@@ -168,7 +197,7 @@ public:
 private:
 
 };
-
+//////////////////////////////////// END SystemController CLASS ////////////////////////////////////
 
 #endif // DEVICEMODELS_H
 

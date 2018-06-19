@@ -15,11 +15,13 @@
 ///     We'll use it to build a lightweight and flexible representation of a G code file
 ///     using the following hierarchy.
 ///
-///     (BLOCKIO::) Part::Layer::Block::messags
+///     (BLOCKIO::) Part::Layer::Block::Package::Message
 ///
 ///        Where: a Part is a collection of Layers,
 ///               a Layer is a collection Blocks,
-///               a Block contains messages and meta information
+///               a Block contains Packages and meta information
+///               a Package contains messages for a group of devices
+///               a Message contains instructions and data for a device
 ///
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,32 +103,34 @@ struct machine_settings_t
 /// TaskMap - Lists the recognized tasks
 ///   [0] NONE : default value
 ///
-///   [1] POSITION : data[0] -> change in position
+///   [1] DISABLE: disable device
 ///
-///   [2] POSITION_SPEED : data[0] -> change in position, data[1] -> change in speed
+///   [2] POSITION : data[0] -> change in position
 ///
-///   [3] HOME : if(data[0] != 0) -> go Home
+///   [3] POSITION_SPEED : data[0] -> change in position, data[1] -> change in speed
 ///
-///   [4] RELATIVE : if(data[0] != 0) -> future positions are relative moves,
-///                  else if(data[0] == 0) -> Absolute mode
+///   [4] HOME : if(data[0] != 0) -> go Home
 ///
-///   [5] ENABLE : if(data[0] != 0) -> enable device,
-///                else if(data[0] == 0) -> disable device
+///   [5] RELATIVE : switch to relative mode
 ///
-///   [6] ENABLE_POWER : data[0] -> enable/disable *Laser*, data[1] -> laser power
+///   [6] ABSOLUTE : switch to absolute mode
 ///
-///   [7] POWER : data[0] -> laser power
+///   [7] ENABLE : enable device
 ///
-///   [8] DWELL : data[0] -> delay time
+///   [8] ENABLE_POWER : data[0] -> enable/disable *Laser*, data[1] -> laser power
 ///
-enum Tasks{NONE, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL};
-class message_t
+///   [9] POWER : data[0] -> laser power
+///
+///   [10] DWELL : data[0] -> delay time
+///
+enum Tasks{NONE = 0, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL};
+class Message
 {
 public:
-    message_t();
-    message_t(const Tasks aMap);
-    message_t(const Tasks aMap, const float d0);
-    message_t(const Tasks aMap, const float d0, const float d1);
+    Message();
+    Message(const Tasks aMap);
+    Message(const Tasks aMap, const float d0);
+    Message(const Tasks aMap, const float d0, const float d1);
 
     void set(const Tasks aMap);
     void set(const Tasks aMap, float d0);
@@ -147,48 +151,53 @@ public:
 };
 
 
-enum MD_Map{MD_NONE, MD_FAILED, BuildP,HopperP,SpreadB,BuildP_HopperP,BuildP_SpreadB,HopperP_SpreadB,MD_ALL};
-class md_message
+///  Messages destined for the Material Deliver system are grouped into the MD_Package class.
+///  MD_Map indicates which of the messages has been set.
+enum MD_Map{MD_NONE, MD_FAILED, BUILD_PLATE, HOPPPER_PLATE, SPREAD_BLADE,
+            BUILD_HOPPER, BUILD_SPREAD, HOPPER_SPREAD, MD_ALL};
+class MD_Package
 {
 public:
-    md_message();
-    md_message(MD_Map channel, message_t message0);
-    md_message(MD_Map channel, message_t message0, message_t message1);
-    md_message(message_t message0, message_t message1, message_t message2);
+    MD_Package();
+    MD_Package(MD_Map channel, Message message0);
+    MD_Package(MD_Map channel, Message message0, Message message1);
+    MD_Package(Message message0, Message message1, Message message2);
 
-    message_t *buildPlate_message();
-    message_t *hopperPlate_message();
-    message_t *spreadBlade_message();
+    Message *buildPlate_message();
+    Message *hopperPlate_message();
+    Message *spreadBlade_message();
 
     void setMap();
     MD_Map getMap();
 private:
     MD_Map m_map;
-    message_t m_buildPlate_message;
-    message_t m_hopperPlate_message;
-    message_t m_spreadBlade_message;
+    Message m_buildPlate_message;
+    Message m_hopperPlate_message;
+    Message m_spreadBlade_message;
 };
 
-enum LG_Map{LG_NONE, LG_FAILED, Xonly,Yonly,X_Y,Lonly,X_L,Y_L, LG_ALL};
-class lg_message
+///  Messages destined for the Laser-Galvo system are grouped into the LG_Package class.
+///  LG_Map indicates which of the messages has been set.
+enum LG_Map{LG_NONE, LG_FAILED, X_ONLY, Y_ONLY, X_Y, LASER_ONLY, X_LASER, Y_LASER, LG_ALL};
+class LG_Package
 {
 public:
-    lg_message();
-    lg_message(LG_Map channel, message_t message0);
-    lg_message(LG_Map channel, message_t message0, message_t message1);
-    lg_message(message_t x_msg, message_t y_msg, message_t laser_msg);
+    LG_Package();
+    LG_Package(LG_Map channel, Message message0);
+    LG_Package(LG_Map channel, Message message0, Message message1);
+    LG_Package(Message x_msg, Message y_msg, Message laser_msg);
 
-    message_t *x_message();
-    message_t *y_message();
-    message_t *laser_message();
+    Message *x_message();
+    Message *y_message();
+    Message *laser_message();
 
     void setMap();
     LG_Map getMap();
 private:
     LG_Map m_map;
-    message_t m_x_message;
-    message_t m_y_message;
-    message_t m_laser_message;
+    Message m_x_message;
+    Message m_y_message;
+    Message m_laser_message;
 };
 
 
@@ -204,26 +213,21 @@ private:
 ///         Block(const QString toParse, machine_settings_t *settings)
 ///
 ///     Blocks are usually made from a file and assembled into Layers and then a Part using the methods of
-///     the Part class
+///     the Part class     
 ///
 ///   Inputs:
 ///    From constructor:
 ///     QString toParse - a line of Gcode
 ///     machine_settings_t *settings - a pointer to the machine settings
 ///
-///    Overloaded setters:
-///         void set_{x,y,z,a,b}_axis(const message_t &myMessageToAnAxis)
-///         void set_{x,y,z,a,b}_axis(const TaskMap m, const float d0);
-///         void set_{x,y,z,a,b}_axis(const TaskMap m, const float d0, const float d1);
-///
 ///   Outputs:
-///     Qstring m_com_err - any comments present in the G code or errors generated when making the block
-///     message_t {x,y,z,a,b}_axis() - instructions relevant to the {x,y,z,a,b} axis
-///     message_t laser() - instructions relevant to the laser
-///     message_t dwel()l - a dwell instruction
+///     Qstring m_com_err - any comments present in the G code or errors generated when making the bloc
 ///     Code code() - a G code
 ///     bool newLayerFlag() - set high when the parser finds a "(NEW_LAYER)" comment
 ///     bool isBlockValid() - set high if no errors encountered
+///     MD_Package *materialDelivery() - a pointer to the package of messages for the material delivery system
+///     LG_Package *laserGalvo() - a pointer to the package of messages for the laser-galvo system
+///
 ///
 class Block{
 public:
@@ -245,14 +249,13 @@ public:
     QString com_err() const;
     void set_com_err(const QString &com_err);
 
-    md_message *materialDelivery();
-
-    lg_message *laserGalvo();
+    MD_Package *materialDelivery();
+    LG_Package *laserGalvo();
 
 private:
     QString m_com_err;
-    md_message m_materialDelivery;
-    lg_message m_laserGalvo;
+    MD_Package m_materialDelivery;
+    LG_Package m_laserGalvo;
 
     float m_dwell;
     Code m_code;
@@ -339,7 +342,7 @@ public:
     Block getBlock(int LayerNumber, int blockNumber);
     bool isPartValid() const;
     void validatePart();
-    QString displayAxis(QChar axisTitle, message_t axis);
+    QString displayAxis(QChar axisTitle, Message axis);
     QString displayBlock(Block aBlock, bool errorOnly);
     QStringList debugPart(bool errorOnly);
 
