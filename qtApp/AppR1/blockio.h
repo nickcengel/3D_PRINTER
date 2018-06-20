@@ -48,37 +48,40 @@ enum Code {NO_CODE, M0, M2, M3, M5, G0, G1, G4, G28, G90, G91};
 ///// Z - z axis of the build plate
 ///// A - z' axis of the material hopper
 ///// B - x' axis of the material wiper
-enum AxisTitle{X,Y,Z,A,B};
+enum AxisNumber {ALL_AXIS, X, Y, Z, A, B,L, NO_AXIS};
 
 /// An Axis' physical and electrical constraints
 struct axis_settings_t
 {
     int portNumber;
     int deviceNumber;
-    AxisTitle axisTitle;
+    AxisNumber axisNumber;
     float positionMin;
     float positionMax;
     float speedMin;
     float speedMax;
     float homeOffset;
+    float uStepPerMM;
     axis_settings_t() {}
-    axis_settings_t(int aPortNumber, int aDeviceNumber, AxisTitle anAxisTitle,
+    axis_settings_t(int aPortNumber, int aDeviceNumber, AxisNumber anAxisNumber,
                     float aPositionMin, float aPositionMax, float aSpeedMin,
-                    float aSpeedMax, float aHomeOffset){
+                    float aSpeedMax, float aHomeOffset, float microStepsPerMM){
         portNumber = aPortNumber;
         deviceNumber = aDeviceNumber;
-        axisTitle = anAxisTitle;
+        axisNumber = anAxisNumber;
         positionMin = aPositionMin;
         positionMax = aPositionMax;
         speedMin = aSpeedMin;
         speedMax = aSpeedMax;
         homeOffset = aHomeOffset;
+        uStepPerMM = microStepsPerMM;
     }
 };
 
 /// A group of axis settings with other machine parameters
 struct machine_settings_t
 {
+    axis_settings_t l_settings;
     axis_settings_t x_settings;
     axis_settings_t y_settings;
     axis_settings_t z_settings;
@@ -86,9 +89,10 @@ struct machine_settings_t
     axis_settings_t b_settings;
 
     machine_settings_t() {}
-    machine_settings_t(axis_settings_t X_settings, axis_settings_t Y_settings,
+    machine_settings_t(axis_settings_t L_settings, axis_settings_t X_settings, axis_settings_t Y_settings,
                        axis_settings_t Z_settings, axis_settings_t A_settings,
                        axis_settings_t B_settings){
+        l_settings = L_settings;
         x_settings = X_settings;
         y_settings = Y_settings;
         z_settings = Z_settings;
@@ -123,84 +127,67 @@ struct machine_settings_t
 ///
 ///   [10] DWELL : data[0] -> delay time
 ///
-enum Tasks{NONE = 0, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL, FAILED};
+
+enum DeviceNumber {ALL_DEVICES, LASER_GALVO, BUILD_PLATE, HOP_SPRD, NO_DEVICE};
+enum Message_Mode {MODE_ERROR, ABSOLUTE, RELATIVE, NO_MODE};
+enum Message_Task {TASK_ERROR, DISABLE, ENABLE, ENABLE_AT_POWER, SET_POWER, MOVE_ABS, MOVE_REL, MOVE_ABS_AT_SPEED, MOVE_REL_AT_SPEED,
+           STOP, GO_HOME, GET_STATUS, NO_TASK};
+enum Messge_Status{STATUS_ERROR, ENABLED, DISABLED, IDLE, BUSY, STATUS_UNKOWN, NO_STATUS};
 class Message
 {
 public:
+
     Message();
-    Message(const Tasks aMap);
-    Message(const Tasks aMap, const float d0);
-    Message(const Tasks aMap, const float d0, const float d1);
+    Message(const DeviceNumber dn, const AxisNumber an);
 
-    void set(const Tasks aMap);
-    void set(const Tasks aMap, float d0);
-    void set(const Tasks aMap, const float d0, const float d1);
+    DeviceNumber getDeviceNumber() const;
+    void setDeviceNumber(const DeviceNumber &deviceNumber);
 
-    void setTask(const Tasks aMap);
-    void setD0(const float d0);
-    void setD1(const float d1);
+    AxisNumber getAxisNumber() const;
+    void setAxisNumber(const AxisNumber &number);
 
-    Tasks task() const;
-    float D0() const;
-    float D1() const;
+    Message_Mode getMode() const;
+    void setMode(const Message_Mode &mode);
 
-    private:
-    Tasks map;
-    float data0;
-    float data1;
-};
+    Message_Task getTask() const;
+    void setTask(const Message_Task &task);
 
+    Messge_Status getStatus() const;
+    void setStatus(const Messge_Status &status);
 
-///  Messages destined for the Material Deliver system are grouped into the MD_Package class.
-///  MD_Map indicates which of the messages has been set.
-enum MD_Map{MD_NONE, MD_FAILED, BUILD_PLATE, HOPPPER_PLATE, SPREAD_BLADE,
-            BUILD_HOPPER, BUILD_SPREAD, HOPPER_SPREAD, MD_ALL};
-class MD_Package
-{
-public:
-    MD_Package();
-    MD_Package(MD_Map channel, Message message0);
-    MD_Package(MD_Map channel, Message message0, Message message1);
-    MD_Package(Message message0, Message message1, Message message2);
+    float getPosition_mm() const;
+    void setPosition_mm(float position_mm);
 
-    Message *buildPlate_message();
-    Message *hopperPlate_message();
-    Message *spreadBlade_message();
+    int getPosition_ms() const;
+    void setPosition_ms(float mm);
 
-    void setMap();
-    MD_Map getMap();
+    int getSpeed() const;
+    void setSpeed(int speed);
+
+    int getPower() const;
+    void setPower(int power);
+
+    QString getCommandString() const;
+    void composeCommandString();
+
+    float getUStepPerMM() const;
+    void setUStepPerMM(float uStepPerMM);
+
 private:
-    MD_Map m_map;
-    Message m_buildPlate_message;
-    Message m_hopperPlate_message;
-    Message m_spreadBlade_message;
+    DeviceNumber m_deviceNumber;
+    AxisNumber m_axisNumber;
+    Message_Mode m_mode;
+    Message_Task m_task;
+    Messge_Status m_status;
+
+    QString m_commandString;
+
+    float m_uStepPerMM;
+    float m_position_mm;
+    int m_position_ms;
+    int m_speed;
+    int m_power;
 };
-
-///  Messages destined for the Laser-Galvo system are grouped into the LG_Package class.
-///  LG_Map indicates which of the messages has been set.
-enum LG_Map{LG_NONE = 0, LG_FAILED, X_ONLY, Y_ONLY, X_Y, LASER_ONLY, X_LASER, Y_LASER, LG_ALL};
-class LG_Package
-{
-public:
-    LG_Package();
-    LG_Package(LG_Map channel, Message message0);
-    LG_Package(LG_Map channel, Message message0, Message message1);
-    LG_Package(Message x_msg, Message y_msg, Message laser_msg);
-
-    Message *x_message();
-    Message *y_message();
-    Message *laser_message();
-
-    void setMap();
-    void setMap(LG_Map aMap);
-    LG_Map getMap();
-private:
-    LG_Map m_map;
-    Message m_x_message;
-    Message m_y_message;
-    Message m_laser_message;
-};
-
 
 /////////////////////////////////// END BLOCKIO BASE TYPES AND ENUMERATIONS ///////////////////////////
 
@@ -230,40 +217,62 @@ private:
 ///     LG_Package *laserGalvo() - a pointer to the package of messages for the laser-galvo system
 ///
 ///
-class Block{
+class Block
+{
 public:
     Block();
-    Block(const QString toParse, machine_settings_t *settings);
+    Block(QString toParse, Message_Mode previousMode, machine_settings_t *settings);
 
-    float dwell() const;
-    void setDwell(const float d);
+    Message *L_Axis();
+    Message *X_Axis();
+    Message *Y_Axis();
+    Message *Z_Axis();
+    Message *A_Axis();
+    Message *B_Axis();
 
-    bool newLayerFlag() const;
-    void setNewLayer(bool flag);
+    float getDwell() const;
+    void setDwell(float dwell);
+
+    Code getCode() const;
+    void setCode(const Code code);
+
+    QString getComments() const;
+    void setComments(const QString &comments);
+
+    QString getErrors() const;
+    void setErrors(const QString &errors);
+
+    bool isNewLayer() const;
+    void setNewLayer(bool newLayer);
 
     bool isBlockValid() const;
-    void setBlockValid(bool valid);
+    void setBlockValid(bool blockValid);
 
-    Code code() const;
-    void setCode(const Code &code);
-
-    QString com_err() const;
-    void set_com_err(const QString &com_err);
-
-    MD_Package *materialDelivery();
-    LG_Package *laserGalvo();
+    Message_Mode getPreviousMode() const;
+    void setPreviousMode(const Message_Mode previousMode);
 
 private:
-    QString m_com_err;
-    MD_Package m_materialDelivery;
-    LG_Package m_laserGalvo;
+    Message m_L_Axis;
+    Message m_X_Axis;
+    Message m_Y_Axis;
+    Message m_Z_Axis;
+    Message m_A_Axis;
+    Message m_B_Axis;
 
     float m_dwell;
-    Code m_code;
-    bool m_newLayer;
-    bool m_blockValid;
-    void makeBlock(const QString toParse, machine_settings_t *settings);
 
+    Code m_code;
+
+    Message_Mode m_previousMode;
+
+    QString m_comments;
+    QString m_errors;
+
+    bool m_newLayer;
+
+    bool m_blockValid;
+
+    void makeBlock(const QString toParse, Message_Mode previousMode, machine_settings_t *settings);
 };
 ////////////////////////////////////////// END BLOCK CLASS //////////////////////////////////////////
 

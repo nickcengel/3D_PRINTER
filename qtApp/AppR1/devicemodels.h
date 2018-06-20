@@ -4,13 +4,16 @@
 #include <QObject>
 #include "blockio.h"
 
-using BlockIO::AxisTitle;
-using BlockIO::Tasks;
-using BlockIO::MD_Map;
-using BlockIO::LG_Map;
+using BlockIO::AxisNumber;
+using BlockIO::DeviceNumber;
+
+using BlockIO::Message_Task;
+using BlockIO::Message_Mode;
+
+
+
 using BlockIO::Message;
-using BlockIO::LG_Package;
-using BlockIO::MD_Package;
+
 
 using BlockIO::Block;
 
@@ -33,59 +36,58 @@ class Axis
 {
 public:
     Axis();
-    Axis(int portNumber, int deviceNumber, AxisTitle axisTitle);
-    //enum Status{a,b,c};
+    Axis(int portNumber, DeviceNumber deviceNumber, AxisNumber axisNumber);
 
-    int portNumber() const;
-    void setPortNumber(int portNumber);
+    int getPortNumber() const;
+    void setPortNumber(const int portNumber);
 
-    int deviceNumber() const;
-    void setDeviceNumber(int deviceNumber);
+    int getDeviceNumber() const;
+    void setDeviceNumber(const DeviceNumber deviceNumber);
 
-    AxisTitle axisTitle() const;
-    void setAxisTitle(const AxisTitle &axisTitle);
+    AxisNumber getAxisNumber() const;
+    void setAxisNumber(const AxisNumber axisNumber);
 
-    void requestHome();
-    bool isHomePending() const;
-    void setHomed(bool isHomed);
+    void setHomed(const bool isHomed);
     bool isHomed() const;
 
-    void setDesiredPosition(float desiredPosition);
-    float desiredPosition() const;
+    void setDesiredPosition(const float position);
+    float getDesiredPosition() const;
     bool isPositionPending() const;
-    void setCurrentPosition(float currentPosition);
-    float currentPosition() const;
+    void setCurrentPosition(const float position);
+    float getCurrentPosition() const;
 
-    void setDesiredSpeed(float desiredSpeed);
-    float desiredSpeed() const;
+    void setDesiredSpeed(const float speed);
+    float getDesiredSpeed() const;
     bool isSpeedPending() const;
-    void setCurrentSpeed(float currentSpeed);
-    float currentSpeed() const;
+    void setCurrentSpeed(const float speed);
+    float getCurrentSpeed() const;
 
-    void setDesiredMode(Tasks m);
-    Tasks desiredMode() const;
+    void setDesiredMode(const Message_Mode m);
+    Message_Mode getDesiredMode() const;
     bool isModePending() const;
-    void setCurrentMode(Tasks m);
+    void setCurrentMode(const Message_Mode m);
+    Message_Mode getCurrentMode() const;
 
-    Tasks axisTask() const;
-    void setAxisTask(const Tasks axisTask);
-
-    void addMessage(Message aMessage);
-    void clearPending();
+    Message_Task getCurrentTask() const;
+    void setCurrentTask(const Message_Task task);
+    Message_Task getDesiredTask() const;
+    void setDesiredTask(const Message_Task task);
+    bool isTaskPending() const;
 
 private:
     int m_portNumber;
     int m_deviceNumber;
-    AxisTitle m_axisTitle;
+    AxisNumber m_axisNumber;
 
-    Tasks m_axisTask;
+    Message_Task m_currentTask;
+    Message_Task m_desiredTask;
+    bool m_taskPending;
 
-    Tasks m_currentMode;
-    Tasks m_desiredMode;
+    Message_Mode m_currentMode;
+    Message_Mode m_desiredMode;
     bool m_modePending;
 
     bool m_homed;
-    bool m_homePending;
 
     float m_currentPosition;
     float m_desiredPosition;
@@ -96,53 +98,62 @@ private:
     bool m_speedPending;
 };
 ////////////////////////////////////////// END Axis CLASS //////////////////////////////////////////
-
-////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
-/// The Laser class represents the current and desired state of each of the laser system.
 class Laser
 {
 public:
     Laser();
-
-    void setDesiredMode(Tasks m);
-    Tasks desiredMode() const;
-    bool isModePending() const;
-    void setCurrentMode(Tasks m);
-
-    void setDesiredPower(const float power);
-    float desiredPower() const;
-    bool isPowerPending() const;
-    void setCurrentPower(const float power);
-    float currentPower() const;
+    Laser(int portNumber, DeviceNumber deviceNumber, AxisNumber axisNumber);
 
     int getPortNumber() const;
-    void setPortNumber(int value);
+    void setPortNumber(const int portNumber);
 
     int getDeviceNumber() const;
-    void setDeviceNumber(int value);
+    void setDeviceNumber(const DeviceNumber deviceNumber);
 
-    void setLaserTask(const BlockIO::Tasks laserTask);
-    Tasks laserTask() const;
-
-    void addMessage(Message aMessage);
-    void clearPending();
+    AxisNumber getAxisNumber() const;
+    void setAxisNumber(const AxisNumber axisNumber);
 
 
+    void setDesiredPower(const float power);
+    float getDesiredPower() const;
+    bool isPowerPending() const;
+    void setCurrentPower(const float power);
+    float getCurrentPower() const;
+
+    void setDesiredMode(const Message_Mode m);
+    Message_Mode getDesiredMode() const;
+    bool isModePending() const;
+    void setCurrentMode(const Message_Mode m);
+    Message_Mode getCurrentMode() const;
+    void setModePending(const bool pending);
+
+    Message_Task getCurrentTask() const;
+    void setCurrentTask(const Message_Task task);
+    Message_Task getDesiredTask() const;
+    void setDesiredTask(const Message_Task task);
+    bool isTaskPending() const;
+    void setTaskPending(bool pending);
 
 private:
-    int portNumber;
-    int deviceNumber;
+    int m_portNumber;
+    int m_deviceNumber;
+    AxisNumber m_axisNumber;
 
-    Tasks m_laserTask;
+    Message_Task m_currentTask;
+    Message_Task m_desiredTask;
+    bool m_taskPending;
 
-    Tasks m_currentMode;
-    Tasks m_desiredMode;
+    Message_Mode m_currentMode;
+    Message_Mode m_desiredMode;
     bool m_modePending;
 
     float m_currentPower;
     float m_desiredPower;
     bool m_powerPending;
 };
+////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
+/// The Laser class represents the current and desired state of each of the laser system.
+
 ////////////////////////////////////////// END Laser CLASS //////////////////////////////////////////
 
 
@@ -165,38 +176,38 @@ private:
 ///         void laserGalvoReply(LG_Map reply) - deal with reply and clear pending parameters if succesful
 ///         void MaterialDeliveryReply(MD_Map reply)  - deal with reply and clear pending parameters if succesful
 ///
-class SystemController : public QObject
-{
-    Q_OBJECT
-public:
-    explicit SystemController(QObject *parent = nullptr);
+//class SystemController : public QObject
+//{
+//    Q_OBJECT
+//public:
+//    explicit SystemController(QObject *parent = nullptr);
 
-    Axis x_axis_model;
-    Axis y_axis_model;
-    Laser laser_model;
-    LG_Map laserGalvoMap;
-    void updateLaserGalvo_model(LG_Package laserGalvoMessage);
+//    Axis x_axis_model;
+//    Axis y_axis_model;
+//    Laser laser_model;
+//    LG_Map laserGalvoMap;
+//    void updateLaserGalvo_model(LG_Package laserGalvoMessage);
 
-    Axis buildPlate_model;
-    Axis hopperPlate_model;
-    Axis spreadBlade_model;
-    MD_Map materialDeliveryMap;
-    void updateMaterialDelivery_model(MD_Package MaterialDeliveryMessage);
+//    Axis buildPlate_model;
+//    Axis hopperPlate_model;
+//    Axis spreadBlade_model;
+//    MD_Map materialDeliveryMap;
+//    void updateMaterialDelivery_model(MD_Package MaterialDeliveryMessage);
 
-    void sendBlock(Block block);
+//    void sendBlock(Block block);
 
-    signals:
-    void laserGalvoSignal(LG_Package lgsOut);
-    void MaterialDeliverySignal(MD_Package mdsOut);
+//    signals:
+//    void laserGalvoSignal(LG_Package lgsOut);
+//    void MaterialDeliverySignal(MD_Package mdsOut);
 
-    public slots:
-    void laserGalvoReply(LG_Map reply);
-    void MaterialDeliveryReply(MD_Map reply);
+//    public slots:
+//    void laserGalvoReply(LG_Map reply);
+//    void MaterialDeliveryReply(MD_Map reply);
 
 
-private:
+//private:
 
-};
+//};
 //////////////////////////////////// END SystemController CLASS ////////////////////////////////////
 
 

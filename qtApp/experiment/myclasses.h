@@ -57,6 +57,13 @@ struct machine_settings_t
     }
 };
 
+
+enum DeviceNumber {ALL_DEVICES, LASER_GALVO, BUILD_PLATE, HOP_SPRD, NO_DEVICE};
+enum AxisNumber {ALL_AXIS, X, Y, Z, A, B, NO_AXIS};
+enum Mode {MODE_ERROR, ABSOLUTE, RELATIVE, NO_MODE};
+enum Message_Task {TASK_ERROR, DISABLE, ENABLE, MOVE_ABS, MOVE_REL, MOVE_ABS_AT_SPEED, MOVE_REL_AT_SPEED,
+           STOP, GO_HOME, GET_STATUS, NO_TASK};
+enum Status{STATUS_ERROR, ENABLED, DISABLED, IDLE, BUSY, STATUS_UNKOWN};
 class Message
 {
 
