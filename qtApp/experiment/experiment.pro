@@ -1,15 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-06-12T19:47:46
+# Project created by QtCreator 2018-06-19T19:10:43
 #
 #-------------------------------------------------
 
-QT       += core gui \
-            widgets serialport
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = AppR1
+TARGET = experiment
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -27,19 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    blockio.cpp \
-    devicemodels.cpp \
-    devicedrivers.cpp
+    myclasses.cpp
 
 HEADERS += \
         mainwindow.h \
-    blockio.h \
-    devicemodels.h \
-    devicedrivers.h
+    myclasses.h
 
 FORMS += \
         mainwindow.ui
-
-DISTFILES += \
-    test.gcode \
-    simple.gcode

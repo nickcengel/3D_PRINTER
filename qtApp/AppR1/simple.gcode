@@ -1,23 +1,7 @@
-(comment0)
-G90
-(out of line comment1)
-G28 X (in line comment2)
-G28 Y
-G28 Z
-G28 A
-G28 B
-G28 X Y Z A B
+(some out of line comment)
+G28 X (some in line comment)
+G28 Y Z A B
 (NEW_LAYER)
 G0 X-1 Y1 Z-2 A2 B-3
-G0 X-1.5 Y1.5 Z-2.5 A2.1 B-3.5 F10
 G1 X3 Y-3 E10 F12
-G1 X2 Y5 E10
-M5
-(NEW_LAYER)
-G91
-G0 Z-1 A1
-G0 B20
-G0 B0
-G0 X1 Y1
-G1 X3 Y-4 E10 F5
 (NEW_LAYER)

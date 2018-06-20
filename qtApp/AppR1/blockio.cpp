@@ -6,8 +6,8 @@ namespace BlockIO {
 Message::Message()
 {
     map = NONE;
-    float data0 = 0;
-    float data1 = 0;
+    data0 = 0;
+    data1 = 0;
 }
 
 Message::Message(const Tasks aMap)
@@ -298,7 +298,10 @@ Message *LG_Package::laser_message()
 {
     return &m_laser_message;
 }
-
+void LG_Package::setMap(LG_Map aMap)
+{
+    m_map = aMap;
+}
 void LG_Package::setMap()
 {
     m_map = LG_NONE;
@@ -985,7 +988,7 @@ QString Part::displayAxis(QChar axisTitle, Message axis)
         break;
     case POSITION_SPEED:
         axisString += ("  Position: " + QString::number(axis.D0()) + "\n");
-        axisString += ("  Speed: " + QString::number(axis.D0()) + "\n");
+        axisString += ("  Speed: " + QString::number(axis.D1()) + "\n");
         break;
     case HOME:
         if(axis.D0() != 0)

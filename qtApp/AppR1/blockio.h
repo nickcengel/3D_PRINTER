@@ -123,7 +123,7 @@ struct machine_settings_t
 ///
 ///   [10] DWELL : data[0] -> delay time
 ///
-enum Tasks{NONE = 0, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL};
+enum Tasks{NONE = 0, DISABLE, POSITION, POSITION_SPEED, HOME, RELATIVE, ABSOLUTE, ENABLE, ENABLE_POWER, POWER, DWELL, FAILED};
 class Message
 {
 public:
@@ -178,7 +178,7 @@ private:
 
 ///  Messages destined for the Laser-Galvo system are grouped into the LG_Package class.
 ///  LG_Map indicates which of the messages has been set.
-enum LG_Map{LG_NONE, LG_FAILED, X_ONLY, Y_ONLY, X_Y, LASER_ONLY, X_LASER, Y_LASER, LG_ALL};
+enum LG_Map{LG_NONE = 0, LG_FAILED, X_ONLY, Y_ONLY, X_Y, LASER_ONLY, X_LASER, Y_LASER, LG_ALL};
 class LG_Package
 {
 public:
@@ -192,6 +192,7 @@ public:
     Message *laser_message();
 
     void setMap();
+    void setMap(LG_Map aMap);
     LG_Map getMap();
 private:
     LG_Map m_map;

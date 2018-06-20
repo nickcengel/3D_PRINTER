@@ -146,7 +146,7 @@ private:
 ////////////////////////////////////////// END Laser CLASS //////////////////////////////////////////
 
 
-////    Q_PROPERTY([type] -name- READ -funct- WRITE funct NOTIFY funct)
+////    Q_PROPERTY([type] -name- READ -funct- WRITE -funct- NOTIFY -funct-)
 
 //////////////////////////////////// BEGIN SystemController CLASS ////////////////////////////////////
 /// The SystemController class uses five Axis objects and a Laser object to represent the current
@@ -198,6 +198,7 @@ private:
 
 };
 //////////////////////////////////// END SystemController CLASS ////////////////////////////////////
+
 
 #endif // DEVICEMODELS_H
 
