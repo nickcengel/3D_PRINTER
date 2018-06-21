@@ -1,26 +1,9 @@
-#ifndef DEVICEDRIVERS_H
-#define DEVICEDRIVERS_H
+#ifndef SERIALTHREAD_H
+#define SERIALTHREAD_H
 
 #include <QMutex>
 #include <QThread>
 #include <QWaitCondition>
-
-#include "blockio.h"
-using BlockIO::Message;
-using BlockIO::Message_Type;
-using BlockIO::Message_Mode;
-using BlockIO::Message_Status;
-using BlockIO::Message_Reply_Flag;
-using BlockIO::Message_Reply_Flag_Data;
-using BlockIO::Message_Reply_Warning_Flag;
-
-
-
-
-
-
-
-
 
 class SerialThread : public QThread
 {
@@ -34,7 +17,7 @@ public:
 
 
 signals:
-    void response(const QString &responseMessage);
+    void response(const QString &response_str);
     void error(const QString &s);
     void timeout(const QString &s);
 
@@ -49,4 +32,4 @@ private:
 
 };
 
-#endif // DEVICEDRIVERS_H
+#endif // SERIALTHREAD_H

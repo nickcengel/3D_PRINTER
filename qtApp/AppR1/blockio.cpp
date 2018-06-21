@@ -16,7 +16,7 @@ Message::Message()
     setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
-Message::Message(QString replyMessage)
+Message::Message(const QString &replyMessage)
 {
     setMessageType(NO_TYPE);
     setDeviceNumber(NO_DEVICE);
@@ -30,7 +30,7 @@ Message::Message(QString replyMessage)
     decomposeReplyStr(replyMessage);
 }
 
-Message::Message(Message_Type type, const Device_Number dn, const Axis_Number an)
+Message::Message(const Message_Type type, const Device_Number dn, const Axis_Number an)
 {
     setMessageType(type);
     setDeviceNumber(dn);
@@ -43,7 +43,7 @@ Message::Message(Message_Type type, const Device_Number dn, const Axis_Number an
     setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
-Message::Message(Device_Number dn, Axis_Number an)
+Message::Message(const Device_Number dn,  const Axis_Number an)
 {
     setDeviceNumber(dn);
     setAxisNumber(an);
@@ -60,7 +60,7 @@ Device_Number Message::getDeviceNumber() const
     return m_deviceNumber;
 }
 
-void Message::setDeviceNumber(const Device_Number &deviceNumber)
+void Message::setDeviceNumber(const Device_Number deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
@@ -70,7 +70,7 @@ Axis_Number Message::getAxisNumber() const
     return m_axisNumber;
 }
 
-void Message::setAxisNumber(const Axis_Number &axisNumber)
+void Message::setAxisNumber(const Axis_Number axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -80,7 +80,7 @@ Message_Mode Message::getMode() const
     return m_mode;
 }
 
-void Message::setMode(const Message_Mode &mode)
+void Message::setMode(const Message_Mode mode)
 {
     m_mode = mode;
 }
@@ -90,7 +90,7 @@ Message_Task Message::getTask() const
     return m_task;
 }
 
-void Message::setTask(const Message_Task &task)
+void Message::setTask(const Message_Task task)
 {
     m_task = task;
 }
@@ -100,7 +100,7 @@ Message_Status Message::getStatus() const
     return m_status;
 }
 
-void Message::setStatus(const Message_Status &status)
+void Message::setStatus(const Message_Status status)
 {
     m_status = status;
 }
@@ -110,7 +110,7 @@ float Message::getPosition_mm() const
     return m_position_mm;
 }
 
-void Message::setPosition_mm(float position_mm)
+void Message::setPosition_mm(const float position_mm)
 {
     m_position_mm = position_mm;
     setPosition_ms(position_mm);
@@ -121,7 +121,7 @@ int Message::getPosition_ms() const
     return m_position_ms;
 }
 
-void Message::setPosition_ms(float mm)
+void Message::setPosition_ms(const float mm)
 {
     const int myMicroSteps = (int)(getUStepPerMM()*mm);
     m_position_ms = myMicroSteps;
@@ -132,7 +132,7 @@ int Message::getSpeed() const
     return m_speed;
 }
 
-void Message::setSpeed(int speed)
+void Message::setSpeed(const int speed)
 {
     m_speed = speed;
 }
@@ -142,7 +142,7 @@ int Message::getPower() const
     return m_power;
 }
 
-void Message::setPower(int power)
+void Message::setPower(const int power)
 {
     m_power = power;
 }
@@ -221,7 +221,7 @@ float Message::getUStepPerMM() const
     return m_uStepPerMM;
 }
 
-void Message::setUStepPerMM(float uStepPerMM)
+void Message::setUStepPerMM(const float uStepPerMM)
 {
     m_uStepPerMM = uStepPerMM;
 }
@@ -231,7 +231,7 @@ Message_Type Message::getMessageType() const
     return m_messageType;
 }
 
-void Message::setMessageType(const Message_Type &type)
+void Message::setMessageType(const Message_Type type)
 {
     m_messageType = type;
 }
@@ -241,7 +241,7 @@ Message_Reply_Flag Message::getReplyFlag() const
     return m_replyFlag;
 }
 
-void Message::setReplyFlag(const Message_Reply_Flag &replyFlag)
+void Message::setReplyFlag(const Message_Reply_Flag replyFlag)
 {
     m_replyFlag = replyFlag;
 }
@@ -251,7 +251,7 @@ Message_Reply_Flag_Data Message::getRepyFlagData() const
     return m_repyFlagData;
 }
 
-void Message::setRepyFlagData(const Message_Reply_Flag_Data &repyFlagData)
+void Message::setRepyFlagData(const Message_Reply_Flag_Data repyFlagData)
 {
     m_repyFlagData = repyFlagData;
 }
@@ -261,7 +261,7 @@ Message_Reply_Warning_Flag Message::getReplyWarningFlag() const
     return m_replyWarningFlag;
 }
 
-void Message::setReplyWarningFlag(const Message_Reply_Warning_Flag &replyWarningFlag)
+void Message::setReplyWarningFlag(const Message_Reply_Warning_Flag replyWarningFlag)
 {
     m_replyWarningFlag = replyWarningFlag;
 }
@@ -271,7 +271,7 @@ QString Message::getReplyStr() const
     return m_replyString;
 }
 
-Message_Reply_Flag Message::decomposeReplyStr(const QString rplystr)
+Message_Reply_Flag Message::decomposeReplyStr(const QString &rplystr)
 {
     /// SEQUENCE: {Type, DeviceNumber,  , AxisNumber,  , ReplyFlag,  ,ReplyStatus,  ,WarningFlag, , Data, \n}
     ///           {T, NN, , A, , FF, , SSSS, , WW, , X to XXXX XXXX, r}
@@ -413,7 +413,7 @@ Block::Block(){
     setCode(NO_CODE);
 }
 
-Block::Block(QString toParse, Message_Mode previousMode, machine_settings_t *settings)
+Block::Block(const QString &toParse, const Message_Mode previousMode, machine_settings_t *settings)
 {
     setCode(NO_CODE);
     setBlockValid(true);
@@ -455,7 +455,7 @@ float Block::getDwell() const
     return m_dwell;
 }
 
-void Block::setDwell(float dwell)
+void Block::setDwell(const float dwell)
 {
     m_dwell = dwell;
 }
@@ -495,7 +495,7 @@ bool Block::isNewLayer() const
     return m_newLayer;
 }
 
-void Block::setNewLayer(bool newLayer)
+void Block::setNewLayer(const bool newLayer)
 {
     m_newLayer = newLayer;
 }
@@ -505,7 +505,7 @@ bool Block::isBlockValid() const
     return m_blockValid;
 }
 
-void Block::setBlockValid(bool blockValid)
+void Block::setBlockValid(const bool blockValid)
 {
     m_blockValid = blockValid;
 }
@@ -521,7 +521,7 @@ void Block::setPreviousMode(const Message_Mode previousMode)
 }
 
 // the juicy bit...
-void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_settings_t *settings)
+void Block::makeBlock(const QString &toParse, const Message_Mode previousMode, machine_settings_t *settings)
 {
     setPreviousMode(previousMode);
     L_Axis()->setDeviceNumber((Device_Number)settings->l_settings.deviceNumber);
@@ -1140,7 +1140,7 @@ Layer::Layer(){
     setLayerValid(false);
 }
 
-Layer::Layer(QVector<Block> someBlocks){
+Layer::Layer(const QVector<Block> &someBlocks){
     setLayerValid(true);
     m_layer = someBlocks;
 }
@@ -1150,7 +1150,7 @@ QVector<Block> Layer::get() const
     return m_layer;
 }
 
-void Layer::setLayerValid(bool layerValid){
+void Layer::setLayerValid(const bool layerValid){
     m_layerValid = layerValid;
 }
 
@@ -1170,12 +1170,12 @@ void Layer::clearLayer()
     m_layer.clear();
 }
 
-Block Layer::getBlock(int blockNumber) const
+Block Layer::getBlock(const int blockNumber) const
 {
     return m_layer.at(blockNumber);
 }
 
-void Layer::addBlock(Block aBlock)
+void Layer::addBlock(const Block &aBlock)
 {
     if(aBlock.isBlockValid() == false)
         setLayerValid(false);
@@ -1190,7 +1190,7 @@ bool Layer::isLayerValid() const
 
 
 ////////////////////////////////////////// BEGIN PART CLASS //////////////////////////////////////////
-Part::Part(QString fileName, machine_settings_t *settings){
+Part::Part(QString &fileName, machine_settings_t *settings){
     m_fileName = fileName;
     m_settings = settings;
     makePart();
@@ -1211,7 +1211,7 @@ void Part::validatePart()
     }
 }
 
-QString Part::displayAxis(QChar axis_number, Message axis)
+QString Part::displayAxis(const QChar axis_number, const Message axis)
 {
     QString axisString = "---------- ";
     if(axis_number == 'L')
@@ -1261,7 +1261,7 @@ QString Part::displayAxis(QChar axis_number, Message axis)
     return axisString;
 }
 
-QString Part::displayBlock(Block aBlock, bool errorOnly)
+QString Part::displayBlock(Block &aBlock, const bool errorOnly)
 {
     QString blockString;
     if(aBlock.isBlockValid() == true)
@@ -1338,7 +1338,7 @@ QString Part::displayBlock(Block aBlock, bool errorOnly)
     return blockString;
 }
 
-QStringList Part::debugPart(bool errorOnly)
+QStringList Part::debugPart(const bool errorOnly)
 {
     QStringList debugOut;
     int numLayer = m_part.size();
@@ -1404,7 +1404,7 @@ void Part::makePart()
         qDebug()<<"Could not open file";
 }
 
-void Part::addLayer(Layer aLayer)
+void Part::addLayer(const Layer &aLayer)
 {
     m_part.append(aLayer);
 }
@@ -1414,12 +1414,12 @@ QVector<Layer> Part::get() const
     return m_part;
 }
 
-Layer Part::getLayer(int layerNumber) const
+Layer Part::getLayer(const int layerNumber) const
 {
     return m_part[layerNumber];
 }
 
-Block Part::getBlock(int LayerNumber, int blockNumber)
+Block Part::getBlock(const int LayerNumber, const int blockNumber)
 {
     return m_part[LayerNumber].getBlock(blockNumber);
 }

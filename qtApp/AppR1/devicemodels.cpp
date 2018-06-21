@@ -30,7 +30,7 @@ Axis::Axis()
     setCurrentStatus(Message_Status::NO_STATUS);
 }
 
-Axis::Axis(int portNumber, BlockIO::Device_Number deviceNumber, BlockIO::Axis_Number axisNumber)
+Axis::Axis(const int portNumber, const Device_Number deviceNumber, const Axis_Number axisNumber)
 {
     m_portNumber = portNumber;
     m_deviceNumber = deviceNumber;
@@ -61,17 +61,17 @@ int Axis::getDeviceNumber() const
     return m_deviceNumber;
 }
 
-void Axis::setDeviceNumber(const BlockIO::Device_Number deviceNumber)
+void Axis::setDeviceNumber(const Device_Number deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
 
-BlockIO::Axis_Number Axis::getAxisNumber() const
+Axis_Number Axis::getAxisNumber() const
 {
     return m_axisNumber;
 }
 
-void Axis::setAxisNumber(const BlockIO::Axis_Number axisNumber)
+void Axis::setAxisNumber(const Axis_Number axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -143,12 +143,12 @@ float Axis::getCurrentSpeed() const
 
 
 
-BlockIO::Message_Mode Axis::getDesiredMode() const
+Message_Mode Axis::getDesiredMode() const
 {
     return m_desiredMode;
 }
 
-void Axis::setDesiredMode(const BlockIO::Message_Mode m)
+void Axis::setDesiredMode(const Message_Mode m)
 {
     m_desiredMode = m;
     m_modePending = true;
@@ -159,13 +159,13 @@ bool Axis::isModePending() const
     return m_modePending;
 }
 
-void Axis::setCurrentMode(const BlockIO::Message_Mode m)
+void Axis::setCurrentMode(const Message_Mode m)
 {
     m_modePending = false;
     m_currentMode = m;
 }
 
-BlockIO::Message_Mode Axis::getCurrentMode() const
+Message_Mode Axis::getCurrentMode() const
 {
     return m_currentMode;
 }
@@ -175,7 +175,7 @@ Message_Task Axis::getCurrentTask() const
     return m_currentTask;
 }
 
-void Axis::setCurrentTask(const BlockIO::Message_Task task)
+void Axis::setCurrentTask(const Message_Task task)
 {
     m_taskPending = false;
     m_currentTask = task;
@@ -186,7 +186,7 @@ Message_Task Axis::getDesiredTask() const
     return m_desiredTask;
 }
 
-void Axis::setDesiredTask(const BlockIO::Message_Task task)
+void Axis::setDesiredTask(const Message_Task task)
 {
     m_taskPending = true;
     m_desiredTask = task;
@@ -202,7 +202,7 @@ Message_Status Axis::getCurrentStatus() const
     return m_currentStatus;
 }
 
-void Axis::setCurrentStatus(const Message_Status &currentStatus)
+void Axis::setCurrentStatus(const Message_Status currentStatus)
 {
     m_currentStatus = currentStatus;
 }
@@ -234,7 +234,7 @@ Laser::Laser()
     setCurrentStatus(Message_Status::NO_STATUS);
 }
 
-Laser::Laser(int portNumber, BlockIO::Device_Number deviceNumber, BlockIO::Axis_Number axisNumber)
+Laser::Laser(const int portNumber, const Device_Number deviceNumber, const Axis_Number axisNumber)
 {
     m_portNumber = portNumber;
     m_deviceNumber = deviceNumber;
@@ -263,17 +263,17 @@ int Laser::getDeviceNumber() const
     return m_deviceNumber;
 }
 
-void Laser::setDeviceNumber(const BlockIO::Device_Number deviceNumber)
+void Laser::setDeviceNumber(const Device_Number deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
 
-BlockIO::Axis_Number Laser::getAxisNumber() const
+Axis_Number Laser::getAxisNumber() const
 {
     return m_axisNumber;
 }
 
-void Laser::setAxisNumber(const BlockIO::Axis_Number axisNumber)
+void Laser::setAxisNumber(const Axis_Number axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -306,12 +306,12 @@ float Laser::getCurrentPower() const
     return m_currentPower;
 }
 
-BlockIO::Message_Mode Laser::getDesiredMode() const
+Message_Mode Laser::getDesiredMode() const
 {
     return m_desiredMode;
 }
 
-void Laser::setDesiredMode(const BlockIO::Message_Mode m)
+void Laser::setDesiredMode(const Message_Mode m)
 {
     m_desiredMode = m;
     m_modePending = true;
@@ -322,13 +322,13 @@ bool Laser::isModePending() const
     return m_modePending;
 }
 
-void Laser::setCurrentMode(const BlockIO::Message_Mode m)
+void Laser::setCurrentMode(const Message_Mode m)
 {
     m_modePending = false;
     m_currentMode = m;
 }
 
-BlockIO::Message_Mode Laser::getCurrentMode() const
+Message_Mode Laser::getCurrentMode() const
 {
     return m_currentMode;
 }
@@ -338,7 +338,7 @@ Message_Task Laser::getCurrentTask() const
     return m_currentTask;
 }
 
-void Laser::setCurrentTask(const BlockIO::Message_Task task)
+void Laser::setCurrentTask(const Message_Task task)
 {
     m_taskPending = false;
     m_currentTask = task;
@@ -349,7 +349,7 @@ Message_Task Laser::getDesiredTask() const
     return m_desiredTask;
 }
 
-void Laser::setDesiredTask(const BlockIO::Message_Task task)
+void Laser::setDesiredTask(const Message_Task task)
 {
     m_taskPending = true;
     m_desiredTask = task;
@@ -365,7 +365,7 @@ Message_Status Laser::getCurrentStatus() const
     return m_currentStatus;
 }
 
-void Laser::setCurrentStatus(const Message_Status &currentStatus)
+void Laser::setCurrentStatus(const Message_Status currentStatus)
 {
     m_currentStatus = currentStatus;
 }
@@ -380,41 +380,45 @@ void Laser::setCurrentStatus(const Message_Status &currentStatus)
 
 //////////////////////////////////// BEGIN SystemController CLASS ////////////////////////////////////
 
-SystemController::SystemController(machine_settings_t *settings, QObject *parent)
-    : QObject(parent)
+SystemController::SystemController(QObject *parent) : QObject(parent)
 {
-    laser_model.setPortNumber(settings->l_settings.portNumber);
-    laser_model.setDeviceNumber((Device_Number)settings->l_settings.deviceNumber);
-    laser_model.setAxisNumber((Axis_Number)settings->l_settings.deviceNumber);
-
-    x_axis_model.setPortNumber(settings->x_settings.portNumber);
-    x_axis_model.setDeviceNumber((Device_Number)settings->x_settings.deviceNumber);
-    x_axis_model.setAxisNumber((Axis_Number)settings->x_settings.deviceNumber);
-
-    y_axis_model.setPortNumber(settings->y_settings.portNumber);
-    y_axis_model.setDeviceNumber((Device_Number)settings->y_settings.deviceNumber);
-    y_axis_model.setAxisNumber((Axis_Number)settings->y_settings.deviceNumber);
-
-    buildPlate_model.setPortNumber(settings->z_settings.portNumber);
-    buildPlate_model.setDeviceNumber((Device_Number)settings->z_settings.deviceNumber);
-    buildPlate_model.setAxisNumber((Axis_Number)settings->z_settings.deviceNumber);
-
-    hopperPlate_model.setPortNumber(settings->a_settings.portNumber);
-    hopperPlate_model.setDeviceNumber((Device_Number)settings->a_settings.deviceNumber);
-    hopperPlate_model.setAxisNumber((Axis_Number)settings->a_settings.deviceNumber);
-
-    spreadBlade_model.setPortNumber(settings->b_settings.portNumber);
-    spreadBlade_model.setDeviceNumber((Device_Number)settings->b_settings.deviceNumber);
-    spreadBlade_model.setAxisNumber((Axis_Number)settings->b_settings.deviceNumber);
 
 }
+//SystemController::SystemController(machine_settings_t *settings, QObject *parent)
+//    : QObject(parent)
+//{
+//    laser_model.setPortNumber(settings->l_settings.portNumber);
+//    laser_model.setDeviceNumber((Device_Number)settings->l_settings.deviceNumber);
+//    laser_model.setAxisNumber((Axis_Number)settings->l_settings.deviceNumber);
+
+//    x_axis_model.setPortNumber(settings->x_settings.portNumber);
+//    x_axis_model.setDeviceNumber((Device_Number)settings->x_settings.deviceNumber);
+//    x_axis_model.setAxisNumber((Axis_Number)settings->x_settings.deviceNumber);
+
+//    y_axis_model.setPortNumber(settings->y_settings.portNumber);
+//    y_axis_model.setDeviceNumber((Device_Number)settings->y_settings.deviceNumber);
+//    y_axis_model.setAxisNumber((Axis_Number)settings->y_settings.deviceNumber);
+
+//    buildPlate_model.setPortNumber(settings->z_settings.portNumber);
+//    buildPlate_model.setDeviceNumber((Device_Number)settings->z_settings.deviceNumber);
+//    buildPlate_model.setAxisNumber((Axis_Number)settings->z_settings.deviceNumber);
+
+//    hopperPlate_model.setPortNumber(settings->a_settings.portNumber);
+//    hopperPlate_model.setDeviceNumber((Device_Number)settings->a_settings.deviceNumber);
+//    hopperPlate_model.setAxisNumber((Axis_Number)settings->a_settings.deviceNumber);
+
+//    spreadBlade_model.setPortNumber(settings->b_settings.portNumber);
+//    spreadBlade_model.setDeviceNumber((Device_Number)settings->b_settings.deviceNumber);
+//    spreadBlade_model.setAxisNumber((Axis_Number)settings->b_settings.deviceNumber);
+
+//}
 
 
 
-void SystemController::sendMessage(BlockIO::Message aMessage)
+void SystemController::sendMessage(Message aMessage)
 {
     if((aMessage.getTask() != Message_Task::NO_TASK)
-            && (aMessage.getDeviceNumber() == BlockIO::Device_Number::LASER_GALVO))
+            && (aMessage.getDeviceNumber() == Device_Number::LASER_GALVO))
     {
         const Message_Status currentTraffic = setModelToDesired(aMessage);
         if(currentTraffic != Message_Status::BUSY)
@@ -424,21 +428,20 @@ void SystemController::sendMessage(BlockIO::Message aMessage)
         }
     }
     else if((aMessage.getTask() != Message_Task::NO_TASK)
-            && ((aMessage.getDeviceNumber() == BlockIO::Device_Number::BUILD_PLATE)
-                || (aMessage.getDeviceNumber() == BlockIO::Device_Number::HOP_SPRD)))
+            && ((aMessage.getDeviceNumber() == Device_Number::BUILD_PLATE)
+                || (aMessage.getDeviceNumber() == Device_Number::HOP_SPRD)))
     {
         const Message_Status currentTraffic = setModelToDesired(aMessage);
         if(currentTraffic != Message_Status::BUSY)
         {
             m_current_md_command_str = aMessage.getCommandStr();
-            setModelToDesired(aMessage);
             emit MaterialDeliveryCommand_sig(m_current_md_command_str);
         }
     }
 }
 
 
-void SystemController::LaserGalvoReply_slot(BlockIO::Message lg_reply)
+void SystemController::LaserGalvoReply_slot(Message lg_reply)
 {
     m_current_lg_reply = lg_reply;
     const Message_Status replyStatus = updateModelWithReply(m_current_lg_reply);
@@ -448,13 +451,14 @@ void SystemController::LaserGalvoReply_slot(BlockIO::Message lg_reply)
 //        int g = -3;// handle the error;
 }
 
-void SystemController::MaterialDeliveryReply_slot(BlockIO::Message md_reply)
+void SystemController::MaterialDeliveryReply_slot(Message md_reply)
 {
     m_current_md_reply = md_reply;
     updateModelWithReply(m_current_md_reply);
 }
 
-Message_Status SystemController::setModelToDesired(BlockIO::Message aMessage)
+
+Message_Status SystemController::setModelToDesired(Message aMessage)
 {
     Message_Status myStatus = Message_Status::BUSY;
     if((aMessage.getAxisNumber() == Axis_Number::L)
@@ -600,7 +604,7 @@ Message_Status SystemController::setModelToDesired(BlockIO::Message aMessage)
 }
 
 
-Message_Status SystemController::updateModelWithReply(BlockIO::Message aMessage)
+Message_Status SystemController::updateModelWithReply(Message aMessage)
 {
     Message_Status myStatus = Message_Status::REPLY_FAILED;
     if((aMessage.getReplyFlag() == Message_Reply_Flag::OK))
@@ -768,6 +772,24 @@ Message_Status SystemController::updateModelWithReply(BlockIO::Message aMessage)
         }
     }
     return myStatus;
+}
+
+
+
+
+void SystemController::simpleReceive(QString s)
+{
+    m_myString = s;
+}
+
+void SystemController::sendString(const QString &aString)
+{
+    emit simpleSend(aString);
+}
+
+QString SystemController::getMyString() const
+{
+    return m_myString;
 }
 
 

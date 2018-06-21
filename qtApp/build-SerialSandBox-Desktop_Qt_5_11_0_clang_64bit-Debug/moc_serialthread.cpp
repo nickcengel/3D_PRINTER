@@ -1,16 +1,16 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'devicedrivers.h'
+** Meta object code from reading C++ file 'serialthread.h'
 **
 ** Created by: The Qt Meta Object Compiler version 67 (Qt 5.11.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../AppR1/devicedrivers.h"
+#include "../SerialSandBox/serialthread.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'devicedrivers.h' doesn't include <QObject>."
+#error "The header file 'serialthread.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
 #error "This file was generated using the moc from 5.11.0. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SerialThread_t {
     QByteArrayData data[7];
-    char stringdata0[55];
+    char stringdata0[52];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,13 +34,13 @@ static const qt_meta_stringdata_SerialThread_t qt_meta_stringdata_SerialThread =
 QT_MOC_LITERAL(0, 0, 12), // "SerialThread"
 QT_MOC_LITERAL(1, 13, 8), // "response"
 QT_MOC_LITERAL(2, 22, 0), // ""
-QT_MOC_LITERAL(3, 23, 15), // "responseMessage"
-QT_MOC_LITERAL(4, 39, 5), // "error"
-QT_MOC_LITERAL(5, 45, 1), // "s"
-QT_MOC_LITERAL(6, 47, 7) // "timeout"
+QT_MOC_LITERAL(3, 23, 12), // "response_str"
+QT_MOC_LITERAL(4, 36, 5), // "error"
+QT_MOC_LITERAL(5, 42, 1), // "s"
+QT_MOC_LITERAL(6, 44, 7) // "timeout"
 
     },
-    "SerialThread\0response\0\0responseMessage\0"
+    "SerialThread\0response\0\0response_str\0"
     "error\0s\0timeout"
 };
 #undef QT_MOC_LITERAL

@@ -9,6 +9,8 @@
 #include <qfiledialog.h>
 #include <QString>
 #include "blockio.h"
+#include "devicedrivers.h"
+#include "devicemodels.h"
 
 using BlockIO::axis_settings_t;
 using BlockIO::machine_settings_t;
@@ -38,12 +40,18 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void transaction(const QString &s);
+    void showResponse(const QString &s);
+
 private:
     Ui::MainWindow *ui;
     QString m_fileName;
     machine_settings_t m_settings;
 
     Part * myPart;
+
+    SerialThread s_thread;
+    //SystemController s_controller;
 
 };
 

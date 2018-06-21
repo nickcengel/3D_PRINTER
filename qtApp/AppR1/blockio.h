@@ -214,60 +214,60 @@ class Message
 public:
 
     Message();
-    Message(QString replyMessage);
-    Message(Message_Type type);
-    Message(Message_Type type,const Device_Number dn, const Axis_Number an);
+    Message(const QString &replyMessage);
+    Message(const Message_Type type);
+    Message(const Message_Type type, const Device_Number dn, const Axis_Number an);
 
     Message(const Device_Number dn, const Axis_Number an);
 
     Device_Number getDeviceNumber() const;
-    void setDeviceNumber(const Device_Number &deviceNumber);
+    void setDeviceNumber(const Device_Number deviceNumber);
 
     Axis_Number getAxisNumber() const;
-    void setAxisNumber(const Axis_Number &number);
+    void setAxisNumber(const Axis_Number number);
 
     Message_Mode getMode() const;
-    void setMode(const Message_Mode &mode);
+    void setMode(const Message_Mode mode);
 
     Message_Task getTask() const;
-    void setTask(const Message_Task &task);
+    void setTask(const Message_Task task);
 
     Message_Status getStatus() const;
-    void setStatus(const Message_Status &status);
+    void setStatus(const Message_Status status);
 
     float getPosition_mm() const;
-    void setPosition_mm(float position_mm);
+    void setPosition_mm(const float position_mm);
 
     int getPosition_ms() const;
-    void setPosition_ms(float mm);
+    void setPosition_ms(const float mm);
 
     int getSpeed() const;
-    void setSpeed(int speed);
+    void setSpeed(const int speed);
 
     int getPower() const;
-    void setPower(int power);
+    void setPower(const int power);
 
     QString getCommandStr() const;
     void composeCommandStr();
 
     float getUStepPerMM() const;
-    void setUStepPerMM(float uStepPerMM);
+    void setUStepPerMM(const float uStepPerMM);
 
     Message_Type getMessageType() const;
-    void setMessageType(const Message_Type &type);
+    void setMessageType(const Message_Type type);
 
     Message_Reply_Flag getReplyFlag() const;
-    void setReplyFlag(const Message_Reply_Flag &replyFlag);
+    void setReplyFlag(const Message_Reply_Flag replyFlag);
 
     Message_Reply_Flag_Data getRepyFlagData() const;
-    void setRepyFlagData(const Message_Reply_Flag_Data &repyFlagData);
+    void setRepyFlagData(const Message_Reply_Flag_Data repyFlagData);
 
 
     Message_Reply_Warning_Flag getReplyWarningFlag() const;
-    void setReplyWarningFlag(const Message_Reply_Warning_Flag &replyWarningFlag);
+    void setReplyWarningFlag(const Message_Reply_Warning_Flag replyWarningFlag);
 
     QString getReplyStr() const;
-    Message_Reply_Flag decomposeReplyStr(const QString rplystr);
+    Message_Reply_Flag decomposeReplyStr(const QString &rplystr);
 
 private:
     Message_Type m_messageType;
@@ -325,7 +325,7 @@ class Block
 {
 public:
     Block();
-    Block(QString toParse, Message_Mode previousMode, machine_settings_t *settings);
+    Block(const QString &toParse, const Message_Mode previousMode, machine_settings_t *settings);
 
     Message *L_Axis();
     Message *X_Axis();
@@ -335,7 +335,7 @@ public:
     Message *B_Axis();
 
     float getDwell() const;
-    void setDwell(float dwell);
+    void setDwell(const float dwell);
 
     Code getCode() const;
     void setCode(const Code code);
@@ -347,10 +347,10 @@ public:
     void setErrors(const QString &errors);
 
     bool isNewLayer() const;
-    void setNewLayer(bool newLayer);
+    void setNewLayer(const bool newLayer);
 
     bool isBlockValid() const;
-    void setBlockValid(bool blockValid);
+    void setBlockValid(const bool blockValid);
 
     Message_Mode getPreviousMode() const;
     void setPreviousMode(const Message_Mode previousMode);
@@ -376,7 +376,7 @@ private:
 
     bool m_blockValid;
 
-    void makeBlock(const QString toParse, Message_Mode previousMode, machine_settings_t *settings);
+    void makeBlock(const QString &toParse, const Message_Mode previousMode, machine_settings_t *settings);
 };
 ////////////////////////////////////////// END BLOCK CLASS //////////////////////////////////////////
 
@@ -401,14 +401,14 @@ class Layer
 {
 public:
     Layer();
-    Layer(QVector <Block> someBlocks);
+    Layer(const QVector<Block> &someBlocks);
 
     QVector<Block> get() const;
-    Block getBlock(int blockNumber) const;
+    Block getBlock(const int blockNumber) const;
 
-    void addBlock(Block aBlock);
+    void addBlock(const Block &aBlock);
     bool isLayerValid() const;
-    void setLayerValid(bool layerValid);
+    void setLayerValid(const bool layerValid);
     bool validateLayer();
     void clearLayer();
 
@@ -448,17 +448,17 @@ private:
 class Part
 {
 public:
-    Part(QString fileName, machine_settings_t *settings);
+    Part(QString &fileName, machine_settings_t *settings);
 
-    void addLayer(Layer aLayer);
+    void addLayer(const Layer &aLayer);
     QVector<Layer> get() const;
-    Layer getLayer(int layerNumber) const;
-    Block getBlock(int LayerNumber, int blockNumber);
+    Layer getLayer(const int layerNumber) const;
+    Block getBlock(const int LayerNumber, const int blockNumber);
     bool isPartValid() const;
     void validatePart();
-    QString displayAxis(QChar axisTitle, Message axis);
-    QString displayBlock(Block aBlock, bool errorOnly);
-    QStringList debugPart(bool errorOnly);
+    QString displayAxis(const QChar axisTitle, const Message axis);
+    QString displayBlock( Block &aBlock, const bool errorOnly);
+    QStringList debugPart(const bool errorOnly);
 
 private:
     bool m_partValid;

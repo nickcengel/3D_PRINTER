@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "blockio.h"
+#include "devicedrivers.h"
+#include "devicemodels.h"
 using BlockIO::Axis_Number;
 
 using BlockIO::axis_settings_t;
@@ -14,13 +16,21 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+//    connect(&s_controller, &s_controller::simpleSend, this, &MainWindow::transaction);
+//    ///  Use mainWindow:: transaction method to direct Bob's command to s_thread
+//    ///  SENDER  : BOB,             SIGNAL: (str) command
+//    ///  RECEIVER: this mainWindow, SLOT  : (void) transaction
+//    //connect( &BOB , &BOB::command, this, &MainWindow::transaction);
+
+//    ///  SENDER  : s_thread,        SIGNAL: (str) response
+//    ///  RECEIVER: this mainWindow, SLOT  : (void) showResponse
+//    connect(&s_thread, &SerialThread::response, this, &MainWindow::showResponse);
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete myPart;
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -41,5 +51,21 @@ void MainWindow::on_pushButton_clicked()
 
     myPart = new Part(m_fileName, &MySettings);
     qDebug().noquote()<<myPart->debugPart(0);
+    delete myPart;
+
 }
 
+
+void MainWindow::transaction(const QString &s)
+{
+/// use our thread's transaction method to send it a stringcommand...
+//    s_thread.transaction(portName,
+//                         timeout,
+//                         stringcommand)
+}
+
+void MainWindow::showResponse(const QString &s)
+{
+ /// when the thread emits a string its captured and decoded from the serial port...
+
+}

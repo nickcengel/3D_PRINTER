@@ -37,7 +37,7 @@ class Axis
 {
 public:
     Axis();
-    Axis(int portNumber, Device_Number deviceNumber, Axis_Number axisNumber);
+    Axis(const int portNumber, const Device_Number deviceNumber, const Axis_Number axisNumber);
 
     int getPortNumber() const;
     void setPortNumber(const int portNumber);
@@ -76,7 +76,7 @@ public:
     bool isTaskPending() const;
 
     Message_Status getCurrentStatus() const;
-    void setCurrentStatus(const Message_Status &currentStatus);
+    void setCurrentStatus(const Message_Status currentStatus);
 
 
 
@@ -114,7 +114,7 @@ class Laser
 {
 public:
     Laser();
-    Laser(int portNumber, Device_Number deviceNumber, Axis_Number axisNumber);
+    Laser(const int portNumber, const Device_Number deviceNumber, const Axis_Number axisNumber);
 
     int getPortNumber() const;
     void setPortNumber(const int portNumber);
@@ -147,7 +147,7 @@ public:
     void setTaskPending(bool pending);
 
     Message_Status getCurrentStatus() const;
-    void setCurrentStatus(const Message_Status &currentStatus);
+    void setCurrentStatus(const Message_Status currentStatus);
 
 private:
     int m_portNumber;
@@ -193,7 +193,9 @@ class SystemController : public QObject
 {
     Q_OBJECT
 public:
-    explicit SystemController(machine_settings_t *settings, QObject *parent = nullptr);
+    explicit SystemController(QObject *parent = nullptr);
+
+    //explicit SystemController(machine_settings_t *settings, QObject *parent = nullptr);
 
     Laser laser_model;
     Axis x_axis_model;
@@ -205,18 +207,28 @@ public:
     Axis spreadBlade_model;
 
     void sendMessage(Message aMessage);
-    BlockIO::Message_Status setModelToDesired(BlockIO::Message aMessage) ;
-    BlockIO::Message_Status updateModelWithReply(BlockIO::Message aMessage);
+    Message_Status setModelToDesired(Message aMessage) ;
+    Message_Status updateModelWithReply(Message aMessage);
+
+    void sendString(const QString &aString);
+
+    QString getMyString() const;
+
 signals:
     void LaserGalvoCommand_sig(QString current_lg_command_str);
     void MaterialDeliveryCommand_sig(QString current_md_command_str);
 
+    void simpleSend(QString s);
+
     public slots:
     void LaserGalvoReply_slot(Message lg_reply);
     void MaterialDeliveryReply_slot(Message md_reply);
+    void simpleReceive(QString s);
 
 
 private:
+    QString m_myString;
+
     QString m_current_lg_command_str;
     QString m_current_md_command_str;
 
