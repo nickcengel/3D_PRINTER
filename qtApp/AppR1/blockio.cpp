@@ -5,11 +5,42 @@ namespace BlockIO {
 
 Message::Message()
 {
+    setMessageType(NO_TYPE);
     setDeviceNumber(NO_DEVICE);
     setAxisNumber(NO_AXIS);
     setTask(NO_TASK);
     setMode(NO_MODE);
     setStatus(NO_STATUS);
+    setReplyFlag(NO_FLAG);
+    setRepyFlagData(NO_FLAG_DATA);
+    setReplyWarningFlag(NO_WARNING_FLAG);
+}
+
+Message::Message(QString replyMessage)
+{
+    setMessageType(NO_TYPE);
+    setDeviceNumber(NO_DEVICE);
+    setAxisNumber(NO_AXIS);
+    setTask(NO_TASK);
+    setMode(NO_MODE);
+    setStatus(NO_STATUS);
+    setReplyFlag(NO_FLAG);
+    setRepyFlagData(NO_FLAG_DATA);
+    setReplyWarningFlag(NO_WARNING_FLAG);
+    decomposeReplyStr(replyMessage);
+}
+
+Message::Message(Message_Type type, const DeviceNumber dn, const AxisNumber an)
+{
+    setMessageType(type);
+    setDeviceNumber(dn);
+    setAxisNumber(an);
+    setTask(NO_TASK);
+    setMode(NO_MODE);
+    setStatus(NO_STATUS);
+    setReplyFlag(NO_FLAG);
+    setRepyFlagData(NO_FLAG_DATA);
+    setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
 Message::Message(DeviceNumber dn, AxisNumber an)
@@ -19,6 +50,9 @@ Message::Message(DeviceNumber dn, AxisNumber an)
     setTask(NO_TASK);
     setMode(NO_MODE);
     setStatus(NO_STATUS);
+    setReplyFlag(NO_FLAG);
+    setRepyFlagData(NO_FLAG_DATA);
+    setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
 DeviceNumber Message::getDeviceNumber() const
@@ -113,19 +147,22 @@ void Message::setPower(int power)
     m_power = power;
 }
 
-QString Message::getCommandString() const
+QString Message::getCommandStr() const
 {
     return m_commandString;
 }
 
-void Message::composeCommandString()
+void Message::composeCommandStr()
 {
-
+    setMessageType(Message_Type::M_COMMAND);
     const Message_Task myTask = getTask();
     if((myTask > TASK_ERROR) && (myTask < NO_TASK))
     {
         // Commands begin with /device# axis#
-        QString myString = ("/" + QString::number((int)getDeviceNumber()) + " " + QString::number((int)getAxisNumber()));
+        QString myString = ("/"
+                            + QString::number((int)getDeviceNumber())
+                            + " " + QString::number((int)getAxisNumber()));
+
         if((myTask == ENABLE) || (myTask == DISABLE))
         {
             if(myTask == ENABLE)
@@ -189,7 +226,184 @@ void Message::setUStepPerMM(float uStepPerMM)
     m_uStepPerMM = uStepPerMM;
 }
 
+Message_Type Message::getMessageType() const
+{
+    return m_messageType;
+}
 
+void Message::setMessageType(const Message_Type &type)
+{
+    m_messageType = type;
+}
+
+Message_Reply_Flag Message::getReplyFlag() const
+{
+    return m_replyFlag;
+}
+
+void Message::setReplyFlag(const Message_Reply_Flag &replyFlag)
+{
+    m_replyFlag = replyFlag;
+}
+
+Message_Reply_Flag_Data Message::getRepyFlagData() const
+{
+    return m_repyFlagData;
+}
+
+void Message::setRepyFlagData(const Message_Reply_Flag_Data &repyFlagData)
+{
+    m_repyFlagData = repyFlagData;
+}
+
+Message_Reply_Warning_Flag Message::getReplyWarningFlag() const
+{
+    return m_replyWarningFlag;
+}
+
+void Message::setReplyWarningFlag(const Message_Reply_Warning_Flag &replyWarningFlag)
+{
+    m_replyWarningFlag = replyWarningFlag;
+}
+
+QString Message::getReplyStr() const
+{
+    return m_replyString;
+}
+
+Message_Reply_Flag Message::decomposeReplyStr(const QString rplystr)
+{
+    /// SEQUENCE: {Type, DeviceNumber,  , AxisNumber,  , ReplyFlag,  ,ReplyStatus,  ,WarningFlag, , Data, \n}
+    ///           {T, NN, , A, , FF, , SSSS, , WW, , X to XXXX XXXX, r}
+    ///             {Name[startIndex, length]}
+    ///           {T[n,1], N[n+1,2], A[n+4,1], F[n+6,2], S[n+9, 4], W[n+14,2], X[n+17,1 to 8],r[n+18 to n+26, 1}
+    enum reply_Index{Type_index = 0, DeviceNum_index = 1,
+                     AxisNum_index = 4, ReplyFlag_index = 6,
+                     ReplyStatus_index = 9, WarningFlag_index = 14,
+                     ReplyData_index = 17};
+    Message_Reply_Flag myReplyFlag = getReplyFlag();
+    int messageStart = -1;
+    int messageEnd = -1;
+
+    // FIND THE START OF THE MESSAGE AND DETERMINE THE REPLY TYPE
+    if((messageStart = rplystr.indexOf('@',0)) != -1)
+    {
+        setMessageType(Message_Type::M_REPLY);
+    }
+    else if((messageStart = rplystr.indexOf('!',0)) != -1)
+    {
+        setMessageType(Message_Type::M_ALERT);
+    }
+    else if((messageStart = rplystr.indexOf('#',0)) != -1)
+    {
+        setMessageType(Message_Type::M_INFO);
+    }
+    else
+    {
+        setMessageType(Message_Type::TYPE_ERROR);
+        myReplyFlag = Message_Reply_Flag::FLAG_ERROR;
+        setReplyFlag(myReplyFlag);
+        return myReplyFlag;
+    }
+
+    // FIND THE END OF THE MESSAGE
+    if((messageEnd = getReplyStr().indexOf("\r", messageStart)) != -1)
+    {
+        setReplyFlag(Message_Reply_Flag::NO_FLAG);
+    }
+    else if((messageEnd = getReplyStr().indexOf("\n", messageStart)) != -1)
+    {
+        setReplyFlag(Message_Reply_Flag::NO_FLAG);
+    }
+    else if((messageEnd = getReplyStr().indexOf("\r\n", messageStart)) != -1)
+    {
+        setReplyFlag(Message_Reply_Flag::NO_FLAG);
+    }
+    else
+    {
+        setMessageType(Message_Type::TYPE_ERROR);
+        myReplyFlag = Message_Reply_Flag::DID_NOT_FIND_END;
+        setReplyFlag(myReplyFlag);
+        return myReplyFlag;
+    }
+
+    // IF THE MESSAGE HAS A VALID STRUCTURE, PROCESS IT
+    if((messageStart > -1)&&(messageEnd > messageStart)
+            &&(rplystr.at(messageStart+3) == ' ')
+            &&(rplystr.at(messageStart+5) == ' ')
+            &&(rplystr.at(messageStart+8) == ' ')
+            &&(rplystr.at(messageStart+13) == ' '))
+    {
+        const QString myString = rplystr.mid(messageStart,messageEnd-messageStart+1);
+        m_replyString = myString;
+
+        bool goodNum = false;
+
+        const int myDeviceNumber = myString.mid(DeviceNum_index, 2).toInt(&goodNum,10);
+        if(goodNum)
+            setDeviceNumber((DeviceNumber)myDeviceNumber);
+
+        const int myAxisNumber = myString.mid(AxisNum_index, 1).toInt(&goodNum,10);
+        if(goodNum)
+            setAxisNumber((AxisNumber)myAxisNumber);
+
+        const int myRF = myString.mid(ReplyFlag_index, 2).toInt(&goodNum,10);
+        if(goodNum)
+            setReplyFlag((Message_Reply_Flag)myRF);
+
+        const QString myStatus = myString.mid(ReplyStatus_index, 4);
+        if(myStatus == "BUSY")
+            setStatus(Messge_Status::BUSY);
+        else if(myStatus == "IDLE")
+            setStatus(Messge_Status::IDLE);
+
+        const QString myWarningFlag = myString.mid(WarningFlag_index, 2);
+        if(myWarningFlag == "--")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::NO_WARNING_FLAG);
+        else if(myWarningFlag == "FD")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::DRIVER_DISABLED);
+        else if(myWarningFlag == "FQ")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::ENCODER_ERROR);
+        else if(myWarningFlag == "FS")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::STALLED);
+        else if(myWarningFlag == "FE")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::LIMIT_ERROR);
+        else if(myWarningFlag == "WH")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::NOT_HOMED);
+        else if(myWarningFlag == "WL")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::UNEXPECTED_LIMIT_TRIG);
+        else if(myWarningFlag == "WP")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::INVALID_CALIBRATION);
+        else if(myWarningFlag == "WV")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::VOLTAGE_ERROR);
+        else if(myWarningFlag == "WT")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::TEMPERATURE_ERROR);
+        else if(myWarningFlag == "WM")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::UNEXPECTED_DISPLACEMENT);
+        else if(myWarningFlag == "WR")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::NO_REFERENCE_POSITION);
+        else if(myWarningFlag == "NC")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::BUSY_WITH_MANUAL_CONTRL);
+        else if(myWarningFlag == "NI")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::COMMAND_INTERRUPTED);
+        else if(myWarningFlag == "NU")
+           setReplyWarningFlag(Message_Reply_Warning_Flag::UPDATE_OR_RESET_PENDING);
+        else
+            setReplyWarningFlag(Message_Reply_Warning_Flag::WARNING_FLAG_ERROR);
+
+        if((messageEnd-messageStart) > 18)
+        {
+            //handle reply data
+        }
+
+    }
+    else
+    {
+        m_replyString = "did not understand reply\n";
+    }
+
+    return myReplyFlag;
+}
 
 
 
@@ -343,7 +557,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
     int commentSize;
     setNewLayer(false);
     // For safety, always start by setting the laser off flag
-//    L_Axis()->setTask(DISABLE);
+    //    L_Axis()->setTask(DISABLE);
     // Ignore empty lines or ones that begin with '/'
     if((toParse.indexOf('/') == 0)||(toParse.size()<2))
     {
@@ -437,22 +651,22 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(token == "G90")  // ABSOLUTE POSITION
                     {
                         setCode(G90);
-                        X_Axis()->setMode(ABSOLUTE);
-                        Y_Axis()->setMode(ABSOLUTE);
-                        Z_Axis()->setMode(ABSOLUTE);
-                        A_Axis()->setMode(ABSOLUTE);
-                        B_Axis()->setMode(ABSOLUTE);
-                        setPreviousMode(ABSOLUTE);
+                        X_Axis()->setMode(ABSOLUTE_MODE);
+                        Y_Axis()->setMode(ABSOLUTE_MODE);
+                        Z_Axis()->setMode(ABSOLUTE_MODE);
+                        A_Axis()->setMode(ABSOLUTE_MODE);
+                        B_Axis()->setMode(ABSOLUTE_MODE);
+                        setPreviousMode(ABSOLUTE_MODE);
                     }
                     else if(token == "G91") // RELATIVE POSITION
                     {
                         setCode(G91);
-                        X_Axis()->setMode(RELATIVE);
-                        Y_Axis()->setMode(RELATIVE);
-                        Z_Axis()->setMode(RELATIVE);
-                        A_Axis()->setMode(RELATIVE);
-                        B_Axis()->setMode(RELATIVE);
-                        setPreviousMode(RELATIVE);
+                        X_Axis()->setMode(RELATIVE_MODE);
+                        Y_Axis()->setMode(RELATIVE_MODE);
+                        Z_Axis()->setMode(RELATIVE_MODE);
+                        A_Axis()->setMode(RELATIVE_MODE);
+                        B_Axis()->setMode(RELATIVE_MODE);
+                        setPreviousMode(RELATIVE_MODE);
                     }
                 }
                 else
@@ -498,7 +712,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(valueValid && (value < settings->x_settings.positionMax) && (value > settings->x_settings.positionMin))
                     {
                         X_Axis()->setPosition_mm(value);
-                        if(X_Axis()->getMode() == Message_Mode::RELATIVE)
+                        if(X_Axis()->getMode() == Message_Mode::RELATIVE_MODE)
                             X_Axis()->setTask(MOVE_REL);
                         else
                             X_Axis()->setTask(MOVE_ABS);
@@ -538,7 +752,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(valueValid && (value < settings->y_settings.positionMax) && (value > settings->y_settings.positionMin))
                     {
                         Y_Axis()->setPosition_mm(value);
-                        if(Y_Axis()->getMode() == Message_Mode::RELATIVE)
+                        if(Y_Axis()->getMode() == Message_Mode::RELATIVE_MODE)
                             Y_Axis()->setTask(MOVE_REL);
                         else
                             Y_Axis()->setTask(MOVE_ABS);
@@ -577,7 +791,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(valueValid && (value < settings->z_settings.positionMax) && (value > settings->z_settings.positionMin))
                     {
                         Z_Axis()->setPosition_mm(value);
-                        if(Z_Axis()->getMode() == Message_Mode::RELATIVE)
+                        if(Z_Axis()->getMode() == Message_Mode::RELATIVE_MODE)
                             Z_Axis()->setTask(MOVE_REL);
                         else
                             Z_Axis()->setTask(MOVE_ABS);
@@ -617,7 +831,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(valueValid && (value < settings->a_settings.positionMax) && (value > settings->a_settings.positionMin))
                     {
                         A_Axis()->setPosition_mm(value);
-                        if(A_Axis()->getMode() == Message_Mode::RELATIVE)
+                        if(A_Axis()->getMode() == Message_Mode::RELATIVE_MODE)
                             A_Axis()->setTask(MOVE_REL);
                         else
                             A_Axis()->setTask(MOVE_ABS);
@@ -656,7 +870,7 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     if(valueValid && (value < settings->b_settings.positionMax) && (value > settings->b_settings.positionMin))
                     {
                         B_Axis()->setPosition_mm(value);
-                        if(B_Axis()->getMode() == Message_Mode::RELATIVE)
+                        if(B_Axis()->getMode() == Message_Mode::RELATIVE_MODE)
                             B_Axis()->setTask(MOVE_REL);
                         else
                             B_Axis()->setTask(MOVE_ABS);
@@ -735,12 +949,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     {
                         if((value < settings->x_settings.speedMax) && (value > settings->x_settings.speedMin))
                         {
-                            if(X_Axis()->getMode() == ABSOLUTE)
+                            if(X_Axis()->getMode() == ABSOLUTE_MODE)
                             {
                                 X_Axis()->setTask(MOVE_ABS_AT_SPEED);
                                 X_Axis()->setSpeed(value);
                             }
-                            else if(X_Axis()->getMode() == RELATIVE)
+                            else if(X_Axis()->getMode() == RELATIVE_MODE)
                             {
                                 X_Axis()->setTask(MOVE_REL_AT_SPEED);
                                 X_Axis()->setSpeed(value);
@@ -758,12 +972,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     {
                         if((value < settings->y_settings.speedMax) && (value > settings->y_settings.speedMin))
                         {
-                            if(Y_Axis()->getMode() == ABSOLUTE)
+                            if(Y_Axis()->getMode() == ABSOLUTE_MODE)
                             {
                                 Y_Axis()->setTask(MOVE_ABS_AT_SPEED);
                                 Y_Axis()->setSpeed(value);
                             }
-                            else if(Y_Axis()->getMode() == RELATIVE)
+                            else if(Y_Axis()->getMode() == RELATIVE_MODE)
                             {
                                 Y_Axis()->setTask(MOVE_REL_AT_SPEED);
                                 Y_Axis()->setSpeed(value);
@@ -781,12 +995,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     {
                         if((value < settings->z_settings.speedMax) && (value > settings->z_settings.speedMin))
                         {
-                            if(Z_Axis()->getMode() == ABSOLUTE)
+                            if(Z_Axis()->getMode() == ABSOLUTE_MODE)
                             {
                                 Z_Axis()->setTask(MOVE_ABS_AT_SPEED);
                                 Z_Axis()->setSpeed(value);
                             }
-                            else if(Z_Axis()->getMode() == RELATIVE)
+                            else if(Z_Axis()->getMode() == RELATIVE_MODE)
                             {
                                 Z_Axis()->setTask(MOVE_REL_AT_SPEED);
                                 Z_Axis()->setSpeed(value);
@@ -804,12 +1018,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     {
                         if((value < settings->a_settings.speedMax) && (value > settings->a_settings.speedMin))
                         {
-                            if(A_Axis()->getMode() == ABSOLUTE)
+                            if(A_Axis()->getMode() == ABSOLUTE_MODE)
                             {
                                 A_Axis()->setTask(MOVE_ABS_AT_SPEED);
                                 A_Axis()->setSpeed(value);
                             }
-                            else if(A_Axis()->getMode() == RELATIVE)
+                            else if(A_Axis()->getMode() == RELATIVE_MODE)
                             {
                                 A_Axis()->setTask(MOVE_REL_AT_SPEED);
                                 A_Axis()->setSpeed(value);
@@ -827,12 +1041,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
                     {
                         if((value < settings->b_settings.speedMax) && (value > settings->b_settings.speedMin))
                         {
-                            if(B_Axis()->getMode() == ABSOLUTE)
+                            if(B_Axis()->getMode() == ABSOLUTE_MODE)
                             {
                                 B_Axis()->setTask(MOVE_ABS_AT_SPEED);
                                 B_Axis()->setSpeed(value);
                             }
-                            else if(B_Axis()->getMode() == RELATIVE)
+                            else if(B_Axis()->getMode() == RELATIVE_MODE)
                             {
                                 B_Axis()->setTask(MOVE_REL_AT_SPEED);
                                 B_Axis()->setSpeed(value);
@@ -909,12 +1123,12 @@ void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_
 
     if(isBlockValid())
     {
-        L_Axis()->composeCommandString();
-        X_Axis()->composeCommandString();
-        Y_Axis()->composeCommandString();
-        Z_Axis()->composeCommandString();
-        A_Axis()->composeCommandString();
-        B_Axis()->composeCommandString();
+        L_Axis()->composeCommandStr();
+        X_Axis()->composeCommandStr();
+        Y_Axis()->composeCommandStr();
+        Z_Axis()->composeCommandStr();
+        A_Axis()->composeCommandStr();
+        B_Axis()->composeCommandStr();
 
     }
 }
@@ -1004,8 +1218,8 @@ QString Part::displayAxis(QChar axis_number, Message axis)
         axisString += "LASER ----------\n";
     else
     {
-    axisString += (QString)axis_number;
-    axisString += " AXIS ----------\n";
+        axisString += (QString)axis_number;
+        axisString += " AXIS ----------\n";
     }
     switch (axis.getTask()) {
     case MOVE_ABS:
@@ -1033,17 +1247,17 @@ QString Part::displayAxis(QChar axis_number, Message axis)
         break;
     case NO_TASK:
         axisString += "  No task assigned.\n";
-        if(axis.getMode() == ABSOLUTE)
+        if(axis.getMode() == ABSOLUTE_MODE)
             axisString += "  Absolutie motion instructions to follow\n";
-        else if(axis.getMode() == RELATIVE)
+        else if(axis.getMode() == RELATIVE_MODE)
             axisString += "  Relative motion instructions to follow.\n";
         break;
     default:
         axisString += "  Did not recognize Axis task.\n";
         break;
     }
-    if(axis.getCommandString().size() > 1)
-        axisString += ("  Command String: " + axis.getCommandString());
+    if(axis.getCommandStr().size() > 1)
+        axisString += ("  Command String: " + axis.getCommandStr());
     return axisString;
 }
 

@@ -128,16 +128,92 @@ struct machine_settings_t
 ///   [10] DWELL : data[0] -> delay time
 ///
 
-enum DeviceNumber {ALL_DEVICES, LASER_GALVO, BUILD_PLATE, HOP_SPRD, NO_DEVICE};
-enum Message_Mode {MODE_ERROR, ABSOLUTE, RELATIVE, NO_MODE};
-enum Message_Task {TASK_ERROR, DISABLE, ENABLE, ENABLE_AT_POWER, SET_POWER, MOVE_ABS, MOVE_REL, MOVE_ABS_AT_SPEED, MOVE_REL_AT_SPEED,
-           STOP, GO_HOME, GET_STATUS, NO_TASK};
-enum Messge_Status{STATUS_ERROR, ENABLED, DISABLED, IDLE, BUSY, STATUS_UNKOWN, NO_STATUS};
+enum DeviceNumber {ALL_DEVICES,
+                   LASER_GALVO,
+                   BUILD_PLATE,
+                   HOP_SPRD,
+                   NO_DEVICE};
+
+enum Message_Mode {MODE_ERROR,
+                   ABSOLUTE_MODE,
+                   ENABLED_MODE,
+                   DISABLED_MODE,
+                   RELATIVE_MODE,
+                   NO_MODE};
+
+enum Message_Task {TASK_ERROR,
+                   DISABLE,
+                   ENABLE,
+                   ENABLE_AT_POWER,
+                   SET_POWER,
+                   MOVE_ABS,
+                   MOVE_REL,
+                   MOVE_ABS_AT_SPEED,
+                   MOVE_REL_AT_SPEED,
+                   STOP,
+                   GO_HOME,
+                   GET_STATUS,
+                   NO_TASK};
+
+enum Messge_Status{STATUS_ERROR,
+                   ENABLED,
+                   DISABLED,
+                   IDLE,
+                   BUSY,
+                   NO_STATUS};
+
+enum Message_Type{TYPE_ERROR,
+                  M_INFO,       //  #
+                  M_ALERT,      //  !
+                  M_COMMAND,    //  /
+                  M_REPLY,      //  @
+                  NO_TYPE};
+
+enum Message_Reply_Flag{FLAG_ERROR,
+                        OK,
+                        REJECTED,
+                        DID_NOT_FIND_END,
+                        NO_FLAG};
+
+enum Message_Reply_Flag_Data{FLAG_DATA_ERROR,
+                             AGAIN,
+                             BAD_AXIS,
+                             BAD_COMMAND,
+                             BAD_DATA,
+                             BAD_MESSAGE_ID,
+                             DEVICE_ONLY,
+                             NO_ACCESS,
+                             PARKED,
+                             STATUS_BUSY,
+                             NO_FLAG_DATA};
+
+enum Message_Reply_Warning_Flag{WARNING_FLAG_ERROR,
+                                DRIVER_DISABLED,
+                                ENCODER_ERROR,
+                                STALLED,
+                                LIMIT_ERROR,
+                                NOT_HOMED,
+                                UNEXPECTED_LIMIT_TRIG,
+                                INVALID_CALIBRATION,
+                                VOLTAGE_ERROR,
+                                TEMPERATURE_ERROR,
+                                UNEXPECTED_DISPLACEMENT,
+                                NO_REFERENCE_POSITION,
+                                BUSY_WITH_MANUAL_CONTRL,
+                                COMMAND_INTERRUPTED,
+                                UPDATE_OR_RESET_PENDING,
+                                NO_WARNING_FLAG};
+
+
 class Message
 {
 public:
 
     Message();
+    Message(QString replyMessage);
+    Message(Message_Type type);
+    Message(Message_Type type,const DeviceNumber dn, const AxisNumber an);
+
     Message(const DeviceNumber dn, const AxisNumber an);
 
     DeviceNumber getDeviceNumber() const;
@@ -167,20 +243,43 @@ public:
     int getPower() const;
     void setPower(int power);
 
-    QString getCommandString() const;
-    void composeCommandString();
+    QString getCommandStr() const;
+    void composeCommandStr();
 
     float getUStepPerMM() const;
     void setUStepPerMM(float uStepPerMM);
 
+    Message_Type getMessageType() const;
+    void setMessageType(const Message_Type &type);
+
+    Message_Reply_Flag getReplyFlag() const;
+    void setReplyFlag(const Message_Reply_Flag &replyFlag);
+
+    Message_Reply_Flag_Data getRepyFlagData() const;
+    void setRepyFlagData(const Message_Reply_Flag_Data &repyFlagData);
+
+
+    Message_Reply_Warning_Flag getReplyWarningFlag() const;
+    void setReplyWarningFlag(const Message_Reply_Warning_Flag &replyWarningFlag);
+
+    QString getReplyStr() const;
+    Message_Reply_Flag decomposeReplyStr(const QString rplystr);
+
 private:
+    Message_Type m_messageType;
     DeviceNumber m_deviceNumber;
     AxisNumber m_axisNumber;
+
+    Message_Reply_Flag m_replyFlag;
+    Message_Reply_Flag_Data m_repyFlagData;
+    Message_Reply_Warning_Flag m_replyWarningFlag;
+
     Message_Mode m_mode;
     Message_Task m_task;
     Messge_Status m_status;
 
     QString m_commandString;
+    QString m_replyString;
 
     float m_uStepPerMM;
     float m_position_mm;
@@ -188,6 +287,7 @@ private:
     int m_speed;
     int m_power;
 };
+
 
 /////////////////////////////////// END BLOCKIO BASE TYPES AND ENUMERATIONS ///////////////////////////
 
