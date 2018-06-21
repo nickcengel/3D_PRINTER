@@ -1,11 +1,18 @@
 #include "devicemodels.h"
 #include "blockio.h"
 #include <QObject>
-using BlockIO::AxisNumber;
+using BlockIO::Axis_Number;
 using BlockIO::Message_Task;
 using BlockIO::Message_Mode;
 using BlockIO::Message;
 using BlockIO::Block;
+using BlockIO::Message_Status;
+using BlockIO::machine_settings_t;
+using BlockIO::axis_settings_t;
+using BlockIO::Message_Reply_Flag;
+using BlockIO::Message_Status;
+
+
 
 
 ////////////////////////////////////////// BEGIN Axis CLASS //////////////////////////////////////////
@@ -18,9 +25,12 @@ Axis::Axis()
     m_homed = false;
     m_positionPending = false;
     m_speedPending = false;
+    setCurrentMode(Message_Mode::NO_MODE);
+    setCurrentTask(Message_Task::NO_TASK);
+    setCurrentStatus(Message_Status::NO_STATUS);
 }
 
-Axis::Axis(int portNumber, BlockIO::DeviceNumber deviceNumber, BlockIO::AxisNumber axisNumber)
+Axis::Axis(int portNumber, BlockIO::Device_Number deviceNumber, BlockIO::Axis_Number axisNumber)
 {
     m_portNumber = portNumber;
     m_deviceNumber = deviceNumber;
@@ -30,6 +40,9 @@ Axis::Axis(int portNumber, BlockIO::DeviceNumber deviceNumber, BlockIO::AxisNumb
     m_homed = false;
     m_positionPending = false;
     m_speedPending = false;
+    setCurrentMode(Message_Mode::NO_MODE);
+    setCurrentTask(Message_Task::NO_TASK);
+    setCurrentStatus(Message_Status::NO_STATUS);
 }
 
 
@@ -48,17 +61,17 @@ int Axis::getDeviceNumber() const
     return m_deviceNumber;
 }
 
-void Axis::setDeviceNumber(const BlockIO::DeviceNumber deviceNumber)
+void Axis::setDeviceNumber(const BlockIO::Device_Number deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
 
-BlockIO::AxisNumber Axis::getAxisNumber() const
+BlockIO::Axis_Number Axis::getAxisNumber() const
 {
     return m_axisNumber;
 }
 
-void Axis::setAxisNumber(const BlockIO::AxisNumber axisNumber)
+void Axis::setAxisNumber(const BlockIO::Axis_Number axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -70,7 +83,7 @@ void Axis::setHomed(const bool isHomed)
 
 bool Axis::isHomed() const
 {
-   return m_homed;
+    return m_homed;
 }
 
 void Axis::setDesiredPosition(const float position)
@@ -91,8 +104,8 @@ bool Axis::isPositionPending() const
 
 void Axis::setCurrentPosition(const float position)
 {
-        m_currentPosition = position;
-        m_positionPending = false;
+    m_currentPosition = position;
+    m_positionPending = false;
 }
 
 float Axis::getCurrentPosition() const
@@ -184,6 +197,17 @@ bool Axis::isTaskPending() const
     return m_taskPending;
 }
 
+Message_Status Axis::getCurrentStatus() const
+{
+    return m_currentStatus;
+}
+
+void Axis::setCurrentStatus(const Message_Status &currentStatus)
+{
+    m_currentStatus = currentStatus;
+}
+
+
 
 
 
@@ -205,9 +229,12 @@ Laser::Laser()
     m_modePending = false;
     m_taskPending = false;
     m_powerPending = false;
+    setCurrentMode(Message_Mode::NO_MODE);
+    setCurrentTask(Message_Task::NO_TASK);
+    setCurrentStatus(Message_Status::NO_STATUS);
 }
 
-Laser::Laser(int portNumber, BlockIO::DeviceNumber deviceNumber, BlockIO::AxisNumber axisNumber)
+Laser::Laser(int portNumber, BlockIO::Device_Number deviceNumber, BlockIO::Axis_Number axisNumber)
 {
     m_portNumber = portNumber;
     m_deviceNumber = deviceNumber;
@@ -215,6 +242,9 @@ Laser::Laser(int portNumber, BlockIO::DeviceNumber deviceNumber, BlockIO::AxisNu
     m_modePending = false;
     m_taskPending = false;
     m_powerPending = false;
+    setCurrentMode(Message_Mode::NO_MODE);
+    setCurrentTask(Message_Task::NO_TASK);
+    setCurrentStatus(Message_Status::NO_STATUS);
 }
 
 
@@ -233,17 +263,17 @@ int Laser::getDeviceNumber() const
     return m_deviceNumber;
 }
 
-void Laser::setDeviceNumber(const BlockIO::DeviceNumber deviceNumber)
+void Laser::setDeviceNumber(const BlockIO::Device_Number deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
 
-BlockIO::AxisNumber Laser::getAxisNumber() const
+BlockIO::Axis_Number Laser::getAxisNumber() const
 {
     return m_axisNumber;
 }
 
-void Laser::setAxisNumber(const BlockIO::AxisNumber axisNumber)
+void Laser::setAxisNumber(const BlockIO::Axis_Number axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -330,6 +360,16 @@ bool Laser::isTaskPending() const
     return m_taskPending;
 }
 
+Message_Status Laser::getCurrentStatus() const
+{
+    return m_currentStatus;
+}
+
+void Laser::setCurrentStatus(const Message_Status &currentStatus)
+{
+    m_currentStatus = currentStatus;
+}
+
 
 
 
@@ -340,189 +380,426 @@ bool Laser::isTaskPending() const
 
 //////////////////////////////////// BEGIN SystemController CLASS ////////////////////////////////////
 
+SystemController::SystemController(machine_settings_t *settings, QObject *parent)
+    : QObject(parent)
+{
+    laser_model.setPortNumber(settings->l_settings.portNumber);
+    laser_model.setDeviceNumber((Device_Number)settings->l_settings.deviceNumber);
+    laser_model.setAxisNumber((Axis_Number)settings->l_settings.deviceNumber);
 
-//SystemController::SystemController(QObject *parent) : QObject(parent)
-//{
-//    laserGalvoMap = LG_Map::LG_NONE;
-//    materialDeliveryMap = MD_Map::MD_NONE;
-//}
+    x_axis_model.setPortNumber(settings->x_settings.portNumber);
+    x_axis_model.setDeviceNumber((Device_Number)settings->x_settings.deviceNumber);
+    x_axis_model.setAxisNumber((Axis_Number)settings->x_settings.deviceNumber);
 
-//void SystemController::updateLaserGalvo_model(BlockIO::LG_Package laserGalvoMessage)
-//{
-//    laserGalvoMap = laserGalvoMessage.getMap();
-//    switch (laserGalvoMap) {
-//    case LG_Map::LG_NONE:
-//        break;
-//    case LG_Map::X_ONLY:
-//        x_axis_model.addMessage(*laserGalvoMessage.x_message());
-//        break;
-//    case LG_Map::Y_ONLY:
-//        y_axis_model.addMessage(*laserGalvoMessage.y_message());
-//        break;
-//    case LG_Map::X_Y:
-//        x_axis_model.addMessage(*laserGalvoMessage.x_message());
-//        y_axis_model.addMessage(*laserGalvoMessage.y_message());
-//        break;
-//    case LG_Map::LG_ALL:
-//        x_axis_model.addMessage(*laserGalvoMessage.x_message());
-//        y_axis_model.addMessage(*laserGalvoMessage.y_message());
-//        laser_model.addMessage(*laserGalvoMessage.laser_message());
-//        break;
-//    case LG_Map::X_LASER:
-//        x_axis_model.addMessage(*laserGalvoMessage.x_message());
-//        laser_model.addMessage(*laserGalvoMessage.laser_message());
-//        break;
-//    case LG_Map::Y_LASER:
-//        y_axis_model.addMessage(*laserGalvoMessage.y_message());
-//        laser_model.addMessage(*laserGalvoMessage.laser_message());
-//        break;
-//    default:
-//        break;
-//    }
-//}
+    y_axis_model.setPortNumber(settings->y_settings.portNumber);
+    y_axis_model.setDeviceNumber((Device_Number)settings->y_settings.deviceNumber);
+    y_axis_model.setAxisNumber((Axis_Number)settings->y_settings.deviceNumber);
 
-//void SystemController::updateMaterialDelivery_model(BlockIO::MD_Package MaterialDeliveryMessage)
-//{
-//    switch (MaterialDeliveryMessage.getMap())
-//    {
-//    case MD_Map::MD_NONE:
-//        break;
-//    case MD_Map::BUILD_PLATE:
-//        buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
-//        break;
-//    case MD_Map::HOPPPER_PLATE:
-//        hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
-//        break;
-//    case MD_Map::SPREAD_BLADE:
-//        spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
-//        break;
-//    case MD_Map::BUILD_HOPPER:
-//        buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
-//        hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
-//        break;
-//    case MD_Map::BUILD_SPREAD:
-//        buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
-//        spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
-//        break;
-//    case MD_Map::HOPPER_SPREAD:
-//        hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
-//        spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
-//        break;
-//    case MD_Map::MD_ALL:
-//        buildPlate_model.addMessage(*MaterialDeliveryMessage.buildPlate_message());
-//        hopperPlate_model.addMessage(*MaterialDeliveryMessage.hopperPlate_message());
-//        spreadBlade_model.addMessage(*MaterialDeliveryMessage.spreadBlade_message());
-//        break;
-//    default:
-//        break;
-//    }
-//}
+    buildPlate_model.setPortNumber(settings->z_settings.portNumber);
+    buildPlate_model.setDeviceNumber((Device_Number)settings->z_settings.deviceNumber);
+    buildPlate_model.setAxisNumber((Axis_Number)settings->z_settings.deviceNumber);
 
-//void SystemController::sendBlock(BlockIO::Block block)
-//{
-//    if((laserGalvoMap == LG_Map::LG_NONE) && (block.laserGalvo()->getMap() != LG_Map::LG_NONE))
-//    {
-//        updateLaserGalvo_model(*block.laserGalvo());
-//        emit laserGalvoSignal(*block.laserGalvo());
-//    }
-//    if((materialDeliveryMap == MD_Map::MD_NONE) && (block.materialDelivery()->getMap() != MD_Map::MD_NONE))
-//    {
-//        updateMaterialDelivery_model(*block.materialDelivery());
-//        emit MaterialDeliverySignal(*block.materialDelivery());
-//    }
-//}
+    hopperPlate_model.setPortNumber(settings->a_settings.portNumber);
+    hopperPlate_model.setDeviceNumber((Device_Number)settings->a_settings.deviceNumber);
+    hopperPlate_model.setAxisNumber((Axis_Number)settings->a_settings.deviceNumber);
 
-//void SystemController::laserGalvoReply(BlockIO::LG_Map reply)
-//{
-//    switch (reply) {
-//    case LG_Map::X_ONLY:
-//        x_axis_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::Y_ONLY:
-//        y_axis_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::X_Y:
-//        x_axis_model.clearPending();
-//        y_axis_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::LASER_ONLY:
-//        laser_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::X_LASER:
-//        x_axis_model.clearPending();
-//        laser_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::Y_LASER:
-//        y_axis_model.clearPending();
-//        laser_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::LG_ALL:
-//        x_axis_model.clearPending();
-//        y_axis_model.clearPending();
-//        laser_model.clearPending();
-//        laserGalvoMap = LG_Map::LG_NONE;
-//        break;
-//    case LG_Map::LG_FAILED:
-//        laserGalvoMap = LG_Map::LG_FAILED;
-//        //handle error
-//        break;
-//    default:
-//        break;
-//    }
-//}
+    spreadBlade_model.setPortNumber(settings->b_settings.portNumber);
+    spreadBlade_model.setDeviceNumber((Device_Number)settings->b_settings.deviceNumber);
+    spreadBlade_model.setAxisNumber((Axis_Number)settings->b_settings.deviceNumber);
 
-//void SystemController::MaterialDeliveryReply(BlockIO::MD_Map reply)
-//{
-//    switch (reply) {
-//    case MD_Map::BUILD_PLATE:
-//        buildPlate_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::HOPPPER_PLATE:
-//        hopperPlate_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::SPREAD_BLADE:
-//        spreadBlade_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::BUILD_HOPPER:
-//        buildPlate_model.clearPending();
-//        hopperPlate_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::BUILD_SPREAD:
-//        buildPlate_model.clearPending();
-//        spreadBlade_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::HOPPER_SPREAD:
-//        hopperPlate_model.clearPending();
-//        spreadBlade_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::MD_ALL:
-//        buildPlate_model.clearPending();
-//        hopperPlate_model.clearPending();
-//        spreadBlade_model.clearPending();
-//        materialDeliveryMap = MD_Map::MD_NONE;
-//        break;
-//    case MD_Map::MD_FAILED:
-//        materialDeliveryMap = MD_Map::MD_FAILED;
-//        //handle errors
-//        break;
-//    default:
-//        break;
-//    }
-//}
+}
+
+
+
+void SystemController::sendMessage(BlockIO::Message aMessage)
+{
+    if((aMessage.getTask() != Message_Task::NO_TASK)
+            && (aMessage.getDeviceNumber() == BlockIO::Device_Number::LASER_GALVO))
+    {
+        const Message_Status currentTraffic = setModelToDesired(aMessage);
+        if(currentTraffic != Message_Status::BUSY)
+        {
+            m_current_lg_command_str = aMessage.getCommandStr();
+            emit LaserGalvoCommand_sig(m_current_lg_command_str);
+        }
+    }
+    else if((aMessage.getTask() != Message_Task::NO_TASK)
+            && ((aMessage.getDeviceNumber() == BlockIO::Device_Number::BUILD_PLATE)
+                || (aMessage.getDeviceNumber() == BlockIO::Device_Number::HOP_SPRD)))
+    {
+        const Message_Status currentTraffic = setModelToDesired(aMessage);
+        if(currentTraffic != Message_Status::BUSY)
+        {
+            m_current_md_command_str = aMessage.getCommandStr();
+            setModelToDesired(aMessage);
+            emit MaterialDeliveryCommand_sig(m_current_md_command_str);
+        }
+    }
+}
+
+
+void SystemController::LaserGalvoReply_slot(BlockIO::Message lg_reply)
+{
+    m_current_lg_reply = lg_reply;
+    const Message_Status replyStatus = updateModelWithReply(m_current_lg_reply);
+//    if(replyStatus == Message_Status::REPLY_OK)
+//        do something, tell somebody
+//    else
+//        int g = -3;// handle the error;
+}
+
+void SystemController::MaterialDeliveryReply_slot(BlockIO::Message md_reply)
+{
+    m_current_md_reply = md_reply;
+    updateModelWithReply(m_current_md_reply);
+}
+
+Message_Status SystemController::setModelToDesired(BlockIO::Message aMessage)
+{
+    Message_Status myStatus = Message_Status::BUSY;
+    if((aMessage.getAxisNumber() == Axis_Number::L)
+            && laser_model.getCurrentStatus() == Message_Status::IDLE)
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        laser_model.setDesiredMode(aMessage.getMode());
+        laser_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::ENABLE_AT_POWER)
+            laser_model.setDesiredPower(aMessage.getPower());
+        laser_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+    }
+    else if((aMessage.getAxisNumber() == Axis_Number::X)
+            && x_axis_model.getCurrentStatus() == Message_Status::IDLE)
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        x_axis_model.setDesiredMode(aMessage.getMode());
+        x_axis_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::MOVE_ABS)
+            x_axis_model.setDesiredPosition(aMessage.getPosition_mm());
+        else if(aMessage.getTask() == Message_Task::MOVE_ABS_AT_SPEED)
+        {
+            x_axis_model.setDesiredPosition(aMessage.getPosition_mm());
+            x_axis_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL_AT_SPEED)
+        {
+            x_axis_model.setDesiredPosition(x_axis_model.getCurrentPosition() + aMessage.getPosition_mm());
+            x_axis_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL)
+        {
+            x_axis_model.setDesiredPosition(x_axis_model.getCurrentPosition() + aMessage.getPosition_mm());
+        }
+
+        x_axis_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+
+    }
+    else if((aMessage.getAxisNumber() == Axis_Number::Y)
+            && (y_axis_model.getCurrentStatus() == Message_Status::IDLE))
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        y_axis_model.setDesiredMode(aMessage.getMode());
+        y_axis_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::MOVE_ABS)
+            y_axis_model.setDesiredPosition(aMessage.getPosition_mm());
+        else if(aMessage.getTask() == Message_Task::MOVE_ABS_AT_SPEED)
+        {
+            y_axis_model.setDesiredPosition(aMessage.getPosition_mm());
+            y_axis_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL_AT_SPEED)
+        {
+            y_axis_model.setDesiredPosition(y_axis_model.getCurrentPosition() + aMessage.getPosition_mm());
+            y_axis_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL)
+        {
+            y_axis_model.setDesiredPosition(y_axis_model.getCurrentPosition() + aMessage.getPosition_mm());
+        }
+
+        y_axis_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+
+    }
+    else if((aMessage.getAxisNumber() == Axis_Number::Z)
+            && (buildPlate_model.getCurrentStatus() == Message_Status::IDLE))
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        buildPlate_model.setDesiredMode(aMessage.getMode());
+        buildPlate_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::MOVE_ABS)
+            buildPlate_model.setDesiredPosition(aMessage.getPosition_mm());
+        else if(aMessage.getTask() == Message_Task::MOVE_ABS_AT_SPEED)
+        {
+            buildPlate_model.setDesiredPosition(aMessage.getPosition_mm());
+            buildPlate_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL_AT_SPEED)
+        {
+            buildPlate_model.setDesiredPosition(buildPlate_model.getCurrentPosition() + aMessage.getPosition_mm());
+            buildPlate_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL)
+        {
+            buildPlate_model.setDesiredPosition(buildPlate_model.getCurrentPosition() + aMessage.getPosition_mm());
+        }
+
+        buildPlate_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+
+    }
+    else if((aMessage.getAxisNumber() == Axis_Number::A)
+            && (hopperPlate_model.getCurrentStatus() == Message_Status::IDLE))
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        hopperPlate_model.setDesiredMode(aMessage.getMode());
+        hopperPlate_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::MOVE_ABS)
+            hopperPlate_model.setDesiredPosition(aMessage.getPosition_mm());
+        else if(aMessage.getTask() == Message_Task::MOVE_ABS_AT_SPEED)
+        {
+            hopperPlate_model.setDesiredPosition(aMessage.getPosition_mm());
+            hopperPlate_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL_AT_SPEED)
+        {
+            hopperPlate_model.setDesiredPosition(hopperPlate_model.getCurrentPosition() + aMessage.getPosition_mm());
+            hopperPlate_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL)
+        {
+            hopperPlate_model.setDesiredPosition(hopperPlate_model.getCurrentPosition() + aMessage.getPosition_mm());
+        }
+
+        hopperPlate_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+
+    }
+    else if((aMessage.getAxisNumber() == Axis_Number::B)
+            && (spreadBlade_model.getCurrentStatus() == Message_Status::IDLE))
+    {
+        myStatus = Message_Status::REPLY_PENDING;
+        spreadBlade_model.setDesiredMode(aMessage.getMode());
+        spreadBlade_model.setDesiredTask(aMessage.getTask());
+        if(aMessage.getTask() == Message_Task::MOVE_ABS)
+            spreadBlade_model.setDesiredPosition(aMessage.getPosition_mm());
+        else if(aMessage.getTask() == Message_Task::MOVE_ABS_AT_SPEED)
+        {
+            spreadBlade_model.setDesiredPosition(aMessage.getPosition_mm());
+            spreadBlade_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL_AT_SPEED)
+        {
+            spreadBlade_model.setDesiredPosition(spreadBlade_model.getCurrentPosition() + aMessage.getPosition_mm());
+            spreadBlade_model.setDesiredSpeed(aMessage.getSpeed());
+        }
+        else if(aMessage.getTask() == Message_Task::MOVE_REL)
+        {
+            spreadBlade_model.setDesiredPosition(spreadBlade_model.getCurrentPosition() + aMessage.getPosition_mm());
+        }
+
+        spreadBlade_model.setCurrentStatus(Message_Status::REPLY_PENDING);
+    }
+    return myStatus;
+}
+
+
+Message_Status SystemController::updateModelWithReply(BlockIO::Message aMessage)
+{
+    Message_Status myStatus = Message_Status::REPLY_FAILED;
+    if((aMessage.getReplyFlag() == Message_Reply_Flag::OK))
+    {
+        if((aMessage.getAxisNumber() == Axis_Number::L)
+                &&(laser_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+        {
+            myStatus = Message_Status::REPLY_OK;
+
+            laser_model.setCurrentStatus(aMessage.getStatus());
+            if(aMessage.getStatus() == Message_Status::IDLE)
+            {
+                if(laser_model.isModePending())
+                    laser_model.setCurrentMode(laser_model.getDesiredMode());
+
+                if(laser_model.isTaskPending())
+                    laser_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+
+                if(laser_model.isModePending())
+                    laser_model.setCurrentPower(laser_model.getDesiredPower());
+            }
+        }
+
+        else if(aMessage.getAxisNumber() == Axis_Number::X)
+        {
+
+            x_axis_model.setCurrentStatus(aMessage.getStatus());
+
+            if((aMessage.getStatus() == Message_Status::IDLE)
+                    &&(x_axis_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+            {
+                myStatus = Message_Status::REPLY_OK;
+
+                if(x_axis_model.isModePending())
+                    x_axis_model.setCurrentMode(x_axis_model.getDesiredMode());
+
+                if(x_axis_model.isPositionPending())
+                    x_axis_model.setCurrentPosition(x_axis_model.getDesiredPosition());
+
+                if(x_axis_model.isSpeedPending())
+                    x_axis_model.setCurrentSpeed(x_axis_model.getDesiredSpeed());
+
+                if(x_axis_model.isTaskPending())
+                {
+                    if(x_axis_model.getDesiredTask() == Message_Task::GO_HOME)
+                        x_axis_model.setHomed(true);
+
+                    x_axis_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+                }
+            }
+        }
+
+        else if(aMessage.getAxisNumber() == Axis_Number::Y)
+        {
+            y_axis_model.setCurrentStatus(aMessage.getStatus());
+
+            if((aMessage.getStatus() == Message_Status::IDLE)
+                    &&(y_axis_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+            {
+
+                myStatus = Message_Status::REPLY_OK;
+
+                if(y_axis_model.isModePending())
+                    y_axis_model.setCurrentMode(y_axis_model.getDesiredMode());
+
+                if(y_axis_model.isPositionPending())
+                    y_axis_model.setCurrentPosition(y_axis_model.getDesiredPosition());
+
+                if(y_axis_model.isSpeedPending())
+                    y_axis_model.setCurrentSpeed(y_axis_model.getDesiredSpeed());
+
+                if(y_axis_model.isTaskPending())
+                {
+                    if(y_axis_model.getDesiredTask() == Message_Task::GO_HOME)
+                        y_axis_model.setHomed(true);
+
+                    y_axis_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+                }
+            }
+        }
+
+        else if(aMessage.getAxisNumber() == Axis_Number::Z)
+        {
+            buildPlate_model.setCurrentStatus(aMessage.getStatus());
+
+            if((aMessage.getStatus() == Message_Status::IDLE)
+                    &&(buildPlate_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+            {
+                myStatus = Message_Status::REPLY_OK;
+
+                if(buildPlate_model.isModePending())
+                    buildPlate_model.setCurrentMode(buildPlate_model.getDesiredMode());
+
+                if(buildPlate_model.isPositionPending())
+                    buildPlate_model.setCurrentPosition(buildPlate_model.getDesiredPosition());
+
+                if(buildPlate_model.isSpeedPending())
+                    buildPlate_model.setCurrentSpeed(buildPlate_model.getDesiredSpeed());
+
+                if(buildPlate_model.isTaskPending())
+                {
+                    if(buildPlate_model.getDesiredTask() == Message_Task::GO_HOME)
+                        buildPlate_model.setHomed(true);
+
+                    buildPlate_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+                }
+            }
+
+        }
+
+        else if(aMessage.getAxisNumber() == Axis_Number::A)
+        {
+            hopperPlate_model.setCurrentStatus(aMessage.getStatus());
+
+            if((aMessage.getStatus() == Message_Status::IDLE)
+                    &&(hopperPlate_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+
+            {
+                myStatus = Message_Status::REPLY_OK;
+
+                if(hopperPlate_model.isModePending())
+                    hopperPlate_model.setCurrentMode(hopperPlate_model.getDesiredMode());
+
+                if(hopperPlate_model.isPositionPending())
+                    hopperPlate_model.setCurrentPosition(hopperPlate_model.getDesiredPosition());
+
+                if(hopperPlate_model.isSpeedPending())
+                    hopperPlate_model.setCurrentSpeed(hopperPlate_model.getDesiredSpeed());
+
+                if(hopperPlate_model.isTaskPending())
+                {
+                    if(hopperPlate_model.getDesiredTask() == Message_Task::GO_HOME)
+                        hopperPlate_model.setHomed(true);
+
+                    hopperPlate_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+                }
+            }
+        }
+        else if(aMessage.getAxisNumber() == Axis_Number::B)
+        {
+            spreadBlade_model.setCurrentStatus(aMessage.getStatus());
+
+            if((aMessage.getStatus() == Message_Status::IDLE)
+                    &&(spreadBlade_model.getCurrentStatus() == Message_Status::REPLY_PENDING))
+            {
+                myStatus = Message_Status::REPLY_OK;
+
+                if(spreadBlade_model.isModePending())
+                    spreadBlade_model.setCurrentMode(spreadBlade_model.getDesiredMode());
+
+                if(spreadBlade_model.isPositionPending())
+                    spreadBlade_model.setCurrentPosition(spreadBlade_model.getDesiredPosition());
+
+                if(spreadBlade_model.isSpeedPending())
+                    spreadBlade_model.setCurrentSpeed(spreadBlade_model.getDesiredSpeed());
+
+                if(spreadBlade_model.isTaskPending())
+                {
+                    if(spreadBlade_model.getDesiredTask() == Message_Task::GO_HOME)
+                        spreadBlade_model.setHomed(true);
+
+                    spreadBlade_model.setCurrentTask(Message_Task::TASK_COMPLETE);
+                }
+            }
+        }
+    }
+    return myStatus;
+}
+
+
 
 //////////////////////////////////// END SystemController CLASS ////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

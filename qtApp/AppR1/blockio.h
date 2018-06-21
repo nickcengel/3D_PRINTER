@@ -48,14 +48,14 @@ enum Code {NO_CODE, M0, M2, M3, M5, G0, G1, G4, G28, G90, G91};
 ///// Z - z axis of the build plate
 ///// A - z' axis of the material hopper
 ///// B - x' axis of the material wiper
-enum AxisNumber {ALL_AXIS, X, Y, Z, A, B,L, NO_AXIS};
+enum Axis_Number {ALL_AXIS, X, Y, Z, A, B, L, NO_AXIS};
 
 /// An Axis' physical and electrical constraints
 struct axis_settings_t
 {
     int portNumber;
     int deviceNumber;
-    AxisNumber axisNumber;
+    Axis_Number axisNumber;
     float positionMin;
     float positionMax;
     float speedMin;
@@ -63,7 +63,7 @@ struct axis_settings_t
     float homeOffset;
     float uStepPerMM;
     axis_settings_t() {}
-    axis_settings_t(int aPortNumber, int aDeviceNumber, AxisNumber anAxisNumber,
+    axis_settings_t(int aPortNumber, int aDeviceNumber, Axis_Number anAxisNumber,
                     float aPositionMin, float aPositionMax, float aSpeedMin,
                     float aSpeedMax, float aHomeOffset, float microStepsPerMM){
         portNumber = aPortNumber;
@@ -128,11 +128,11 @@ struct machine_settings_t
 ///   [10] DWELL : data[0] -> delay time
 ///
 
-enum DeviceNumber {ALL_DEVICES,
-                   LASER_GALVO,
-                   BUILD_PLATE,
-                   HOP_SPRD,
-                   NO_DEVICE};
+enum Device_Number {ALL_DEVICES,
+                    LASER_GALVO,
+                    BUILD_PLATE,
+                    HOP_SPRD,
+                    NO_DEVICE};
 
 enum Message_Mode {MODE_ERROR,
                    ABSOLUTE_MODE,
@@ -153,14 +153,18 @@ enum Message_Task {TASK_ERROR,
                    STOP,
                    GO_HOME,
                    GET_STATUS,
+                   TASK_COMPLETE,
                    NO_TASK};
 
-enum Messge_Status{STATUS_ERROR,
-                   ENABLED,
-                   DISABLED,
-                   IDLE,
-                   BUSY,
-                   NO_STATUS};
+enum Message_Status{STATUS_ERROR,
+                    REPLY_FAILED,
+                    REPLY_OK,
+                    REPLY_PENDING,
+                    ENABLED,
+                    DISABLED,
+                    IDLE,
+                    BUSY,
+                    NO_STATUS};
 
 enum Message_Type{TYPE_ERROR,
                   M_INFO,       //  #
@@ -212,15 +216,15 @@ public:
     Message();
     Message(QString replyMessage);
     Message(Message_Type type);
-    Message(Message_Type type,const DeviceNumber dn, const AxisNumber an);
+    Message(Message_Type type,const Device_Number dn, const Axis_Number an);
 
-    Message(const DeviceNumber dn, const AxisNumber an);
+    Message(const Device_Number dn, const Axis_Number an);
 
-    DeviceNumber getDeviceNumber() const;
-    void setDeviceNumber(const DeviceNumber &deviceNumber);
+    Device_Number getDeviceNumber() const;
+    void setDeviceNumber(const Device_Number &deviceNumber);
 
-    AxisNumber getAxisNumber() const;
-    void setAxisNumber(const AxisNumber &number);
+    Axis_Number getAxisNumber() const;
+    void setAxisNumber(const Axis_Number &number);
 
     Message_Mode getMode() const;
     void setMode(const Message_Mode &mode);
@@ -228,8 +232,8 @@ public:
     Message_Task getTask() const;
     void setTask(const Message_Task &task);
 
-    Messge_Status getStatus() const;
-    void setStatus(const Messge_Status &status);
+    Message_Status getStatus() const;
+    void setStatus(const Message_Status &status);
 
     float getPosition_mm() const;
     void setPosition_mm(float position_mm);
@@ -267,8 +271,8 @@ public:
 
 private:
     Message_Type m_messageType;
-    DeviceNumber m_deviceNumber;
-    AxisNumber m_axisNumber;
+    Device_Number m_deviceNumber;
+    Axis_Number m_axisNumber;
 
     Message_Reply_Flag m_replyFlag;
     Message_Reply_Flag_Data m_repyFlagData;
@@ -276,7 +280,7 @@ private:
 
     Message_Mode m_mode;
     Message_Task m_task;
-    Messge_Status m_status;
+    Message_Status m_status;
 
     QString m_commandString;
     QString m_replyString;

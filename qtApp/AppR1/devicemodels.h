@@ -4,12 +4,13 @@
 #include <QObject>
 #include "blockio.h"
 
-using BlockIO::AxisNumber;
-using BlockIO::DeviceNumber;
+using BlockIO::Axis_Number;
+using BlockIO::Device_Number;
 
 using BlockIO::Message_Task;
 using BlockIO::Message_Mode;
-
+using BlockIO::Message_Status;
+using BlockIO::machine_settings_t;
 
 
 using BlockIO::Message;
@@ -36,16 +37,16 @@ class Axis
 {
 public:
     Axis();
-    Axis(int portNumber, DeviceNumber deviceNumber, AxisNumber axisNumber);
+    Axis(int portNumber, Device_Number deviceNumber, Axis_Number axisNumber);
 
     int getPortNumber() const;
     void setPortNumber(const int portNumber);
 
     int getDeviceNumber() const;
-    void setDeviceNumber(const DeviceNumber deviceNumber);
+    void setDeviceNumber(const Device_Number deviceNumber);
 
-    AxisNumber getAxisNumber() const;
-    void setAxisNumber(const AxisNumber axisNumber);
+    Axis_Number getAxisNumber() const;
+    void setAxisNumber(const Axis_Number axisNumber);
 
     void setHomed(const bool isHomed);
     bool isHomed() const;
@@ -74,10 +75,15 @@ public:
     void setDesiredTask(const Message_Task task);
     bool isTaskPending() const;
 
+    Message_Status getCurrentStatus() const;
+    void setCurrentStatus(const Message_Status &currentStatus);
+
+
+
 private:
     int m_portNumber;
     int m_deviceNumber;
-    AxisNumber m_axisNumber;
+    Axis_Number m_axisNumber;
 
     Message_Task m_currentTask;
     Message_Task m_desiredTask;
@@ -86,6 +92,9 @@ private:
     Message_Mode m_currentMode;
     Message_Mode m_desiredMode;
     bool m_modePending;
+
+    Message_Status m_currentStatus;
+
 
     bool m_homed;
 
@@ -98,20 +107,23 @@ private:
     bool m_speedPending;
 };
 ////////////////////////////////////////// END Axis CLASS //////////////////////////////////////////
+
+////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
+/// The Laser class represents the current and desired state of each of the laser system.
 class Laser
 {
 public:
     Laser();
-    Laser(int portNumber, DeviceNumber deviceNumber, AxisNumber axisNumber);
+    Laser(int portNumber, Device_Number deviceNumber, Axis_Number axisNumber);
 
     int getPortNumber() const;
     void setPortNumber(const int portNumber);
 
     int getDeviceNumber() const;
-    void setDeviceNumber(const DeviceNumber deviceNumber);
+    void setDeviceNumber(const Device_Number deviceNumber);
 
-    AxisNumber getAxisNumber() const;
-    void setAxisNumber(const AxisNumber axisNumber);
+    Axis_Number getAxisNumber() const;
+    void setAxisNumber(const Axis_Number axisNumber);
 
 
     void setDesiredPower(const float power);
@@ -134,15 +146,19 @@ public:
     bool isTaskPending() const;
     void setTaskPending(bool pending);
 
+    Message_Status getCurrentStatus() const;
+    void setCurrentStatus(const Message_Status &currentStatus);
+
 private:
     int m_portNumber;
     int m_deviceNumber;
-    AxisNumber m_axisNumber;
+    Axis_Number m_axisNumber;
 
     Message_Task m_currentTask;
     Message_Task m_desiredTask;
     bool m_taskPending;
 
+    Message_Status m_currentStatus;
     Message_Mode m_currentMode;
     Message_Mode m_desiredMode;
     bool m_modePending;
@@ -151,9 +167,6 @@ private:
     float m_desiredPower;
     bool m_powerPending;
 };
-////////////////////////////////////////// BEGIN Laser CLASS //////////////////////////////////////////
-/// The Laser class represents the current and desired state of each of the laser system.
-
 ////////////////////////////////////////// END Laser CLASS //////////////////////////////////////////
 
 
@@ -176,38 +189,41 @@ private:
 ///         void laserGalvoReply(LG_Map reply) - deal with reply and clear pending parameters if succesful
 ///         void MaterialDeliveryReply(MD_Map reply)  - deal with reply and clear pending parameters if succesful
 ///
-//class SystemController : public QObject
-//{
-//    Q_OBJECT
-//public:
-//    explicit SystemController(QObject *parent = nullptr);
+class SystemController : public QObject
+{
+    Q_OBJECT
+public:
+    explicit SystemController(machine_settings_t *settings, QObject *parent = nullptr);
 
-//    Axis x_axis_model;
-//    Axis y_axis_model;
-//    Laser laser_model;
-//    LG_Map laserGalvoMap;
-//    void updateLaserGalvo_model(LG_Package laserGalvoMessage);
-
-//    Axis buildPlate_model;
-//    Axis hopperPlate_model;
-//    Axis spreadBlade_model;
-//    MD_Map materialDeliveryMap;
-//    void updateMaterialDelivery_model(MD_Package MaterialDeliveryMessage);
-
-//    void sendBlock(Block block);
-
-//    signals:
-//    void laserGalvoSignal(LG_Package lgsOut);
-//    void MaterialDeliverySignal(MD_Package mdsOut);
-
-//    public slots:
-//    void laserGalvoReply(LG_Map reply);
-//    void MaterialDeliveryReply(MD_Map reply);
+    Laser laser_model;
+    Axis x_axis_model;
+    Axis y_axis_model;
 
 
-//private:
+    Axis buildPlate_model;
+    Axis hopperPlate_model;
+    Axis spreadBlade_model;
 
-//};
+    void sendMessage(Message aMessage);
+    BlockIO::Message_Status setModelToDesired(BlockIO::Message aMessage) ;
+    BlockIO::Message_Status updateModelWithReply(BlockIO::Message aMessage);
+signals:
+    void LaserGalvoCommand_sig(QString current_lg_command_str);
+    void MaterialDeliveryCommand_sig(QString current_md_command_str);
+
+    public slots:
+    void LaserGalvoReply_slot(Message lg_reply);
+    void MaterialDeliveryReply_slot(Message md_reply);
+
+
+private:
+    QString m_current_lg_command_str;
+    QString m_current_md_command_str;
+
+    Message m_current_lg_reply;
+    Message m_current_md_reply;
+
+};
 //////////////////////////////////// END SystemController CLASS ////////////////////////////////////
 
 

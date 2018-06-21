@@ -30,7 +30,7 @@ Message::Message(QString replyMessage)
     decomposeReplyStr(replyMessage);
 }
 
-Message::Message(Message_Type type, const DeviceNumber dn, const AxisNumber an)
+Message::Message(Message_Type type, const Device_Number dn, const Axis_Number an)
 {
     setMessageType(type);
     setDeviceNumber(dn);
@@ -43,7 +43,7 @@ Message::Message(Message_Type type, const DeviceNumber dn, const AxisNumber an)
     setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
-Message::Message(DeviceNumber dn, AxisNumber an)
+Message::Message(Device_Number dn, Axis_Number an)
 {
     setDeviceNumber(dn);
     setAxisNumber(an);
@@ -55,22 +55,22 @@ Message::Message(DeviceNumber dn, AxisNumber an)
     setReplyWarningFlag(NO_WARNING_FLAG);
 }
 
-DeviceNumber Message::getDeviceNumber() const
+Device_Number Message::getDeviceNumber() const
 {
     return m_deviceNumber;
 }
 
-void Message::setDeviceNumber(const DeviceNumber &deviceNumber)
+void Message::setDeviceNumber(const Device_Number &deviceNumber)
 {
     m_deviceNumber = deviceNumber;
 }
 
-AxisNumber Message::getAxisNumber() const
+Axis_Number Message::getAxisNumber() const
 {
     return m_axisNumber;
 }
 
-void Message::setAxisNumber(const AxisNumber &axisNumber)
+void Message::setAxisNumber(const Axis_Number &axisNumber)
 {
     m_axisNumber = axisNumber;
 }
@@ -95,12 +95,12 @@ void Message::setTask(const Message_Task &task)
     m_task = task;
 }
 
-Messge_Status Message::getStatus() const
+Message_Status Message::getStatus() const
 {
     return m_status;
 }
 
-void Message::setStatus(const Messge_Status &status)
+void Message::setStatus(const Message_Status &status)
 {
     m_status = status;
 }
@@ -341,11 +341,11 @@ Message_Reply_Flag Message::decomposeReplyStr(const QString rplystr)
 
         const int myDeviceNumber = myString.mid(DeviceNum_index, 2).toInt(&goodNum,10);
         if(goodNum)
-            setDeviceNumber((DeviceNumber)myDeviceNumber);
+            setDeviceNumber((Device_Number)myDeviceNumber);
 
         const int myAxisNumber = myString.mid(AxisNum_index, 1).toInt(&goodNum,10);
         if(goodNum)
-            setAxisNumber((AxisNumber)myAxisNumber);
+            setAxisNumber((Axis_Number)myAxisNumber);
 
         const int myRF = myString.mid(ReplyFlag_index, 2).toInt(&goodNum,10);
         if(goodNum)
@@ -353,9 +353,9 @@ Message_Reply_Flag Message::decomposeReplyStr(const QString rplystr)
 
         const QString myStatus = myString.mid(ReplyStatus_index, 4);
         if(myStatus == "BUSY")
-            setStatus(Messge_Status::BUSY);
+            setStatus(Message_Status::BUSY);
         else if(myStatus == "IDLE")
-            setStatus(Messge_Status::IDLE);
+            setStatus(Message_Status::IDLE);
 
         const QString myWarningFlag = myString.mid(WarningFlag_index, 2);
         if(myWarningFlag == "--")
@@ -524,27 +524,27 @@ void Block::setPreviousMode(const Message_Mode previousMode)
 void Block::makeBlock(const QString toParse, Message_Mode previousMode, machine_settings_t *settings)
 {
     setPreviousMode(previousMode);
-    L_Axis()->setDeviceNumber((DeviceNumber)settings->l_settings.deviceNumber);
-    L_Axis()->setAxisNumber((AxisNumber)settings->l_settings.axisNumber);
+    L_Axis()->setDeviceNumber((Device_Number)settings->l_settings.deviceNumber);
+    L_Axis()->setAxisNumber((Axis_Number)settings->l_settings.axisNumber);
 
-    X_Axis()->setDeviceNumber((DeviceNumber)settings->x_settings.deviceNumber);
-    X_Axis()->setAxisNumber((AxisNumber)settings->x_settings.axisNumber);
+    X_Axis()->setDeviceNumber((Device_Number)settings->x_settings.deviceNumber);
+    X_Axis()->setAxisNumber((Axis_Number)settings->x_settings.axisNumber);
     X_Axis()->setUStepPerMM(settings->x_settings.uStepPerMM);
 
-    Y_Axis()->setDeviceNumber((DeviceNumber)settings->y_settings.deviceNumber);
-    Y_Axis()->setAxisNumber((AxisNumber)settings->y_settings.axisNumber);
+    Y_Axis()->setDeviceNumber((Device_Number)settings->y_settings.deviceNumber);
+    Y_Axis()->setAxisNumber((Axis_Number)settings->y_settings.axisNumber);
     Y_Axis()->setUStepPerMM(settings->y_settings.uStepPerMM);
 
-    Z_Axis()->setDeviceNumber((DeviceNumber)settings->z_settings.deviceNumber);
-    Z_Axis()->setAxisNumber((AxisNumber)settings->z_settings.axisNumber);
+    Z_Axis()->setDeviceNumber((Device_Number)settings->z_settings.deviceNumber);
+    Z_Axis()->setAxisNumber((Axis_Number)settings->z_settings.axisNumber);
     X_Axis()->setUStepPerMM(settings->z_settings.uStepPerMM);
 
-    A_Axis()->setDeviceNumber((DeviceNumber)settings->a_settings.deviceNumber);
-    A_Axis()->setAxisNumber((AxisNumber)settings->a_settings.axisNumber);
+    A_Axis()->setDeviceNumber((Device_Number)settings->a_settings.deviceNumber);
+    A_Axis()->setAxisNumber((Axis_Number)settings->a_settings.axisNumber);
     X_Axis()->setUStepPerMM(settings->a_settings.uStepPerMM);
 
-    B_Axis()->setDeviceNumber((DeviceNumber)settings->b_settings.deviceNumber);
-    B_Axis()->setAxisNumber((AxisNumber)settings->b_settings.axisNumber);
+    B_Axis()->setDeviceNumber((Device_Number)settings->b_settings.deviceNumber);
+    B_Axis()->setAxisNumber((Axis_Number)settings->b_settings.axisNumber);
     X_Axis()->setUStepPerMM(settings->b_settings.uStepPerMM);
 
     setBlockValid(true);
