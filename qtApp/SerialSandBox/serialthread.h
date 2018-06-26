@@ -12,7 +12,7 @@ public:
     explicit SerialThread(QObject *parent = nullptr);
     ~SerialThread();
 
-    void transaction(const QString &portName, int waitTimeout, const QString &request_str);
+    void transaction(const QString &portName, qint32 baudRate ,int waitTimeout, const QString &request_str);
 
 
 
@@ -26,6 +26,7 @@ private:
     QString m_portName;
     QString m_request;
     int m_waitTimeout = 0;
+    qint32 m_baudRate;
     QMutex m_mutex;
     QWaitCondition m_cond;
     bool m_quit = false;
