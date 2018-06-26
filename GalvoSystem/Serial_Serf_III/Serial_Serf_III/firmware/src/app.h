@@ -95,7 +95,12 @@ typedef enum
 
 } APP_STATES;
 
-
+typedef enum {
+  USART_BM_INIT = 0,
+  USART_BM_READ,
+  USART_BM_WRITE,
+  USART_BM_DONE
+} USART_STATES;
 // *****************************************************************************
 /* Application Data
 
@@ -113,9 +118,12 @@ typedef struct
 {
     /* The application's current state */
     APP_STATES state;
+    USART_STATES usartState;
     DRV_HANDLE handleUSART0;
+    
 	int tx_count;
 	int rx_count;
+    uint8_t app_rx_buf[33];
     /* TODO: Define any additional data used by the application. */
 
 } APP_DATA;

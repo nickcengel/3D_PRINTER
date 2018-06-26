@@ -1,9 +1,9 @@
 /*******************************************************************************
   MPLAB Harmony Application Source File
-  
+
   Company:
     Microchip Technology Inc.
-  
+
   File Name:
     app.c
 
@@ -11,8 +11,8 @@
     This file contains the source code for the MPLAB Harmony application.
 
   Description:
-    This file contains the source code for the MPLAB Harmony application.  It 
-    implements the logic of the application's state machine and it may call 
+    This file contains the source code for the MPLAB Harmony application.  It
+    implements the logic of the application's state machine and it may call
     API routines of other MPLAB Harmony modules in the system, such as drivers,
     system services, and middleware.  However, it does not call any of the
     system interfaces (such as the "Initialize" and "Tasks" functions) of any of
@@ -49,7 +49,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files 
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
@@ -72,20 +72,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
   Remarks:
     This structure should be initialized by the APP_Initialize function.
-    
+
     Application strings and buffers are be defined outside this structure.
-*/
+ */
 
 APP_DATA appData;
-static uint8_t app_tx_buf[] = "*hello how many bytes 12345678910*\r\n\r\n";
-static uint8_t *app_rx_buf;
-static enum 
-{
-    USART_BM_INIT,
-    USART_BM_SEND_MSG,
-    USART_BM_ECHO,
-    USART_BM_DONE
-} usartBMState;
+// static uint8_t app_tx_buf[] = "*hello how many bytes 12345678910*\r\n\r\n";
+
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -94,7 +88,7 @@ static enum
 // *****************************************************************************
 
 /* TODO:  Add any necessary callback functions.
-*/
+ */
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,72 +96,86 @@ static enum
 // *****************************************************************************
 // *****************************************************************************
 
-
 /* TODO:  Add any necessary local functions.
-*/
-static void USART_Task (void)
-{
-    switch (usartBMState)
-    {
-        default:
+ */
+static void USART_Task(void) {
+    switch (appData.usartState) {
+
         case USART_BM_INIT:
         {
             appData.tx_count = 0;
             appData.rx_count = 0;
-            usartBMState = USART_BM_SEND_MSG;
-        }break;
-
-        case USART_BM_SEND_MSG:
-        {
-            if (appData.tx_count < sizeof(app_tx_buf)) 
-            {
-                if(!DRV_USART0_TransmitBufferIsFull())
-                {
-                    DRV_USART0_WriteByte(app_tx_buf[appData.tx_count]);
-                    appData.tx_count++;
-                }
+            usartBMState = USART_BM_READ;
+            while (!DRV_USART0_ReceiverBufferIsEmpty()) {
+                uint8_t f = DRV_USART0_ReadByte();
             }
 
-            /* Have we finished sending message? */
-            if (appData.tx_count == sizeof(app_tx_buf))
-            {
-                usartBMState = USART_BM_ECHO;
-            }
-        }break;
 
-        case USART_BM_ECHO:
+
+        }
+        break;
+
+        case USART_BM_READ:
         {
-                BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_OFF);
-                BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_OFF);
-                if(!DRV_USART0_ReceiverBufferIsEmpty()){
-                    /* Read the received character */
-                    const uint8_t g = DRV_USART0_ReadByte();
-                    
+
+            BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_OFF);
+            // BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_OFF);
+            if (appData.rx_count < 32) {
+                /* Read the received character */
+                if (!DRV_USART0_ReceiverBufferIsEmpty()) {
                     BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_ON);
+                    const uint8_t g = DRV_USART0_ReadByte();
 
-                    /* Echo back the received character */                
-                    if((g == 'o') && !DRV_USART0_TransmitBufferIsFull())
-                    {
-                        DRV_USART0_WriteByte('k');
-                        DRV_USART0_WriteByte('\r');
-                        DRV_USART0_WriteByte('\n');
-                        usartBMState = USART_BM_DONE;
-                        break;
+                    //        if(!DRV_USART0_TransmitBufferIsFull())
+                    //            DRV_USART0_WriteByte(g);
+
+                    appData.app_rx_buf[appData.rx_count] = g;
+                    appData.rx_count++;
+
+                    if ((g == '\r') || (g == '\n') || (g == ';') ||
+                            (appData.rx_count == 31)) {
+                        BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_OFF);
+                        usartBMState = USART_BM_WRITE;
                     }
-                          
                 }
-                
-        }break;
+            }
+        }
+        break;
+
+        case USART_BM_WRITE:
+        {
+
+            if (appData.tx_count < appData.rx_count) {
+                if (!DRV_USART0_TransmitBufferIsFull()) {
+                    DRV_USART0_WriteByte(appData.app_rx_buf[appData.tx_count]);
+                    appData.tx_count++;
+
+                    if (appData.tx_count == appData.rx_count) {
+                        if (!DRV_USART0_TransmitBufferIsFull())
+                            DRV_USART0_WriteByte('\r');
+                        if (!DRV_USART0_TransmitBufferIsFull())
+                            DRV_USART0_WriteByte('\n');
+                        usartBMState = USART_BM_DONE;
+                    }
+                }
+            }
+        }
+        break;
 
         case USART_BM_DONE:
         {
-            
+            appData.rx_count = 0;
+            appData.tx_count = 0;
             BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_ON);
-            usartBMState = USART_BM_ECHO;
-        }break;
+            usartBMState = USART_BM_READ;
+
+        }
+        break;
+
+        default:
+            break;
     }
 }
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -183,17 +191,15 @@ static void USART_Task (void)
     See prototype in app.h.
  */
 
-void APP_Initialize ( void )
-{
+void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
-
+    appData.usartState = USART_BM_INIT;
     appData.handleUSART0 = DRV_HANDLE_INVALID;
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
 }
-
 
 /******************************************************************************
   Function:
@@ -203,59 +209,52 @@ void APP_Initialize ( void )
     See prototype in app.h.
  */
 
-void APP_Tasks ( void )
-{
+void APP_Tasks(void) {
 
     /* Check the application's current state. */
-    switch ( appData.state )
-    {
-        /* Application's initial state. */
+    switch (appData.state) {
+            /* Application's initial state. */
         case APP_STATE_INIT:
         {
             bool appInitialized = true;
-       
-            if (appData.handleUSART0 == DRV_HANDLE_INVALID)
-            {
-                appData.handleUSART0 = DRV_USART0_Open(DRV_USART_INDEX_0, DRV_IO_INTENT_READWRITE|DRV_IO_INTENT_NONBLOCKING);
-                appInitialized &= ( DRV_HANDLE_INVALID != appData.handleUSART0 );
+
+            if (appData.handleUSART0 == DRV_HANDLE_INVALID) {
+                appData.handleUSART0 =
+                        DRV_USART0_Open(DRV_USART_INDEX_0,
+                        DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.handleUSART0);
             }
-        
-            if (appInitialized)
-            {
+
+            if (appInitialized) {
                 /* initialize the USART state machine */
                 usartBMState = USART_BM_INIT;
-                
+
                 BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);
 
-            
                 appData.state = APP_STATE_SERVICE_TASKS;
             }
-            break;
+
         }
+        break;
 
         case APP_STATE_SERVICE_TASKS:
-        {   
-
-            //while(BSP_SwitchStateGet(BSP_SWITCH_1) == BSP_SWITCH_STATE_RELEASED);
-           // usartBMState = USART_BM_INIT;
-			USART_Task();
-        
-            break;
-        }
-
-        /* TODO: implement your application state machine.*/
-        
-
-        /* The default state should never be executed. */
-        default:
         {
+
+            // while(BSP_SwitchStateGet(BSP_SWITCH_1) == BSP_SWITCH_STATE_RELEASED);
+            // usartBMState = USART_BM_INIT;
+            USART_Task();
+
+        }
+        break;
+
+            /* TODO: implement your application state machine.*/
+
+            /* The default state should never be executed. */
+        default:
             /* TODO: Handle error in application's state machine. */
             break;
-        }
     }
 }
-
- 
 
 /*******************************************************************************
  End of File
