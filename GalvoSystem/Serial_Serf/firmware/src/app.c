@@ -122,28 +122,28 @@ void USART_Task(void) {
                 /* Read the received character */
                 if (!DRV_USART0_ReceiverBufferIsEmpty()) {
                     BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_ON);
-                    uint8_t g = DRV_USART0_ReadByte();
+                    //uint8_t g = DRV_USART0_ReadByte();
                     //
                     if (!DRV_USART0_TransmitBufferIsFull())
-                        DRV_USART0_WriteByte(g);
+                    //    DRV_USART0_WriteByte(g);
 
-                    appData.app_rx_buf[appData.rx_count] = g;
+                   // appData.app_rx_buf[appData.rx_count] = g;
                     appData.rx_count++;
 
-                    if ((g == 10) || (g == 13) || (g == ';') ||
-                            (appData.rx_count == 30)) {
-                        BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_OFF);
-                        appData.usartState = USART_BM_WRITE;
-
-                        if (!DRV_USART0_TransmitBufferIsFull()){
-
-                            DRV_USART0_WriteByte('\r');
-                            DRV_USART0_WriteByte('\n');
-                        }
-
-
-                        
-                    }
+//                    if ((g == 10) || (g == 13) || (g == ';') ||
+//                            (appData.rx_count == 30)) {
+//                        BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_OFF);
+//                        appData.usartState = USART_BM_WRITE;
+//
+//                        if (!DRV_USART0_TransmitBufferIsFull()){
+//
+//                          //  DRV_USART0_WriteByte('\r');
+//                           // DRV_USART0_WriteByte('\n');
+//                        }
+//
+//
+//                        
+//                    }
                 }
             }
 
@@ -160,8 +160,8 @@ void USART_Task(void) {
                         if (appData.tx_count == appData.rx_count) {
                                              if (!DRV_USART0_TransmitBufferIsFull()){
 
-                            DRV_USART0_WriteByte('\r');
-                            DRV_USART0_WriteByte('\n');
+                            //DRV_USART0_WriteByte('\r');
+                           // DRV_USART0_WriteByte('\n');
                         }
                             appData.usartState = USART_BM_DONE;
                         }
@@ -176,16 +176,16 @@ void USART_Task(void) {
 
                 for (appData.rx_count = 0; appData.rx_count < appData.tx_count; appData.rx_count++)
                     appData.app_rx_buf[appData.rx_count] = 0;
-                appData.rx_count = 0;
-                appData.tx_count = 0;
+               // appData.rx_count = 0;
+               // appData.tx_count = 0;
 
                 BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_ON);
  
                 appData.usartState = USART_BM_READ;
                          if (!DRV_USART0_TransmitBufferIsFull()){
-
-                            DRV_USART0_WriteByte('\r');
-                            DRV_USART0_WriteByte('\n');
+//
+                          //  DRV_USART0_WriteByte('\r');
+                         //   DRV_USART0_WriteByte('\n');
                         }
 
 
