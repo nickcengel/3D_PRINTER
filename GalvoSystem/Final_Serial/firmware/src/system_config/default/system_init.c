@@ -188,7 +188,10 @@ void SYS_Initialize ( void* data )
     /* Initialize Drivers */
     /* Disable SDHC module */
 	PLIB_POWER_PeripheralModuleDisable(POWER_ID_0, POWER_MODULE_SDHC);
-    sysObj.drvUsart0 = DRV_USART_Initialize(DRV_USART_INDEX_0, (SYS_MODULE_INIT *)NULL);
+    /*Initialize TMR0 */
+    DRV_TMR0_Initialize();
+ 
+     sysObj.drvUsart0 = DRV_USART_Initialize(DRV_USART_INDEX_0, (SYS_MODULE_INIT *)NULL);
 
     /* Initialize System Services */
     SYS_PORTS_Initialize();

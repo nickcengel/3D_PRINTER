@@ -80,12 +80,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 int stringToInt(uint8_t *str) {
     int8_t sign = 1;
 
-    if (str[0] == '-')
-    {
+    if (str[0] == '-') {
         sign = -1;
         str[0] = ' ';
     }
-    return (sign*atoi(str));
+    return (sign * atoi(str));
 }
 
 APP_DATA appData;
@@ -236,6 +235,7 @@ void addActiveParameter(MESSAGE_DATA *m, int value) {
 
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
+    DRV_TMR0_Initialize();
 
     appData.handleUSART0 = DRV_HANDLE_INVALID;
     appData.appState = APP_STATE_INIT;
@@ -253,9 +253,6 @@ void APP_Initialize(void) {
     int i;
     for (i = 0; i < 6; i++)
         myMessage.activeParameter[i] = 0;
-
-
-
 
 
     /* TODO: Initialize your application's state machine and other
@@ -292,14 +289,12 @@ void USART_Tasks(void) {
                     myMessage.activeParameter[i] = 0;
 
                 myMessage.parameterIterator = L_STATE;
-            }
-
-            else if (appData.appState == APP_SEND_REPLY) {
+            } else if (appData.appState == APP_SEND_REPLY) {
                 appData.tx_count = 0;
 
                 appData.usartState = USART_THROW_BYTE;
                 appData.messageState = MESSAGE_SEND_BUSY;
-                
+
                 BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_ON);
             }
 
@@ -328,11 +323,6 @@ void USART_Tasks(void) {
 
                     case MESSAGE_LOOK_FOR_DATA:
                     {
-                        
-                        
-                        
-                        
-                        
                         if (((currentByte >= '0') && (currentByte <= '9'))
                                 || ((currentByte == '-') && (appData.rx_count == 0))) {
                             usart_rx_buffer[appData.rx_count] = currentByte;
@@ -341,9 +331,9 @@ void USART_Tasks(void) {
                             myMessage.parameterIterator++;
                         } else if ((currentByte == ' ') && (appData.rx_count > 0)) {
 
-                            if(strlen(usart_rx_buffer) > 0){
-                            const int currentParameter = stringToInt(usart_rx_buffer);
-                            addActiveParameter(&myMessage, currentParameter);
+                            if (strlen(usart_rx_buffer) > 0) {
+                                const int currentParameter = stringToInt(usart_rx_buffer);
+                                addActiveParameter(&myMessage, currentParameter);
                             }
                             memset(usart_rx_buffer, 0, appData.rx_count);
                             appData.rx_count = 0;
@@ -353,11 +343,11 @@ void USART_Tasks(void) {
                                 appData.usartState = USART_IDLE;
                             }
                         } else if (currentByte == ';') {
-                            if(strlen(usart_rx_buffer) > 0){
+                            if (strlen(usart_rx_buffer) > 0) {
                                 const int currentParameter = stringToInt(usart_rx_buffer);
-                            addActiveParameter(&myMessage, currentParameter);
+                                addActiveParameter(&myMessage, currentParameter);
                             }
-                            
+
                             memset(usart_rx_buffer, 0, appData.rx_count);
                             appData.rx_count = 0;
                             appData.messageState = MESSAGE_RECEIVE_COMPLETE;
@@ -372,11 +362,11 @@ void USART_Tasks(void) {
                     default:
                         break;
                 }
-            } 
-            
+            }
             else if ((appData.rx_count >= USART_RX_BUFF_SIZE - 2)) {
                 if (myMessage.parameterIterator < END_PARAMETERS) {
-                    const int currentParameter = stringToInt(usart_rx_buffer);;
+                    const int currentParameter = stringToInt(usart_rx_buffer);
+                    ;
                     addActiveParameter(&myMessage, currentParameter);
                     memset(usart_rx_buffer, 0, appData.rx_count);
                     appData.rx_count = 0;
@@ -398,19 +388,19 @@ void USART_Tasks(void) {
             break;
         }
 
-                    case USART_THROW_BYTE:
-                    {
-                        if (!DRV_USART0_TransmitBufferIsFull() && (appData.tx_count < appData.tx_length)) {
-                            DRV_USART0_WriteByte(usart_tx_buffer[appData.tx_count]);
-                            appData.tx_count++;
-                        } else if (appData.tx_count == appData.tx_length) {
-                            appData.messageState = MESSAGE_SEND_COMPLETE;
-                            appData.appState = APP_GET_NEW_MESSAGE;
-                            appData.usartState = USART_IDLE;
-                        }
-            
-                        break;
-                    }
+        case USART_THROW_BYTE:
+        {
+            if (!DRV_USART0_TransmitBufferIsFull() && (appData.tx_count < appData.tx_length)) {
+                DRV_USART0_WriteByte(usart_tx_buffer[appData.tx_count]);
+                appData.tx_count++;
+            } else if (appData.tx_count == appData.tx_length) {
+                appData.messageState = MESSAGE_SEND_COMPLETE;
+                appData.appState = APP_GET_NEW_MESSAGE;
+                appData.usartState = USART_IDLE;
+            }
+
+            break;
+        }
 
 
 
@@ -436,6 +426,8 @@ void APP_Tasks(void) {
         {
             bool appInitialized = true;
 
+            DRV_TMR0_Start();
+            tmr0_flag = 0;
 
             if (appData.handleUSART0 == DRV_HANDLE_INVALID) {
                 appData.handleUSART0 =
@@ -450,7 +442,7 @@ void APP_Tasks(void) {
 
                 BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);
 
-                appData.appState = APP_GET_NEW_MESSAGE;
+                appData.appState = APP_PROCESS_MESSAGE;
             }
 
             break;
@@ -467,15 +459,14 @@ void APP_Tasks(void) {
         case APP_PROCESS_MESSAGE:
         {
             memset(usart_tx_buffer, 0, USART_TX_BUFF_SIZE);
-            strcpy(usart_tx_buffer, "\r\n@ ok:\r\n");
+            strcpy(usart_tx_buffer, "\r\n@ok:\r\n");
 
 
             int i;
             for (i = 0; i < END_PARAMETERS; i++) {
                 if (myMessage.activeParameter[i]) {
                     int value = getMessageData(&myMessage, (PARAMETER_LABELS) i);
-                    if(value < 0)
-                    {
+                    if (value < 0) {
                         value *= -1;
                         strcat(usart_tx_buffer, "-");
                     }
@@ -497,7 +488,9 @@ void APP_Tasks(void) {
 
         case APP_SEND_REPLY:
         {
+
             USART_Tasks();
+
 
             break;
         }

@@ -87,7 +87,8 @@ extern "C" {
 
 #define USART_RX_BUFF_SIZE 60
 #define USART_TX_BUFF_SIZE 63
-
+    
+    bool tmr0_flag;
     typedef enum {
         /* Application's state machine's initial state. */
         APP_STATE_INIT = 0,

@@ -12,7 +12,10 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="framework" projectFiles="true">
               <logicalFolder name="f1" displayName="driver" projectFiles="true">
-                <logicalFolder name="f1" displayName="usart" projectFiles="true">
+                <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+                  <itemPath>../src/system_config/default/framework/driver/tmr/drv_tmr_static.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f2" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/default/framework/driver/usart/src/drv_usart_static_local.h</itemPath>
                   </logicalFolder>
@@ -36,7 +39,16 @@
       </logicalFolder>
       <logicalFolder name="f1" displayName="framework" projectFiles="true">
         <logicalFolder name="f1" displayName="driver" projectFiles="true">
-          <logicalFolder name="f1" displayName="usart" projectFiles="true">
+          <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f1" displayName="src" projectFiles="true">
+              <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/src/drv_tmr_variant_mapping.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/drv_tmr.h</itemPath>
+            <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/drv_tmr_mapping.h</itemPath>
+            <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/drv_tmr_compatibility.h</itemPath>
+            <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/tmr_definitions_pic32m.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="usart" projectFiles="true">
             <logicalFolder name="f1" displayName="src" projectFiles="true">
               <itemPath>../../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/usart/src/drv_usart_variant_mapping.h</itemPath>
             </logicalFolder>
@@ -100,7 +112,13 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="framework" projectFiles="true">
               <logicalFolder name="f1" displayName="driver" projectFiles="true">
-                <logicalFolder name="f1" displayName="usart" projectFiles="true">
+                <logicalFolder name="f1" displayName="tmr" projectFiles="true">
+                  <logicalFolder name="f1" displayName="src" projectFiles="true">
+                    <itemPath>../src/system_config/default/framework/driver/tmr/src/drv_tmr_static.c</itemPath>
+                    <itemPath>../src/system_config/default/framework/driver/tmr/src/drv_tmr_mapping.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="f2" displayName="usart" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/default/framework/driver/usart/src/drv_usart_mapping.c</itemPath>
                     <itemPath>../src/system_config/default/framework/driver/usart/src/drv_usart_static.c</itemPath>
@@ -159,6 +177,7 @@
     <Elem>../..</Elem>
     <Elem>../src/default</Elem>
     <Elem>../src/system_config/default</Elem>
+    <Elem>../../../../../../../Applications/microchip/harmony/v2_06</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -207,7 +226,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/system_config/default;../src/default;../../../../framework;../src/system_config/default/framework;../../../../../../../../../Applications/microchip/harmony/v2_06/framework;../src/system_config/default/bsp"/>
+                  value="../../../../framework;../src;../src/system_config/default;../src/default;../../../../../../../../../Applications/microchip/harmony/v2_06/framework;../src/system_config/default/framework;../src/system_config/default/bsp"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

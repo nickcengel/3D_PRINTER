@@ -75,8 +75,10 @@ void __ISR(_TIMER_1_VECTOR, ipl1AUTO) IntHandlerDrvTmrInstance0(void)
 {
     
     DRV_TMR0_CounterClear();
+    tmr0_flag = 1;
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
 }
  /*******************************************************************************
  End of File
 */
+ 
