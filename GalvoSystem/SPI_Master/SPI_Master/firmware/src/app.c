@@ -189,7 +189,7 @@ void APP_Tasks(void) {
 
             if ((spi_buf_handle == 0) || (spi_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE))
 
-                spi_buf_handle = DRV_SPI0_BufferAddWrite(spi_tx_buf, 8, 0, 0);
+                spi_buf_handle = DRV_SPI0_BufferAddWrite(spi_tx_buffer, 8, 0, 0);
             break;
         }
 

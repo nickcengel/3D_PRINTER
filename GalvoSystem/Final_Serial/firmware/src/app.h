@@ -130,8 +130,10 @@ extern "C" {
     typedef enum {
         SPI_IDLE = 0,
         SPI_WRITE_START,
+        SPI_WRITE_BUSY,
         SPI_WRITE_COMPLETE,
         SPI_READ_START,
+        SPI_READ_BUSY,
         SPI_READ_COMPLETE
     } SPI_STATES;
     // *****************************************************************************
@@ -193,7 +195,7 @@ extern "C" {
     uint8_t usart_rx_count;
     uint8_t usart_tx_count;
     uint8_t usart_tx_length;
-    
+
     uint8_t spi_tx_buffer[SPI_TX_BUFF_SIZE];
     DRV_SPI_BUFFER_HANDLE spi_buf_handle;
     DRV_SPI_BUFFER_EVENT spi_buf_status;

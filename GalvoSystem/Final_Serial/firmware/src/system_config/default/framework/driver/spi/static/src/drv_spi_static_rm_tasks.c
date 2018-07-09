@@ -49,7 +49,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_definitions.h"
 #include "driver/spi/static/src/drv_spi_static_local.h"
 
-int32_t DRV_SPI0_MasterRMSend8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
+int32_t DRV_SPI0_MasterRMSend32BitPolled( struct DRV_SPI_OBJ * pDrvObj )
 {
     register DRV_SPI_JOB_OBJECT * currentJob = pDrvObj->currentJob;
 
@@ -59,7 +59,7 @@ int32_t DRV_SPI0_MasterRMSend8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
         return 0;
     }
     /* Check to see if the transmit buffer is empty*/
-    if (!PLIB_SPI_TransmitBufferIsEmpty(SPI_ID_1))
+    if (!PLIB_SPI_TransmitBufferIsEmpty(SPI_ID_2))
     {
         return 0;
     }
@@ -71,15 +71,15 @@ int32_t DRV_SPI0_MasterRMSend8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     if (currentJob->dataLeftToTx != 0)
     {
     /* Transmit the data & update the counts */
-        PLIB_SPI_BufferWrite(SPI_ID_1, currentJob->txBuffer[currentJob->dataTxed]);
-        currentJob->dataTxed++;
-        currentJob->dataLeftToTx--;
+        PLIB_SPI_BufferWrite32bit(SPI_ID_2, ((uint32_t*)currentJob->txBuffer)[currentJob->dataTxed>>2]);
+        currentJob->dataTxed+=4;
+        currentJob->dataLeftToTx-=4;
     }
     else
     {
         /* Transmit the dummy data & update the counts */
-        PLIB_SPI_BufferWrite(SPI_ID_1, (uint8_t)pDrvObj->dummyByteValue);
-        currentJob->dummyLeftToTx--;
+        PLIB_SPI_BufferWrite32bit(SPI_ID_2, (uint32_t)pDrvObj->dummyByteValue);
+        currentJob->dummyLeftToTx-=4;
     }
     /* We now have a symbol in progress*/
     pDrvObj->symbolsInProgress = 1;
@@ -87,7 +87,7 @@ int32_t DRV_SPI0_MasterRMSend8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     return 0;
 }
 
-int32_t DRV_SPI0_MasterRMReceive8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
+int32_t DRV_SPI0_MasterRMReceive32BitPolled( struct DRV_SPI_OBJ * pDrvObj )
 {
     register DRV_SPI_JOB_OBJECT * currentJob = pDrvObj->currentJob;
 
@@ -95,15 +95,15 @@ int32_t DRV_SPI0_MasterRMReceive8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     {
         return 0;
     }
-    if (PLIB_SPI_ReceiverBufferIsFull(SPI_ID_1))
+    if (PLIB_SPI_ReceiverBufferIsFull(SPI_ID_2))
     {
         /* We have data waiting in the SPI buffer */
         if (currentJob->dataLeftToRx != 0)
         {
             /* Receive the data and updates the count */
-            currentJob->rxBuffer[currentJob->dataRxed] = PLIB_SPI_BufferRead(SPI_ID_1);
-            currentJob->dataRxed++;
-            currentJob->dataLeftToRx --;
+            ((uint32_t*)(currentJob->rxBuffer))[currentJob->dataRxed>>2] = PLIB_SPI_BufferRead32bit(SPI_ID_2);
+            currentJob->dataRxed+=4;
+            currentJob->dataLeftToRx -=4;
         }
         else
         {
@@ -111,9 +111,8 @@ int32_t DRV_SPI0_MasterRMReceive8BitPolled( struct DRV_SPI_OBJ * pDrvObj )
                buffer because we have to keep track of how many symbols/units we
                have received, and the number may have increased since we checked
                how full the buffer is.*/
-            PLIB_SPI_BufferRead(SPI_ID_1);
-            //SYS_CONSOLE_MESSAGE("Rd ");
-            currentJob->dummyLeftToRx--;
+            PLIB_SPI_BufferRead32bit(SPI_ID_2);
+            currentJob->dummyLeftToRx-=4;
         }
         /* No longer have a symbol in progress */
         pDrvObj->symbolsInProgress = 0;

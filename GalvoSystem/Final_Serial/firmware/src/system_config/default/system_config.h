@@ -194,9 +194,9 @@ extern "C" {
 #define DRV_SPI_SLAVE 				0
 #define DRV_SPI_RM 					1
 #define DRV_SPI_EBM 				0
-#define DRV_SPI_8BIT 				1
+#define DRV_SPI_8BIT 				0
 #define DRV_SPI_16BIT 				0
-#define DRV_SPI_32BIT 				0
+#define DRV_SPI_32BIT 				1
 #define DRV_SPI_DMA 				0
 
 /*** SPI Driver Static Allocation Options ***/

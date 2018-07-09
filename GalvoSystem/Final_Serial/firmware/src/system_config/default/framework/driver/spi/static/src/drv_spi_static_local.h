@@ -189,10 +189,10 @@ typedef struct _DRV_SPI_SYS_QUEUE_QUEUE_MANAGER_DATA
 // *****************************************************************************
 // *****************************************************************************
 
-int32_t DRV_SPI0_PolledMasterRM8BitTasks ( struct DRV_SPI_OBJ * dObj );
+int32_t DRV_SPI0_PolledMasterRM32BitTasks ( struct DRV_SPI_OBJ * dObj );
 int32_t DRV_SPI0_PolledErrorTasks(struct DRV_SPI_OBJ * dObj);
-int32_t DRV_SPI0_MasterRMSend8BitPolled( struct DRV_SPI_OBJ * dObj );
-int32_t DRV_SPI0_MasterRMReceive8BitPolled( struct DRV_SPI_OBJ * dObj );
+int32_t DRV_SPI0_MasterRMSend32BitPolled( struct DRV_SPI_OBJ * dObj );
+int32_t DRV_SPI0_MasterRMReceive32BitPolled( struct DRV_SPI_OBJ * dObj );
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

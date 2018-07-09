@@ -252,7 +252,12 @@ void APP_Initialize(void) {
     usart_tx_count = 0;
 
     appData.spiHandle = DRV_HANDLE_INVALID;
-
+    appData.spiState = SPI_IDLE;
+    spi_tx_buffer[0] = 255;
+    spi_tx_buffer[1] = 0;
+    spi_tx_buffer[2] = 0;
+    spi_tx_buffer[3] = 255;
+    SPI2_CS0On();
 
     myMessage.parameterIterator = NO_PARAMETER;
 
@@ -495,6 +500,7 @@ void APP_Tasks(void) {
             }
 
             appData.appState = APP_WRITE_TO_DAC;
+            appData.spiState = SPI_WRITE_START;
             usart_tx_length = strlen(usart_tx_buffer);
 
 
@@ -503,7 +509,28 @@ void APP_Tasks(void) {
 
         case APP_WRITE_TO_DAC:
         {
-
+           
+                if (appData.spiState == SPI_WRITE_START)
+                {
+                    SPI2_CS0Off();
+                    appData.spiState = SPI_WRITE_BUSY;
+                    spi_buf_handle = DRV_SPI0_BufferAddWrite(spi_tx_buffer, 4, 0, 0);
+                }
+                else if(appData.spiState == SPI_WRITE_BUSY)
+                {
+                    spi_buf_status =  DRV_SPI0_BufferStatus(spi_buf_handle);
+                    
+                    if(spi_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE)
+                    {
+                        SPI2_CS0On();
+                         appData.spiState = SPI_WRITE_COMPLETE;
+                         appData.appState = APP_CONFIRM_DAC;
+                    }
+                        
+                    
+                }
+            
+            
             break;
         }
         case APP_CONFIRM_DAC:

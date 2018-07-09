@@ -49,7 +49,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 
-int32_t DRV_SPI0_PolledMasterRM8BitTasks ( struct DRV_SPI_OBJ * dObj )
+int32_t DRV_SPI0_PolledMasterRM32BitTasks ( struct DRV_SPI_OBJ * dObj )
 {
     volatile bool continueLoop;
     uint8_t counter = 0;
@@ -84,7 +84,7 @@ int32_t DRV_SPI0_PolledMasterRM8BitTasks ( struct DRV_SPI_OBJ * dObj )
             /* List the new job as processing*/
             currentJob->status = DRV_SPI_BUFFER_EVENT_PROCESSING;
             /* Flush out the Receive buffer */
-            PLIB_SPI_BufferClear(SPI_ID_1);
+            PLIB_SPI_BufferClear(SPI_ID_2);
         }
 
 
@@ -94,7 +94,7 @@ int32_t DRV_SPI0_PolledMasterRM8BitTasks ( struct DRV_SPI_OBJ * dObj )
             if
             (currentJob->dataLeftToTx +currentJob->dummyLeftToTx != 0)
         {
-            DRV_SPI0_MasterRMSend8BitPolled(dObj);
+            DRV_SPI0_MasterRMSend32BitPolled(dObj);
         }
         
         DRV_SPI0_PolledErrorTasks(dObj);
@@ -105,7 +105,7 @@ int32_t DRV_SPI0_PolledMasterRM8BitTasks ( struct DRV_SPI_OBJ * dObj )
         // Check to see if we have any data left to receive and update the bytes left.
         if (bytesLeft != 0)
         {
-            DRV_SPI0_MasterRMReceive8BitPolled(dObj);
+            DRV_SPI0_MasterRMReceive32BitPolled(dObj);
             bytesLeft = currentJob->dataLeftToRx + currentJob->dummyLeftToRx;
         }
         if (bytesLeft == 0)

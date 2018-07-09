@@ -100,47 +100,47 @@ SYS_MODULE_OBJ DRV_SPI0_Initialize(void)
     dObj = &gDrvSPI0Obj;
 
     /* Disable the SPI module to configure it*/
-    PLIB_SPI_Disable ( SPI_ID_1 );
+    PLIB_SPI_Disable ( SPI_ID_2 );
 
     /* Set up Master or Slave Mode*/
-    PLIB_SPI_MasterEnable ( SPI_ID_1 );
-    PLIB_SPI_PinDisable(SPI_ID_1, SPI_PIN_SLAVE_SELECT);
+    PLIB_SPI_MasterEnable ( SPI_ID_2 );
+    PLIB_SPI_PinDisable(SPI_ID_2, SPI_PIN_SLAVE_SELECT);
 
     /* Set up if the SPI is allowed to run while the rest of the CPU is in idle mode*/
-    PLIB_SPI_StopInIdleEnable( SPI_ID_1 );
+    PLIB_SPI_StopInIdleEnable( SPI_ID_2 );
 
     /* Set up clock Polarity and output data phase*/
-    PLIB_SPI_ClockPolaritySelect( SPI_ID_1, SPI_CLOCK_POLARITY_IDLE_LOW );
-    PLIB_SPI_OutputDataPhaseSelect( SPI_ID_1, SPI_OUTPUT_DATA_PHASE_ON_IDLE_TO_ACTIVE_CLOCK );
+    PLIB_SPI_ClockPolaritySelect( SPI_ID_2, SPI_CLOCK_POLARITY_IDLE_LOW );
+    PLIB_SPI_OutputDataPhaseSelect( SPI_ID_2, SPI_OUTPUT_DATA_PHASE_ON_IDLE_TO_ACTIVE_CLOCK );
 
     /* Set up the Input Sample Phase*/
-    PLIB_SPI_InputSamplePhaseSelect ( SPI_ID_1, SPI_INPUT_SAMPLING_PHASE_IN_MIDDLE);
+    PLIB_SPI_InputSamplePhaseSelect ( SPI_ID_2, SPI_INPUT_SAMPLING_PHASE_IN_MIDDLE);
 
     /* Communication Width Selection */
-    PLIB_SPI_CommunicationWidthSelect ( SPI_ID_1, SPI_COMMUNICATION_WIDTH_8BITS );
+    PLIB_SPI_CommunicationWidthSelect ( SPI_ID_2, SPI_COMMUNICATION_WIDTH_32BITS );
 
     /* Baud rate selection */
-    PLIB_SPI_BaudRateSet( SPI_ID_1 , SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2), 12000000 );
+    PLIB_SPI_BaudRateSet( SPI_ID_2 , SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2), 12000000 );
 
     /* Protocol selection */
-    PLIB_SPI_FramedCommunicationDisable( SPI_ID_1  );
+    PLIB_SPI_FramedCommunicationDisable( SPI_ID_2  );
     #if defined (PLIB_SPI_ExistsAudioProtocolControl)
-            if (PLIB_SPI_ExistsAudioProtocolControl(SPI_ID_1))
+            if (PLIB_SPI_ExistsAudioProtocolControl(SPI_ID_2))
             {
-                PLIB_SPI_AudioProtocolDisable(SPI_ID_1);
+                PLIB_SPI_AudioProtocolDisable(SPI_ID_2);
             }
     #endif
 
     /* Buffer type selection */
     #if defined (PLIB_SPI_ExistsFIFOControl)
-        if (PLIB_SPI_ExistsFIFOControl( SPI_ID_1 ))
+        if (PLIB_SPI_ExistsFIFOControl( SPI_ID_2 ))
         {
-            PLIB_SPI_FIFODisable( SPI_ID_1 );
+            PLIB_SPI_FIFODisable( SPI_ID_2 );
         }
     #endif
 
-    PLIB_SPI_BufferClear( SPI_ID_1 );
-    PLIB_SPI_ReceiverOverflowClear ( SPI_ID_1 );
+    PLIB_SPI_BufferClear( SPI_ID_2 );
+    PLIB_SPI_ReceiverOverflowClear ( SPI_ID_2 );
 
     /* Initialize Queue only once for all instances of SPI driver*/
     if (DRV_SPI_SYS_QUEUE_Initialize(&qmInitData, &hQueueManager) != DRV_SPI_SYS_QUEUE_SUCCESS)
@@ -167,7 +167,7 @@ SYS_MODULE_OBJ DRV_SPI0_Initialize(void)
     dObj->numTrfsSmPolled = 16;
 
     /* Enable the Module */
-    PLIB_SPI_Enable(SPI_ID_1);
+    PLIB_SPI_Enable(SPI_ID_2);
 
     return (SYS_MODULE_OBJ)DRV_SPI_INDEX_0 ;
 }
@@ -175,7 +175,7 @@ SYS_MODULE_OBJ DRV_SPI0_Initialize(void)
 void DRV_SPI0_Deinitialize ( void )
 {
     /* Disable the SPI Module */
-    PLIB_SPI_Disable(SPI_ID_1);
+    PLIB_SPI_Disable(SPI_ID_2);
 
     return;
 }
@@ -189,7 +189,7 @@ SYS_STATUS DRV_SPI0_Status ( void )
 void DRV_SPI0_Tasks ( void )
 {
     /* Call the respective task routine */
-    DRV_SPI0_PolledMasterRM8BitTasks(&gDrvSPI0Obj);
+    DRV_SPI0_PolledMasterRM32BitTasks(&gDrvSPI0Obj);
 }
 
 DRV_HANDLE DRV_SPI0_Open ( const SYS_MODULE_INDEX index, const DRV_IO_INTENT intent )
@@ -227,7 +227,7 @@ int32_t DRV_SPI0_ClientConfigure ( const DRV_SPI_CLIENT_DATA * cfgData  )
     if (cfgData->baudRate != 0)
     {
 
-        PLIB_SPI_BaudRateSet (SPI_ID_1,
+        PLIB_SPI_BaudRateSet (SPI_ID_2,
                               SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2),
                               cfgData->baudRate);
     }
@@ -240,6 +240,13 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI0_BufferAddRead2 ( void *rxBuffer, size_t size, DRV
     DRV_SPI_OBJ *dObj = (DRV_SPI_OBJ*)NULL;
 
     dObj = &gDrvSPI0Obj;
+
+    /* Check if the requested size of data can be processed with the configured Data Width */
+    if ((size & 0x3) != 0)
+    {
+        SYS_ASSERT(false, "\r\nSPI Driver: invalid input size, must be a multiple of 32 bits.");
+        return (DRV_SPI_BUFFER_HANDLE)NULL;
+    }
 
     DRV_SPI_JOB_OBJECT * pJob = NULL;
 
@@ -279,6 +286,13 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI0_BufferAddWrite2 ( void *txBuffer, size_t size, DR
 
     dObj = &gDrvSPI0Obj;
 
+    /* Check if the requested size of data can be processed with the configured Data Width */
+    if ((size & 0x3) != 0)
+    {
+        SYS_ASSERT(false, "\r\nSPI Driver: invalid input size, must be a multiple of 32 bits.");
+        return (DRV_SPI_BUFFER_HANDLE)NULL;
+    }
+
     DRV_SPI_JOB_OBJECT * pJob = NULL;
     if (DRV_SPI_SYS_QUEUE_AllocElementLock(dObj->queue, (void **)&pJob) != DRV_SPI_SYS_QUEUE_SUCCESS)
     {
@@ -314,6 +328,13 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI0_BufferAddWriteRead2 ( void *txBuffer, size_t txSi
     DRV_SPI_OBJ *dObj = (DRV_SPI_OBJ*)NULL;
 
     dObj = &gDrvSPI0Obj;
+
+    /* Check if the requested size of data can be processed with the configured Data Width */
+    if (((rxSize & 0x3) != 0) || ((txSize & 0x3) != 0))
+    {
+        SYS_ASSERT(false, "\r\nSPI Driver: invalid input size, must be a multiple of 32 bits.");
+        return (DRV_SPI_BUFFER_HANDLE)NULL;
+    }
 
     DRV_SPI_JOB_OBJECT * pJob = NULL;
     if (DRV_SPI_SYS_QUEUE_AllocElementLock(dObj->queue, (void **)&pJob) != DRV_SPI_SYS_QUEUE_SUCCESS)
@@ -382,7 +403,7 @@ int32_t DRV_SPI0_PolledErrorTasks(struct DRV_SPI_OBJ * dObj)
 
     register DRV_SPI_JOB_OBJECT * currentJob = dObj->currentJob;
 
-    if (PLIB_SPI_ReceiverHasOverflowed(SPI_ID_1))
+    if (PLIB_SPI_ReceiverHasOverflowed(SPI_ID_2))
     {
         currentJob->status = DRV_SPI_BUFFER_EVENT_ERROR;
         if (currentJob->completeCB != NULL)
@@ -399,8 +420,8 @@ int32_t DRV_SPI0_PolledErrorTasks(struct DRV_SPI_OBJ * dObj)
             return 0;
         }
         dObj->currentJob = NULL;
-        PLIB_SPI_BufferClear(SPI_ID_1 );
-        PLIB_SPI_ReceiverOverflowClear (SPI_ID_1 );
+        PLIB_SPI_BufferClear(SPI_ID_2 );
+        PLIB_SPI_ReceiverOverflowClear (SPI_ID_2 );
     }
     return 0;
 }
@@ -413,12 +434,12 @@ int32_t DRV_SPI0_PolledErrorTasks(struct DRV_SPI_OBJ * dObj)
 // *********************************************************************************************
 bool DRV_SPI0_ReceiverBufferIsFull(void)
 {
-    return (PLIB_SPI_ReceiverBufferIsFull(SPI_ID_1));
+    return (PLIB_SPI_ReceiverBufferIsFull(SPI_ID_2));
 }
 
 bool DRV_SPI0_TransmitterBufferIsFull(void)
 {
-    return (PLIB_SPI_TransmitBufferIsFull(SPI_ID_1));
+    return (PLIB_SPI_TransmitBufferIsFull(SPI_ID_2));
 }
 
 int32_t DRV_SPI0_BufferAddWriteRead(const void * txBuffer, void * rxBuffer, uint32_t size)
@@ -428,17 +449,17 @@ int32_t DRV_SPI0_BufferAddWriteRead(const void * txBuffer, void * rxBuffer, uint
     int32_t rxcounter = 0;
     do {
         continueLoop = false;
-        if(!PLIB_SPI_TransmitBufferIsFull(SPI_ID_1) && txcounter < size)
+        if(!PLIB_SPI_TransmitBufferIsFull(SPI_ID_2) && txcounter < (size>>2))
         {
-            PLIB_SPI_BufferWrite(SPI_ID_1, ((uint8_t*)txBuffer)[txcounter]);
+            PLIB_SPI_BufferWrite32bit(SPI_ID_2, ((uint32_t*)txBuffer)[txcounter]);
             txcounter++;
             continueLoop = true;
         }
 
         while (txcounter != rxcounter)
         {
-            while(!PLIB_SPI_ReceiverBufferIsFull(SPI_ID_1));
-            ((uint8_t*)rxBuffer)[rxcounter] = PLIB_SPI_BufferRead(SPI_ID_1);
+            while(!PLIB_SPI_ReceiverBufferIsFull(SPI_ID_2));
+            ((uint32_t*)rxBuffer)[rxcounter] = PLIB_SPI_BufferRead32bit(SPI_ID_2);
             rxcounter++;
             continueLoop = true;
         }
@@ -447,6 +468,6 @@ int32_t DRV_SPI0_BufferAddWriteRead(const void * txBuffer, void * rxBuffer, uint
             continueLoop = true;
         }
     }while(continueLoop);
-    return txcounter;
+    return txcounter<<2;
 }
 
