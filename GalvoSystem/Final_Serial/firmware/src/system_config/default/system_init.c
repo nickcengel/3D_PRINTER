@@ -134,6 +134,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Driver Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+// <editor-fold defaultstate="collapsed" desc="DRV_SPI Initialization Data"> 
+ /*** SPI Driver Initialization Data ***/
+// </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="DRV_USART Initialization Data">
 // </editor-fold>
 
@@ -188,6 +191,10 @@ void SYS_Initialize ( void* data )
     /* Initialize Drivers */
     /* Disable SDHC module */
 	PLIB_POWER_PeripheralModuleDisable(POWER_ID_0, POWER_MODULE_SDHC);
+
+    /*** SPI Driver Index 0 initialization***/
+
+    sysObj.spiObjectIdx0 = DRV_SPI_Initialize(DRV_SPI_INDEX_0, (const SYS_MODULE_INIT  * const)NULL);
     /*Initialize TMR0 */
     DRV_TMR0_Initialize();
  

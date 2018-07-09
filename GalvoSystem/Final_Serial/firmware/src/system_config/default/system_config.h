@@ -102,8 +102,8 @@ extern "C" {
 #define SYS_PORT_A_CNPD         0x0000
 #define SYS_PORT_A_CNEN         0x0000
 
-#define SYS_PORT_B_ANSEL        0x8F9E
-#define SYS_PORT_B_TRIS         0xFFDF
+#define SYS_PORT_B_ANSEL        0x8F9A
+#define SYS_PORT_B_TRIS         0xFFDB
 #define SYS_PORT_B_LAT          0x0000
 #define SYS_PORT_B_ODC          0x0000
 #define SYS_PORT_B_CNPU         0x7000
@@ -142,7 +142,7 @@ extern "C" {
 #define SYS_PORT_F_CNPD         0x0000
 #define SYS_PORT_F_CNEN         0x0000
 
-#define SYS_PORT_G_ANSEL        0x8DFC
+#define SYS_PORT_G_ANSEL        0x8C3C
 #define SYS_PORT_G_TRIS         0xFFFF
 #define SYS_PORT_G_LAT          0x0000
 #define SYS_PORT_G_ODC          0x0000
@@ -183,6 +183,26 @@ extern "C" {
 // Section: Driver Configuration
 // *****************************************************************************
 // *****************************************************************************
+
+/*** SPI Driver Configuration ***/
+#define DRV_SPI_NUMBER_OF_MODULES		6
+/*** Driver Compilation and static configuration options. ***/
+/*** Select SPI compilation units.***/
+#define DRV_SPI_POLLED 				1
+#define DRV_SPI_ISR 				0
+#define DRV_SPI_MASTER 				1
+#define DRV_SPI_SLAVE 				0
+#define DRV_SPI_RM 					1
+#define DRV_SPI_EBM 				0
+#define DRV_SPI_8BIT 				1
+#define DRV_SPI_16BIT 				0
+#define DRV_SPI_32BIT 				0
+#define DRV_SPI_DMA 				0
+
+/*** SPI Driver Static Allocation Options ***/
+#define DRV_SPI_INSTANCES_NUMBER 		1
+#define DRV_SPI_CLIENTS_NUMBER 			1
+#define DRV_SPI_ELEMENTS_PER_QUEUE 		10
 /*** Timer Driver Configuration ***/
 #define DRV_TMR_INTERRUPT_MODE             true
 
@@ -255,6 +275,13 @@ extern "C" {
 
 /*** Functions for BSP_SWITCH_1 pin ***/
 #define BSP_SWITCH_1StateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_13)
+
+/*** Functions for SPI2_CS0 pin ***/
+#define SPI2_CS0Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define SPI2_CS0On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define SPI2_CS0Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define SPI2_CS0StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define SPI2_CS0StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2, Value)
 
 
 /*** Application Instance 0 Configuration ***/

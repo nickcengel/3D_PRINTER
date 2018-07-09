@@ -85,15 +85,20 @@ extern "C" {
         determine the behavior of the application at various times.
      */
 
-#define USART_RX_BUFF_SIZE 60
-#define USART_TX_BUFF_SIZE 63
-    
+#define USART_RX_BUFF_SIZE 30
+#define USART_TX_BUFF_SIZE 33
+
+#define SPI_TX_BUFF_SIZE 4
+
     bool tmr0_flag;
+
     typedef enum {
         /* Application's state machine's initial state. */
         APP_STATE_INIT = 0,
         APP_GET_NEW_MESSAGE,
         APP_PROCESS_MESSAGE,
+        APP_WRITE_TO_DAC,
+        APP_CONFIRM_DAC,
         APP_SEND_REPLY
 
         /* TODO: Define states used by the application state machine. */
@@ -122,6 +127,13 @@ extern "C" {
 
     } USART_STATES;
 
+    typedef enum {
+        SPI_IDLE = 0,
+        SPI_WRITE_START,
+        SPI_WRITE_COMPLETE,
+        SPI_READ_START,
+        SPI_READ_COMPLETE
+    } SPI_STATES;
     // *****************************************************************************
 
     /* Application Data
@@ -140,7 +152,7 @@ extern "C" {
     } COMPONENT_STATES;
 
     typedef enum {
-       NO_PARAMETER = -1, L_STATE = 0, L_POWER, G_STATE, X_POS, Y_POS, G_SPEED, END_PARAMETERS
+        NO_PARAMETER = -1, L_STATE = 0, L_POWER, G_STATE, X_POS, Y_POS, G_SPEED, END_PARAMETERS
     } PARAMETER_LABELS;
 
     typedef struct {
@@ -150,35 +162,45 @@ extern "C" {
         int xPosition;
         int yPosition;
         int gSpeed;
-        
+
         bool activeParameter[6];
         PARAMETER_LABELS parameterIterator;
 
     } MESSAGE_DATA;
 
-    int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS dataLabel); 
+    int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS dataLabel);
     void setMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label, int value);
-    
+
     void addActiveParameter(MESSAGE_DATA *m, int value);
-    
+
     typedef struct {
         /* The application's current state */
         APP_STATES appState;
         MESSAGE_STATES messageState;
-        USART_STATES usartState;
-        DRV_HANDLE handleUSART0;
 
-        uint8_t rx_count;
-        uint8_t tx_count;
-        uint8_t tx_length;
-        
+        USART_STATES usartState;
+        DRV_HANDLE usartHandle;
+
+        SPI_STATES spiState;
+        DRV_HANDLE spiHandle;
 
         /* TODO: Define any additional data used by the application. */
 
     } APP_DATA;
-    
+
     uint8_t usart_rx_buffer[USART_RX_BUFF_SIZE];
     uint8_t usart_tx_buffer[USART_TX_BUFF_SIZE];
+    uint8_t usart_rx_count;
+    uint8_t usart_tx_count;
+    uint8_t usart_tx_length;
+    
+    uint8_t spi_tx_buffer[SPI_TX_BUFF_SIZE];
+    DRV_SPI_BUFFER_HANDLE spi_buf_handle;
+    DRV_SPI_BUFFER_EVENT spi_buf_status;
+
+
+
+
     // *****************************************************************************
     // *****************************************************************************
     // Section: Application Callback Routines
@@ -258,6 +280,7 @@ extern "C" {
      */
 
     void APP_Tasks(void);
+    void SPI_Tasks(void);
     void USART_Tasks(void);
 
 #endif /* _APP_H */

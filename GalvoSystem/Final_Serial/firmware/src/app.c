@@ -1,24 +1,24 @@
 /*******************************************************************************
-  MPLAB Harmony Application Source File
+ MPLAB Harmony Application Source File
   
-  Company:
-    Microchip Technology Inc.
+ Company:
+   Microchip Technology Inc.
   
-  File Name:
-    app.c
+ File Name:
+   app.c
 
-  Summary:
-    This file contains the source code for the MPLAB Harmony application.
+ Summary:
+   This file contains the source code for the MPLAB Harmony application.
 
-  Description:
-    This file contains the source code for the MPLAB Harmony application.  It 
-    implements the logic of the application's state machine and it may call 
-    API routines of other MPLAB Harmony modules in the system, such as drivers,
-    system services, and middleware.  However, it does not call any of the
-    system interfaces (such as the "Initialize" and "Tasks" functions) of any of
-    the modules in the system or make any assumptions about when those functions
-    are called.  That is the responsibility of the configuration-specific system
-    files.
+ Description:
+   This file contains the source code for the MPLAB Harmony application.  It 
+   implements the logic of the application's state machine and it may call 
+   API routines of other MPLAB Harmony modules in the system, such as drivers,
+   system services, and middleware.  However, it does not call any of the
+   system interfaces (such as the "Initialize" and "Tasks" functions) of any of
+   the modules in the system or make any assumptions about when those functions
+   are called.  That is the responsibility of the configuration-specific system
+   files.
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -88,6 +88,7 @@ int stringToInt(uint8_t *str) {
 }
 
 APP_DATA appData;
+uintptr_t appDataPtr = (uintptr_t) & appData;
 
 MESSAGE_DATA myMessage = {0, 0, 0, 0, 0, 0,
     {0, 0, 0, 0, 0, 0}, 0};
@@ -219,6 +220,9 @@ void addActiveParameter(MESSAGE_DATA *m, int value) {
     }
 }
 
+
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -235,18 +239,20 @@ void addActiveParameter(MESSAGE_DATA *m, int value) {
 
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
-    DRV_TMR0_Initialize();
 
-    appData.handleUSART0 = DRV_HANDLE_INVALID;
+
+    appData.usartHandle = DRV_HANDLE_INVALID;
     appData.appState = APP_STATE_INIT;
     appData.messageState = MESSAGE_IDLE;
     appData.usartState = USART_INIT;
-
     memset(usart_rx_buffer, 0, USART_RX_BUFF_SIZE);
-    appData.rx_count = 0;
+    usart_rx_count = 0;
 
     memset(usart_tx_buffer, 0, USART_TX_BUFF_SIZE);
-    appData.tx_count = 0;
+    usart_tx_count = 0;
+
+    appData.spiHandle = DRV_HANDLE_INVALID;
+
 
     myMessage.parameterIterator = NO_PARAMETER;
 
@@ -254,10 +260,6 @@ void APP_Initialize(void) {
     for (i = 0; i < 6; i++)
         myMessage.activeParameter[i] = 0;
 
-
-    /* TODO: Initialize your application's state machine and other
-     * parameters.
-     */
 }
 
 void USART_Tasks(void) {
@@ -266,17 +268,18 @@ void USART_Tasks(void) {
 
         case USART_INIT:
         {
-            appData.rx_count = 0;
+            usart_rx_count = 0;
             appData.usartState = USART_IDLE;
             break;
         }
 
+
         case USART_IDLE:
         {
             if (appData.appState == APP_GET_NEW_MESSAGE) {
-                if (appData.rx_count != 0) {
+                if (usart_rx_count != 0) {
                     memset(usart_rx_buffer, 0, USART_RX_BUFF_SIZE);
-                    appData.rx_count = 0;
+                    usart_rx_count = 0;
                 }
 
                 appData.usartState = USART_GRAB_BYTE;
@@ -290,7 +293,7 @@ void USART_Tasks(void) {
 
                 myMessage.parameterIterator = L_STATE;
             } else if (appData.appState == APP_SEND_REPLY) {
-                appData.tx_count = 0;
+                usart_tx_count = 0;
 
                 appData.usartState = USART_THROW_BYTE;
                 appData.messageState = MESSAGE_SEND_BUSY;
@@ -305,7 +308,7 @@ void USART_Tasks(void) {
         case USART_GRAB_BYTE:
         {
             if (!DRV_USART0_ReceiverBufferIsEmpty()
-                    && (appData.rx_count < USART_RX_BUFF_SIZE - 2)
+                    && (usart_rx_count < USART_RX_BUFF_SIZE - 2)
                     && (myMessage.parameterIterator < END_PARAMETERS)) {
 
                 const uint8_t currentByte = DRV_USART0_ReadByte();
@@ -324,19 +327,19 @@ void USART_Tasks(void) {
                     case MESSAGE_LOOK_FOR_DATA:
                     {
                         if (((currentByte >= '0') && (currentByte <= '9'))
-                                || ((currentByte == '-') && (appData.rx_count == 0))) {
-                            usart_rx_buffer[appData.rx_count] = currentByte;
-                            appData.rx_count++;
+                                || ((currentByte == '-') && (usart_rx_count == 0))) {
+                            usart_rx_buffer[usart_rx_count] = currentByte;
+                            usart_rx_count++;
                         } else if (currentByte == '~') {
                             myMessage.parameterIterator++;
-                        } else if ((currentByte == ' ') && (appData.rx_count > 0)) {
+                        } else if ((currentByte == ' ') && (usart_rx_count > 0)) {
 
                             if (strlen(usart_rx_buffer) > 0) {
                                 const int currentParameter = stringToInt(usart_rx_buffer);
                                 addActiveParameter(&myMessage, currentParameter);
                             }
-                            memset(usart_rx_buffer, 0, appData.rx_count);
-                            appData.rx_count = 0;
+                            memset(usart_rx_buffer, 0, usart_rx_count);
+                            usart_rx_count = 0;
                             if (myMessage.parameterIterator >= END_PARAMETERS) {
                                 appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                                 appData.appState = APP_PROCESS_MESSAGE;
@@ -348,8 +351,8 @@ void USART_Tasks(void) {
                                 addActiveParameter(&myMessage, currentParameter);
                             }
 
-                            memset(usart_rx_buffer, 0, appData.rx_count);
-                            appData.rx_count = 0;
+                            memset(usart_rx_buffer, 0, usart_rx_count);
+                            usart_rx_count = 0;
                             appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                             appData.appState = APP_PROCESS_MESSAGE;
                             appData.usartState = USART_IDLE;
@@ -362,27 +365,26 @@ void USART_Tasks(void) {
                     default:
                         break;
                 }
-            }
-            else if ((appData.rx_count >= USART_RX_BUFF_SIZE - 2)) {
+            } else if ((usart_rx_count >= USART_RX_BUFF_SIZE - 2)) {
                 if (myMessage.parameterIterator < END_PARAMETERS) {
                     const int currentParameter = stringToInt(usart_rx_buffer);
-                    ;
+
                     addActiveParameter(&myMessage, currentParameter);
-                    memset(usart_rx_buffer, 0, appData.rx_count);
-                    appData.rx_count = 0;
+                    memset(usart_rx_buffer, 0, usart_rx_count);
+                    usart_rx_count = 0;
                 } else {
                     appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                     appData.appState = APP_PROCESS_MESSAGE;
                     appData.usartState = USART_IDLE;
                     memset(usart_rx_buffer, 0, sizeof (usart_rx_buffer));
-                    appData.rx_count = 0;
+                    usart_rx_count = 0;
                 }
             } else if (myMessage.parameterIterator >= END_PARAMETERS) {
                 appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                 appData.appState = APP_PROCESS_MESSAGE;
                 appData.usartState = USART_IDLE;
                 memset(usart_rx_buffer, 0, sizeof (usart_rx_buffer));
-                appData.rx_count = 0;
+                usart_rx_count = 0;
             }
 
             break;
@@ -390,10 +392,10 @@ void USART_Tasks(void) {
 
         case USART_THROW_BYTE:
         {
-            if (!DRV_USART0_TransmitBufferIsFull() && (appData.tx_count < appData.tx_length)) {
-                DRV_USART0_WriteByte(usart_tx_buffer[appData.tx_count]);
-                appData.tx_count++;
-            } else if (appData.tx_count == appData.tx_length) {
+            if (!DRV_USART0_TransmitBufferIsFull() && (usart_tx_count < usart_tx_length)) {
+                DRV_USART0_WriteByte(usart_tx_buffer[usart_tx_count]);
+                usart_tx_count++;
+            } else if (usart_tx_count == usart_tx_length) {
                 appData.messageState = MESSAGE_SEND_COMPLETE;
                 appData.appState = APP_GET_NEW_MESSAGE;
                 appData.usartState = USART_IDLE;
@@ -417,6 +419,12 @@ void USART_Tasks(void) {
     See prototype in app.h.
  */
 
+void SPI_Tasks(void) {
+
+
+
+}
+
 void APP_Tasks(void) {
 
     /* Check the application's current state. */
@@ -429,11 +437,18 @@ void APP_Tasks(void) {
             DRV_TMR0_Start();
             tmr0_flag = 0;
 
-            if (appData.handleUSART0 == DRV_HANDLE_INVALID) {
-                appData.handleUSART0 =
+            if (appData.usartHandle == DRV_HANDLE_INVALID) {
+                appData.usartHandle =
                         DRV_USART0_Open(DRV_USART_INDEX_0,
                         DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
-                appInitialized &= (DRV_HANDLE_INVALID != appData.handleUSART0);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.usartHandle);
+            }
+
+            if (appData.spiHandle == DRV_HANDLE_INVALID) {
+                appData.spiHandle =
+                        DRV_SPI0_Open(DRV_SPI_INDEX_0,
+                        DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.spiHandle);
             }
 
             if (appInitialized) {
@@ -442,7 +457,7 @@ void APP_Tasks(void) {
 
                 BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);
 
-                appData.appState = APP_PROCESS_MESSAGE;
+                appData.appState = APP_GET_NEW_MESSAGE;
             }
 
             break;
@@ -479,13 +494,23 @@ void APP_Tasks(void) {
                 }
             }
 
-            appData.appState = APP_SEND_REPLY;
-            appData.tx_length = strlen(usart_tx_buffer);
+            appData.appState = APP_WRITE_TO_DAC;
+            usart_tx_length = strlen(usart_tx_buffer);
 
 
             break;
         }
 
+        case APP_WRITE_TO_DAC:
+        {
+
+            break;
+        }
+        case APP_CONFIRM_DAC:
+        {
+            appData.appState = APP_SEND_REPLY;
+            break;
+        }
         case APP_SEND_REPLY:
         {
 

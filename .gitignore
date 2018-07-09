@@ -27,3 +27,7 @@ qtApp/build-AppR1-Desktop_Qt_5_11_0_clang_64bit-Debug/AppR1.app/Contents/MacOS/A
 /GalvoSystem/Final_Serial/Final_Serial.X/dist/default/
 /GalvoSystem/Final_Serial/Final_Serial.X/nbproject/private/
 /GalvoSystem/Final_Serial/Final_Serial.X/build/default/
+/GalvoSystem/SPI_Master/SPI_Master/firmware/SPI_Master.X/nbproject/private/
+/GalvoSystem/SPI_Master/SPI_Master/firmware/SPI_Master.X/build/default/
+/GalvoSystem/SPI_Master/SPI_Master/firmware/SPI_Master.X/dist/default/
+/GalvoSystem/Final_Serial/firmware/Final_Serial.X/dist/default/
