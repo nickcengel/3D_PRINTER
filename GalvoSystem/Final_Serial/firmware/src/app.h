@@ -85,6 +85,21 @@ extern "C" {
         determine the behavior of the application at various times.
      */
 
+#define DAC_DIN_REG_WRITE 0x1
+#define DAC_OFFSET_REG_WRITE 0x2    
+#define DAC_GAIN_REG_WRITE 0x3
+#define DAC_CONFIG_REG_WRITE 0x4    
+
+#define DAC_DIN_REG_READ 0x9
+#define DAC_OFFSET_REG_READ 0xA    
+#define DAC_GAIN_REG_READ 0xB
+#define DAC_CONFIG_REG_READ 0xC
+    
+#define DAC_OFFSET 0x00000
+#define DAC_GAIN 0x3FFFF
+  
+    
+    
 #define USART_RX_BUFF_SIZE 30
 #define USART_TX_BUFF_SIZE 33
 
@@ -128,6 +143,8 @@ extern "C" {
     } USART_STATES;
 
     typedef enum {
+        SPI_INIT_OFFSET = -2,
+        SPI_INIT_GAIN = -1,
         SPI_IDLE = 0,
         SPI_WRITE_START,
         SPI_WRITE_BUSY,
@@ -199,6 +216,7 @@ extern "C" {
     uint8_t spi_tx_buffer[SPI_TX_BUFF_SIZE];
     DRV_SPI_BUFFER_HANDLE spi_buf_handle;
     DRV_SPI_BUFFER_EVENT spi_buf_status;
+    uint32_t dac_offset_val = 0x20000;
 
 
 
