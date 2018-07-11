@@ -84,43 +84,57 @@ extern "C" {
         This enumeration defines the valid application states.  These states
         determine the behavior of the application at various times.
      */
-
+    /* MAX5318 SPI DAC COMMAND REGISTER VALUES*/
 #define DAC_DIN_REG_WRITE 0x1
 #define DAC_OFFSET_REG_WRITE 0x2    
 #define DAC_GAIN_REG_WRITE 0x3
 #define DAC_CONFIG_REG_WRITE 0x4    
-
 #define DAC_DIN_REG_READ 0x9
 #define DAC_OFFSET_REG_READ 0xA    
 #define DAC_GAIN_REG_READ 0xB
 #define DAC_CONFIG_REG_READ 0xC
 
-#define DAC_OFFSET 0x00000
-#define DAC_GAIN 0x3FFFF
-
-
-
-#define USART_RX_BUFF_SIZE 30
-#define USART_TX_BUFF_SIZE 33
+    /* MAX5318 SPI DAC SETUP  VALUES*/
+    const uint32_t dac0_offset_val = 0x20217; // added to incoming signed number 
+    // so that outgoing unsigned number
+    // maps to FS differential range  
 
 #define SPI_TX_BUFF_SIZE 4
 #define SPI_RX_BUFF_SIZE 4
 
+    uint8_t spi0_tx_buffer[SPI_TX_BUFF_SIZE];
+    uint8_t spi0_rx_buffer[SPI_RX_BUFF_SIZE];
+
+    DRV_SPI_BUFFER_HANDLE spi0_buf_handle;
+    DRV_SPI_BUFFER_EVENT spi0_buf_status;
+
+    
+#define USART0_RX_BUFF_SIZE 30
+#define USART0_TX_BUFF_SIZE 33
+
+    uint8_t usart0_rx_buffer[USART0_RX_BUFF_SIZE];
+    uint8_t usart0_tx_buffer[USART0_TX_BUFF_SIZE];
+    uint8_t usart0_rx_count;
+    uint8_t usart0_tx_count;
+    uint8_t usart0_tx_length;
+
+    
+    /* TMR0 controls chip-select/conversionstart timing for ADC*/
     volatile bool tmr0_flag;
 
+    //***** SOFTWARE STATES ******//
+
+    /*Primary App states*/
     typedef enum {
-        /* Application's state machine's initial state. */
         APP_STATE_INIT = 0,
         APP_GET_NEW_MESSAGE,
         APP_PROCESS_MESSAGE,
         APP_WRITE_TO_DAC,
         APP_READ_FROM_ADC,
         APP_SEND_REPLY
-
-        /* TODO: Define states used by the application state machine. */
-
     } APP_STATES;
 
+    /* message states for USART communication with PC */
     typedef enum {
         MESSAGE_IDLE,
         MESSAGE_LOOK_FOR_START,
@@ -128,12 +142,14 @@ extern "C" {
         MESSAGE_RECEIVE_COMPLETE,
         MESSAGE_SEND_BUSY,
         MESSAGE_SEND_COMPLETE,
-
         MESSAGE_ERROR
-
-
     } MESSAGE_STATES;
 
+    //*****************************//
+
+    //***** HARDWARE STATES ******//
+
+    /* USART function states*/
     typedef enum {
         USART_INIT = 0,
         USART_IDLE,
@@ -143,6 +159,7 @@ extern "C" {
 
     } USART_STATES;
 
+    /* SPI function states */
     typedef enum {
         SPI_INIT_OFFSET = -2,
         SPI_INIT_GAIN = -1,
@@ -154,27 +171,23 @@ extern "C" {
         SPI_READ_BUSY,
         SPI_READ_COMPLETE
     } SPI_STATES;
-    // *****************************************************************************
 
-    /* Application Data
+    //*****************************//
 
-      Summary:
-        Holds application data
 
-      Description:
-        This structure holds the application's data.
+    /* Data received over USART from master is stored in MESSAGE_DATA Struct */
 
-      Remarks:
-        Application strings and buffers are be defined outside this structure.
-     */
+    /* List of possible commanded states */
     typedef enum {
         ENABLE = 1, DISABLE, RELATIVE_MOVE, ABSOLUTE_MOVE, NONE
     } COMPONENT_STATES;
 
+    /* List of data parameter labels in the order they are expected to arrive */
     typedef enum {
         NO_PARAMETER = -1, L_STATE = 0, L_POWER, G_STATE, X_POS, Y_POS, G_SPEED, END_PARAMETERS
     } PARAMETER_LABELS;
 
+    /* data type for storing information received from PC */
     typedef struct {
         COMPONENT_STATES laserState;
         int laserPower;
@@ -183,60 +196,32 @@ extern "C" {
         int yPosition;
         int gSpeed;
 
-        bool activeParameter[6];
-        PARAMETER_LABELS parameterIterator;
+        bool activeParameter[6]; // each bit in the array corresponds to a parameter.
+        // Set true when valid data is read from PC
 
+        PARAMETER_LABELS parameterIterator; // Used to step through each parameter field
+        // filling with data from PC
     } MESSAGE_DATA;
 
+    /* getters and setters for Message Data */
     int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS dataLabel);
     void setMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label, int value);
 
+    /* automatically increments parameterIterator used to fill data from PC */
     void addActiveParameter(MESSAGE_DATA *m, int value);
 
+    /* persistent local app data*/
     typedef struct {
-        /* The application's current state */
         APP_STATES appState;
         MESSAGE_STATES messageState;
 
-        USART_STATES usartState;
-        DRV_HANDLE usartHandle;
+        USART_STATES usart0State;
+        DRV_HANDLE usart0Handle;
 
-        SPI_STATES spiState;
-        DRV_HANDLE spiHandle;
-
-        /* TODO: Define any additional data used by the application. */
+        SPI_STATES spi0State;
+        DRV_HANDLE spi0Handle;
 
     } APP_DATA;
-
-    uint8_t usart_rx_buffer[USART_RX_BUFF_SIZE];
-    uint8_t usart_tx_buffer[USART_TX_BUFF_SIZE];
-    uint8_t usart_rx_count;
-    uint8_t usart_tx_count;
-    uint8_t usart_tx_length;
-
-    uint8_t spi_tx_buffer[SPI_TX_BUFF_SIZE];
-    uint8_t spi_rx_buffer[SPI_RX_BUFF_SIZE];
-
-    DRV_SPI_BUFFER_HANDLE spi_buf_handle;
-    DRV_SPI_BUFFER_EVENT spi_buf_status;
-    uint32_t dac_offset_val = 0x20000;
-
-
-
-
-    // *****************************************************************************
-    // *****************************************************************************
-    // Section: Application Callback Routines
-    // *****************************************************************************
-    // *****************************************************************************
-    /* These routines are called by drivers when certain events occur.
-     */
-
-    // *****************************************************************************
-    // *****************************************************************************
-    // Section: Application Initialization and State Machine Functions
-    // *****************************************************************************
-    // *****************************************************************************
 
     /*******************************************************************************
       Function:
@@ -303,7 +288,9 @@ extern "C" {
      */
 
     void APP_Tasks(void);
-    void SPI_Tasks(void);
+    
+    /* called by APP_Tasks tp handle communication with PC */
+    /* internally advances appState */
     void USART_Tasks(void);
 
 #endif /* _APP_H */

@@ -76,30 +76,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     
     Application strings and buffers are be defined outside this structure.
  */
-
-int stringToInt(uint8_t *str) {
-    int8_t sign = 1;
-
-    if (str[0] == '-') {
-        sign = -1;
-        str[0] = ' ';
-    }
-    return (sign * atoi(str));
-}
-
 APP_DATA appData;
-uintptr_t appDataPtr = (uintptr_t) & appData;
 
 MESSAGE_DATA myMessage = {0, 0, 0, 0, 0, 0,
     {0, 0, 0, 0, 0, 0}, 0};
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Callback Functions
-// *****************************************************************************
-// *****************************************************************************
 
-/* TODO:  Add any necessary callback functions.
- */
+uint32_t ADC0_value = 0x0000;
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -107,9 +90,7 @@ MESSAGE_DATA myMessage = {0, 0, 0, 0, 0, 0,
 // *****************************************************************************
 // *****************************************************************************
 
-/* TODO:  Add any necessary local functions.
- */
-
+/* Message_Data type helper functions */
 int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label) {
 
     switch (label) {
@@ -220,7 +201,16 @@ void addActiveParameter(MESSAGE_DATA *m, int value) {
     }
 }
 
+/* converter for signed numbers */
+int stringToInt(uint8_t *str) {
+    int8_t sign = 1;
 
+    if (str[0] == '-') {
+        sign = -1;
+        str[0] = ' ';
+    }
+    return (sign * atoi(str));
+}
 
 
 // *****************************************************************************
@@ -238,54 +228,48 @@ void addActiveParameter(MESSAGE_DATA *m, int value) {
  */
 
 void APP_Initialize(void) {
-    /* Place the App state machine in its initial state. */
-
-    appData.usartHandle = DRV_HANDLE_INVALID;
     appData.appState = APP_STATE_INIT;
+
     appData.messageState = MESSAGE_IDLE;
-    appData.usartState = USART_INIT;
-    memset(usart_rx_buffer, 0, USART_RX_BUFF_SIZE);
-    usart_rx_count = 0;
-
-    memset(usart_tx_buffer, 0, USART_TX_BUFF_SIZE);
-    usart_tx_count = 0;
-
-    appData.spiHandle = DRV_HANDLE_INVALID;
-    appData.spiState = SPI_INIT_OFFSET;
-
-
 
     myMessage.parameterIterator = NO_PARAMETER;
 
-    int i;
-    for (i = 0; i < 6; i++)
-        myMessage.activeParameter[i] = 0;
+    appData.usart0Handle = DRV_HANDLE_INVALID;
+    appData.usart0State = USART_INIT;
+    memset(usart0_rx_buffer, 0, USART0_RX_BUFF_SIZE);
+    usart0_rx_count = 0;
+    memset(usart0_tx_buffer, 0, USART0_TX_BUFF_SIZE);
+    usart0_tx_count = 0;
+
+    appData.spi0Handle = DRV_HANDLE_INVALID;
+    appData.spi0State = SPI_INIT_OFFSET;
+    memset(spi0_rx_buffer, 0, SPI_RX_BUFF_SIZE);
+    memset(spi0_tx_buffer, 0, SPI_TX_BUFF_SIZE);
 
     DRV_TMR0_CounterValueSet(0xFFFF - 10);
     tmr0_flag = 0;
 }
 
 void USART_Tasks(void) {
-
-    switch (appData.usartState) {
+    switch (appData.usart0State) { /// BEGIN USART STATE SWITCH ///
 
         case USART_INIT:
         {
-            usart_rx_count = 0;
-            appData.usartState = USART_IDLE;
+            usart0_rx_count = 0;
+            appData.usart0State = USART_IDLE;
             break;
-        }
+        } // END USART_INIT //
 
-
+            /* Clear / Prepare buffers, Advance USART state */
         case USART_IDLE:
         {
             if (appData.appState == APP_GET_NEW_MESSAGE) {
-                if (usart_rx_count != 0) {
-                    memset(usart_rx_buffer, 0, USART_RX_BUFF_SIZE);
-                    usart_rx_count = 0;
+                if (usart0_rx_count != 0) {
+                    memset(usart0_rx_buffer, 0, USART0_RX_BUFF_SIZE);
+                    usart0_rx_count = 0;
                 }
 
-                appData.usartState = USART_GRAB_BYTE;
+                appData.usart0State = USART_GRAB_BYTE;
                 appData.messageState = MESSAGE_LOOK_FOR_START;
 
                 BSP_LEDStateSet(BSP_LED_2, BSP_LED_STATE_ON);
@@ -295,124 +279,126 @@ void USART_Tasks(void) {
                     myMessage.activeParameter[i] = 0;
 
                 myMessage.parameterIterator = L_STATE;
-            } else if (appData.appState == APP_SEND_REPLY) {
-                usart_tx_count = 0;
 
-                appData.usartState = USART_THROW_BYTE;
+
+            } else if (appData.appState == APP_SEND_REPLY) {
+                usart0_tx_count = 0;
+
+                appData.usart0State = USART_THROW_BYTE;
                 appData.messageState = MESSAGE_SEND_BUSY;
 
                 BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_ON);
             }
 
             break;
-        }
+        } // END USART_IDLE //
 
-
+            /* Read a byte from the PC over USART */
         case USART_GRAB_BYTE:
         {
+            /* see if there is new data and if there is a place to put it */
             if (!DRV_USART0_ReceiverBufferIsEmpty()
-                    && (usart_rx_count < USART_RX_BUFF_SIZE - 2)
+                    && (usart0_rx_count < USART0_RX_BUFF_SIZE - 2)
                     && (myMessage.parameterIterator < END_PARAMETERS)) {
 
                 const uint8_t currentByte = DRV_USART0_ReadByte();
 
-                switch (appData.messageState) {
+                switch (appData.messageState) { /// BEGIN MESSAGE STATE SWITCH ///
 
+                        /* Find the beginning of message demarcated by "/" */
                     case MESSAGE_LOOK_FOR_START:
                     {
                         if (currentByte == '/')
                             appData.messageState = MESSAGE_LOOK_FOR_DATA;
 
                         break;
-                    }
+                    } // END MESSAGE_LOOK_FOR_START
 
-
+                        /* Read in  ASCII numerical characters until space or ";" */
                     case MESSAGE_LOOK_FOR_DATA:
                     {
                         if (((currentByte >= '0') && (currentByte <= '9'))
-                                || ((currentByte == '-') && (usart_rx_count == 0))) {
-                            usart_rx_buffer[usart_rx_count] = currentByte;
-                            usart_rx_count++;
+                                || ((currentByte == '-') && (usart0_rx_count == 0))) {
+                            usart0_rx_buffer[usart0_rx_count] = currentByte;
+                            usart0_rx_count++;
                         } else if (currentByte == '~') {
                             myMessage.parameterIterator++;
-                        } else if ((currentByte == ' ') && (usart_rx_count > 0)) {
+                        } else if ((currentByte == ' ') && (usart0_rx_count > 0)) {
 
-                            if (strlen(usart_rx_buffer) > 0) {
-                                const int currentParameter = stringToInt(usart_rx_buffer);
+                            if (strlen(usart0_rx_buffer) > 0) {
+                                const int currentParameter = stringToInt(usart0_rx_buffer);
                                 addActiveParameter(&myMessage, currentParameter);
                             }
-                            memset(usart_rx_buffer, 0, usart_rx_count);
-                            usart_rx_count = 0;
+                            memset(usart0_rx_buffer, 0, usart0_rx_count);
+                            usart0_rx_count = 0;
                             if (myMessage.parameterIterator >= END_PARAMETERS) {
                                 appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                                 appData.appState = APP_PROCESS_MESSAGE;
-                                appData.usartState = USART_IDLE;
+                                appData.usart0State = USART_IDLE;
                             }
                         } else if (currentByte == ';') {
-                            if (strlen(usart_rx_buffer) > 0) {
-                                const int currentParameter = stringToInt(usart_rx_buffer);
+                            if (strlen(usart0_rx_buffer) > 0) {
+                                const int currentParameter = stringToInt(usart0_rx_buffer);
                                 addActiveParameter(&myMessage, currentParameter);
                             }
-
-                            memset(usart_rx_buffer, 0, usart_rx_count);
-                            usart_rx_count = 0;
+                            memset(usart0_rx_buffer, 0, usart0_rx_count);
+                            usart0_rx_count = 0;
                             appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                             appData.appState = APP_PROCESS_MESSAGE;
-                            appData.usartState = USART_IDLE;
+                            appData.usart0State = USART_IDLE;
                         }
-
-
                         break;
-                    }
+                    } // END MESSAGE_LOOK_FOR_DATA //
 
                     default:
                         break;
-                }
-            } else if ((usart_rx_count >= USART_RX_BUFF_SIZE - 2)) {
+                } /// END MESSAGE STATE SWITCH ///
+
+                /* We are out of room */
+            } else if ((usart0_rx_count >= USART0_RX_BUFF_SIZE - 2)) {
                 if (myMessage.parameterIterator < END_PARAMETERS) {
-                    const int currentParameter = stringToInt(usart_rx_buffer);
+                    const int currentParameter = stringToInt(usart0_rx_buffer);
 
                     addActiveParameter(&myMessage, currentParameter);
-                    memset(usart_rx_buffer, 0, usart_rx_count);
-                    usart_rx_count = 0;
+                    memset(usart0_rx_buffer, 0, usart0_rx_count);
+                    usart0_rx_count = 0;
                 } else {
                     appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                     appData.appState = APP_PROCESS_MESSAGE;
-                    appData.usartState = USART_IDLE;
-                    memset(usart_rx_buffer, 0, sizeof (usart_rx_buffer));
-                    usart_rx_count = 0;
+                    appData.usart0State = USART_IDLE;
+                    memset(usart0_rx_buffer, 0, sizeof (usart0_rx_buffer));
+                    usart0_rx_count = 0;
                 }
+                /* We received all the data we expected to get */
             } else if (myMessage.parameterIterator >= END_PARAMETERS) {
                 appData.messageState = MESSAGE_RECEIVE_COMPLETE;
                 appData.appState = APP_PROCESS_MESSAGE;
-                appData.usartState = USART_IDLE;
-                memset(usart_rx_buffer, 0, sizeof (usart_rx_buffer));
-                usart_rx_count = 0;
+                appData.usart0State = USART_IDLE;
+                memset(usart0_rx_buffer, 0, sizeof (usart0_rx_buffer));
+                usart0_rx_count = 0;
             }
-
             break;
-        }
+        } // END USART_GRAB_BYTE //
 
+            /* Send a byte back to PC over USART */
         case USART_THROW_BYTE:
         {
-            if (!DRV_USART0_TransmitBufferIsFull() && (usart_tx_count < usart_tx_length)) {
-                DRV_USART0_WriteByte(usart_tx_buffer[usart_tx_count]);
-                usart_tx_count++;
-            } else if (usart_tx_count == usart_tx_length) {
+            if (!DRV_USART0_TransmitBufferIsFull() && (usart0_tx_count < usart0_tx_length)) {
+                DRV_USART0_WriteByte(usart0_tx_buffer[usart0_tx_count]);
+                usart0_tx_count++;
+            } else if (usart0_tx_count == usart0_tx_length) {
                 appData.messageState = MESSAGE_SEND_COMPLETE;
                 appData.appState = APP_GET_NEW_MESSAGE;
-                appData.usartState = USART_IDLE;
+                appData.usart0State = USART_IDLE;
             }
-
             break;
-        }
-
-
+        }// END USART_THROW_BYTE //
 
         default:
             break;
-    }
-}
+    }/// END USART STATE SWITCH ///
+
+} /// END USART_TASKS() //
 
 /******************************************************************************
   Function:
@@ -422,14 +408,8 @@ void USART_Tasks(void) {
     See prototype in app.h.
  */
 
-void SPI_Tasks(void) {
-
-
-
-}
 
 void APP_Tasks(void) {
-
     /* Check the application's current state. */
     switch (appData.appState) {
             /* Application's initial state. */
@@ -437,167 +417,142 @@ void APP_Tasks(void) {
         {
             bool appInitialized = true;
 
-            //DRV_TMR0_Start();
-            SPI2_CS0On();
-            SPI2_CS1On();
-
-
-
-            if (appData.usartHandle == DRV_HANDLE_INVALID) {
-                appData.usartHandle =
+            if (appData.usart0Handle == DRV_HANDLE_INVALID) {
+                appData.usart0Handle =
                         DRV_USART0_Open(DRV_USART_INDEX_0,
                         DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
-                appInitialized &= (DRV_HANDLE_INVALID != appData.usartHandle);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.usart0Handle);
             }
 
-            if (appData.spiHandle == DRV_HANDLE_INVALID) {
-                appData.spiHandle =
+            if (appData.spi0Handle == DRV_HANDLE_INVALID) {
+                appData.spi0Handle =
                         DRV_SPI0_Open(DRV_SPI_INDEX_0,
                         DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
-                appInitialized &= (DRV_HANDLE_INVALID != appData.spiHandle);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.spi0Handle);
             }
 
-            if (appInitialized) {
-
-                if (appData.spiState == SPI_INIT_OFFSET) {
-                    spi_tx_buffer[3] = DAC_OFFSET_REG_WRITE << 4;
-                    spi_tx_buffer[3] |= (0xFF & (DAC_OFFSET >> 14));
-                    spi_tx_buffer[2] = (0xFF & (DAC_OFFSET >> 6));
-                    spi_tx_buffer[1] = (uint8_t) ((0xFF & DAC_OFFSET) << 2);
-                    spi_tx_buffer[0] = 0x0;
-                    DRV_SPI0_BufferAddWrite(spi_tx_buffer, 4, 0, 0);
-                    appData.spiState = SPI_INIT_GAIN;
-                } else {
-                    spi_tx_buffer[3] = DAC_GAIN_REG_WRITE << 4;
-                    spi_tx_buffer[3] |= (0xFF & (DAC_GAIN >> 14));
-                    spi_tx_buffer[2] = (0xFF & (DAC_GAIN >> 6));
-                    spi_tx_buffer[1] = (uint8_t) ((0xFF & DAC_GAIN) << 2);
-                    spi_tx_buffer[0] = 0x0;
-                    DRV_SPI0_BufferAddWrite(spi_tx_buffer, 4, 0, 0);
-                    appData.spiState = SPI_IDLE;
-
-                    appData.usartState = USART_INIT;
-
-                    BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);
-
+            if (appInitialized) {              
+                    appData.spi0State = SPI_IDLE;
+                    appData.usart0State = USART_INIT;
                     appData.appState = APP_GET_NEW_MESSAGE;
-
-                }
-
+                    
+                    BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);      
             }
-
             break;
-        }
+        } // END APP_INIT CASE
 
         case APP_GET_NEW_MESSAGE:
         {
-
             USART_Tasks();
-
             break;
         }
 
         case APP_PROCESS_MESSAGE:
         {
-
-
-
-
-
-            uint32_t data = getMessageData(&myMessage, L_STATE) + 0x20217;
-
-            spi_tx_buffer[3] = DAC_DIN_REG_WRITE << 4;
-            spi_tx_buffer[3] |= (0xFF & (data >> 14));
-            spi_tx_buffer[2] = (0xFF & (data >> 6));
-            spi_tx_buffer[1] = (0xFF & data) << 2;
-            //spi_tx_buffer[0] = 0x0;
+            uint32_t data = getMessageData(&myMessage, L_STATE) + dac0_offset_val;
+            spi0_tx_buffer[3] = DAC_DIN_REG_WRITE << 4;
+            spi0_tx_buffer[3] |= (0xFF & (data >> 14));
+            spi0_tx_buffer[2] = (0xFF & (data >> 6));
+            spi0_tx_buffer[1] = (0xFF & data) << 2;
 
             appData.appState = APP_WRITE_TO_DAC;
-            appData.spiState = SPI_WRITE_START;
+            appData.spi0State = SPI_WRITE_START;
             break;
         }
 
         case APP_WRITE_TO_DAC:
         {
-
-            if (appData.spiState == SPI_WRITE_START) {
+            if (appData.spi0State == SPI_WRITE_START) {
                 SPI2_CS0Off();
-                appData.spiState = SPI_WRITE_BUSY;
-                spi_buf_handle = DRV_SPI0_BufferAddWrite(spi_tx_buffer, 4, 0, 0);
-            } else if (appData.spiState == SPI_WRITE_BUSY) {
-                spi_buf_status = DRV_SPI0_BufferStatus(spi_buf_handle);
+                appData.spi0State = SPI_WRITE_BUSY;
+                spi0_buf_handle = DRV_SPI0_BufferAddWrite(spi0_tx_buffer, 4, 0, 0);
+            }
+            else if (appData.spi0State == SPI_WRITE_BUSY) {
+                spi0_buf_status = DRV_SPI0_BufferStatus(spi0_buf_handle);
 
-                if (spi_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+                if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
                     SPI2_CS0On();
-                    appData.spiState = SPI_READ_START;
+                    appData.spi0State = SPI_READ_START;
                     appData.appState = APP_READ_FROM_ADC;
                 }
-
-
             }
-
-
             break;
-        }
+        } // END APP_WRITE_TO_DAC CASE
+
         case APP_READ_FROM_ADC:
         {
-            if (appData.spiState == SPI_READ_START) {
+            if (appData.spi0State == SPI_READ_START) {
                 tmr0_flag = 0;
                 SPI2_CS1Off();
                 DRV_TMR0_Start();
                 while (1) {
-
                     if (tmr0_flag != 0)
                         break;
                 }
-                spi_buf_handle = DRV_SPI0_BufferAddRead(spi_rx_buffer, 4, 0, 0);
-                appData.spiState = SPI_READ_BUSY;
-            } else if (appData.spiState == SPI_READ_BUSY) {
-                spi_buf_status = DRV_SPI0_BufferStatus(spi_buf_handle);
-
-                if (spi_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
-                    appData.spiState = SPI_READ_COMPLETE;
-                    appData.appState = APP_SEND_REPLY;
-                }
-
+                spi0_buf_handle = DRV_SPI0_BufferAddRead(spi0_rx_buffer, 4, 0, 0);
+                appData.spi0State = SPI_READ_BUSY;
             }
 
+            else if (appData.spi0State == SPI_READ_BUSY) {
+                spi0_buf_status = DRV_SPI0_BufferStatus(spi0_buf_handle);
+                if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+                    appData.spi0State = SPI_READ_COMPLETE;
+                    appData.appState = APP_SEND_REPLY;
+                    ADC0_value = 0x0000;
+                    ADC0_value |= (uint32_t) (spi0_rx_buffer[3] << 10);
+                    ADC0_value |= (uint32_t) (spi0_rx_buffer[2] << 2);
+                    ADC0_value |= (uint32_t) (spi0_rx_buffer[1] >> 6);
+                }
+            }
             break;
-        }
+        }  // END APP_READ_FROM_ADC CASE
+
         case APP_SEND_REPLY:
         {
-            if (appData.usartState == USART_IDLE) {
-                memset(usart_tx_buffer, 0, USART_TX_BUFF_SIZE);
-                strcpy(usart_tx_buffer, "\r\n@ok:\r\n");
+            if (appData.usart0State == USART_IDLE) {
+                memset(usart0_tx_buffer, 0, USART0_TX_BUFF_SIZE);
+                strcpy(usart0_tx_buffer, "\r\n@ok:\r\n");
+
+                uint8_t buf[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+                itoa(buf, ADC0_value, 10);
+                strcat(buf, "\r\n");
+                strcat(usart0_tx_buffer, buf);
+
+                //                memset(buf, 0, 4);
+                //                itoa(buf, spi_rx_buffer[1], 10);
+                //                strcat(buf, "\r\n");
+                //                strcat(usart_tx_buffer, buf);
+                //                memset(buf, 0, 4);
+                //                itoa(buf, spi_rx_buffer[2], 10);
+                //                strcat(buf, "\r\n");
+                //                strcat(usart_tx_buffer, buf);
+                //                memset(buf,0,4);
+                //                itoa(buf, spi_rx_buffer[3], 10);
+                //                strcat(buf, "\r\n");
+                //                strcat(usart_tx_buffer, buf);
 
 
-                int i;
-                for (i = 0; i < END_PARAMETERS; i++) {
-                    if (myMessage.activeParameter[i]) {
-                        int value = getMessageData(&myMessage, (PARAMETER_LABELS) i);
-                        if (value < 0) {
-                            value *= -1;
-                            strcat(usart_tx_buffer, "-");
-                        }
-                        uint8_t buf[8];
-                        itoa(buf, value, 10);
-                        strcat(buf, "\r\n");
-                        strcat(usart_tx_buffer, buf);
-                    } else {
-                        strcat(usart_tx_buffer, "~\r\n");
-                    }
-                }
-                usart_tx_length = strlen(usart_tx_buffer);
+                //                int i;
+                //                for (i = 1; i < END_PARAMETERS; i++) {
+                //                    if (myMessage.activeParameter[i]) {
+                //                        int value = getMessageData(&myMessage, (PARAMETER_LABELS) i);
+                //                        if (value < 0) {
+                //                            value *= -1;
+                //                            strcat(usart_tx_buffer, "-");
+                //                        }
+                //                        uint8_t buf[8];
+                //                        itoa(buf, value, 10);
+                //                        strcat(buf, "\r\n");
+                //                        strcat(usart_tx_buffer, buf);
+                //                    } else {
+                //                        strcat(usart_tx_buffer, "~\r\n");
+                //                    }
+                //              }
+                usart0_tx_length = strlen(usart0_tx_buffer);
             }
-            
             USART_Tasks();
-
-
             break;
-        }
-
-            /* TODO: implement your application state machine.*/
-
+        } // END REPLY CASE
 
             /* The default state should never be executed. */
         default:
@@ -605,8 +560,8 @@ void APP_Tasks(void) {
             /* TODO: Handle error in application's state machine. */
             break;
         }
-    }
-}
+    } // END APP_STATE SWITCH
+} // END APP_TASKS()
 
 
 
