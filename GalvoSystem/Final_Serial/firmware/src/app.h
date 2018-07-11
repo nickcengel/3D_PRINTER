@@ -94,18 +94,19 @@ extern "C" {
 #define DAC_OFFSET_REG_READ 0xA    
 #define DAC_GAIN_REG_READ 0xB
 #define DAC_CONFIG_REG_READ 0xC
-    
+
 #define DAC_OFFSET 0x00000
 #define DAC_GAIN 0x3FFFF
-  
-    
-    
+
+
+
 #define USART_RX_BUFF_SIZE 30
 #define USART_TX_BUFF_SIZE 33
 
 #define SPI_TX_BUFF_SIZE 4
+#define SPI_RX_BUFF_SIZE 4
 
-    bool tmr0_flag;
+    volatile bool tmr0_flag;
 
     typedef enum {
         /* Application's state machine's initial state. */
@@ -113,7 +114,7 @@ extern "C" {
         APP_GET_NEW_MESSAGE,
         APP_PROCESS_MESSAGE,
         APP_WRITE_TO_DAC,
-        APP_CONFIRM_DAC,
+        APP_READ_FROM_ADC,
         APP_SEND_REPLY
 
         /* TODO: Define states used by the application state machine. */
@@ -214,6 +215,8 @@ extern "C" {
     uint8_t usart_tx_length;
 
     uint8_t spi_tx_buffer[SPI_TX_BUFF_SIZE];
+    uint8_t spi_rx_buffer[SPI_RX_BUFF_SIZE];
+
     DRV_SPI_BUFFER_HANDLE spi_buf_handle;
     DRV_SPI_BUFFER_EVENT spi_buf_status;
     uint32_t dac_offset_val = 0x20000;

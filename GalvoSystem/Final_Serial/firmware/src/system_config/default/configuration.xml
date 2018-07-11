@@ -228,7 +228,7 @@
       <Template dnOrder="11">
         <Name dnOrder="0">system_interrupt.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default</Path>
-        <Checksum dnOrder="2">C63707B80FA2DD74F9A95710F8436276</Checksum>
+        <Checksum dnOrder="2">531DC379C6AE14AE96DD4AE859BCD469</Checksum>
         <ProjectFileChecksum dnOrder="3">5598E91416D54C4690C98FFA81D0D3EA</ProjectFileChecksum>
       </Template>
       <Template dnOrder="12">
@@ -332,7 +332,7 @@
       <Template dnOrder="29">
         <Name dnOrder="0">system_config.h</Name>
         <Path dnOrder="1">Header&amp;#160;Files/app/system_config/default</Path>
-        <Checksum dnOrder="2">2BD43BB7FCD723182D7DD72352EDE5D0</Checksum>
+        <Checksum dnOrder="2">12D7527D396957D92D5B2128069246A4</Checksum>
         <ProjectFileChecksum dnOrder="3">24EAB125B9FD8120E1C701075238770A</ProjectFileChecksum>
       </Template>
       <Template dnOrder="30">
@@ -342,13 +342,13 @@
       <Template dnOrder="31">
         <Name dnOrder="0">drv_tmr_static.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/driver/tmr/src</Path>
-        <Checksum dnOrder="2">7935E298CF5124AF94BF1AD1FB3483C6</Checksum>
+        <Checksum dnOrder="2">1209D11C6446B677C96E9CDD498C976D</Checksum>
         <ProjectFileChecksum dnOrder="3">EF88E4611485BEBBC19AF914DA5E2C9F</ProjectFileChecksum>
       </Template>
       <Template dnOrder="32">
         <Name dnOrder="0">sys_clk_pic32mz.c</Name>
         <Path dnOrder="1">Source&amp;#160;Files/app/system_config/default/framework/system/clk/src</Path>
-        <Checksum dnOrder="2">3F6927A30DE9F42C0A8FEEE1C0EBF2C1</Checksum>
+        <Checksum dnOrder="2">1CD3DD96DC0D1F0DCA6C0CE793851C69</Checksum>
         <ProjectFileChecksum dnOrder="3">791084E0FA547C23A212DAA975A49BB6</ProjectFileChecksum>
       </Template>
       <Template dnOrder="33">
