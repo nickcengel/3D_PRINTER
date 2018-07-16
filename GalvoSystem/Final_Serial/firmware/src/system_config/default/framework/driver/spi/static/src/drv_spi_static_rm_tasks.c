@@ -56,6 +56,7 @@ int32_t DRV_SPI0_MasterRMSend32BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     /* Check to see if we have any more bytes to transmit */
     if (currentJob->dataLeftToTx + currentJob->dummyLeftToTx == 0)
     {
+        SPI2_CS0On(); 
         return 0;
     }
     /* Check to see if the transmit buffer is empty*/
@@ -70,6 +71,7 @@ int32_t DRV_SPI0_MasterRMSend32BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     }
     if (currentJob->dataLeftToTx != 0)
     {
+        SPI2_CS0Off(); 
     /* Transmit the data & update the counts */
         PLIB_SPI_BufferWrite32bit(SPI_ID_2, ((uint32_t*)currentJob->txBuffer)[currentJob->dataTxed>>2]);
         currentJob->dataTxed+=4;
@@ -77,6 +79,7 @@ int32_t DRV_SPI0_MasterRMSend32BitPolled( struct DRV_SPI_OBJ * pDrvObj )
     }
     else
     {
+        SPI2_CS0On();  
         /* Transmit the dummy data & update the counts */
         PLIB_SPI_BufferWrite32bit(SPI_ID_2, (uint32_t)pDrvObj->dummyByteValue);
         currentJob->dummyLeftToTx-=4;

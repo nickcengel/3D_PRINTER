@@ -120,7 +120,7 @@ SYS_MODULE_OBJ DRV_SPI0_Initialize(void)
     PLIB_SPI_CommunicationWidthSelect ( SPI_ID_2, SPI_COMMUNICATION_WIDTH_32BITS );
 
     /* Baud rate selection */
-    PLIB_SPI_BaudRateSet( SPI_ID_2 , SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2), 12000000 );
+    PLIB_SPI_BaudRateSet( SPI_ID_2 , SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_2), 12500000 );
 
     /* Protocol selection */
     PLIB_SPI_FramedCommunicationDisable( SPI_ID_2  );

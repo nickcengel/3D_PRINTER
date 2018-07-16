@@ -95,7 +95,7 @@ extern "C" {
 #define DAC_CONFIG_REG_READ 0xC
 
     /* MAX5318 SPI DAC SETUP  VALUES*/
-    const uint32_t dac0_offset_val = 0x20217; // added to incoming signed number 
+    const uint32_t dac0_offset_val = 0x201EA; // added to incoming signed number 
     // so that outgoing unsigned number
     // maps to FS differential range  
 

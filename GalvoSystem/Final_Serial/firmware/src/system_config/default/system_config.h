@@ -150,8 +150,8 @@ extern "C" {
 #define SYS_PORT_G_CNPD         0x0000
 #define SYS_PORT_G_CNEN         0x0000
 
-#define SYS_PORT_H_ANSEL        0x0898
-#define SYS_PORT_H_TRIS         0xFFF8
+#define SYS_PORT_H_ANSEL        0x0818
+#define SYS_PORT_H_TRIS         0xFF78
 #define SYS_PORT_H_LAT          0x0000
 #define SYS_PORT_H_ODC          0x0000
 #define SYS_PORT_H_CNPU         0x0000
@@ -166,9 +166,9 @@ extern "C" {
 #define SYS_PORT_J_CNPD         0x0000
 #define SYS_PORT_J_CNEN         0x0000
 
-#define SYS_PORT_K_ANSEL        0xFF04
-#define SYS_PORT_K_TRIS         0xFFFD
-#define SYS_PORT_K_LAT          0x0002
+#define SYS_PORT_K_ANSEL        0xFF00
+#define SYS_PORT_K_TRIS         0xFFF9
+#define SYS_PORT_K_LAT          0x0006
 #define SYS_PORT_K_ODC          0x0000
 #define SYS_PORT_K_CNPU         0x0000
 #define SYS_PORT_K_CNPD         0x0000
@@ -283,12 +283,26 @@ extern "C" {
 #define SPI2_CS0StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
 #define SPI2_CS0StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2, Value)
 
+/*** Functions for LDAC0 pin ***/
+#define LDAC0Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define LDAC0On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define LDAC0Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define LDAC0StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define LDAC0StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2, Value)
+
 /*** Functions for SPI2_CS1 pin ***/
 #define SPI2_CS1Toggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
 #define SPI2_CS1On() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
 #define SPI2_CS1Off() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
 #define SPI2_CS1StateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
 #define SPI2_CS1StateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1, Value)
+
+/*** Functions for APP_TEST_PIN pin ***/
+#define APP_TEST_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define APP_TEST_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define APP_TEST_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define APP_TEST_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define APP_TEST_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7, Value)
 
 
 /*** Application Instance 0 Configuration ***/

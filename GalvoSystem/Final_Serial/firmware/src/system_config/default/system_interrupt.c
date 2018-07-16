@@ -71,7 +71,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  
  
 
-void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void)
+void __ISR(_TIMER_1_VECTOR, ipl5AUTO) IntHandlerDrvTmrInstance0(void)
 {
     SPI2_CS1On();
     tmr0_flag = 1;

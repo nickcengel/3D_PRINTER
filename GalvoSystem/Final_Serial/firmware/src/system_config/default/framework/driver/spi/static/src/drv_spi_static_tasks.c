@@ -17,7 +17,7 @@
 
   Remarks:
   This file is generated from framework/driver/spi/template/drv_spi_static_tasks.c.ftl
-*******************************************************************************/
+ *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -41,34 +41,28 @@ INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
 CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+ *******************************************************************************/
 //DOM-IGNORE-END
 #include "system_config.h"
 #include "system_definitions.h"
 #include "driver/spi/static/src/drv_spi_static_local.h"
 
-
-
-int32_t DRV_SPI0_PolledMasterRM32BitTasks ( struct DRV_SPI_OBJ * dObj )
-{
+int32_t DRV_SPI0_PolledMasterRM32BitTasks(struct DRV_SPI_OBJ * dObj) {
     volatile bool continueLoop;
     uint8_t counter = 0;
     uint8_t numPolled = dObj->numTrfsSmPolled;
     uint8_t result = 0;
     do {
-        
+
         DRV_SPI_JOB_OBJECT * currentJob = dObj->currentJob;
 
         /* Check for a new task */
-        if (dObj->currentJob == NULL)
-        {
-            if (DRV_SPI_SYS_QUEUE_DequeueLock(dObj->queue, (void *)&(dObj->currentJob)) != DRV_SPI_SYS_QUEUE_SUCCESS)
-            {
+        if (dObj->currentJob == NULL) {
+            if (DRV_SPI_SYS_QUEUE_DequeueLock(dObj->queue, (void *) &(dObj->currentJob)) != DRV_SPI_SYS_QUEUE_SUCCESS) {
                 SYS_ASSERT(false, "\r\nSPI Driver: Error in dequeing.");
                 return 0;
             }
-            if (dObj->currentJob == NULL)
-            {
+            if (dObj->currentJob == NULL) {
                 return 0;
             }
             currentJob = dObj->currentJob;
@@ -76,9 +70,8 @@ int32_t DRV_SPI0_PolledMasterRM32BitTasks ( struct DRV_SPI_OBJ * dObj )
             dObj->symbolsInProgress = 0;
 
             /* Call the operation starting function pointer.  This can be used to modify the slave select lines */
-            if (dObj->operationStarting != NULL)
-            {
-                (*dObj->operationStarting)(DRV_SPI_BUFFER_EVENT_PROCESSING, (DRV_SPI_BUFFER_HANDLE)currentJob, currentJob->context);
+            if (dObj->operationStarting != NULL) {
+                (*dObj->operationStarting)(DRV_SPI_BUFFER_EVENT_PROCESSING, (DRV_SPI_BUFFER_HANDLE) currentJob, currentJob->context);
             }
 
             /* List the new job as processing*/
@@ -89,61 +82,54 @@ int32_t DRV_SPI0_PolledMasterRM32BitTasks ( struct DRV_SPI_OBJ * dObj )
 
 
         continueLoop = false;
-        
+
         /* Execute the sub tasks */
-            if
-            (currentJob->dataLeftToTx +currentJob->dummyLeftToTx != 0)
-        {
+        if(currentJob->dataLeftToTx + currentJob->dummyLeftToTx != 0) {
+            
             DRV_SPI0_MasterRMSend32BitPolled(dObj);
         }
-        
+
         DRV_SPI0_PolledErrorTasks(dObj);
-        
+
         /* Figure out how many bytes are left to be received */
         volatile size_t bytesLeft = currentJob->dataLeftToRx + currentJob->dummyLeftToRx;
-        
+
         // Check to see if we have any data left to receive and update the bytes left.
-        if (bytesLeft != 0)
-        {
+        if (bytesLeft != 0) {
             DRV_SPI0_MasterRMReceive32BitPolled(dObj);
             bytesLeft = currentJob->dataLeftToRx + currentJob->dummyLeftToRx;
         }
-        if (bytesLeft == 0)
-        {
-                    /* Job is complete*/
-                    currentJob->status = DRV_SPI_BUFFER_EVENT_COMPLETE;
-                    /* Call the job complete call back*/
-                    if (currentJob->completeCB != NULL)
-                    {
-                        (*currentJob->completeCB)(DRV_SPI_BUFFER_EVENT_COMPLETE, (DRV_SPI_BUFFER_HANDLE)currentJob, currentJob->context);
-                    }
+        if (bytesLeft == 0) {
+            /* Job is complete*/
+            currentJob->status = DRV_SPI_BUFFER_EVENT_COMPLETE;
+            /* Call the job complete call back*/
+            if (currentJob->completeCB != NULL) {
+                (*currentJob->completeCB)(DRV_SPI_BUFFER_EVENT_COMPLETE, (DRV_SPI_BUFFER_HANDLE) currentJob, currentJob->context);
+            }
 
-                    /* Call the operation complete call back.  This is different than the
-                       job complete callback.  This can be used to modify the Slave Select line.*/
+            /* Call the operation complete call back.  This is different than the
+               job complete callback.  This can be used to modify the Slave Select line.*/
 
-                    if (dObj->operationEnded != NULL)
-                    {
-                        (*dObj->operationEnded)(DRV_SPI_BUFFER_EVENT_COMPLETE, (DRV_SPI_BUFFER_HANDLE)currentJob, currentJob->context);
-                    }
+            if (dObj->operationEnded != NULL) {
+                (*dObj->operationEnded)(DRV_SPI_BUFFER_EVENT_COMPLETE, (DRV_SPI_BUFFER_HANDLE) currentJob, currentJob->context);
+            }
 
-                    /* Return the job back to the free queue*/
-                    if (DRV_SPI_SYS_QUEUE_FreeElementLock(dObj->queue, currentJob) != DRV_SPI_SYS_QUEUE_SUCCESS)
-                    {
-                        SYS_ASSERT(false, "\r\nSPI Driver: Queue free element error.");
-                        return 0;
-                    }
-                    /* Clean up */
-                    dObj->currentJob = NULL;
-                }
+            /* Return the job back to the free queue*/
+            if (DRV_SPI_SYS_QUEUE_FreeElementLock(dObj->queue, currentJob) != DRV_SPI_SYS_QUEUE_SUCCESS) {
+                SYS_ASSERT(false, "\r\nSPI Driver: Queue free element error.");
+                return 0;
+            }
+            /* Clean up */
+            dObj->currentJob = NULL;
+        }
 
 
-        counter ++;
-        if ((counter < numPolled) && (result != 0))
-        {
+        counter++;
+        if ((counter < numPolled) && (result != 0)) {
             continueLoop = true;
         }
 
-    } while(continueLoop);
+    } while (continueLoop);
     return 0;
 }
 
