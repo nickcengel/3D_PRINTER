@@ -93,6 +93,8 @@ extern "C" {
 #define DAC_OFFSET_REG_READ 0xA    
 #define DAC_GAIN_REG_READ 0xB
 #define DAC_CONFIG_REG_READ 0xC
+    
+#define DAC_UPDATE_PERIOD 10.0 
 
     /* MAX5318 SPI DAC SETUP  VALUES*/
     const uint32_t dac0_offset_val = 0x201EA; // added to incoming signed number 

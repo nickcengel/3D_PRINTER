@@ -6,7 +6,7 @@
 #     Harmony version: 2.06
 #
 #
-# from /Users/nickengel/Documents/Git_Repos/3D_PRINTER/GalvoSystem/Final_Serial/firmware/Final_Serial.hconfig
+# from /Users/h.t.w.s/GitHub_Repos/3D_PRINTER/GalvoSystem/Final_Serial/firmware/Final_Serial.hconfig
 #
 CONFIG_APP_INSTANCES=1
 #
@@ -16,7 +16,7 @@ CONFIG_APP_MENU_IDX0=y
 CONFIG_APP_NAME_0="app"
 CONFIG_APP_AUTO_GENERATE_CODE0=n
 #
-# from /Users/nickengel/Documents/Git_Repos/3D_PRINTER/GalvoSystem/Final_Serial/firmware/Final_Serial.hconfig
+# from /Users/h.t.w.s/GitHub_Repos/3D_PRINTER/GalvoSystem/Final_Serial/firmware/Final_Serial.hconfig
 #
 CONFIG_USE_EXCEPTION_HANDLER=y
 CONFIG_EXCEPTION_USE_SYS_DEBUG=y
