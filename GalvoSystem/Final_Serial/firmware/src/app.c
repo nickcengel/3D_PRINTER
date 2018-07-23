@@ -104,7 +104,7 @@ static uint32_t DAC1_finalValue = 0;
 static uint32_t stepSizeX = 0;
 // uint32_t stepSizeY = 0;
 const float defaultGalvoSpeed = 13.5;
-const float dac_update_period = 7.3;
+const float dac_update_period = 8.0;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Local Functions
@@ -489,7 +489,7 @@ void APP_Tasks(void) {
             USART_Tasks();
             break;
         }
-        
+
         case APP_PROCESS_MESSAGE:
         {
             DAC0_finalValue = getMessageData(&myMessage, L_STATE) + dac0_offset_val;
@@ -500,36 +500,41 @@ void APP_Tasks(void) {
 
             uint32_t deltaX;
             uint32_t deltaY = 0;
-            if(DAC0_finalValue > DAC0_currentValue)
+            if (DAC0_finalValue > DAC0_currentValue)
                 deltaX = DAC0_finalValue - DAC0_currentValue;
             else
                 deltaX = DAC0_currentValue - DAC0_finalValue;
-            
-            uint32_t distance = ((uint32_t)sqrt((float)deltaX*(float)deltaX + (float)deltaY*(float)deltaY))<<10;
-            uint32_t duration = distance / defaultGalvoSpeed;
-            uint32_t numIncrements = (uint32_t)(((float)duration)/dac_update_period);
-            stepSizeX = distance / numIncrements;
-            
+
+            if (deltaX > 0) {
+                uint32_t distance = ((uint32_t) sqrt((float) deltaX * (float) deltaX + (float) deltaY * (float) deltaY)) << 10;
+                uint32_t duration = distance / defaultGalvoSpeed;
+                uint32_t numIncrements = (uint32_t) (((float) duration) / dac_update_period);
+                stepSizeX = distance / numIncrements;
 
 
-            //
-            //            DAC0_finalValue <<= 4;
-            //
-            //            float deltaX = (float) DAC0_finalValue - (float) DAC0_currentValue;
-            //            if (deltaX < 0)
-            //                deltaX *= -1;
-            //
-            //            float duration = sqrt(deltaX * deltaX) / defaultGalvoSpeed;
-            //            float numSteps = duration / DAC_UPDATE_PERIOD;
-            //
-            //            stepSizeX = (uint32_t) (deltaX / numSteps);
 
-            appData.appState = APP_WRITE_TO_DAC;
-            appData.spi0State = SPI_WRITE_START;
-            LDAC0On();
-            tmr1_flag = 0;
-            DRV_TMR1_CounterValueSet(0xFFFF - 188);
-            DRV_TMR1_Start();
+                //
+                //            DAC0_finalValue <<= 4;
+                //
+                //            float deltaX = (float) DAC0_finalValue - (float) DAC0_currentValue;
+                //            if (deltaX < 0)
+                //                deltaX *= -1;
+                //
+                //            float duration = sqrt(deltaX * deltaX) / defaultGalvoSpeed;
+                //            float numSteps = duration / DAC_UPDATE_PERIOD;
+                //
+                //            stepSizeX = (uint32_t) (deltaX / numSteps);
+
+                appData.appState = APP_WRITE_TO_DAC;
+                appData.spi0State = SPI_WRITE_START;
+                LDAC0On();
+                tmr1_flag = 0;
+                DRV_TMR1_CounterValueSet(0xFFFF - 188);
+                DRV_TMR1_Start();
+            } else {
+                appData.spi0State = SPI_READ_START;
+                appData.appState = APP_READ_FROM_ADC;
+            }
             break;
         }
 
@@ -554,12 +559,12 @@ void APP_Tasks(void) {
                 spi0_tx_buffer[3] = DAC_DIN_REG_WRITE << 4;
                 spi0_tx_buffer[3] |= (0xFF & (DAC0_DATA >> 14));
                 spi0_tx_buffer[2] = (0xFF & (DAC0_DATA >> 6));
-                spi0_tx_buffer[1] = (0xFF & DAC0_DATA) << 2;              
+                spi0_tx_buffer[1] = (0xFF & DAC0_DATA) << 2;
 
                 spi0_buf_handle = DRV_SPI0_BufferAddWrite(spi0_tx_buffer, 4, 0, 0);
 
                 DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-                
+
                 appData.spi0State = SPI_WRITE_BUSY;
 
             } else if (appData.spi0State == SPI_WRITE_BUSY) {
@@ -569,13 +574,11 @@ void APP_Tasks(void) {
 
                 if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
                     tmr1_flag = 1;
-                    
-                    if(DAC0_currentValue == DAC0_finalValue){
+
+                    if (DAC0_currentValue == DAC0_finalValue) {
                         appData.spi0State = SPI_READ_START;
-                        appData.appState = APP_READ_FROM_ADC;  
-                    }
-                    else
-                    {
+                        appData.appState = APP_READ_FROM_ADC;
+                    } else {
                         appData.spi0State = SPI_WRITE_START;
                     }
 
