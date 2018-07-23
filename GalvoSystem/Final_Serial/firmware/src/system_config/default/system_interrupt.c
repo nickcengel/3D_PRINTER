@@ -79,6 +79,19 @@ void __ISR(_TIMER_1_VECTOR, ipl5AUTO) IntHandlerDrvTmrInstance0(void)
     DRV_TMR0_CounterValueSet(0xFFFF - 8);
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
 }
+void __ISR(_TIMER_2_VECTOR, ipl5AUTO) IntHandlerDrvTmrInstance1(void)
+{
+    DRV_TMR1_CounterValueSet(0xFFFF - 188);
+    
+    if(tmr1_flag == 1)
+    {
+       LDAC0Off();
+       SPI2_CS0On();
+       tmr1_flag = 0;
+    }
+    
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_2);
+}
  
 /*******************************************************************************
  End of File

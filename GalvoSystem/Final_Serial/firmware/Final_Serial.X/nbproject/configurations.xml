@@ -261,7 +261,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../../../../framework;../src;../src/system_config/default;../src/default;../../../../../../../../../Applications/microchip/harmony/v2_06/framework;../src/system_config/default/framework;../../../../../../Applications/microchip/harmony/v2_06/framework;../../../../../../../../Applications/microchip/harmony/v2_06/framework;../src/system_config/default/bsp"/>
+                  value="../../../../framework;../../../../../../../../../Applications/microchip/harmony/v2_06/framework;../../../../../../Applications/microchip/harmony/v2_06/framework;../src;../src/system_config/default;../src/default;../../../../../../../../Applications/microchip/harmony/v2_06/framework;../src/system_config/default/framework;../src/system_config/default/bsp"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -449,6 +449,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>
         <property key="memories.eeprom" value="true"/>

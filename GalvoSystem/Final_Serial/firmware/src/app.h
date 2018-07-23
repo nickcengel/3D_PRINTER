@@ -94,35 +94,24 @@ extern "C" {
 #define DAC_GAIN_REG_READ 0xB
 #define DAC_CONFIG_REG_READ 0xC
     
-#define DAC_UPDATE_PERIOD 10.0 
+
 
     /* MAX5318 SPI DAC SETUP  VALUES*/
-    const uint32_t dac0_offset_val = 0x201EA; // added to incoming signed number 
+    
     // so that outgoing unsigned number
-    // maps to FS differential range  
+    // maps to FS differential range 
+    /* TMR0 controls chip-select/conversionstart timing for ADC*/
 
+    volatile bool tmr0_flag;
+    volatile bool tmr1_flag;
 #define SPI_TX_BUFF_SIZE 4
 #define SPI_RX_BUFF_SIZE 4
 
-    uint8_t spi0_tx_buffer[SPI_TX_BUFF_SIZE];
-    uint8_t spi0_rx_buffer[SPI_RX_BUFF_SIZE];
-
-    DRV_SPI_BUFFER_HANDLE spi0_buf_handle;
-    DRV_SPI_BUFFER_EVENT spi0_buf_status;
 
     
 #define USART0_RX_BUFF_SIZE 30
 #define USART0_TX_BUFF_SIZE 33
 
-    uint8_t usart0_rx_buffer[USART0_RX_BUFF_SIZE];
-    uint8_t usart0_tx_buffer[USART0_TX_BUFF_SIZE];
-    uint8_t usart0_rx_count;
-    uint8_t usart0_tx_count;
-    uint8_t usart0_tx_length;
-
-    
-    /* TMR0 controls chip-select/conversionstart timing for ADC*/
-    volatile bool tmr0_flag;
 
     //***** SOFTWARE STATES ******//
 
@@ -194,9 +183,9 @@ extern "C" {
         COMPONENT_STATES laserState;
         int laserPower;
         COMPONENT_STATES galvoState;
-        int xPosition;
-        int yPosition;
-        int gSpeed;
+        int32_t xPosition;
+        int32_t yPosition;
+        int32_t gSpeed;
 
         bool activeParameter[6]; // each bit in the array corresponds to a parameter.
         // Set true when valid data is read from PC
