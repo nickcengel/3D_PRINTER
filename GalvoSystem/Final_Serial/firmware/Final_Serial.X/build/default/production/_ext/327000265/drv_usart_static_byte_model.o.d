@@ -331,4 +331,5 @@ build/default/production/_ext/327000265/drv_usart_static_byte_model.o:  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioProtocolMode_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer32bit_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer16bit_Default.h  \
- ../src/app.h 
+ ../src/app.h  \
+../src/message_components.h 

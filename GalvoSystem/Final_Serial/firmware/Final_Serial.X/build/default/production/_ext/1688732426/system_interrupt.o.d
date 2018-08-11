@@ -332,4 +332,5 @@ build/default/production/_ext/1688732426/system_interrupt.o:  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioProtocolMode_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer32bit_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer16bit_Default.h  \
+ ../src/message_components.h  \
  ../src/system_config/default/system_definitions.h 

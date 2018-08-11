@@ -59,6 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_config.h"
 #include "system_definitions.h"
 
+#include "message_components.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -67,24 +68,6 @@ extern "C" {
 #endif
     // DOM-IGNORE-END 
 
-    // *****************************************************************************
-    // *****************************************************************************
-    // Section: Type Definitions
-    // *****************************************************************************
-    // *****************************************************************************
-
-    // *****************************************************************************
-
-    /* Application states
-
-      Summary:
-        Application states enumeration
-
-      Description:
-        This enumeration defines the valid application states.  These states
-        determine the behavior of the application at various times.
-     */
-    /* MAX5318 SPI DAC COMMAND REGISTER VALUES*/
 #define DAC_DIN_REG_WRITE 0x1
 #define DAC_OFFSET_REG_WRITE 0x2    
 #define DAC_GAIN_REG_WRITE 0x3
@@ -93,11 +76,11 @@ extern "C" {
 #define DAC_OFFSET_REG_READ 0xA    
 #define DAC_GAIN_REG_READ 0xB
 #define DAC_CONFIG_REG_READ 0xC
-    
+
 
 
     /* MAX5318 SPI DAC SETUP  VALUES*/
-    
+
     // so that outgoing unsigned number
     // maps to FS differential range 
     /* TMR0 controls chip-select/conversionstart timing for ADC*/
@@ -106,11 +89,12 @@ extern "C" {
     volatile bool tmr1_flag;
 #define SPI_TX_BUFF_SIZE 4
 #define SPI_RX_BUFF_SIZE 4
+#define   DAC0_OFFSET  0x201EA // added to incoming signed number 
+#define ADC0_OFFSET 0x1FFF4
+#define DEFAULT_GALVO_SPEED  13.5
+#define DAC_UPDATE_PERIOD  8.0
 
 
-    
-#define USART0_RX_BUFF_SIZE 30
-#define USART0_TX_BUFF_SIZE 33
 
 
     //***** SOFTWARE STATES ******//
@@ -126,15 +110,6 @@ extern "C" {
     } APP_STATES;
 
     /* message states for USART communication with PC */
-    typedef enum {
-        MESSAGE_IDLE,
-        MESSAGE_LOOK_FOR_START,
-        MESSAGE_LOOK_FOR_DATA,
-        MESSAGE_RECEIVE_COMPLETE,
-        MESSAGE_SEND_BUSY,
-        MESSAGE_SEND_COMPLETE,
-        MESSAGE_ERROR
-    } MESSAGE_STATES;
 
     //*****************************//
 
@@ -165,46 +140,10 @@ extern "C" {
 
     //*****************************//
 
-
-    /* Data received over USART from master is stored in MESSAGE_DATA Struct */
-
-    /* List of possible commanded states */
-    typedef enum {
-        ENABLE = 1, DISABLE, RELATIVE_MOVE, ABSOLUTE_MOVE, NONE
-    } COMPONENT_STATES;
-
-    /* List of data parameter labels in the order they are expected to arrive */
-    typedef enum {
-        NO_PARAMETER = -1, L_STATE = 0, L_POWER, G_STATE, X_POS, Y_POS, G_SPEED, END_PARAMETERS
-    } PARAMETER_LABELS;
-
-    /* data type for storing information received from PC */
-    typedef struct {
-        COMPONENT_STATES laserState;
-        int laserPower;
-        COMPONENT_STATES galvoState;
-        int32_t xPosition;
-        int32_t yPosition;
-        int32_t gSpeed;
-
-        bool activeParameter[6]; // each bit in the array corresponds to a parameter.
-        // Set true when valid data is read from PC
-
-        PARAMETER_LABELS parameterIterator; // Used to step through each parameter field
-        // filling with data from PC
-    } MESSAGE_DATA;
-
-    /* getters and setters for Message Data */
-    int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS dataLabel);
-    void setMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label, int value);
-
-    /* automatically increments parameterIterator used to fill data from PC */
-    void addActiveParameter(MESSAGE_DATA *m, int value);
-
     /* persistent local app data*/
     typedef struct {
         APP_STATES appState;
-        MESSAGE_STATES messageState;
+        MESSAGE_DATA hostMessage;
 
         USART_STATES usart0State;
         DRV_HANDLE usart0Handle;
@@ -212,77 +151,50 @@ extern "C" {
         SPI_STATES spi0State;
         DRV_HANDLE spi0Handle;
 
+        uint32_t ADC0_value;
+
+        DRV_SPI_BUFFER_HANDLE spi0_buf_handle;
+        DRV_SPI_BUFFER_EVENT spi0_buf_status;
+
+        uint8_t *spi0_tx_bufPtr;
+        uint8_t *spi0_rx_bufPtr;
+        uint8_t *usart0_tx_bufPtr;
+        uint8_t *usart0_rx_bufPtr;
+        
+        
+        uint8_t usart0_rx_count;
+        uint8_t usart0_tx_count;
+        uint8_t usart0_tx_length;
+
+
+        uint32_t DAC0_currentValue;
+        uint32_t DAC0_finalValue;
+        uint32_t DAC1_currentValue;
+        uint32_t DAC1_finalValue;
+        uint32_t stepSizeX;
+        uint32_t stepSizeY;
     } APP_DATA;
 
-    /*******************************************************************************
-      Function:
-        void APP_Initialize ( void )
 
-      Summary:
-         MPLAB Harmony application initialization routine.
+    int stringToInt(uint8_t *str);
+    uint32_t stepSizeCalc(uint32_t currennt, uint32_t final, float speed);
 
-      Description:
-        This function initializes the Harmony application.  It places the 
-        application in its initial state and prepares it to run so that its 
-        APP_Tasks function can be called.
-
-      Precondition:
-        All other system initialization routines should be called before calling
-        this routine (in "SYS_Initialize").
-
-      Parameters:
-        None.
-
-      Returns:
-        None.
-
-      Example:
-        <code>
-        APP_Initialize();
-        </code>
-
-      Remarks:
-        This routine must be called from the SYS_Initialize function.
-     */
+    void USART0_TaskHandler(void);
+    
+    void set_DAC0_StartVal(uint32_t startVal);
+    void DAC0_Write(void);
+    void DAC0_Confirm_Write(void);
+    
+    uint32_t ADC0_Read(void);
 
     void APP_Initialize(void);
-
-
-    /*******************************************************************************
-      Function:
-        void APP_Tasks ( void )
-
-      Summary:
-        MPLAB Harmony Demo application tasks function
-
-      Description:
-        This routine is the Harmony Demo application's tasks function.  It
-        defines the application's state machine and core logic.
-
-      Precondition:
-        The system and application initialization ("SYS_Initialize") should be
-        called before calling this.
-
-      Parameters:
-        None.
-
-      Returns:
-        None.
-
-      Example:
-        <code>
-        APP_Tasks();
-        </code>
-
-      Remarks:
-        This routine must be called from SYS_Tasks() routine.
-     */
-
     void APP_Tasks(void);
-    
+
+
     /* called by APP_Tasks tp handle communication with PC */
     /* internally advances appState */
-    void USART_Tasks(void);
+
+
 
 #endif /* _APP_H */
 

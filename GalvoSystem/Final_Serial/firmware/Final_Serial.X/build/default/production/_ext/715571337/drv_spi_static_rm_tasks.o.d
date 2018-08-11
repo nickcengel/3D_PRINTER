@@ -332,5 +332,6 @@ build/default/production/_ext/715571337/drv_spi_static_rm_tasks.o:  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer32bit_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer16bit_Default.h  \
  ../src/app.h  \
+../src/message_components.h  \
  ../src/system_config/default/framework/driver/spi/static/src/drv_spi_static_local.h  \
  ../src/system_config/default/framework/driver/spi/static/src/drv_spi_static_sys_queue.h 

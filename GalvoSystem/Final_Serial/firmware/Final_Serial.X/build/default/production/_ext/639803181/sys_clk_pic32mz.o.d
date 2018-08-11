@@ -331,4 +331,5 @@ build/default/production/_ext/639803181/sys_clk_pic32mz.o:  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioProtocolMode_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer32bit_Default.h  \
  ../../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer16bit_Default.h  \
- ../src/app.h 
+ ../src/app.h  \
+../src/message_components.h 

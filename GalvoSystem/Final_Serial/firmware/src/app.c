@@ -56,6 +56,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "app.h"
 #include "string.h"
 #include "math.h"
+#include "message_components.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -75,152 +76,20 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
   Remarks:
     This structure should be initialized by the APP_Initialize function.
     
-    Application strings and buffers are be defined outside this structure.
+   
  */
+uint8_t spi0_tx_buffer[SPI_TX_BUFF_SIZE];
+uint8_t spi0_rx_buffer[SPI_RX_BUFF_SIZE];
+
+uint8_t usart0_rx_buffer[USART0_RX_BUFF_SIZE];
+uint8_t usart0_tx_buffer[USART0_TX_BUFF_SIZE];
+
 APP_DATA appData;
-
-MESSAGE_DATA myMessage = {0, 0, 0, 0, 0, 0,
-    {0, 0, 0, 0, 0, 0}, 0};
-
-static uint32_t ADC0_value = 0;
-static uint8_t spi0_tx_buffer[SPI_TX_BUFF_SIZE];
-static uint8_t spi0_rx_buffer[SPI_RX_BUFF_SIZE];
-
-static DRV_SPI_BUFFER_HANDLE spi0_buf_handle;
-static DRV_SPI_BUFFER_EVENT spi0_buf_status;
-
-static uint8_t usart0_rx_buffer[USART0_RX_BUFF_SIZE];
-static uint8_t usart0_tx_buffer[USART0_TX_BUFF_SIZE];
-static uint8_t usart0_rx_count;
-static uint8_t usart0_tx_count;
-static uint8_t usart0_tx_length;
-
-const uint32_t dac0_offset_val = 0x201EA; // added to incoming signed number 
-
-static uint32_t DAC0_currentValue = 0;
-static uint32_t DAC0_finalValue = 0;
-static uint32_t DAC1_currentValue = 0;
-static uint32_t DAC1_finalValue = 0;
-static uint32_t stepSizeX = 0;
-// uint32_t stepSizeY = 0;
-const float defaultGalvoSpeed = 13.5;
-const float dac_update_period = 8.0;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Local Functions
 // *****************************************************************************
 // *****************************************************************************
-
-/* Message_Data type helper functions */
-int getMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label) {
-
-    switch (label) {
-        case L_STATE:
-            return (int) m->laserState;
-
-        case L_POWER:
-            return m->laserPower;
-
-        case G_STATE:
-            return (int) m->galvoState;
-
-        case X_POS:
-            return m->xPosition;
-
-        case Y_POS:
-            return m->yPosition;
-
-        case G_SPEED:
-            return m->gSpeed;
-
-
-        default:
-            return 0;
-    }
-}
-
-void setMessageData(MESSAGE_DATA *m, PARAMETER_LABELS label, int value) {
-
-    switch (label) {
-        case L_STATE:
-            m->laserState = (COMPONENT_STATES) value;
-            break;
-
-        case L_POWER:
-            m->laserPower = value;
-            break;
-
-        case G_STATE:
-            m->galvoState = (COMPONENT_STATES) value;
-            break;
-
-        case X_POS:
-            m->xPosition = value;
-            break;
-
-        case Y_POS:
-            m->yPosition = value;
-            break;
-
-        case G_SPEED:
-            m->gSpeed = value;
-            break;
-
-        default:
-            break;
-    }
-}
-
-void addActiveParameter(MESSAGE_DATA *m, int value) {
-
-    switch (m->parameterIterator) {
-        case L_STATE:
-        {
-            m->laserState = (COMPONENT_STATES) value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator++;
-            break;
-        }
-        case L_POWER:
-        {
-            m->laserPower = value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator++;
-            break;
-        }
-        case G_STATE:
-        {
-            m->galvoState = (COMPONENT_STATES) value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator++;
-            break;
-        }
-        case X_POS:
-        {
-            m->xPosition = value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator++;
-            break;
-        }
-        case Y_POS:
-        {
-            m->yPosition = value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator++;
-            break;
-        }
-        case G_SPEED:
-        {
-            m->gSpeed = value;
-            m->activeParameter[m->parameterIterator] = 1;
-            m->parameterIterator = END_PARAMETERS;
-            break;
-        }
-
-        default:
-            break;
-    }
-}
 
 /* converter for signed numbers */
 int stringToInt(uint8_t *str) {
@@ -233,50 +102,29 @@ int stringToInt(uint8_t *str) {
     return (sign * atoi(str));
 }
 
+uint32_t stepSizeCalc(uint32_t currenntX, uint32_t finalX, float speed) {
+    uint32_t deltaX = 0;
+    uint32_t deltaY = 0;
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Initialization and State Machine Functions
-// *****************************************************************************
-// *****************************************************************************
+    if (finalX > currenntX)
+        deltaX = finalX - currenntX;
+    else
+        deltaX = currenntX - finalX;
 
-/*******************************************************************************
-  Function:
-    void APP_Initialize ( void )
-
-  Remarks:
-    See prototype in app.h.
- */
-
-void APP_Initialize(void) {
-    appData.appState = APP_STATE_INIT;
-
-    appData.messageState = MESSAGE_IDLE;
-
-    myMessage.parameterIterator = NO_PARAMETER;
-
-    appData.usart0Handle = DRV_HANDLE_INVALID;
-    appData.usart0State = USART_INIT;
-    memset(usart0_rx_buffer, 0, USART0_RX_BUFF_SIZE);
-    usart0_rx_count = 0;
-    memset(usart0_tx_buffer, 0, USART0_TX_BUFF_SIZE);
-    usart0_tx_count = 0;
-
-    appData.spi0Handle = DRV_HANDLE_INVALID;
-    appData.spi0State = SPI_INIT_OFFSET;
-    memset(spi0_rx_buffer, 0, SPI_RX_BUFF_SIZE);
-    memset(spi0_tx_buffer, 0, SPI_TX_BUFF_SIZE);
-
-    DRV_TMR0_CounterValueSet(0xFFFF - 10);
-    tmr0_flag = 0;
+    if (deltaX > 0) {
+        uint32_t distance = ((uint32_t) sqrt((float) deltaX * (float) deltaX + (float) deltaY * (float) deltaY)) << 10;
+        uint32_t duration = distance / speed;
+        uint32_t numIncrements = (uint32_t) (((float) duration) / DAC_UPDATE_PERIOD);
+        return (distance / numIncrements);
+    }
 }
 
-void USART_Tasks(void) {
+void USART0_TaskHandler(void) {
     switch (appData.usart0State) { /// BEGIN USART STATE SWITCH ///
 
         case USART_INIT:
         {
-            usart0_rx_count = 0;
+            appData.usart0_rx_count = 0;
             appData.usart0State = USART_IDLE;
             break;
         } // END USART_INIT //
@@ -284,30 +132,29 @@ void USART_Tasks(void) {
             /* Clear / Prepare buffers, Advance USART state */
         case USART_IDLE:
         {
-            BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_OFF);
+            
             if (appData.appState == APP_GET_NEW_MESSAGE) {
-                if (usart0_rx_count != 0) {
-                    memset(usart0_rx_buffer, 0, USART0_RX_BUFF_SIZE);
-                    usart0_rx_count = 0;
+                if (appData.usart0_rx_count != 0) {
+                    memset(appData.usart0_rx_bufPtr, 0, USART0_RX_BUFF_SIZE);
+                    appData.usart0_rx_count = 0;
                 }
 
                 appData.usart0State = USART_GRAB_BYTE;
-                appData.messageState = MESSAGE_LOOK_FOR_START;
+                appData.hostMessage.messageState = MESSAGE_LOOK_FOR_START;
 
                 int i;
                 for (i = 0; i < 6; i++)
-                    myMessage.activeParameter[i] = 0;
+                    appData.hostMessage.activeParameter[i] = 0;
 
-                myMessage.parameterIterator = L_STATE;
+                appData.hostMessage.parameterIterator = L_STATE;
 
 
             } else if (appData.appState == APP_SEND_REPLY) {
-                usart0_tx_count = 0;
+                appData.usart0_tx_count = 0;
 
                 appData.usart0State = USART_THROW_BYTE;
-                appData.messageState = MESSAGE_SEND_BUSY;
+                appData.hostMessage.messageState = MESSAGE_SEND_BUSY;
 
-                BSP_LEDStateSet(BSP_LED_3, BSP_LED_STATE_ON);
             }
 
             break;
@@ -318,19 +165,19 @@ void USART_Tasks(void) {
         {
             /* see if there is new data and if there is a place to put it */
             if (!DRV_USART0_ReceiverBufferIsEmpty()
-                    && (usart0_rx_count < USART0_RX_BUFF_SIZE - 2)
-                    && (myMessage.parameterIterator < END_PARAMETERS)) {
+                    && (appData.usart0_rx_count < USART0_RX_BUFF_SIZE - 2)
+                    && (appData.hostMessage.parameterIterator < END_PARAMETERS)) {
 
                 const uint8_t currentByte = DRV_USART0_ReadByte();
 
-                switch (appData.messageState) { /// BEGIN MESSAGE STATE SWITCH ///
+                switch (appData.hostMessage.messageState) { /// BEGIN MESSAGE STATE SWITCH ///
 
                         /* Find the beginning of message demarcated by "/" */
                     case MESSAGE_LOOK_FOR_START:
                     {
                         if (currentByte == '/')
 
-                            appData.messageState = MESSAGE_LOOK_FOR_DATA;
+                            appData.hostMessage.messageState = MESSAGE_LOOK_FOR_DATA;
 
 
                         break;
@@ -340,32 +187,32 @@ void USART_Tasks(void) {
                     case MESSAGE_LOOK_FOR_DATA:
                     {
                         if (((currentByte >= '0') && (currentByte <= '9'))
-                                || ((currentByte == '-') && (usart0_rx_count == 0))) {
-                            usart0_rx_buffer[usart0_rx_count] = currentByte;
-                            usart0_rx_count++;
+                                || ((currentByte == '-') && (appData.usart0_rx_count == 0))) {
+                            appData.usart0_rx_bufPtr[ appData.usart0_rx_count] = currentByte;
+                            appData.usart0_rx_count++;
                         } else if (currentByte == '~') {
-                            myMessage.parameterIterator++;
-                        } else if ((currentByte == ' ') && (usart0_rx_count > 0)) {
+                            appData.hostMessage.parameterIterator++;
+                        } else if ((currentByte == ' ') && (appData.usart0_rx_count > 0)) {
 
-                            if (strlen(usart0_rx_buffer) > 0) {
-                                const int currentParameter = stringToInt(usart0_rx_buffer);
-                                addActiveParameter(&myMessage, currentParameter);
+                            if (strlen(appData.usart0_rx_bufPtr) > 0) {
+                                const int currentParameter = stringToInt(appData.usart0_rx_bufPtr);
+                                addActiveParameter(&appData.hostMessage, currentParameter);
                             }
-                            memset(usart0_rx_buffer, 0, usart0_rx_count);
-                            usart0_rx_count = 0;
-                            if (myMessage.parameterIterator >= END_PARAMETERS) {
-                                appData.messageState = MESSAGE_RECEIVE_COMPLETE;
+                            memset(appData.usart0_rx_bufPtr, 0, appData.usart0_rx_count);
+                            appData.usart0_rx_count = 0;
+                            if (appData.hostMessage.parameterIterator >= END_PARAMETERS) {
+                                appData.hostMessage.messageState = MESSAGE_RECEIVE_COMPLETE;
                                 appData.appState = APP_PROCESS_MESSAGE;
                                 appData.usart0State = USART_IDLE;
                             }
                         } else if (currentByte == ';') {
-                            if (strlen(usart0_rx_buffer) > 0) {
-                                const int currentParameter = stringToInt(usart0_rx_buffer);
-                                addActiveParameter(&myMessage, currentParameter);
+                            if (strlen(appData.usart0_rx_bufPtr) > 0) {
+                                const int currentParameter = stringToInt(appData.usart0_rx_bufPtr);
+                                addActiveParameter(&appData.hostMessage, currentParameter);
                             }
-                            memset(usart0_rx_buffer, 0, usart0_rx_count);
-                            usart0_rx_count = 0;
-                            appData.messageState = MESSAGE_RECEIVE_COMPLETE;
+                            memset(appData.usart0_rx_bufPtr, 0, appData.usart0_rx_count);
+                            appData.usart0_rx_count = 0;
+                            appData.hostMessage.messageState = MESSAGE_RECEIVE_COMPLETE;
                             appData.appState = APP_PROCESS_MESSAGE;
                             appData.usart0State = USART_IDLE;
                         }
@@ -377,27 +224,27 @@ void USART_Tasks(void) {
                 } /// END MESSAGE STATE SWITCH ///
 
                 /* We are out of room */
-            } else if ((usart0_rx_count >= USART0_RX_BUFF_SIZE - 2)) {
-                if (myMessage.parameterIterator < END_PARAMETERS) {
-                    const int currentParameter = stringToInt(usart0_rx_buffer);
+            } else if ((appData.usart0_rx_count >= USART0_RX_BUFF_SIZE - 2)) {
+                if (appData.hostMessage.parameterIterator < END_PARAMETERS) {
+                    const int currentParameter = stringToInt(appData.usart0_rx_bufPtr);
 
-                    addActiveParameter(&myMessage, currentParameter);
-                    memset(usart0_rx_buffer, 0, usart0_rx_count);
-                    usart0_rx_count = 0;
+                    addActiveParameter(&appData.hostMessage, currentParameter);
+                    memset(appData.usart0_rx_bufPtr, 0, appData.usart0_rx_count);
+                    appData.usart0_rx_count = 0;
                 } else {
-                    appData.messageState = MESSAGE_RECEIVE_COMPLETE;
+                    appData.hostMessage.messageState = MESSAGE_RECEIVE_COMPLETE;
                     appData.appState = APP_PROCESS_MESSAGE;
                     appData.usart0State = USART_IDLE;
-                    memset(usart0_rx_buffer, 0, sizeof (usart0_rx_buffer));
-                    usart0_rx_count = 0;
+                    memset(appData.usart0_rx_bufPtr, 0, sizeof (appData.usart0_rx_bufPtr));
+                    appData.usart0_rx_count = 0;
                 }
                 /* We received all the data we expected to get */
-            } else if (myMessage.parameterIterator >= END_PARAMETERS) {
-                appData.messageState = MESSAGE_RECEIVE_COMPLETE;
+            } else if (appData.hostMessage.parameterIterator >= END_PARAMETERS) {
+                appData.hostMessage.messageState = MESSAGE_RECEIVE_COMPLETE;
                 appData.appState = APP_PROCESS_MESSAGE;
                 appData.usart0State = USART_IDLE;
-                memset(usart0_rx_buffer, 0, sizeof (usart0_rx_buffer));
-                usart0_rx_count = 0;
+                memset(appData.usart0_rx_bufPtr, 0, sizeof (appData.usart0_rx_bufPtr));
+                appData.usart0_rx_count = 0;
             }
             break;
         } // END USART_GRAB_BYTE //
@@ -405,11 +252,11 @@ void USART_Tasks(void) {
             /* Send a byte back to PC over USART */
         case USART_THROW_BYTE:
         {
-            if (!DRV_USART0_TransmitBufferIsFull() && (usart0_tx_count < usart0_tx_length)) {
-                DRV_USART0_WriteByte(usart0_tx_buffer[usart0_tx_count]);
-                usart0_tx_count++;
-            } else if (usart0_tx_count == usart0_tx_length) {
-                appData.messageState = MESSAGE_SEND_COMPLETE;
+            if (!DRV_USART0_TransmitBufferIsFull() && (appData.usart0_tx_count < appData.usart0_tx_length)) {
+                DRV_USART0_WriteByte(appData.usart0_tx_bufPtr[appData.usart0_tx_count]);
+                appData.usart0_tx_count++;
+            } else if (appData.usart0_tx_count == appData.usart0_tx_length) {
+                appData.hostMessage.messageState = MESSAGE_SEND_COMPLETE;
                 appData.appState = APP_GET_NEW_MESSAGE;
                 appData.usart0State = USART_IDLE;
             }
@@ -422,14 +269,141 @@ void USART_Tasks(void) {
 
 } /// END USART_TASKS() //
 
-/******************************************************************************
-  Function:
-    void APP_Tasks ( void )
+void set_DAC0_StartVal(uint32_t startVal) {
+    if (appData.spi0State == SPI_IDLE) {
+        memset(appData.spi0_tx_bufPtr, 0, 4);
+        appData.DAC0_currentValue = startVal;
+        uint32_t DAC0_DATA = appData.DAC0_currentValue;
+        appData.spi0_tx_bufPtr[3] = DAC_DIN_REG_WRITE << 4;
+        appData.spi0_tx_bufPtr[3] |= (0xFF & (DAC0_DATA >> 14));
+        appData.spi0_tx_bufPtr[2] = (0xFF & (DAC0_DATA >> 6));
+        appData.spi0_tx_bufPtr[1] = (0xFF DAC0_DATA) << 2;
 
-  Remarks:
-    See prototype in app.h.
- */
+        appData.spi0_buf_handle = DRV_SPI0_BufferAddWrite(appData.spi0_tx_bufPtr, 4, 0, 0);
+        DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+        appData.spi0State = SPI_WRITE_BUSY;
+    } else {
+        DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+        appData.spi0_buf_status = DRV_SPI0_BufferStatus(appData.spi0_buf_handle);
+        if (appData.spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+            LDAC0Off();
+            appData.spi0State = SPI_IDLE;
+            appData.appState = APP_GET_NEW_MESSAGE;
+        }
+    }
+}
 
+void DAC0_Write(void) {
+    LDAC0On();
+    if (appData.DAC0_currentValue < appData.DAC0_finalValue) {
+        appData.DAC0_currentValue += appData.stepSizeX;
+        if (appData.DAC0_currentValue > appData.DAC0_finalValue)
+            appData.DAC0_currentValue = appData.DAC0_finalValue;
+    } else if (appData.DAC0_currentValue > appData.DAC0_finalValue) {
+        appData.DAC0_currentValue -= appData.stepSizeX;
+        if (appData.DAC0_currentValue < appData.DAC0_finalValue)
+            appData.DAC0_currentValue = appData.DAC0_finalValue;
+    }
+
+    const uint32_t DAC0_DATA = appData.DAC0_currentValue;
+
+    appData.spi0_tx_bufPtr[3] = DAC_DIN_REG_WRITE << 4;
+    appData.spi0_tx_bufPtr[3] |= (0xFF & (DAC0_DATA >> 14));
+    appData.spi0_tx_bufPtr[2] = (0xFF & (DAC0_DATA >> 6));
+    appData.spi0_tx_bufPtr[1] = (0xFF & DAC0_DATA) << 2;
+
+    appData.spi0_buf_handle = DRV_SPI0_BufferAddWrite((uint8_t *) & appData.spi0_tx_bufPtr, 4, 0, 0);
+
+    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+
+    appData.spi0State = SPI_WRITE_BUSY;
+
+}
+
+void DAC0_Confirm_Write(void) {
+
+    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+    appData.spi0_buf_status = DRV_SPI0_BufferStatus(appData.spi0_buf_handle);
+
+    if (appData.spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+        tmr1_flag = 1;
+
+        if (appData.DAC0_currentValue == appData.DAC0_finalValue) {
+            appData.spi0State = SPI_READ_START;
+            appData.appState = APP_READ_FROM_ADC;
+        } else {
+            appData.spi0State = SPI_WRITE_START;
+        }
+    }
+}
+
+uint32_t ADC0_Read(void) {
+    uint32_t adc0val = 0;
+
+    if (appData.spi0State == SPI_READ_START) {
+
+        SPI2_CS1Off();
+        DRV_TMR0_Start();
+        while (1) {
+            if (tmr0_flag != 0)
+                break;
+        }
+
+        appData.spi0_buf_handle = DRV_SPI0_BufferAddRead((uint8_t *) & appData.spi0_rx_bufPtr, 4, 0, 0);
+        DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+        appData.spi0State = SPI_READ_BUSY;
+    } else if (appData.spi0State == SPI_READ_BUSY) {
+        DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+        appData.spi0_buf_status = DRV_SPI0_BufferStatus(appData.spi0_buf_handle);
+        if (appData.spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+
+            adc0val = 0;
+            adc0val |= (uint32_t) (appData.spi0_rx_bufPtr[3] << 10);
+            adc0val |= (uint32_t) (appData.spi0_rx_bufPtr[2] << 2);
+            adc0val |= (uint32_t) (appData.spi0_rx_bufPtr[1] >> 6);
+            adc0val -= ADC0_OFFSET;
+
+            appData.spi0State = SPI_READ_COMPLETE;
+            appData.appState = APP_SEND_REPLY;
+        }
+    }
+    return adc0val;
+}
+
+void APP_Initialize(void) {
+    appData.appState = APP_STATE_INIT;
+
+    appData.hostMessage.messageState = MESSAGE_IDLE;
+    appData.hostMessage.parameterIterator = NO_PARAMETER;
+    memset(appData.hostMessage.activeParameter, 0, 6);
+    appData.hostMessage.laserState = NONE;
+    appData.hostMessage.laserPower = 0;
+    appData.hostMessage.galvoState = NONE;
+    appData.hostMessage.xPosition = 0;
+    appData.hostMessage.yPosition = 0;
+    appData.hostMessage.gSpeed = DEFAULT_GALVO_SPEED;
+    
+    appData.spi0_tx_bufPtr = &spi0_tx_buffer[0];
+    appData.spi0_rx_bufPtr = &spi0_rx_buffer[0];
+
+    
+    memset(appData.spi0_rx_bufPtr, 0, SPI_RX_BUFF_SIZE);
+    memset(appData.spi0_tx_bufPtr, 0, SPI_TX_BUFF_SIZE);
+
+    appData.usart0Handle = DRV_HANDLE_INVALID;
+    appData.usart0State = USART_INIT;
+    memset(appData.usart0_rx_bufPtr, 0, USART0_RX_BUFF_SIZE);
+    appData.usart0_rx_count = 0;
+    memset(appData.usart0_tx_bufPtr, 0, USART0_TX_BUFF_SIZE);
+    appData.usart0_tx_count = 0;
+
+    appData.spi0Handle = DRV_HANDLE_INVALID;
+    appData.spi0State = SPI_INIT_OFFSET;
+
+
+    DRV_TMR0_CounterValueSet(0xFFFF - 10);
+    tmr0_flag = 0;
+}
 
 void APP_Tasks(void) {
     /* Check the application's current state. */
@@ -438,14 +412,12 @@ void APP_Tasks(void) {
         case APP_STATE_INIT:
         {
             bool appInitialized = true;
-
             if (appData.usart0Handle == DRV_HANDLE_INVALID) {
                 appData.usart0Handle =
                         DRV_USART0_Open(DRV_USART_INDEX_0,
                         DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
                 appInitialized &= (DRV_HANDLE_INVALID != appData.usart0Handle);
             }
-
             if (appData.spi0Handle == DRV_HANDLE_INVALID) {
                 appData.spi0Handle =
                         DRV_SPI0_Open(DRV_SPI_INDEX_0,
@@ -454,31 +426,9 @@ void APP_Tasks(void) {
                 //  LDAC0On();
                 appData.spi0State = SPI_IDLE;
             }
-
             if (appInitialized) {
-                // BSP_LEDStateSet(BSP_LED_1, BSP_LED_STATE_ON);
-
-
-                if (appData.spi0State == SPI_IDLE) {
-
-                    appData.usart0State = USART_INIT;
-                    DAC0_currentValue = 0;
-                    memset(spi0_tx_buffer, 0, 4);
-                    spi0_tx_buffer[3] = DAC_DIN_REG_WRITE << 4;
-                    spi0_buf_handle = DRV_SPI0_BufferAddWrite(spi0_tx_buffer, 4, 0, 0);
-                    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-                    appData.spi0State = SPI_WRITE_BUSY;
-                } else {
-                    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-                    spi0_buf_status = DRV_SPI0_BufferStatus(spi0_buf_handle);
-                    if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
-                        LDAC0Off();
-                        appData.spi0State = SPI_IDLE;
-                        appData.appState = APP_GET_NEW_MESSAGE;
-                    }
-
-                }
-
+                set_DAC0_StartVal(0);
+                appData.usart0State = USART_INIT;
             }
             break;
         } // END APP_INIT CASE
@@ -486,44 +436,20 @@ void APP_Tasks(void) {
         case APP_GET_NEW_MESSAGE:
         {
             DRV_USART_TasksReceive(sysObj.drvUsart0);
-            USART_Tasks();
+            USART0_TaskHandler();
             break;
         }
 
         case APP_PROCESS_MESSAGE:
         {
-            DAC0_finalValue = getMessageData(&myMessage, L_STATE) + dac0_offset_val;
-            if (DAC0_finalValue > 0x3FFFF)
-                DAC0_finalValue = 0x3FFFF;
-            else if (DAC0_finalValue < 0)
-                DAC0_finalValue = 0;
+            appData.DAC0_finalValue = getMessageData(&appData.hostMessage, L_STATE) + DAC0_OFFSET;
+            if (appData.DAC0_finalValue > 0x3FFFF)
+                appData.DAC0_finalValue = 0x3FFFF;
+            else if (appData.DAC0_finalValue < 0)
+                appData.DAC0_finalValue = 0;
+            if (appData.DAC0_currentValue != appData.DAC0_finalValue) {
 
-            uint32_t deltaX;
-            uint32_t deltaY = 0;
-            if (DAC0_finalValue > DAC0_currentValue)
-                deltaX = DAC0_finalValue - DAC0_currentValue;
-            else
-                deltaX = DAC0_currentValue - DAC0_finalValue;
-
-            if (deltaX > 0) {
-                uint32_t distance = ((uint32_t) sqrt((float) deltaX * (float) deltaX + (float) deltaY * (float) deltaY)) << 10;
-                uint32_t duration = distance / defaultGalvoSpeed;
-                uint32_t numIncrements = (uint32_t) (((float) duration) / dac_update_period);
-                stepSizeX = distance / numIncrements;
-
-
-
-                //
-                //            DAC0_finalValue <<= 4;
-                //
-                //            float deltaX = (float) DAC0_finalValue - (float) DAC0_currentValue;
-                //            if (deltaX < 0)
-                //                deltaX *= -1;
-                //
-                //            float duration = sqrt(deltaX * deltaX) / defaultGalvoSpeed;
-                //            float numSteps = duration / DAC_UPDATE_PERIOD;
-                //
-                //            stepSizeX = (uint32_t) (deltaX / numSteps);
+                appData.stepSizeX = stepSizeCalc(appData.DAC0_currentValue, appData.DAC0_finalValue, DEFAULT_GALVO_SPEED);
 
                 appData.appState = APP_WRITE_TO_DAC;
                 appData.spi0State = SPI_WRITE_START;
@@ -540,82 +466,17 @@ void APP_Tasks(void) {
 
         case APP_WRITE_TO_DAC:
         {
-
-            if ((appData.spi0State == SPI_WRITE_START)&&(tmr1_flag == 0)) {
-
-                LDAC0On();
-                if (DAC0_currentValue < DAC0_finalValue) {
-                    DAC0_currentValue += stepSizeX;
-                    if (DAC0_currentValue > DAC0_finalValue)
-                        DAC0_currentValue = DAC0_finalValue;
-                } else if (DAC0_currentValue > DAC0_finalValue) {
-                    DAC0_currentValue -= stepSizeX;
-                    if (DAC0_currentValue < DAC0_finalValue)
-                        DAC0_currentValue = DAC0_finalValue;
-                }
-
-                uint32_t DAC0_DATA = DAC0_currentValue;
-
-                spi0_tx_buffer[3] = DAC_DIN_REG_WRITE << 4;
-                spi0_tx_buffer[3] |= (0xFF & (DAC0_DATA >> 14));
-                spi0_tx_buffer[2] = (0xFF & (DAC0_DATA >> 6));
-                spi0_tx_buffer[1] = (0xFF & DAC0_DATA) << 2;
-
-                spi0_buf_handle = DRV_SPI0_BufferAddWrite(spi0_tx_buffer, 4, 0, 0);
-
-                DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-
-                appData.spi0State = SPI_WRITE_BUSY;
-
-            } else if (appData.spi0State == SPI_WRITE_BUSY) {
-
-                DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-                spi0_buf_status = DRV_SPI0_BufferStatus(spi0_buf_handle);
-
-                if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
-                    tmr1_flag = 1;
-
-                    if (DAC0_currentValue == DAC0_finalValue) {
-                        appData.spi0State = SPI_READ_START;
-                        appData.appState = APP_READ_FROM_ADC;
-                    } else {
-                        appData.spi0State = SPI_WRITE_START;
-                    }
-
-                    // LDAC0Off();
-
-
-                }
-            }
+            if ((appData.spi0State == SPI_WRITE_START)&&(tmr1_flag == 0))
+                DAC0_Write();
+            else if (appData.spi0State == SPI_WRITE_BUSY)
+                DAC0_Confirm_Write();
 
             break;
         } // END APP_WRITE_TO_DAC CASE
 
         case APP_READ_FROM_ADC:
         {
-            DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-            if (appData.spi0State == SPI_READ_START) {
-
-                SPI2_CS1Off();
-                DRV_TMR0_Start();
-                while (1) {
-                    if (tmr0_flag != 0)
-                        break;
-                }
-                spi0_buf_handle = DRV_SPI0_BufferAddRead(spi0_rx_buffer, 4, 0, 0);
-                appData.spi0State = SPI_READ_BUSY;
-            } else if (appData.spi0State == SPI_READ_BUSY) {
-                spi0_buf_status = DRV_SPI0_BufferStatus(spi0_buf_handle);
-                if (spi0_buf_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
-                    appData.spi0State = SPI_READ_COMPLETE;
-                    appData.appState = APP_SEND_REPLY;
-                    ADC0_value = 0x0000;
-                    ADC0_value |= (uint32_t) (spi0_rx_buffer[3] << 10);
-                    ADC0_value |= (uint32_t) (spi0_rx_buffer[2] << 2);
-                    ADC0_value |= (uint32_t) (spi0_rx_buffer[1] >> 6);
-                    ADC0_value -= 0x1FFF4;
-                }
-            }
+            appData.ADC0_value = ADC0_Read();
             break;
         } // END APP_READ_FROM_ADC CASE
 
@@ -624,13 +485,19 @@ void APP_Tasks(void) {
             DRV_USART_TasksTransmit(sysObj.drvUsart0);
             if (appData.usart0State == USART_IDLE) {
 
-                memset(usart0_tx_buffer, 0, USART0_TX_BUFF_SIZE);
-                strcpy(usart0_tx_buffer, "\r\n@ok:\r\n");
-
+                memset(appData.usart0_tx_bufPtr, 0, USART0_TX_BUFF_SIZE);
+                strcpy(appData.usart0_tx_bufPtr, "\r\n@ok:\r\n");
+                int j;
+                for(j = 0; j < appData.hostMessage.parameterIterator)
+                {
+                
+                
                 uint8_t buf[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-                itoa(buf, ADC0_value, 10);
+                uint8_t val = getMessageData(&appData.hostMessage, j);
+                
+                itoa(buf, appData.hostMessage., 10);
                 strcat(buf, "\r\n");
-                strcat(usart0_tx_buffer, buf);
+                strcat(appData.usart0_tx_bufPtr, buf);
 
                 //                memset(buf, 0, 4);
                 //                itoa(buf, spi_rx_buffer[1], 10);
@@ -662,9 +529,9 @@ void APP_Tasks(void) {
                 //                        strcat(usart_tx_buffer, "~\r\n");
                 //                    }
                 //              }
-                usart0_tx_length = strlen(usart0_tx_buffer);
+                appData.usart0_tx_length = strlen(appData.usart0_tx_bufPtr);
             }
-            USART_Tasks();
+            USART0_TaskHandler();
 
             break;
         } // END REPLY CASE
