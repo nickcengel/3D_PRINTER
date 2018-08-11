@@ -21,6 +21,10 @@
     files.
  *******************************************************************************/
 
+
+
+
+
 // ****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -209,12 +213,12 @@ static void processHostMessage(HOST_MESSAGE_DATA volatile * const messPtr,
                             // for debugging ! REMOVE !
                         else
                             clientDataPtr->GalvoController.X_Axis.final = getMessageData(messPtr, X_POS) + DAC0_OFFSET;
-                        
+
                         if (clientDataPtr->GalvoController.X_Axis.final > DAC_MAX_VALUE)
                             clientDataPtr->GalvoController.X_Axis.final = DAC_MAX_VALUE;
                         else if (clientDataPtr->GalvoController.X_Axis.final < DAC_MIN_VALUE)
                             clientDataPtr->GalvoController.X_Axis.final = DAC_MIN_VALUE;
-                        //
+
                         if (clientDataPtr->GalvoController.X_Axis.current != clientDataPtr->GalvoController.X_Axis.final) {
                             if (clientDataPtr->GalvoController.X_Axis.current < clientDataPtr->GalvoController.X_Axis.final)
                                 clientDataPtr->GalvoController.X_Axis.direction = DAC_DIRECTION_INCREASE;
@@ -226,14 +230,11 @@ static void processHostMessage(HOST_MESSAGE_DATA volatile * const messPtr,
                                     clientDataPtr->GalvoController.Y_Axis.current,
                                     clientDataPtr->GalvoController.Y_Axis.final,
                                     clientDataPtr->GalvoController.speed);
-                            //
+
                             clientDataPtr->state = APP_READ_FROM_ADC;
                             clientDataPtr->GalvoController.X_Axis.Measurement.type = ADC_MEASUREMENT_BEGINNING;
-                            //
 
-                            //
                             sysDevPtr->SPI0.DAC_state = DAC_STATE_READY;
-                            //                            sysDevPtr->SPI0.ADC_state = ADC_STATE_READY;
 
                         }
                         //else {
@@ -452,7 +453,6 @@ static void WriteToDAC(void) {
     switch (spi0Ptr->DAC_state) {
         case DAC_STATE_READY:
         {
-
             DAC0_Tasks(&(galvoPtr->X_Axis));
             const uint32_t DAC0_DATA = galvoPtr->X_Axis.current;
             memset(SPI0_TX_Buffer, 0, SPI0_TX_BUFF_SIZE);
@@ -494,98 +494,128 @@ static void WriteToDAC(void) {
     }
 }
 
-static uint32_t sampleAccumulator(uint32_t *tempVal, bool *finishFlag) {
+static uint32_t sampleAccumulator(uint32_t tempVal, bool *finishFlag) {
     static sampleIterator = 0;
     static runningVal = 0;
 
-    runningVal += *tempVal;
-    sampleIterator++;
+    sampleIterator += 1;
+    runningVal += tempVal;
 
+    uint32_t finalValue;
     if (sampleIterator < ADC_NUMBER_OF_SAMPLES) {
-        *finishFlag = 0;
-        return 0;
+        *finishFlag = false;
+        finalValue = 0;
     } else {
-        *finishFlag = 1;
-        uint32_t returnVal = runningVal >> 6;
+        *finishFlag = true;
         sampleIterator = 0;
+        finalValue = (runningVal >> 3);
         runningVal = 0;
-        return (returnVal);
+
     }
+    return finalValue;
 }
 
 static void ReadFromADC(void) {
+    static APP_STATES adc0_next_app_state;
+    static APP_STATES adc1_next_app_state = APP_READ_FROM_ADC;
+
     static uint8_t SPI0_RX_Buffer[SPI0_RX_BUFF_SIZE];
-
     SYSTEM_DEVICE_DATA_SPI volatile * const spi0Ptr = spi0_ptr();
-    APP_STATES adc0_next_app_state = APP_READ_FROM_ADC;
-    APP_STATES adc1_next_app_state = APP_READ_FROM_ADC;
-
-    if (spi0Ptr->ADC_state == ADC_STATE_READY) {
-        spi0Ptr->ADC_state = ADC_STATE_CONVERSION_START;
-        memset(SPI0_RX_Buffer, 0, SPI0_RX_BUFF_SIZE);
-        ADC0_START_PINOff();
-        DRV_TMR1_CounterValueSet(0xFFFF - ADC_CONVERSION_PERIOD_COUNTS);
-        DRV_TMR1_Start();
-        while (1) {
-            if (spi0Ptr->ADC_state == ADC_STATE_CONVERSION_COMPLETE) {
-                spi0Ptr->ADC_state = ADC_STATE_READ_VALUE;
-                break;
-            }
-        }
-        spi0Ptr->RX_handle = DRV_SPI0_BufferAddRead(SPI0_RX_Buffer, 3, 0, 0);
-
-    }
-    if ((spi0Ptr->RX_status == DRV_SPI_BUFFER_EVENT_COMPLETE)
-            && (spi0Ptr->ADC_state == ADC_STATE_READ_VALUE)) {
-        bool flag = 0;
-        uint32_t tempVal = 0;
-        tempVal |= (0x3FFFF & (SPI0_RX_Buffer[0] << 10));
-        tempVal |= (0x3FFFF & (SPI0_RX_Buffer[1] << 2));
-        tempVal |= (0x3FFFF & (SPI0_RX_Buffer[2] >> 6));
-        const uint32_t total = sampleAccumulator(&tempVal, &flag);
-
-        if (flag) {
-            APP_GALVO_DATA_AXIS * const x_axisPtr = &(galvo_ptr()->X_Axis);
-            switch (x_axisPtr->Measurement.type) {
-                case ADC_MEASUREMENT_BEGINNING:
-                {
-                    DRV_SPI_CLIENT_DATA * const dac0ptr = dac0_config_ptr();
-                    DRV_SPI0_ClientConfigure(dac0_config_ptr());
-                    x_axisPtr->Measurement.start = total;
-                    spi0Ptr->DAC_state = DAC_STATE_READY;
-                    adc0_next_app_state = APP_WRITE_TO_DAC;
-                    break;
-                }
-                case ADC_MEASUREMENT_ENDING:
-                {
-                    PACKET_STATES volatile * const pcktStatePtr = packet_state_ptr();
-                    *pcktStatePtr = PACKET_SEND_START;
-                    x_axisPtr->Measurement.end = total;
-                    adc0_next_app_state = APP_SEND_REPLY_TO_HOST;
-                    break;
-                }
-                case ADC_MEASUREMENT_ONLY:
-                {
-                    PACKET_STATES volatile * const pcktStatePtr = packet_state_ptr();
-                    *pcktStatePtr = PACKET_SEND_START;
-                    x_axisPtr->Measurement.start = x_axisPtr->Measurement.end;
-                    x_axisPtr->Measurement.end = total;
-                    adc0_next_app_state = APP_SEND_REPLY_TO_HOST;
-                    break;
-                }
-                default:
-                {
+    switch (spi0Ptr->ADC_state) {
+        case ADC_STATE_READY:
+        {   
+            DRV_TMR0_Stop();
+            adc0_next_app_state = APP_READ_FROM_ADC;
+            spi0Ptr->ADC_state = ADC_STATE_WAIT;
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_HOLDOFF_PERIOD_COUNTS);
+            DRV_TMR1_Start();
+            while (1) {
+                if (spi0Ptr->ADC_state == ADC_STATE_CONTINUE) {
                     break;
                 }
             }
-            adc1_next_app_state = adc0_next_app_state;
-            spi0Ptr->ADC_state = ADC_STATE_READY;
+            break;
         }
+        case ADC_STATE_CONTINUE:
+        {
+            spi0Ptr->ADC_state = ADC_STATE_CONVERSION_START;
+            memset(SPI0_RX_Buffer, 0, SPI0_RX_BUFF_SIZE);
+            ADC0_START_PINOff();
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_CONVERSION_PERIOD_COUNTS);
+            DRV_TMR1_Start();
+            while (1) {
+                if (spi0Ptr->ADC_state == ADC_STATE_CONVERSION_COMPLETE) {
+                    spi0Ptr->ADC_state = ADC_STATE_READ_VALUE;
+                    break;
+                }
+            }
+            spi0Ptr->RX_handle = DRV_SPI0_BufferAddRead(SPI0_RX_Buffer, 3, 0, 0);
+            break;
+        }
+        case ADC_STATE_READ_VALUE:
+        {
+            if (spi0Ptr->RX_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+
+                uint32_t tempVal;
+                tempVal = (0x3FC00 & (SPI0_RX_Buffer[0] << 10));
+                tempVal |= (0x3FC & (SPI0_RX_Buffer[1] << 2));
+                tempVal |= (0x3 & (SPI0_RX_Buffer[2] >> 6));
+                tempVal &= 0x3FFFF;
+                
+                bool finishedReadingSamples = false;
+                uint32_t avgVal = sampleAccumulator(tempVal, &finishedReadingSamples);
+
+                if (finishedReadingSamples) {
+                    APP_GALVO_DATA_AXIS * const x_axisPtr = &(galvo_ptr()->X_Axis);
+                    switch (x_axisPtr->Measurement.type) {
+                        case ADC_MEASUREMENT_BEGINNING:
+                        {
+                            DRV_SPI_CLIENT_DATA * const dac0ptr = dac0_config_ptr();
+                            DRV_SPI0_ClientConfigure(dac0_config_ptr());
+                            x_axisPtr->Measurement.start = avgVal;
+                            spi0Ptr->DAC_state = DAC_STATE_READY;
+
+                            adc0_next_app_state = APP_WRITE_TO_DAC;
+                            DRV_TMR0_CounterValueSet(0xFFFF - DAC_UPDATE_PERIOD_COUNTS);
+                            DRV_TMR0_Start();
+                            break;
+                        }
+                        case ADC_MEASUREMENT_ENDING:
+                        {
+                            PACKET_STATES volatile * const pcktStatePtr = packet_state_ptr();
+                            *pcktStatePtr = PACKET_SEND_START;
+                            x_axisPtr->Measurement.end = avgVal;
+                            adc0_next_app_state = APP_SEND_REPLY_TO_HOST;
+                            break;
+                        }
+                        case ADC_MEASUREMENT_ONLY:
+                        {
+                            PACKET_STATES volatile * const pcktStatePtr = packet_state_ptr();
+                            *pcktStatePtr = PACKET_SEND_START;
+                            x_axisPtr->Measurement.start = x_axisPtr->Measurement.end;
+                            x_axisPtr->Measurement.end = avgVal;
+                            adc0_next_app_state = APP_SEND_REPLY_TO_HOST;
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
+                    }
+                    spi0Ptr->ADC_state = ADC_STATE_READY;
+                } else {
+                    spi0Ptr->ADC_state = ADC_STATE_CONTINUE;
+                }
+            }
+            break;
+        }
+        default:
+            break;
     }
-    if ((adc0_next_app_state != APP_READ_FROM_ADC) && (adc1_next_app_state != APP_READ_FROM_ADC)) {
+
+    adc1_next_app_state = adc0_next_app_state; // debug only!!!!
+    if ((adc0_next_app_state != APP_READ_FROM_ADC) && (adc1_next_app_state != APP_READ_FROM_ADC))
         *client_state_ptr() = adc0_next_app_state;
-
-    }
 }
 
 
@@ -597,11 +627,11 @@ static void ReadFromADC(void) {
 
 void APP_Initialize(void) {
     /* Place the App state machine in its initial state. */
-    ClientApp.Device.SPI0.DAC0_clientData.baudRate = 0; // use default
+    ClientApp.Device.SPI0.DAC0_clientData.baudRate = 50000000; // use default
     ClientApp.Device.SPI0.DAC0_clientData.operationStarting = SPI0_DAC0_CallBack_Start;
     ClientApp.Device.SPI0.DAC0_clientData.operationEnded = SPI0_DAC0_CallBack_End;
 
-    ClientApp.Device.SPI0.ADC0_clientData.baudRate = 0; // use default
+    ClientApp.Device.SPI0.ADC0_clientData.baudRate = 12500000; // use default
     ClientApp.Device.SPI0.ADC0_clientData.operationStarting = SPI0_ADC0_CallBack_Start;
     ClientApp.Device.SPI0.ADC0_clientData.operationEnded = SPI0_ADC0_CallBack_End;
 
@@ -727,19 +757,20 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     memset(USART0_RX_Buffer, 0, USART0_RX_Count);
                     USART0_RX_Count = 0;
                     if (parameterIndex >= END_PARAMETERS) {
-                        parameterIndex = 0;
+                        *pcktPtr = PACKET_RECEIVE_COMPLETE;
                         memset(USART0_RX_Buffer, 0, USART0_RX_Count);
                         USART0_RX_Count = 0;
-                        *pcktPtr = PACKET_RECEIVE_COMPLETE;
+                        parameterIndex = 0;
+
                     }
                 } else if (currentByte == ';') {
                     if (USART0_RX_Count > 0) {
                         const int currentParameter = stringToInt(USART0_RX_Buffer);
                         addActiveParameter(mssgPtr, parameterIndex, currentParameter);
                     }
+                    *pcktPtr = PACKET_RECEIVE_COMPLETE;
                     memset(USART0_RX_Buffer, 0, USART0_RX_Count);
                     USART0_RX_Count = 0;
-                    *pcktPtr = PACKET_RECEIVE_COMPLETE;
                     parameterIndex = 0;
                 }
                 break;
@@ -755,43 +786,41 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
             memset(USART0_RX_Buffer, 0, USART0_RX_Count);
             USART0_RX_Count = 0;
         } else {
-            parameterIndex = 0;
             *pcktPtr = PACKET_RECEIVE_COMPLETE;
             memset(USART0_RX_Buffer, 0, sizeof (USART0_RX_Buffer));
             USART0_RX_Count = 0;
+            parameterIndex = 0;
         }
         /* We received all the data we expected to get */
     } else if (parameterIndex >= END_PARAMETERS) {
-        parameterIndex = 0;
         *pcktPtr = PACKET_RECEIVE_COMPLETE;
         memset(USART0_RX_Buffer, 0, sizeof (USART0_RX_Buffer));
         USART0_RX_Count = 0;
+        parameterIndex = 0;
     }
 }
 
 void SPI0_DAC0_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
-
     SYSTEM_DEVICE_DATA_SPI volatile * const spiPtr = spi0_ptr();
+    spiPtr->TX_status = eEvent;
     APP_DAC0_SELECT();
-    spiPtr->TX_status = DRV_SPI0_BufferStatus(bufferHandle);
 }
 
 void SPI0_DAC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
     SYSTEM_DEVICE_DATA_SPI volatile * const spiPtr = spi0_ptr();
-    APP_DAC0_DESELECT();
-    spiPtr->TX_status = DRV_SPI0_BufferStatus(bufferHandle);
+    spiPtr->TX_status = eEvent;
     spiPtr->DAC_state = DAC_STATE_WRITE_COMPLETE;
-
+    APP_DAC0_DESELECT();
 }
 
 void SPI0_ADC0_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
     SYSTEM_DEVICE_DATA_SPI volatile * const spiPtr = spi0_ptr();
-    spiPtr->RX_status = DRV_SPI0_BufferStatus(bufferHandle);
+    spiPtr->RX_status = eEvent;
 }
 
 void SPI0_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
     SYSTEM_DEVICE_DATA_SPI volatile * const spiPtr = spi0_ptr();
-    spiPtr->RX_status = DRV_SPI0_BufferStatus(bufferHandle);
+    spiPtr->RX_status = eEvent;
 }
 
 // *****************************************************************************
@@ -800,7 +829,7 @@ void SPI0_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE b
 // *****************************************************************************
 // *****************************************************************************
 
-void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void) {
+void __ISR(_TIMER_1_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance0(void) {
     DRV_TMR0_CounterClear();
     SYSTEM_DEVICE_DATA_SPI volatile * const spiPtr = spi0_ptr();
     if (spiPtr->DAC_state == DAC_STATE_WRITE_COMPLETE) {
@@ -817,6 +846,8 @@ void __ISR(_TIMER_2_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance1(void) {
     if (spiPtr->ADC_state == ADC_STATE_CONVERSION_START) {
         ADC0_START_PINOn();
         spiPtr->ADC_state = ADC_STATE_CONVERSION_COMPLETE;
+    } else if (spiPtr->ADC_state == ADC_STATE_WAIT) {
+        spiPtr->ADC_state = ADC_STATE_CONTINUE;
     }
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_TIMER_2);
 }

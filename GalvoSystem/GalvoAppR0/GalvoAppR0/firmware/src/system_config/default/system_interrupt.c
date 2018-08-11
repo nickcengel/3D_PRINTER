@@ -68,31 +68,48 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
-
-void __ISR(_UART2_TX_VECTOR, ipl5AUTO) _IntHandlerDrvUsartTransmitInstance0(void) {
+ 
+void __ISR(_UART2_TX_VECTOR, ipl1AUTO) _IntHandlerDrvUsartTransmitInstance0(void)
+{
     DRV_USART_TasksTransmit(sysObj.drvUsart0);
 }
-
-void __ISR(_UART2_RX_VECTOR, ipl6AUTO) _IntHandlerDrvUsartReceiveInstance0(void) {
+void __ISR(_UART2_RX_VECTOR, ipl2AUTO) _IntHandlerDrvUsartReceiveInstance0(void)
+{
     DRV_USART_TasksReceive(sysObj.drvUsart0);
 }
-
-void __ISR(_UART2_FAULT_VECTOR, ipl6AUTO) _IntHandlerDrvUsartErrorInstance0(void) {
+void __ISR(_UART2_FAULT_VECTOR, ipl2AUTO) _IntHandlerDrvUsartErrorInstance0(void)
+{
     DRV_USART_TasksError(sysObj.drvUsart0);
 }
+ 
+ 
 
-void __ISR(_SPI2_RX_VECTOR, ipl1AUTO) _IntHandlerSPIRxInstance0(void) {
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+ 
+ 
+
+
+ 
+void __ISR(_SPI2_RX_VECTOR, ipl4AUTO) _IntHandlerSPIRxInstance0(void)
+{
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
-
 }
-
-void __ISR(_SPI2_TX_VECTOR, ipl4AUTO) _IntHandlerSPITxInstance0(void) {
+void __ISR(_SPI2_TX_VECTOR, ipl5AUTO) _IntHandlerSPITxInstance0(void)
+{
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
-
-void __ISR(_SPI2_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance0(void) {
+void __ISR(_SPI2_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance0(void)
+{
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
 /*******************************************************************************
  End of File
- */
+*/

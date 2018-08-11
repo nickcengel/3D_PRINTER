@@ -75,10 +75,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define SPI0_RX_BUFF_SIZE 3
 #define SPI0_TX_BUFF_SIZE 3
 
-#define ADC_NUMBER_OF_SAMPLES 64
-#define ADC_CONVERSION_PERIOD_COUNTS 12
-#define ADC_WAIT_PERIOD_COUNTS 2400
-#define ADC0_OFFSET 0x1FFF8
+// 64 samples , so shift by 6
+#define ADC_NUMBER_OF_SAMPLES 8
+
+#define ADC_CONVERSION_PERIOD_COUNTS 8
+#define ADC_HOLDOFF_PERIOD_COUNTS 2048
+#define ADC0_OFFSET 0x1FFF7
 
 #define DAC_DIN_REG_WRITE 0x1
 #define DAC_OFFSET_REG_WRITE 0x2    
@@ -90,7 +92,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define DAC_CONFIG_REG_READ 0xC
 
 #define DAC_UPDATE_PERIOD_uS 10.0
-#define DAC_UPDATE_PERIOD_COUNTS 116
+#define DAC_UPDATE_PERIOD_COUNTS 117
 
 #define DAC0_OFFSET  0x201EA // added to incoming signed number
 #define DAC1_OFFSET  0x201EA // added to incoming signed number
@@ -145,10 +147,11 @@ extern "C" {
     typedef enum {
         ADC_STATE_READY = 0,
         ADC_STATE_WAIT = 1,
-        ADC_STATE_CONVERSION_START = 2,
-        ADC_STATE_CONVERSION_COMPLETE = 3,
-        ADC_STATE_READ_PENDING = 4,
-        ADC_STATE_READ_VALUE = 5
+        ADC_STATE_CONTINUE = 2,
+        ADC_STATE_CONVERSION_START = 3,
+        ADC_STATE_CONVERSION_COMPLETE = 4,
+        ADC_STATE_READ_PENDING = 5,
+        ADC_STATE_READ_VALUE = 6,
     } ADC_STATES;
 
     typedef enum {
@@ -291,7 +294,7 @@ extern "C" {
     static void WriteToDAC(void);
 
     /* ADC Read Methods for Galvo */
-    static uint32_t sampleAccumulator(uint32_t *tempVal, bool *finishFlag);
+    static uint32_t sampleAccumulator(uint32_t tempVal, bool *finishFlag);
     static void ReadFromADC(void);
 
     // *****************************************************************************
@@ -335,7 +338,7 @@ extern "C" {
       Remarks:
         This routine must be called from SYS_Tasks() routine.
      */
-    void APP_Tasks(void); 
+    void APP_Tasks(void);
 
     // *****************************************************************************
     // *****************************************************************************
