@@ -144,6 +144,11 @@ static void InitalizeDevices(void) {
                 DRV_SPI0_Open(DRV_SPI_INDEX_0,
                 DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
         appInitialized &= (DRV_HANDLE_INVALID != clientDataPtr->Device.SPI0.driverHandle);
+    }    if (clientDataPtr->Device.SPI1.driverHandle == DRV_HANDLE_INVALID) {
+        clientDataPtr->Device.SPI1.driverHandle =
+                DRV_SPI1_Open(DRV_SPI_INDEX_1,
+                DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
+        appInitialized &= (DRV_HANDLE_INVALID != clientDataPtr->Device.SPI1.driverHandle);
     }
     if (appInitialized) {
         SYSTEM_DEVICE_DATA_SPI volatile * const spi0Ptr = spi0_ptr();

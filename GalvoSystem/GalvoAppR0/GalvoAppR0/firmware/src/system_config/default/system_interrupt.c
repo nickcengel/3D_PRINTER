@@ -102,13 +102,25 @@ void __ISR(_SPI2_RX_VECTOR, ipl4AUTO) _IntHandlerSPIRxInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
-void __ISR(_SPI2_TX_VECTOR, ipl5AUTO) _IntHandlerSPITxInstance0(void)
+void __ISR(_SPI2_TX_VECTOR, ipl6AUTO) _IntHandlerSPITxInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
 void __ISR(_SPI2_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+}
+void __ISR(_SPI6_RX_VECTOR, ipl1AUTO) _IntHandlerSPIRxInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
+}
+void __ISR(_SPI6_TX_VECTOR, ipl1AUTO) _IntHandlerSPITxInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
+}
+void __ISR(_SPI6_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
 }
 /*******************************************************************************
  End of File

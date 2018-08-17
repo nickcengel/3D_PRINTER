@@ -66,6 +66,11 @@ SYS_MODULE_OBJ DRV_SPI_Initialize(const SYS_MODULE_INDEX index,const SYS_MODULE_
             returnValue = DRV_SPI0_Initialize();
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_Initialize();
+            break;
+        }
         default:
         {
             returnValue = SYS_MODULE_OBJ_INVALID;
@@ -82,6 +87,11 @@ void DRV_SPI_Deinitialize( SYS_MODULE_OBJ object)
         case DRV_SPI_INDEX_0:
         {
             DRV_SPI0_Deinitialize();
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            DRV_SPI1_Deinitialize();
             break;
         }
         default:
@@ -102,6 +112,11 @@ SYS_STATUS DRV_SPI_Status( SYS_MODULE_OBJ object)
             returnValue = DRV_SPI0_Status();
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_Status();
+            break;
+        }
         default:
         {
             returnValue = SYS_STATUS_ERROR;
@@ -118,6 +133,11 @@ void DRV_SPI_Tasks ( SYS_MODULE_OBJ object )
         case DRV_SPI_INDEX_0:
         {
             DRV_SPI0_Tasks();
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            DRV_SPI1_Tasks();
             break;
         }
         default:
@@ -138,6 +158,11 @@ DRV_HANDLE DRV_SPI_Open( const SYS_MODULE_INDEX index, const DRV_IO_INTENT ioInt
         case DRV_SPI_INDEX_0:
         {
             returnValue = DRV_SPI0_Open(index,ioIntent);
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_Open(index,ioIntent);
             break;
         }
         default:
@@ -162,6 +187,11 @@ void DRV_SPI_Close( const DRV_HANDLE handle)
             DRV_SPI0_Close( );
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            DRV_SPI1_Close( );
+            break;
+        }
         default:
         {
             break;
@@ -181,6 +211,11 @@ int32_t DRV_SPI_ClientConfigure ( DRV_HANDLE handle, const DRV_SPI_CLIENT_DATA *
         case DRV_SPI_INDEX_0:
         {
             returnValue = DRV_SPI0_ClientConfigure( cfgData );
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_ClientConfigure( cfgData );
             break;
         }
         default:
@@ -209,6 +244,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddRead ( DRV_HANDLE handle,void *rxBuffer,s
             returnValue = DRV_SPI0_BufferAddRead ( rxBuffer, size, completeCB, context);
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddRead ( rxBuffer, size, completeCB, context);
+            break;
+        }
         default:
         {
             returnValue = DRV_SPI_BUFFER_HANDLE_INVALID;
@@ -230,6 +270,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddWrite ( DRV_HANDLE handle,void *txBuffer,
         case DRV_SPI_INDEX_0:
         {
             returnValue = DRV_SPI0_BufferAddWrite ( txBuffer, size, completeCB, context);
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddWrite ( txBuffer, size, completeCB, context);
             break;
         }
         default:
@@ -257,6 +302,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddWriteRead ( DRV_HANDLE handle, void *txBu
             returnValue = DRV_SPI0_BufferAddWriteReadNew ( txBuffer, txSize, rxBuffer, rxSize, completeCB, context );
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddWriteReadNew ( txBuffer, txSize, rxBuffer, rxSize, completeCB, context );
+            break;
+        }
         default:
         {
             returnValue = DRV_SPI_BUFFER_HANDLE_INVALID;
@@ -278,6 +328,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddRead2 ( DRV_HANDLE handle,void *rxBuffer,
         case DRV_SPI_INDEX_0:
         {
             returnValue = DRV_SPI0_BufferAddRead2 ( rxBuffer, size, completeCB, context, jobHandle);
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddRead2 ( rxBuffer, size, completeCB, context, jobHandle);
             break;
         }
         default:
@@ -303,6 +358,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddWrite2 ( DRV_HANDLE handle,void *txBuffer
             returnValue = DRV_SPI0_BufferAddWrite2 ( txBuffer, size, completeCB, context, jobHandle);
             break;
         }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddWrite2 ( txBuffer, size, completeCB, context, jobHandle);
+            break;
+        }
         default:
         {
             returnValue = DRV_SPI_BUFFER_HANDLE_INVALID;
@@ -324,6 +384,11 @@ DRV_SPI_BUFFER_HANDLE DRV_SPI_BufferAddWriteRead2 ( DRV_HANDLE handle, void *txB
         case DRV_SPI_INDEX_0:
         {
             returnValue = DRV_SPI0_BufferAddWriteRead2 ( txBuffer, txSize, rxBuffer, rxSize, completeCB, context, jobHandle);
+            break;
+        }
+        case DRV_SPI_INDEX_1:
+        {
+            returnValue = DRV_SPI1_BufferAddWriteRead2 ( txBuffer, txSize, rxBuffer, rxSize, completeCB, context, jobHandle );
             break;
         }
         default:

@@ -160,7 +160,7 @@ void DRV_TMR0_Initialize(void)
     PLIB_TMR_Period16BitSet(TMR_ID_1, 65535);
     /* Setup Interrupt */   
     PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_T1, INT_PRIORITY_LEVEL6);
-    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_T1, INT_SUBPRIORITY_LEVEL0);          
+    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_T1, INT_SUBPRIORITY_LEVEL2);          
 }
 
 static void _DRV_TMR0_Resume(bool resume)
