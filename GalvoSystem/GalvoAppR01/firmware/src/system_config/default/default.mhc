@@ -6,7 +6,7 @@
 #     Harmony version: 2.06
 #
 #
-# from /Users/h.tosh/MPLABXProjects/GalvoAppR01/firmware/GalvoAppR01.hconfig
+# from /Users/h.tosh/git_repos/3D_PRINTER/GalvoSystem/GalvoAppR01/firmware/GalvoAppR01.hconfig
 #
 CONFIG_APP_INSTANCES=1
 #
@@ -16,7 +16,7 @@ CONFIG_APP_MENU_IDX0=y
 CONFIG_APP_NAME_0="app"
 CONFIG_APP_AUTO_GENERATE_CODE0=n
 #
-# from /Users/h.tosh/MPLABXProjects/GalvoAppR01/firmware/GalvoAppR01.hconfig
+# from /Users/h.tosh/git_repos/3D_PRINTER/GalvoSystem/GalvoAppR01/firmware/GalvoAppR01.hconfig
 #
 CONFIG_USE_EXCEPTION_HANDLER=y
 CONFIG_EXCEPTION_USE_SYS_DEBUG=y

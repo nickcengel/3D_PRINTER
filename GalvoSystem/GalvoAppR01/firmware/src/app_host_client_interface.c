@@ -39,76 +39,27 @@ HCI_REG_ACTION gHCI_Action[HCI_PACKET_SIZE];
 /* ************************************************************************** */
 
 /* ************************************************************************** */
-//void sampleSwitch(void) {
-//    int i;
-//    switch (i) {
-//        case JOB_TYPE:
-//        {
-//
-//            break;
-//        }
-//        case COMMAND_TYPE:
-//        {
-//
-//            break;
-//        }
-//        case REPLY_TYPE:
-//        {
-//
-//            break;
-//        }
-//
-//        case G_STATE:
-//        {
-//
-//            break;
-//        }
-//        case G_SPEED:
-//        {
-//
-//            break;
-//        }
-//        case X_POSITION:
-//        {
-//
-//            break;
-//        }
-//        case Y_POSITION:
-//        {
-//
-//            break;
-//        }
-//
-//        case L_STATE:
-//        {
-//
-//            break;
-//        }
-//        case L_POWER:
-//        {
-//
-//            break;
-//        }
-//        case X_MEASUREMENT:
-//        {
-//
-//            break;
-//        }
-//        case Y_MEASUREMENT:
-//        {
-//
-//            break;
-//        }
-//        default:
-//            break;
-//    }
-//}
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Interface Functions                                               */
 /* ************************************************************************** */
 
 /* ************************************************************************** */
+
+void HCI_Clear_Data(void) {
+    uint8_t i;
+    for (i = 0; i < HCI_PACKET_SIZE; i++)
+        HCI_REG_Set_Value(i, 0);
+
+}
+
+void HCI_Clear_REG_Action(void) {
+    uint8_t i;
+    for (i = 0; i < HCI_PACKET_SIZE; i++)
+        HCI_REG_Set_Action(i, NO_REG_ACTION);
+
+}
 
 int32_t HCI_REG_Value(HCI_REG_INDEX r_index) {
     switch (r_index) {
@@ -119,10 +70,6 @@ int32_t HCI_REG_Value(HCI_REG_INDEX r_index) {
         case JOB_TYPE:
         {
             return gHCI_Data.jobType;
-        }
-        case COMMAND_TYPE:
-        {
-            return gHCI_Data.commandType;
         }
         case REPLY_TYPE:
         {
@@ -168,27 +115,27 @@ int32_t HCI_REG_Value(HCI_REG_INDEX r_index) {
         }
         case L_STATE:
         {
-            return gHCI_Data.DAC_enabled_x;
+            return gHCI_Data.laserState;
         }
         case L_POWER:
         {
-            return gHCI_Data.DAC_enabled_y;
+            return gHCI_Data.laserPower;
         }
         case X_DAC_EN:
         {
-            return gHCI_Data.ADC_enabled_x;
+            return gHCI_Data.DAC_enabled_x;
         }
         case Y_DAC_EN:
         {
-            return gHCI_Data.ADC_enabled_y;
+            return gHCI_Data.DAC_enabled_y;
         }
         case X_ADC_EN:
         {
-            return gHCI_Data.laserState;
+            return gHCI_Data.ADC_enabled_x;
         }
         case Y_ADC_EN:
         {
-            return gHCI_Data.laserPower;
+            return gHCI_Data.ADC_enabled_y;
         }
 
         default:
@@ -198,14 +145,14 @@ int32_t HCI_REG_Value(HCI_REG_INDEX r_index) {
 
 void HCI_REG_Set_Value(HCI_REG_INDEX r_index, int32_t r_value) {
     switch (r_index) {
+        case JOB_NUMBER:
+        {
+            gHCI_Data.jobNumber = r_value;
+            break;
+        }           
         case JOB_TYPE:
         {
             gHCI_Data.jobType = r_value;
-            break;
-        }
-        case COMMAND_TYPE:
-        {
-            gHCI_Data.commandType = r_value;
             break;
         }
         case REPLY_TYPE:
@@ -268,6 +215,26 @@ void HCI_REG_Set_Value(HCI_REG_INDEX r_index, int32_t r_value) {
             gHCI_Data.laserPower = r_value;
             break;
         }
+        case X_DAC_EN:
+        {
+            gHCI_Data.DAC_enabled_x = r_value;
+            break;
+        }
+        case Y_DAC_EN:
+        {
+            gHCI_Data.DAC_enabled_y = r_value;
+            break;
+        }
+        case X_ADC_EN:
+        {
+            gHCI_Data.ADC_enabled_x = r_value;
+            break;
+        }
+        case Y_ADC_EN:
+        {
+            gHCI_Data.ADC_enabled_y = r_value;
+            break;
+        }
         default:
             break;
     }
@@ -301,6 +268,14 @@ HCI_RX_PACKET_STATUS HCI_RX_Status(void) {
 
 void HCI_Set_RX_Status(HCI_RX_PACKET_STATUS r_status) {
     gHCI_Data.RX_status = r_status;
+}
+
+HCI_TX_PACKET_STATUS HCI_TX_Status(void) {
+    return gHCI_Data.TX_status;
+}
+
+void HCI_Set_TX_Status(HCI_TX_PACKET_STATUS t_status) {
+    gHCI_Data.TX_status = t_status;
 }
 /* *****************************************************************************
  End of File

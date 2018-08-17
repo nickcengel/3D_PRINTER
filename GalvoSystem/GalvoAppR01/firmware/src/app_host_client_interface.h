@@ -29,7 +29,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#define HCI_PACKET_SIZE 20
+#define HCI_PACKET_SIZE 19
 #define HCI_INVALID_REG_INDEX 24
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -41,20 +41,6 @@ extern "C" {
     /* ************************************************************************** */
     /* Section: Constants                                                         */
     /* ************************************************************************** 
-    if (HCI_REG_Value(COMMAND_TYPE) == HOST_READ_REG) {
-                            
-                            HCI_Set_RX_Status(HCI_RX_LOOK_FOR_CMD_TYPE);
-
-                        } else if (HCI_REG_Value(COMMAND_TYPE) == HOST_WRITE_REG) {
-
-                            HCI_Set_RX_Status(HCI_RX_LOOK_FOR_DATA);
-                        }
-                    } else
-                        regIndex = 0;
-                } else {
-                    HCI_Set_RX_Status(HCI_RX_COMPLETE);
-                    DRV_USART0_WriteByte(currentByte);
-                }
     /* ************************************************************************** */
 
 
@@ -66,18 +52,13 @@ extern "C" {
     // *****************************************************************************
 
     typedef enum {
-        HOST_REQUEST_UNKNWN,
-        HOST_WRITE_REG,
-        HOST_READ_REG,
-    } HCI_COMMAND_TYPE;
-
-    typedef enum {
         HOST_REQST_REPLY_UNKNWN,
         HOST_REQST_REPLY_OK_ONLY,
         HOST_REQST_REPLY_REG_DATA
     } HCI_REPLY_TYPE;
 
     typedef enum {
+        HCI_JOB_UNKNWN,
         HCI_JOB_PENDING,
         HCI_LIST_JOBS,
         HCI_CLEAR_JOBS,
@@ -96,7 +77,6 @@ extern "C" {
     typedef enum {
         JOB_NUMBER = 0,
         JOB_TYPE,
-        COMMAND_TYPE,
         REPLY_TYPE,
 
         G_STATE,
@@ -112,7 +92,7 @@ extern "C" {
         L_ARM,
         L_STATE,
         L_POWER,
-                
+
         X_DAC_EN,
         Y_DAC_EN,
         X_ADC_EN,
@@ -123,11 +103,10 @@ extern "C" {
         NO_REG_ACTION,
         REG_READ_REQSTD,
         REG_WRITE_REQSTD,
-
     } HCI_REG_ACTION;
 
     typedef enum {
-        HCI_RX_PACKET_IDLE,
+        HCI_RX_WAIT_FOR_PACKET,
         HCI_RX_LOOK_FOR_START,
         HCI_RX_LOOK_FOR_REG_INDEX,
         HCI_RX_LOOK_FOR_JOB_TYPE,
@@ -136,10 +115,15 @@ extern "C" {
         HCI_RX_COMPLETE
     } HCI_RX_PACKET_STATUS;
 
+    typedef enum {
+        HCI_TX_EMPTY,
+        HCI_TX_PENDING,
+        HCI_TX_COMPLETE
+    } HCI_TX_PACKET_STATUS;
+
     typedef struct {
         uint16_t jobNumber;
         HCI_JOB_TYPE jobType;
-        HCI_COMMAND_TYPE commandType;
         HCI_REPLY_TYPE replyType;
 
         HCI_DEVICE_STATES galvoState;
@@ -150,18 +134,19 @@ extern "C" {
         int32_t endPosition_y;
         int32_t measurement_x;
         int32_t measurement_y;
-        
+
         bool laserArmed;
         bool DAC_enabled_x;
         bool DAC_enabled_y;
         bool ADC_enabled_x;
         bool ADC_enabled_y;
 
-        
+
         HCI_DEVICE_STATES laserState;
         uint32_t laserPower;
 
         HCI_RX_PACKET_STATUS RX_status;
+        HCI_TX_PACKET_STATUS TX_status;
     } HCI_DATA;
 
 
@@ -179,6 +164,8 @@ extern "C" {
     // Section: Interface Functions
     // *****************************************************************************
     // *****************************************************************************
+    void HCI_Clear_Data(void);
+    void HCI_Clear_REG_Action(void);
 
     int32_t HCI_REG_Value(HCI_REG_INDEX r_index);
     void HCI_REG_Set_Value(HCI_REG_INDEX r_index, int32_t r_value);
@@ -186,12 +173,14 @@ extern "C" {
     HCI_REG_ACTION HCI_REG_Action(HCI_REG_INDEX r_index);
     void HCI_REG_Set_Action(HCI_REG_INDEX r_index, HCI_REG_ACTION r_action);
 
-    bool HCI_REG_Write_Available(HCI_REG_INDEX r_index);
-    bool HCI_REG_Read_Available(HCI_REG_INDEX r_index);
-
 
     HCI_RX_PACKET_STATUS HCI_RX_Status(void);
     void HCI_Set_RX_Status(HCI_RX_PACKET_STATUS r_status);
+
+    HCI_TX_PACKET_STATUS HCI_TX_Status(void);
+    void HCI_Set_TX_Status(HCI_TX_PACKET_STATUS t_status);
+
+
 
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

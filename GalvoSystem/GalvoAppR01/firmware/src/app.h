@@ -16,7 +16,7 @@
     "APP_Initialize" and "APP_Tasks" prototypes) and some of them are only used
     internally by the application (such as the "APP_STATES" definition).  Both
     are defined here for convenience.
-*******************************************************************************/
+ *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -68,148 +68,191 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 extern "C" {
 
 #endif
-// DOM-IGNORE-END 
+    // DOM-IGNORE-END 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Type Definitions
-// *****************************************************************************
-// *****************************************************************************
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Type Definitions
+    // *****************************************************************************
+    // *****************************************************************************
 #define USART0_RX_BUFF_SIZE 16
-#define USART0_TX_BUFF_SIZE 128
+#define USART0_TX_BUFF_SIZE 255
 
-// *****************************************************************************
-/* Application states
+#define DAC0_OFFSET 0x1FFFF
+#define DAC1_OFFSET 0x1FFFF 
+    // *****************************************************************************
 
-  Summary:
-    Application states enumeration
+    /* Application states
 
-  Description:
-    This enumeration defines the valid application states.  These states
-    determine the behavior of the application at various times.
-*/
+      Summary:
+        Application states enumeration
 
-typedef enum
-{
-	/* Application's state machine's initial state. */
-	APP_STATE_INIT=0,
-	APP_STATE_SERVICE_TASKS,
+      Description:
+        This enumeration defines the valid application states.  These states
+        determine the behavior of the application at various times.
+     */
 
-	/* TODO: Define states used by the application state machine. */
+    typedef enum {
+        /* Application's state machine's initial state. */
+        APP_STATE_INIT = 0,
+        APP_READ_FROM_HOST,       
+        APP_WRITE_TO_HOST, 
+        /* TODO: Define states used by the application state machine. */
 
-} APP_STATES;
-
-
-// *****************************************************************************
-/* Application Data
-
-  Summary:
-    Holds application data
-
-  Description:
-    This structure holds the application's data.
-
-  Remarks:
-    Application strings and buffers are be defined outside this structure.
- */
-
-typedef struct
-{
-    /* The application's current state */
-    APP_STATES state;
-    DRV_HANDLE usart0_Handle;
-    /* TODO: Define any additional data used by the application. */
-
-} APP_DATA;
+    } APP_STATES;
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Callback Routines
-// *****************************************************************************
-// *****************************************************************************
-/* These routines are called by drivers when certain events occur.
-*/
-	
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Initialization and State Machine Functions
-// *****************************************************************************
-// *****************************************************************************
+    // *****************************************************************************
 
-/*******************************************************************************
-  Function:
-    void APP_Initialize ( void )
+    /* Application Data
 
-  Summary:
-     MPLAB Harmony application initialization routine.
+      Summary:
+        Holds application data
 
-  Description:
-    This function initializes the Harmony application.  It places the 
-    application in its initial state and prepares it to run so that its 
-    APP_Tasks function can be called.
+      Description:
+        This structure holds the application's data.
 
-  Precondition:
-    All other system initialization routines should be called before calling
-    this routine (in "SYS_Initialize").
+      Remarks:
+        Application strings and buffers are be defined outside this structure.
+     */
+    typedef struct {
+        uint32_t stepSize;
+        uint32_t currentPosition;
+        uint32_t finalPosition;
+        uint32_t reading;
+        bool DAC_enabled;
+        bool ADC_enabled;
+    } APP_GALVO_AXIS_DATA;
 
-  Parameters:
-    None.
+    typedef struct {
+        APP_GALVO_AXIS_DATA X;
+        APP_GALVO_AXIS_DATA Y;
+        HCI_DEVICE_STATES state;
+        uint32_t speed;
+    } APP_GALVO_DATA;
 
-  Returns:
-    None.
+    typedef struct {
+        bool armed;
+        bool enabled;
+        uint32_t power;
+    } APP_LASER_DATA;
 
-  Example:
-    <code>
-    APP_Initialize();
-    </code>
+    typedef struct {
+        uint16_t jobNumber;
+        HCI_JOB_TYPE jobType;
+        HCI_REPLY_TYPE replyType;
+    } APP_JOB_INFO;
 
-  Remarks:
-    This routine must be called from the SYS_Initialize function.
-*/
+    typedef struct {
+        /* The application's current state */
+        APP_STATES state;
+        DRV_HANDLE usart0_Handle;
+        APP_JOB_INFO jobInfo;
+        APP_GALVO_DATA Galvo;
+        APP_LASER_DATA Laser;
+        /* TODO: Define any additional data used by the application. */
 
-void APP_Initialize ( void );
-
-
-/*******************************************************************************
-  Function:
-    void APP_Tasks ( void )
-
-  Summary:
-    MPLAB Harmony Demo application tasks function
-
-  Description:
-    This routine is the Harmony Demo application's tasks function.  It
-    defines the application's state machine and core logic.
-
-  Precondition:
-    The system and application initialization ("SYS_Initialize") should be
-    called before calling this.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    APP_Tasks();
-    </code>
-
-  Remarks:
-    This routine must be called from SYS_Tasks() routine.
- */
-
-void APP_Tasks( void );
+    } APP_DATA;
 
 
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Application Callback Routines
+    // *****************************************************************************
+    // *****************************************************************************
 
-void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index);
+    void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index);
+
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Application Initialization and State Machine Functions
+    // *****************************************************************************
+    // *****************************************************************************
+
+    /*******************************************************************************
+      Function:
+        void APP_Initialize ( void )
+
+      Summary:
+         MPLAB Harmony application initialization routine.
+
+      Description:
+        This function initializes the Harmony application.  It places the 
+        application in its initial state and prepares it to run so that its 
+        APP_Tasks function can be called.
+
+      Precondition:
+        All other system initialization routines should be called before calling
+        this routine (in "SYS_Initialize").
+
+      Parameters:
+        None.
+
+      Returns:
+        None.
+
+      Example:
+        <code>
+        APP_Initialize();
+        </code>
+
+      Remarks:
+        This routine must be called from the SYS_Initialize function.
+     */
+
+    void APP_Initialize(void);
+
+    void APP_GALVO_Initialize(void);
+
+    void APP_LASER_Initialize(void);
+
+    void APP_JOB_INFO_Initialize(void);
+    
+    void APP_HCI_Initialize(void);
+    
+    void APP_Read_HCI_Job(void);
+    
+    
+    bool APP_Write_HCI_Reply(void);
+    /*******************************************************************************
+      Function:
+        void APP_Tasks ( void )
+
+      Summary:
+        MPLAB Harmony Demo application tasks function
+
+      Description:
+        This routine is the Harmony Demo application's tasks function.  It
+        defines the application's state machine and core logic.
+
+      Precondition:
+        The system and application initialization ("SYS_Initialize") should be
+        called before calling this.
+
+      Parameters:
+        None.
+
+      Returns:
+        None.
+
+      Example:
+        <code>
+        APP_Tasks();
+        </code>
+
+      Remarks:
+        This routine must be called from SYS_Tasks() routine.
+     */
+
+    void APP_Tasks(void);
+
+
+
+
 
 #endif /* _APP_H */
 
-//DOM-IGNORE-BEGIN
+    //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
 #endif
