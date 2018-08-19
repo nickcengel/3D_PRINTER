@@ -131,7 +131,7 @@ extern "C" {
     } APP_STATES;
 
     typedef enum {
-        DAC_STATE_READY = 0,
+            DAC_STATE_READY = 0,
         DAC_STATE_WRITE_PENDING = 1,
         DAC_STATE_WRITE_COMPLETE = 2,
         DAC_STATE_LATCHED = 3,

@@ -25,7 +25,6 @@
 /* ************************************************************************** */
 /* ************************************************************************** */
 #include <stdint.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -135,11 +134,11 @@ extern "C" {
         int32_t measurement_x;
         int32_t measurement_y;
 
-        bool laserArmed;
-        bool DAC_enabled_x;
-        bool DAC_enabled_y;
-        bool ADC_enabled_x;
-        bool ADC_enabled_y;
+        uint8_t laserArmed;
+        uint8_t DAC_enabled_x;
+        uint8_t DAC_enabled_y;
+        uint8_t ADC_enabled_x;
+        uint8_t ADC_enabled_y;
 
 
         HCI_DEVICE_STATES laserState;
@@ -149,15 +148,11 @@ extern "C" {
         HCI_TX_PACKET_STATUS TX_status;
     } HCI_DATA;
 
-
-
-
     /* ************************************************************************** */
     /* ************************************************************************** */
     // Section: Local Functions                                                   */
     /* ************************************************************************** */
     /* ************************************************************************** */
-
 
     // *****************************************************************************
     // *****************************************************************************
@@ -179,7 +174,6 @@ extern "C" {
 
     HCI_TX_PACKET_STATUS HCI_TX_Status(void);
     void HCI_Set_TX_Status(HCI_TX_PACKET_STATUS t_status);
-
 
 
     /* Provide C++ Compatibility */

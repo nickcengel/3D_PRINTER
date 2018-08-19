@@ -58,7 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
-
+#include <math.h>
 #include "app_host_client_interface.h"
 
 
@@ -72,59 +72,52 @@ extern "C" {
 
     // *****************************************************************************
     // *****************************************************************************
-    // Section: Type Definitions
+    // Section: App Definitions
     // *****************************************************************************
     // *****************************************************************************
 #define USART0_RX_BUFF_SIZE 16
 #define USART0_TX_BUFF_SIZE 255
 
-#define DAC0_OFFSET 0x1FFFF
-#define DAC1_OFFSET 0x1FFFF 
+#define SPI0_TX_BUFF_SIZE 3
+#define SPI0_RX_BUFF_SIZE 3
+
+#define DAC_DIN_REG_WRITE 0x1
+#define DAC0_OFFSET 131562
+#define DAC1_OFFSET 0x1FFF7
+#define DAC_UPDATE_PERIOD_COUNTS 480
+#define DAC_UPDATE_PERIOD_uS 10.0
+#define GALVO_DEFAULT_SPEED 13824
+#define ADC0_OFFSET 0x1FFF7
+#define ADC1_OFFSET 0x1FFF7
+#define ADC_HOLDOFF_COUNTS 16
+#define ADC_CNV_TRIG_COUNTS  10
+
     // *****************************************************************************
-
-    /* Application states
-
-      Summary:
-        Application states enumeration
-
-      Description:
-        This enumeration defines the valid application states.  These states
-        determine the behavior of the application at various times.
-     */
+    // *****************************************************************************
+    // Section: Type Definitions
+    // *****************************************************************************
+    // *****************************************************************************
 
     typedef enum {
-        /* Application's state machine's initial state. */
-        APP_STATE_INIT = 0,
-        APP_READ_FROM_HOST,       
-        APP_WRITE_TO_HOST, 
-        /* TODO: Define states used by the application state machine. */
+        ADC_READY,
+        ADC_READ_PENDING,
+        ADC_DISABLED
+    } APP_ADC_STATES;
 
-    } APP_STATES;
-
-
-    // *****************************************************************************
-
-    /* Application Data
-
-      Summary:
-        Holds application data
-
-      Description:
-        This structure holds the application's data.
-
-      Remarks:
-        Application strings and buffers are be defined outside this structure.
-     */
     typedef struct {
         uint32_t stepSize;
         uint32_t currentPosition;
         uint32_t finalPosition;
         uint32_t reading;
-        bool DAC_enabled;
-        bool ADC_enabled;
+        uint8_t DAC_enabled;
+        uint8_t ADC_enabled;
+        uint8_t processComplete;
+        APP_ADC_STATES ADC_state;
     } APP_GALVO_AXIS_DATA;
 
     typedef struct {
+        uint8_t DAC_jobPending;
+        uint8_t ADC_jobPending;
         APP_GALVO_AXIS_DATA X;
         APP_GALVO_AXIS_DATA Y;
         HCI_DEVICE_STATES state;
@@ -132,8 +125,8 @@ extern "C" {
     } APP_GALVO_DATA;
 
     typedef struct {
-        bool armed;
-        bool enabled;
+        uint8_t armed;
+        uint8_t enabled;
         uint32_t power;
     } APP_LASER_DATA;
 
@@ -144,16 +137,40 @@ extern "C" {
     } APP_JOB_INFO;
 
     typedef struct {
-        /* The application's current state */
-        APP_STATES state;
-        DRV_HANDLE usart0_Handle;
-        APP_JOB_INFO jobInfo;
-        APP_GALVO_DATA Galvo;
-        APP_LASER_DATA Laser;
-        /* TODO: Define any additional data used by the application. */
+        DRV_HANDLE drvHandle;
+        DRV_SPI_BUFFER_HANDLE tx_bufHandle;
+        DRV_SPI_BUFFER_HANDLE rx_bufHandle;
+        DRV_SPI_CLIENT_DATA ADC_clientData;
+        DRV_SPI_CLIENT_DATA DAC_clientData;
+    } APP_SPI_DATA;
 
+    typedef enum {
+        APP_STATE_INIT = 0,
+        APP_READ_FROM_HOST,
+        APP_WRITE_TO_HOST,
+        APP_WRITE_TO_GALVO,
+        APP_READ_FROM_GALVO
+    } APP_STATES;
+
+    typedef struct {
+        APP_STATES state;
+        APP_GALVO_DATA Galvo;
+        APP_SPI_DATA drvSPI0;
+        APP_LASER_DATA Laser;
+        uint8_t HCI_WritePending;
+        APP_JOB_INFO jobInfo;
+        DRV_HANDLE usart0_Handle;
     } APP_DATA;
 
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Global Data Definitions
+    // *****************************************************************************
+    // *****************************************************************************
+
+    DRV_SPI_BUFFER_EVENT volatile APP_SPI0_TX_Status(void);
+
+    DRV_SPI_BUFFER_EVENT volatile APP_SPI0_RX_Status(void);
 
     // *****************************************************************************
     // *****************************************************************************
@@ -163,92 +180,58 @@ extern "C" {
 
     void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index);
 
+    void APP_DAC0_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_DAC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_ADC0_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    // *****************************************************************************
+    // *****************************************************************************
+    // Section: Application Local Functions
+    // *****************************************************************************
+    // *****************************************************************************
+
+    int32_t APP_Convert_String_To_Int(uint8_t *str);
+
+    void APP_Compute_StepSize(void);
+
     // *****************************************************************************
     // *****************************************************************************
     // Section: Application Initialization and State Machine Functions
     // *****************************************************************************
     // *****************************************************************************
 
-    /*******************************************************************************
-      Function:
-        void APP_Initialize ( void )
-
-      Summary:
-         MPLAB Harmony application initialization routine.
-
-      Description:
-        This function initializes the Harmony application.  It places the 
-        application in its initial state and prepares it to run so that its 
-        APP_Tasks function can be called.
-
-      Precondition:
-        All other system initialization routines should be called before calling
-        this routine (in "SYS_Initialize").
-
-      Parameters:
-        None.
-
-      Returns:
-        None.
-
-      Example:
-        <code>
-        APP_Initialize();
-        </code>
-
-      Remarks:
-        This routine must be called from the SYS_Initialize function.
-     */
-
-    void APP_Initialize(void);
+    void APP_SPI0_Initialize(void);
 
     void APP_GALVO_Initialize(void);
 
     void APP_LASER_Initialize(void);
 
     void APP_JOB_INFO_Initialize(void);
-    
+
     void APP_HCI_Initialize(void);
+
+    void APP_Initialize(void);
+
+
+    void APP_Open_HCI_Packet(void);
+
+    void APP_Write_HCI_Packet(void);
+
+    void APP_GALVO_Launch_DAC_Process(void);
+
+    void APP_GALVO_Run_DAC_Process(void);
+
+    void APP_GALVO_Launch_ADC_Process(void);
+
+    void APP_GALVO_Run_ADC_Process(void);
+
+    void APP_Next_Task(void);
     
-    void APP_Read_HCI_Job(void);
-    
-    
-    bool APP_Write_HCI_Reply(void);
-    /*******************************************************************************
-      Function:
-        void APP_Tasks ( void )
-
-      Summary:
-        MPLAB Harmony Demo application tasks function
-
-      Description:
-        This routine is the Harmony Demo application's tasks function.  It
-        defines the application's state machine and core logic.
-
-      Precondition:
-        The system and application initialization ("SYS_Initialize") should be
-        called before calling this.
-
-      Parameters:
-        None.
-
-      Returns:
-        None.
-
-      Example:
-        <code>
-        APP_Tasks();
-        </code>
-
-      Remarks:
-        This routine must be called from SYS_Tasks() routine.
-     */
-
     void APP_Tasks(void);
-
-
-
-
 
 #endif /* _APP_H */
 

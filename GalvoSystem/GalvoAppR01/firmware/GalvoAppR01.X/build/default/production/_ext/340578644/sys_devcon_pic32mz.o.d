@@ -34,7 +34,7 @@ build/default/production/_ext/340578644/sys_devcon_pic32mz.o:  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/ports/processor/../templates/ports_ChangeNoticeEdgeControl_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/ports/processor/../templates/ports_ChangeNoticeEdgeStatus_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/ports/plib_ports_compatibility.h  \
- ../src/system_config/default/framework/system/devcon/sys_devcon.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/devcon/sys_devcon.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/system.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/common/sys_common.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/common/sys_module.h  \

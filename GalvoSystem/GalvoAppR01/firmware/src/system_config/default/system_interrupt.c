@@ -93,8 +93,18 @@ void __ISR(_UART2_FAULT_VECTOR, ipl1AUTO) _IntHandlerDrvUsartErrorInstance0(void
  
 
  
- 
- 
+void __ISR(_SPI2_RX_VECTOR, ipl3AUTO) _IntHandlerSPIRxInstance0(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+}
+void __ISR(_SPI2_TX_VECTOR, ipl3AUTO) _IntHandlerSPITxInstance0(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+}
+void __ISR(_SPI2_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance0(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+}
 /*******************************************************************************
  End of File
 */

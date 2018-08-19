@@ -102,9 +102,9 @@ extern "C" {
 #define SYS_PORT_A_CNPD         0x0000
 #define SYS_PORT_A_CNEN         0x0000
 
-#define SYS_PORT_B_ANSEL        0x8F9E
-#define SYS_PORT_B_TRIS         0xFFDF
-#define SYS_PORT_B_LAT          0x0000
+#define SYS_PORT_B_ANSEL        0x8E9A
+#define SYS_PORT_B_TRIS         0xFFDB
+#define SYS_PORT_B_LAT          0x0004
 #define SYS_PORT_B_ODC          0x0000
 #define SYS_PORT_B_CNPU         0x7000
 #define SYS_PORT_B_CNPD         0x0000
@@ -142,7 +142,7 @@ extern "C" {
 #define SYS_PORT_F_CNPD         0x0000
 #define SYS_PORT_F_CNEN         0x0000
 
-#define SYS_PORT_G_ANSEL        0x8DFC
+#define SYS_PORT_G_ANSEL        0x8CBC
 #define SYS_PORT_G_TRIS         0xFFFF
 #define SYS_PORT_G_LAT          0x0000
 #define SYS_PORT_G_ODC          0x0000
@@ -150,8 +150,8 @@ extern "C" {
 #define SYS_PORT_G_CNPD         0x0000
 #define SYS_PORT_G_CNEN         0x0000
 
-#define SYS_PORT_H_ANSEL        0x0898
-#define SYS_PORT_H_TRIS         0xFFF8
+#define SYS_PORT_H_ANSEL        0x0818
+#define SYS_PORT_H_TRIS         0xFF78
 #define SYS_PORT_H_LAT          0x0000
 #define SYS_PORT_H_ODC          0x0000
 #define SYS_PORT_H_CNPU         0x0000
@@ -166,9 +166,9 @@ extern "C" {
 #define SYS_PORT_J_CNPD         0x0000
 #define SYS_PORT_J_CNEN         0x0000
 
-#define SYS_PORT_K_ANSEL        0xFF06
-#define SYS_PORT_K_TRIS         0xFFFF
-#define SYS_PORT_K_LAT          0x0000
+#define SYS_PORT_K_ANSEL        0xFF00
+#define SYS_PORT_K_TRIS         0xFFF9
+#define SYS_PORT_K_LAT          0x0006
 #define SYS_PORT_K_ODC          0x0000
 #define SYS_PORT_K_CNPU         0x0000
 #define SYS_PORT_K_CNPD         0x0000
@@ -183,7 +183,56 @@ extern "C" {
 // Section: Driver Configuration
 // *****************************************************************************
 // *****************************************************************************
-// *****************************************************************************
+
+/*** SPI Driver Configuration ***/
+#define DRV_SPI_NUMBER_OF_MODULES		6
+/*** Driver Compilation and static configuration options. ***/
+/*** Select SPI compilation units.***/
+#define DRV_SPI_POLLED 				0
+#define DRV_SPI_ISR 				1
+#define DRV_SPI_MASTER 				1
+#define DRV_SPI_SLAVE 				0
+#define DRV_SPI_RM 					0
+#define DRV_SPI_EBM 				1
+#define DRV_SPI_8BIT 				1
+#define DRV_SPI_16BIT 				0
+#define DRV_SPI_32BIT 				0
+#define DRV_SPI_DMA 				0
+
+/*** SPI Driver Static Allocation Options ***/
+#define DRV_SPI_INSTANCES_NUMBER 		1
+#define DRV_SPI_CLIENTS_NUMBER 			1
+#define DRV_SPI_ELEMENTS_PER_QUEUE 		16
+/*** Timer Driver Configuration ***/
+#define DRV_TMR_INTERRUPT_MODE             true
+
+/*** Timer Driver 0 Configuration ***/
+#define DRV_TMR_PERIPHERAL_ID_IDX0          TMR_ID_2
+#define DRV_TMR_INTERRUPT_SOURCE_IDX0       INT_SOURCE_TIMER_2
+#define DRV_TMR_INTERRUPT_VECTOR_IDX0       INT_VECTOR_T2
+#define DRV_TMR_ISR_VECTOR_IDX0             _TIMER_2_VECTOR
+#define DRV_TMR_INTERRUPT_PRIORITY_IDX0     INT_PRIORITY_LEVEL2
+#define DRV_TMR_INTERRUPT_SUB_PRIORITY_IDX0 INT_SUBPRIORITY_LEVEL0
+#define DRV_TMR_CLOCK_SOURCE_IDX0           DRV_TMR_CLKSOURCE_INTERNAL
+#define DRV_TMR_PRESCALE_IDX0               TMR_PRESCALE_VALUE_2
+#define DRV_TMR_OPERATION_MODE_IDX0         DRV_TMR_OPERATION_MODE_16_BIT
+#define DRV_TMR_ASYNC_WRITE_ENABLE_IDX0     false
+#define DRV_TMR_POWER_STATE_IDX0            
+
+#define DRV_TMR_PERIPHERAL_ID_IDX1          TMR_ID_4
+#define DRV_TMR_INTERRUPT_SOURCE_IDX1       INT_SOURCE_TIMER_4
+#define DRV_TMR_INTERRUPT_VECTOR_IDX1       INT_VECTOR_T4
+#define DRV_TMR_ISR_VECTOR_IDX1             _TIMER_4_VECTOR
+#define DRV_TMR_INTERRUPT_PRIORITY_IDX1     INT_PRIORITY_LEVEL2
+#define DRV_TMR_INTERRUPT_SUB_PRIORITY_IDX1 INT_SUBPRIORITY_LEVEL0
+#define DRV_TMR_CLOCK_SOURCE_IDX1           DRV_TMR_CLKSOURCE_INTERNAL
+#define DRV_TMR_PRESCALE_IDX1               TMR_PRESCALE_VALUE_2
+#define DRV_TMR_OPERATION_MODE_IDX1         DRV_TMR_OPERATION_MODE_16_BIT
+
+#define DRV_TMR_ASYNC_WRITE_ENABLE_IDX1     false
+#define DRV_TMR_POWER_STATE_IDX1            
+
+ // *****************************************************************************
 /* USART Driver Configuration Options
 */
 #define DRV_USART_INSTANCES_NUMBER                  1
@@ -238,6 +287,34 @@ extern "C" {
 
 /*** Functions for BSP_SWITCH_1 pin ***/
 #define BSP_SWITCH_1StateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_13)
+
+/*** Functions for ADC0_CS_PIN pin ***/
+#define ADC0_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define ADC0_CS_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define ADC0_CS_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define ADC0_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
+#define ADC0_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2, Value)
+
+/*** Functions for DAC0_LATCH_PIN pin ***/
+#define DAC0_LATCH_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define DAC0_LATCH_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define DAC0_LATCH_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define DAC0_LATCH_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
+#define DAC0_LATCH_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2, Value)
+
+/*** Functions for DAC0_CS_PIN pin ***/
+#define DAC0_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
+#define DAC0_CS_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
+#define DAC0_CS_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
+#define DAC0_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
+#define DAC0_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1, Value)
+
+/*** Functions for TEST_PIN pin ***/
+#define TEST_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define TEST_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define TEST_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define TEST_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define TEST_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7, Value)
 
 
 /*** Application Instance 0 Configuration ***/

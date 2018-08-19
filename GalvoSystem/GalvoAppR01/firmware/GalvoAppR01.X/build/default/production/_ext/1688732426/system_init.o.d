@@ -36,7 +36,7 @@ build/default/production/_ext/1688732426/system_init.o:  \
  ../src/system_config/default/system_definitions.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/common/sys_common.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/common/sys_module.h  \
- ../src/system_config/default/framework/system/devcon/sys_devcon.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/devcon/sys_devcon.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/system.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/clk/sys_clk.h  \
  ../src/system_config/default/system_config.h  \
@@ -136,11 +136,35 @@ build/default/production/_ext/1688732426/system_init.o:  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/int/processor/../templates/int_VariableOffset_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/int/processor/../templates/int_SoftwareNMI_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/int/sys_int_mapping.h  \
+ ../src/system_config/default/framework/driver/tmr/drv_tmr_static.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/drv_tmr.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/driver_common.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/plib_tmr.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/tmr_processor.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/tmr_p32xxxx.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/tmr_p32mz2064dag169.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_GatedTimeAccumulation_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_registers.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_ClockSource_Extended.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Prescale_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_ClockSourceSync_Inverted.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Mode16Bit_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Mode32Bit_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_EnableControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_StopInIdle_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Counter16Bit_In16BitRegister.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Counter32Bit_In16BitRegister.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Period16Bit_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_Period32Bit_In16BitRegister_pic32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_CounterAsyncWriteControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_CounterAsyncWriteInProgress_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/tmr/processor/../templates/tmr_TimerOperationMode_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/tmr_definitions_pic32m.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/tmr/drv_tmr_compatibility.h  \
  ../src/system_config/default/framework/driver/usart/drv_usart_static.h  \
  ../src/system_config/default/framework/driver/usart/src/drv_usart_static_local.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/usart/drv_usart.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/usart/drv_usart_definitions.h  \
- ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/driver_common.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/usart/plib_usart.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/usart/processor/usart_processor.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/usart/processor/usart_p32xxxx.h  \
@@ -261,6 +285,53 @@ build/default/production/_ext/1688732426/system_init.o:  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/power/processor/../templates/power_DeepSleepPortPinsStateControl_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/power/processor/../templates/power_DeepSleepEventStatus_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/power/processor/../templates/power_DeepSleepGPROperation_Default.h  \
+ ../src/system_config/default/framework/driver/spi/static/drv_spi_static.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/spi/drv_spi.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/driver/spi/drv_spi_definitions.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/plib_spi.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/spi_processor.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/spi_p32xxxx.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/spi_p32mz2064dag169.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_EnableControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_registers.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_StopInIdle_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ReceiverOverflow_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_TransmitBufferFullStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_TransmitBufferEmptyStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ReceiveBufferStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_PinControl_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_CommunicationWidth_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioCommunicationWidth_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_InputSamplePhase_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_OutputDataPhase_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ClockPolarity_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_MasterControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_BaudRate_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_BusStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ReadDataSignStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_SlaveSelectControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_TransmitUnderRunStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FIFOControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FIFOCount_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ReceiveFIFOStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FIFOShiftRegisterEmptyStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FIFOInterruptMode_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FramedCommunication_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameSyncPulseDirection_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameSyncPulsePolarity_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameSyncPulseEdge_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameSyncPulseWidth_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameSyncPulseCounter_PIC32.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_FrameErrorStatus_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_BaudRateClock_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_ErrorInterruptControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioErrorControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioProtocolControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioTransmitMode_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_AudioProtocolMode_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer32bit_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/spi/processor/../templates/spi_Buffer16bit_Default.h  \
  ../src/app.h  \
 ../src/system_config/default/system_definitions.h  \
  ../src/app_host_client_interface.h 
