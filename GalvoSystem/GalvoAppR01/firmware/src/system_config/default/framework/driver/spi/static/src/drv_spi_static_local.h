@@ -192,6 +192,11 @@ int32_t DRV_SPI0_ISRMasterEBM8BitTasks ( struct DRV_SPI_OBJ * dObj );
 int32_t DRV_SPI0_ISRErrorTasks(struct DRV_SPI_OBJ * dObj);
 int32_t DRV_SPI0_MasterEBMSend8BitISR( struct DRV_SPI_OBJ * dObj );
 int32_t DRV_SPI0_MasterEBMReceive8BitISR( struct DRV_SPI_OBJ * dObj );
+
+int32_t DRV_SPI1_ISRMasterEBM8BitTasks ( struct DRV_SPI_OBJ * dObj );
+int32_t DRV_SPI1_ISRErrorTasks(struct DRV_SPI_OBJ * dObj);
+int32_t DRV_SPI1_MasterEBMSend8BitISR( struct DRV_SPI_OBJ * dObj );
+int32_t DRV_SPI1_MasterEBMReceive8BitISR( struct DRV_SPI_OBJ * dObj );
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

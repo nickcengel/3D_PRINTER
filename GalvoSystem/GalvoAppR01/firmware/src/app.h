@@ -78,14 +78,14 @@ extern "C" {
 #define USART0_RX_BUFF_SIZE 16
 #define USART0_TX_BUFF_SIZE 255
 
-#define SPI0_TX_BUFF_SIZE 3
-#define SPI0_RX_BUFF_SIZE 3
+#define SPI_TX_BUFF_SIZE 3
+#define SPI_RX_BUFF_SIZE 3
 
 #define DAC_DIN_REG_WRITE 0x1
 #define DAC0_OFFSET 131562
 #define DAC1_OFFSET 0x1FFF7
-#define DAC_UPDATE_PERIOD_COUNTS 480
-#define DAC_UPDATE_PERIOD_uS 10.0
+#define DAC_UPDATE_PERIOD_COUNTS 774
+#define DAC_UPDATE_PERIOD_uS 20.0
 #define GALVO_DEFAULT_SPEED 13824
 #define ADC0_OFFSET 0x1FFF7
 #define ADC1_OFFSET 0x1FFF7
@@ -156,6 +156,7 @@ extern "C" {
         APP_STATES state;
         APP_GALVO_DATA Galvo;
         APP_SPI_DATA drvSPI0;
+        APP_SPI_DATA drvSPI1;
         APP_LASER_DATA Laser;
         uint8_t HCI_WritePending;
         APP_JOB_INFO jobInfo;
@@ -172,6 +173,10 @@ extern "C" {
 
     DRV_SPI_BUFFER_EVENT volatile APP_SPI0_RX_Status(void);
 
+    DRV_SPI_BUFFER_EVENT volatile APP_SPI1_TX_Status(void);
+
+    DRV_SPI_BUFFER_EVENT volatile APP_SPI1_RX_Status(void);
+
     // *****************************************************************************
     // *****************************************************************************
     // Section: Application Callback Routines
@@ -187,6 +192,15 @@ extern "C" {
     void APP_ADC0_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
 
     void APP_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+
+    void APP_DAC1_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_DAC1_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_ADC1_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
+
+    void APP_ADC1_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
 
     // *****************************************************************************
     // *****************************************************************************
@@ -205,6 +219,8 @@ extern "C" {
     // *****************************************************************************
 
     void APP_SPI0_Initialize(void);
+    
+    void APP_SPI1_Initialize(void);
 
     void APP_GALVO_Initialize(void);
 
@@ -230,7 +246,7 @@ extern "C" {
     void APP_GALVO_Run_ADC_Process(void);
 
     void APP_Next_Task(void);
-    
+
     void APP_Tasks(void);
 
 #endif /* _APP_H */

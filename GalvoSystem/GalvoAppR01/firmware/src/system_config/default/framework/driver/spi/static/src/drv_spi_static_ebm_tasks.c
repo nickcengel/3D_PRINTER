@@ -156,3 +156,112 @@ int32_t DRV_SPI0_MasterEBMReceive8BitISR( struct DRV_SPI_OBJ * pDrvObj )
     return 0;
 }
 
+int32_t DRV_SPI1_MasterEBMSend8BitISR( struct DRV_SPI_OBJ * pDrvObj )
+{
+    register DRV_SPI_JOB_OBJECT * currentJob = pDrvObj->currentJob;
+
+    /* Determine the maximum number of bytes we can send to the FIFO*/
+        uint8_t symbolsInTransit = MAX(pDrvObj->symbolsInProgress, PLIB_SPI_FIFOCountGet(SPI_ID_6, SPI_FIFO_TYPE_TRANSMIT));
+        uint8_t bufferBytes = PLIB_SPI_TX_8BIT_FIFO_SIZE(SPI_ID_6) - symbolsInTransit;
+    /* Figure out how much data we can send*/
+    size_t dataUnits = MIN(currentJob->dataLeftToTx, bufferBytes);
+
+    size_t counter;
+
+    if (dataUnits != 0)
+    {
+        /* Adjust the maximum buffer size downwards based on how much data we'll be sending*/
+        bufferBytes -= dataUnits;
+        currentJob->dataLeftToTx -= dataUnits;
+        /* Set the location in the buffer of where to start sending from*/
+        uint8_t *bufferLoc = &(currentJob->txBuffer[currentJob->dataTxed]);
+        for (counter = 0; counter < dataUnits; counter++)
+        {
+            /* Send a unit/symbol of data*/
+            PLIB_SPI_BufferWrite(SPI_ID_6, bufferLoc[counter]);
+        }
+        /* Update the number of bytes transmitted*/
+        currentJob->dataTxed += dataUnits;
+        /* Adjust the symbols in progress */
+        pDrvObj->symbolsInProgress += dataUnits;
+    }
+    size_t dummyUnits = MIN(currentJob->dummyLeftToTx, bufferBytes);
+    if (dummyUnits != 0)
+    {
+        currentJob->dummyLeftToTx -= dummyUnits;
+
+        /* Adjust the symbols in progress */
+        pDrvObj->symbolsInProgress += dummyUnits;
+        
+        for (counter = 0; counter < dummyUnits; counter++)
+        {
+            PLIB_SPI_BufferWrite(SPI_ID_6, (uint8_t)pDrvObj->dummyByteValue);
+        }
+    }
+    if (currentJob->dataLeftToTx + currentJob->dummyLeftToTx == 0)
+    {
+        /* We have no more data to send, turn off the TX interrupt*/
+        PLIB_SPI_FIFOInterruptModeSelect(SPI_ID_6, SPI_FIFO_INTERRUPT_WHEN_TRANSMIT_BUFFER_IS_COMPLETELY_EMPTY);
+        pDrvObj->txEnabled = false;
+
+        /* Turn on the RX Interrupt*/
+        pDrvObj->rxEnabled = true;
+    }
+    return 0;
+}
+
+int32_t DRV_SPI1_MasterEBMReceive8BitISR( struct DRV_SPI_OBJ * pDrvObj )
+{
+    register DRV_SPI_JOB_OBJECT * currentJob = pDrvObj->currentJob;
+
+    /* Figure out how many bytes are waiting to be received."*/
+    uint8_t bufferBytes = PLIB_SPI_FIFOCountGet(SPI_ID_6, SPI_FIFO_TYPE_RECEIVE);
+    /* Calculate the maximum number of data bytes that can be received*/
+    size_t dataUnits = MIN(currentJob->dataLeftToRx, bufferBytes);
+    size_t counter;
+
+    if (dataUnits != 0)
+    {
+        bufferBytes -= dataUnits;
+        currentJob->dataLeftToRx -= dataUnits;
+        /* Set the buffer location to receive bytes from the SPI to*/
+        uint8_t *bufferLoc = &(currentJob->rxBuffer[currentJob->dataRxed]);
+        for (counter = 0; counter < dataUnits; counter++)
+        {
+            /* Receive the data from the SPI */
+            bufferLoc[counter] = PLIB_SPI_BufferRead(SPI_ID_6);
+        }
+        /* Adjust the amount of data that has been received */
+        currentJob->dataRxed += dataUnits;
+        /* Update the symbols in progress so we can send more units later */
+        pDrvObj->symbolsInProgress -= dataUnits;
+    }
+
+    /* Figure out the maximum number of dummy data to be received */
+    size_t dummyUnits = MIN(currentJob->dummyLeftToRx, bufferBytes);
+    if (dummyUnits != 0)
+    {
+        /* Lower the number of dummy bytes to be received */
+        currentJob->dummyLeftToRx -= dummyUnits;
+        pDrvObj->symbolsInProgress -= dummyUnits;
+        for (counter = 0; counter < dummyUnits; counter++)
+        {
+            /* Receive and throw away the byte.  Note: We cannot just clear the
+               buffer because we have to keep track of how many symbols/units we
+               have received, and the number may have increased since we checked
+               how full the buffer is.*/
+            PLIB_SPI_BufferRead(SPI_ID_6);
+        }
+    }
+
+    /* Figure out how many bytes are left to be received */
+    size_t bytesLeft = currentJob->dataLeftToRx + currentJob->dummyLeftToRx;
+
+    /* If the bytes left are smaller than the HW mark we have to change the interrupt mode */
+    if (bytesLeft < PLIB_SPI_RX_8BIT_HW_MARK(SPI_ID_6))
+    {
+        PLIB_SPI_FIFOInterruptModeSelect(SPI_ID_6, SPI_FIFO_INTERRUPT_WHEN_RECEIVE_BUFFER_IS_NOT_EMPTY);
+    }
+    return 0;
+}
+

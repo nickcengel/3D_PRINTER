@@ -60,11 +60,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 APP_DATA appData;
-DRV_SPI_BUFFER_EVENT volatile spi0_tx_status;
-DRV_SPI_BUFFER_EVENT volatile spi0_rx_status;
 
 uint8_t volatile GALVO_ADC_Flag;
 uint8_t volatile GALVO_DAC_Latched;
+
+DRV_SPI_BUFFER_EVENT volatile spi0_tx_status;
+DRV_SPI_BUFFER_EVENT volatile spi0_rx_status;
+DRV_SPI_BUFFER_EVENT volatile spi1_tx_status;
+DRV_SPI_BUFFER_EVENT volatile spi1_rx_status;
 
 DRV_SPI_BUFFER_EVENT volatile APP_SPI0_RX_Status(void) {
     return spi0_rx_status;
@@ -72,6 +75,14 @@ DRV_SPI_BUFFER_EVENT volatile APP_SPI0_RX_Status(void) {
 
 DRV_SPI_BUFFER_EVENT volatile APP_SPI0_TX_Status(void) {
     return spi0_tx_status;
+}
+
+DRV_SPI_BUFFER_EVENT volatile APP_SPI1_RX_Status(void) {
+    return spi1_rx_status;
+}
+
+DRV_SPI_BUFFER_EVENT volatile APP_SPI1_TX_Status(void) {
+    return spi1_tx_status;
 }
 // *****************************************************************************
 // *****************************************************************************
@@ -306,10 +317,32 @@ void APP_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bu
     spi0_rx_status = eEvent;
 }
 
+void APP_DAC1_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
+    DAC1_LATCH_PINOn();
+    DAC1_CS_PINOff();
+    GALVO_DAC_Latched = 0;
+    spi1_tx_status = eEvent;
+}
+
+void APP_DAC1_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
+    DAC1_CS_PINOn();
+    spi1_tx_status = eEvent;
+}
+
+void APP_ADC1_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
+    spi1_rx_status = eEvent;
+}
+
+void APP_ADC1_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context) {
+    spi1_rx_status = eEvent;
+}
+
 void __ISR(_TIMER_2_VECTOR, ipl2AUTO) IntHandlerDrvTmrInstance0(void) {
     DRV_TMR0_CounterValueSet(0xFFFF - DAC_UPDATE_PERIOD_COUNTS);
-    if (spi0_tx_status == DRV_SPI_BUFFER_EVENT_COMPLETE) {
+    if ((spi0_tx_status == DRV_SPI_BUFFER_EVENT_COMPLETE)
+            && (spi1_tx_status == DRV_SPI_BUFFER_EVENT_COMPLETE)) {
         DAC0_LATCH_PINOff();
+        DAC1_LATCH_PINOff();
         GALVO_DAC_Latched = 1;
     }
     PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_TIMER_2);
@@ -386,6 +419,18 @@ void APP_SPI0_Initialize(void) {
     spi0_rx_status = DRV_SPI_BUFFER_EVENT_COMPLETE;
 }
 
+void APP_SPI1_Initialize(void) {
+    appData.drvSPI1.drvHandle = DRV_HANDLE_INVALID;
+    appData.drvSPI1.DAC_clientData.baudRate = 25000000;
+    appData.drvSPI1.DAC_clientData.operationStarting = APP_DAC1_CallBack_Start;
+    appData.drvSPI1.DAC_clientData.operationEnded = APP_DAC1_CallBack_End;
+    spi1_tx_status = DRV_SPI_BUFFER_EVENT_COMPLETE;
+    appData.drvSPI1.ADC_clientData.baudRate = 12500000;
+    appData.drvSPI1.ADC_clientData.operationStarting = APP_ADC1_CallBack_Start;
+    appData.drvSPI1.ADC_clientData.operationEnded = APP_ADC1_CallBack_End;
+    spi1_rx_status = DRV_SPI_BUFFER_EVENT_COMPLETE;
+}
+
 void APP_GALVO_Initialize(void) {
     appData.Galvo.X.processComplete = 0;
     appData.Galvo.X.stepSize = 0;
@@ -428,6 +473,7 @@ void APP_Initialize(void) {
     GALVO_ADC_Flag = 0;
     GALVO_DAC_Latched = 0;
     APP_SPI0_Initialize();
+    APP_SPI1_Initialize();
     APP_JOB_INFO_Initialize();
     APP_GALVO_Initialize();
     APP_LASER_Initialize();
@@ -505,7 +551,7 @@ void APP_Open_HCI_Packet(void) {
                     break;
                 }
                 case X_MEASUREMENT:
-                {      
+                {
                     break;
                 }
                 case Y_MEASUREMENT:
@@ -669,7 +715,7 @@ void APP_Write_HCI_Packet(void) {
                         case Y_MEASUREMENT:
                         {
                             strcpy(tempTextBuf, "Y_reading");
-                            tempVal = appData.Galvo.Y.reading - ADC0_OFFSET;
+                            tempVal = appData.Galvo.Y.reading - ADC1_OFFSET;
                             break;
                         }
                         case L_ARM:
@@ -777,7 +823,7 @@ void APP_GALVO_Launch_DAC_Process(void) {
     } else
         appData.Galvo.X.processComplete = 1;
     if (appData.Galvo.Y.DAC_enabled) {
-        //DRV_SPI0_ClientConfigure(&(appData.drvSPI0.DAC_clientData));
+        DRV_SPI1_ClientConfigure(&(appData.drvSPI1.DAC_clientData));
         appData.Galvo.Y.processComplete = 0;
     } else
         appData.Galvo.Y.processComplete = 1;
@@ -790,33 +836,63 @@ void APP_GALVO_Launch_DAC_Process(void) {
 }
 
 void APP_GALVO_Run_DAC_Process(void) {
-    static uint8_t SPI0_TX_Buffer[SPI0_TX_BUFF_SIZE];
+    static uint8_t SPI0_TX_Buffer[SPI_TX_BUFF_SIZE];
+    static uint8_t SPI1_TX_Buffer[SPI_TX_BUFF_SIZE];
     while (appData.Galvo.DAC_jobPending) {
 
-        if (appData.Galvo.X.currentPosition < appData.Galvo.X.finalPosition) {
-            appData.Galvo.X.currentPosition += appData.Galvo.X.stepSize;
-            if (appData.Galvo.X.currentPosition > appData.Galvo.X.finalPosition) {
-                appData.Galvo.X.currentPosition = appData.Galvo.X.finalPosition;
-                appData.Galvo.X.processComplete = 1;
-            }
-        } else if (appData.Galvo.X.currentPosition > appData.Galvo.X.finalPosition) {
-            appData.Galvo.X.currentPosition -= appData.Galvo.X.stepSize;
+        if (appData.Galvo.X.DAC_enabled) {
             if (appData.Galvo.X.currentPosition < appData.Galvo.X.finalPosition) {
-                appData.Galvo.X.currentPosition = appData.Galvo.X.finalPosition;
+                appData.Galvo.X.currentPosition += appData.Galvo.X.stepSize;
+                if (appData.Galvo.X.currentPosition > appData.Galvo.X.finalPosition) {
+                    appData.Galvo.X.currentPosition = appData.Galvo.X.finalPosition;
+                    appData.Galvo.X.processComplete = 1;
+                }
+            } else if (appData.Galvo.X.currentPosition > appData.Galvo.X.finalPosition) {
+                appData.Galvo.X.currentPosition -= appData.Galvo.X.stepSize;
+                if (appData.Galvo.X.currentPosition < appData.Galvo.X.finalPosition) {
+                    appData.Galvo.X.currentPosition = appData.Galvo.X.finalPosition;
+                    appData.Galvo.X.processComplete = 1;
+                }
+            } else
                 appData.Galvo.X.processComplete = 1;
-            }
-        } else
-            appData.Galvo.X.processComplete = 1;
 
-        const uint32_t datax = appData.Galvo.X.currentPosition;
+            const uint32_t datax = appData.Galvo.X.currentPosition;
 
-        SPI0_TX_Buffer[0] = DAC_DIN_REG_WRITE << 4;
-        SPI0_TX_Buffer[0] |= (0xFF & (datax >> 14));
-        SPI0_TX_Buffer[1] = (0xFF & (datax >> 6));
-        SPI0_TX_Buffer[2] = (0xFF & (datax << 2));
-        DRV_SPI0_BufferAddWrite(SPI0_TX_Buffer, 3, 0, 0);
+            SPI0_TX_Buffer[0] = DAC_DIN_REG_WRITE << 4;
+            SPI0_TX_Buffer[0] |= (0xFF & (datax >> 14));
+            SPI0_TX_Buffer[1] = (0xFF & (datax >> 6));
+            SPI0_TX_Buffer[2] = (0xFF & (datax << 2));
+            DRV_SPI0_BufferAddWrite(SPI0_TX_Buffer, 3, 0, 0);
+        }
+
+        if (appData.Galvo.Y.DAC_enabled) {
+            if (appData.Galvo.Y.currentPosition < appData.Galvo.Y.finalPosition) {
+                appData.Galvo.Y.currentPosition += appData.Galvo.Y.stepSize;
+                if (appData.Galvo.Y.currentPosition > appData.Galvo.Y.finalPosition) {
+                    appData.Galvo.Y.currentPosition = appData.Galvo.Y.finalPosition;
+                    appData.Galvo.Y.processComplete = 1;
+                }
+            } else if (appData.Galvo.Y.currentPosition > appData.Galvo.Y.finalPosition) {
+                appData.Galvo.Y.currentPosition -= appData.Galvo.Y.stepSize;
+                if (appData.Galvo.Y.currentPosition < appData.Galvo.Y.finalPosition) {
+                    appData.Galvo.Y.currentPosition = appData.Galvo.Y.finalPosition;
+                    appData.Galvo.Y.processComplete = 1;
+                }
+            } else
+                appData.Galvo.Y.processComplete = 1;
+
+            const uint32_t datay = appData.Galvo.Y.currentPosition;
+
+            SPI1_TX_Buffer[0] = DAC_DIN_REG_WRITE << 4;
+            SPI1_TX_Buffer[0] |= (0xFF & (datay >> 14));
+            SPI1_TX_Buffer[1] = (0xFF & (datay >> 6));
+            SPI1_TX_Buffer[2] = (0xFF & (datay << 2));
+            DRV_SPI1_BufferAddWrite(SPI1_TX_Buffer, 3, 0, 0);
+
+        }
 
         while (!GALVO_DAC_Latched);
+
         if (appData.Galvo.X.processComplete && appData.Galvo.Y.processComplete) {
             DRV_TMR0_Stop();
             appData.Galvo.DAC_jobPending = 0;
@@ -832,7 +908,7 @@ void APP_GALVO_Launch_ADC_Process(void) {
         appData.Galvo.X.processComplete = 1;
     }
     if (appData.Galvo.Y.ADC_enabled) {
-        //DRV_SPI0_ClientConfigure(&(appData.drvSPI0.ADC_clientData));
+        DRV_SPI1_ClientConfigure(&(appData.drvSPI1.ADC_clientData));
         appData.Galvo.Y.processComplete = 0;
     } else {
         appData.Galvo.Y.processComplete = 1;
@@ -841,31 +917,59 @@ void APP_GALVO_Launch_ADC_Process(void) {
 }
 
 void APP_GALVO_Run_ADC_Process(void) {
+    static uint8_t SPI0_RX_Buffer[SPI_TX_BUFF_SIZE];
+    static uint8_t SPI1_RX_Buffer[SPI_TX_BUFF_SIZE];
     while (appData.Galvo.ADC_jobPending) {
-        static uint8_t SPI0_RX_Buffer[SPI0_TX_BUFF_SIZE];
-        uint32_t tempVal;
-        DRV_TMR1_CounterValueSet(0xFFFF - ADC_HOLDOFF_COUNTS);
-        GALVO_ADC_Flag = 0;
-        DRV_TMR1_Start();
-        while (GALVO_ADC_Flag != 1);
+        if (appData.Galvo.X.ADC_enabled) {
+            uint32_t tempValx;
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_HOLDOFF_COUNTS);
+            GALVO_ADC_Flag = 0;
+            DRV_TMR1_Start();
+            while (GALVO_ADC_Flag != 1);
 
-        DRV_TMR1_CounterValueSet(0xFFFF - ADC_CNV_TRIG_COUNTS);
-        GALVO_ADC_Flag = 0;
-        ADC0_CS_PINOff();
-        DRV_TMR1_Start();
-        while (GALVO_ADC_Flag != 1);
-        ADC0_CS_PINOn();
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_CNV_TRIG_COUNTS);
+            GALVO_ADC_Flag = 0;
+            ADC0_CS_PINOff();
+            DRV_TMR1_Start();
+            while (GALVO_ADC_Flag != 1);
+            ADC0_CS_PINOn();
 
-        DRV_SPI0_BufferAddRead(SPI0_RX_Buffer, 3, 0, 0);
-        while (APP_SPI0_RX_Status() != DRV_SPI_BUFFER_EVENT_COMPLETE);
+            DRV_SPI0_BufferAddRead(SPI0_RX_Buffer, 3, 0, 0);
+            while (APP_SPI0_RX_Status() != DRV_SPI_BUFFER_EVENT_COMPLETE);
 
-        tempVal = (0x3FC00 & (SPI0_RX_Buffer[0] << 10));
-        tempVal |= (0x3FC & (SPI0_RX_Buffer[1] << 2));
-        tempVal |= (0x3 & (SPI0_RX_Buffer[2] >> 6));
-        tempVal &= 0x3FFFF;
+            tempValx = (0x3FC00 & (SPI0_RX_Buffer[0] << 10));
+            tempValx |= (0x3FC & (SPI0_RX_Buffer[1] << 2));
+            tempValx |= (0x3 & (SPI0_RX_Buffer[2] >> 6));
+            tempValx &= 0x3FFFF;
 
-        appData.Galvo.X.reading = tempVal;
-        appData.Galvo.X.processComplete = 1;
+            appData.Galvo.X.reading = tempValx;
+            appData.Galvo.X.processComplete = 1;
+        }
+        if (appData.Galvo.Y.ADC_enabled) {
+            uint32_t tempValy;
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_HOLDOFF_COUNTS);
+            GALVO_ADC_Flag = 0;
+            DRV_TMR1_Start();
+            while (GALVO_ADC_Flag != 1);
+
+            DRV_TMR1_CounterValueSet(0xFFFF - ADC_CNV_TRIG_COUNTS);
+            GALVO_ADC_Flag = 0;
+            ADC1_CS_PINOff();
+            DRV_TMR1_Start();
+            while (GALVO_ADC_Flag != 1);
+            ADC1_CS_PINOn();
+
+            DRV_SPI1_BufferAddRead(SPI1_RX_Buffer, 3, 0, 0);
+            while (APP_SPI1_RX_Status() != DRV_SPI_BUFFER_EVENT_COMPLETE);
+
+            tempValy = (0x3FC00 & (SPI1_RX_Buffer[0] << 10));
+            tempValy |= (0x3FC & (SPI1_RX_Buffer[1] << 2));
+            tempValy |= (0x3 & (SPI1_RX_Buffer[2] >> 6));
+            tempValy &= 0x3FFFF;
+
+            appData.Galvo.Y.reading = tempValy;
+            appData.Galvo.Y.processComplete = 1;
+        }
 
         if (appData.Galvo.X.processComplete && appData.Galvo.Y.processComplete) {
             appData.Galvo.ADC_jobPending = 0;
@@ -879,8 +983,10 @@ void APP_Next_Task(void) {
         case APP_STATE_INIT:
         {
             appData.Galvo.X.DAC_enabled = 1;
+            appData.Galvo.Y.DAC_enabled = 1;
             appData.Galvo.DAC_jobPending = 1;
             appData.Galvo.X.ADC_enabled = 1;
+            appData.Galvo.Y.ADC_enabled = 1;
             appData.Galvo.ADC_jobPending = 1;
             APP_GALVO_Launch_DAC_Process();
             break;
@@ -945,6 +1051,12 @@ void APP_Tasks(void) {
                         DRV_SPI0_Open(DRV_USART_INDEX_0,
                         DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
                 appInitialized &= (DRV_HANDLE_INVALID != appData.drvSPI0.drvHandle);
+            }
+            if (appData.drvSPI1.drvHandle == DRV_HANDLE_INVALID) {
+                appData.drvSPI1.drvHandle =
+                        DRV_SPI1_Open(DRV_USART_INDEX_1,
+                        DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
+                appInitialized &= (DRV_HANDLE_INVALID != appData.drvSPI1.drvHandle);
             }
             if (appInitialized) {
                 APP_Next_Task();

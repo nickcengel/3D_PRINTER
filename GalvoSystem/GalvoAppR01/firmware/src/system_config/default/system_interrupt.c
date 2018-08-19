@@ -93,17 +93,41 @@ void __ISR(_UART2_FAULT_VECTOR, ipl1AUTO) _IntHandlerDrvUsartErrorInstance0(void
  
 
  
-void __ISR(_SPI2_RX_VECTOR, ipl3AUTO) _IntHandlerSPIRxInstance0(void)
+ 
+ 
+
+//void __ISR(_TIMER_2_VECTOR, ipl2AUTO) IntHandlerDrvTmrInstance0(void)
+//{
+//    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_2);
+//}
+//void __ISR(_TIMER_4_VECTOR, ipl2AUTO) IntHandlerDrvTmrInstance1(void)
+//{
+//    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_4);
+//}
+ 
+void __ISR(_SPI2_RX_VECTOR, ipl4AUTO) _IntHandlerSPIRxInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
-void __ISR(_SPI2_TX_VECTOR, ipl3AUTO) _IntHandlerSPITxInstance0(void)
+void __ISR(_SPI2_TX_VECTOR, ipl4AUTO) _IntHandlerSPITxInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
 }
 void __ISR(_SPI2_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance0(void)
 {
     DRV_SPI_Tasks(sysObj.spiObjectIdx0);
+}
+void __ISR(_SPI6_RX_VECTOR, ipl3AUTO) _IntHandlerSPIRxInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
+}
+void __ISR(_SPI6_TX_VECTOR, ipl3AUTO) _IntHandlerSPITxInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
+}
+void __ISR(_SPI6_FAULT_VECTOR, ipl1AUTO) _IntHandlerSPIFaultInstance1(void)
+{
+    DRV_SPI_Tasks(sysObj.spiObjectIdx1);
 }
 /*******************************************************************************
  End of File

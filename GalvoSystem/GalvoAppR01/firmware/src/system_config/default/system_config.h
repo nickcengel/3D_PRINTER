@@ -102,7 +102,7 @@ extern "C" {
 #define SYS_PORT_A_CNPD         0x0000
 #define SYS_PORT_A_CNEN         0x0000
 
-#define SYS_PORT_B_ANSEL        0x8E9A
+#define SYS_PORT_B_ANSEL        0x0E9A
 #define SYS_PORT_B_TRIS         0xFFDB
 #define SYS_PORT_B_LAT          0x0004
 #define SYS_PORT_B_ODC          0x0000
@@ -118,9 +118,9 @@ extern "C" {
 #define SYS_PORT_C_CNPD         0x0000
 #define SYS_PORT_C_CNEN         0x0000
 
-#define SYS_PORT_D_ANSEL        0xC100
-#define SYS_PORT_D_TRIS         0xFFFF
-#define SYS_PORT_D_LAT          0x0000
+#define SYS_PORT_D_ANSEL        0x0100
+#define SYS_PORT_D_TRIS         0xBFFF
+#define SYS_PORT_D_LAT          0x4000
 #define SYS_PORT_D_ODC          0x0000
 #define SYS_PORT_D_CNPU         0x0000
 #define SYS_PORT_D_CNPD         0x0000
@@ -151,16 +151,16 @@ extern "C" {
 #define SYS_PORT_G_CNEN         0x0000
 
 #define SYS_PORT_H_ANSEL        0x0818
-#define SYS_PORT_H_TRIS         0xFF78
-#define SYS_PORT_H_LAT          0x0000
+#define SYS_PORT_H_TRIS         0xEF78
+#define SYS_PORT_H_LAT          0x1000
 #define SYS_PORT_H_ODC          0x0000
 #define SYS_PORT_H_CNPU         0x0000
 #define SYS_PORT_H_CNPD         0x0000
 #define SYS_PORT_H_CNEN         0x0000
 
-#define SYS_PORT_J_ANSEL        0x0004
-#define SYS_PORT_J_TRIS         0xFFFF
-#define SYS_PORT_J_LAT          0x0000
+#define SYS_PORT_J_ANSEL        0x0000
+#define SYS_PORT_J_TRIS         0xFFFB
+#define SYS_PORT_J_LAT          0x0004
 #define SYS_PORT_J_ODC          0x0000
 #define SYS_PORT_J_CNPU         0x0000
 #define SYS_PORT_J_CNPD         0x0000
@@ -200,8 +200,8 @@ extern "C" {
 #define DRV_SPI_DMA 				0
 
 /*** SPI Driver Static Allocation Options ***/
-#define DRV_SPI_INSTANCES_NUMBER 		1
-#define DRV_SPI_CLIENTS_NUMBER 			1
+#define DRV_SPI_INSTANCES_NUMBER 		2
+#define DRV_SPI_CLIENTS_NUMBER 			2
 #define DRV_SPI_ELEMENTS_PER_QUEUE 		16
 /*** Timer Driver Configuration ***/
 #define DRV_TMR_INTERRUPT_MODE             true
@@ -295,6 +295,20 @@ extern "C" {
 #define ADC0_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
 #define ADC0_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2, Value)
 
+/*** Functions for DAC1_CS_PIN pin ***/
+#define DAC1_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
+#define DAC1_CS_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
+#define DAC1_CS_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
+#define DAC1_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
+#define DAC1_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14, Value)
+
+/*** Functions for DAC1_LATCH_PIN pin ***/
+#define DAC1_LATCH_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_J, PORTS_BIT_POS_2)
+#define DAC1_LATCH_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_J, PORTS_BIT_POS_2)
+#define DAC1_LATCH_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_J, PORTS_BIT_POS_2)
+#define DAC1_LATCH_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_J, PORTS_BIT_POS_2)
+#define DAC1_LATCH_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_J, PORTS_BIT_POS_2, Value)
+
 /*** Functions for DAC0_LATCH_PIN pin ***/
 #define DAC0_LATCH_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
 #define DAC0_LATCH_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_2)
@@ -315,6 +329,13 @@ extern "C" {
 #define TEST_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
 #define TEST_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
 #define TEST_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7, Value)
+
+/*** Functions for ADC1_CS_PIN pin ***/
+#define ADC1_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
+#define ADC1_CS_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
+#define ADC1_CS_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
+#define ADC1_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
+#define ADC1_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12, Value)
 
 
 /*** Application Instance 0 Configuration ***/
