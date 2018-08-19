@@ -38,6 +38,18 @@ build/default/production/_ext/639803181/sys_clk_pic32mz.o:  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/common/sys_module.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/devcon/sys_devcon.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/system.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/reset/sys_reset.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/reset/sys_reset_definitions_pic32m.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/plib_reset.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/reset_processor.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/reset_p32xxxx.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/reset_p32mz2064dag169.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_ResetReasonStatus_MZ_1.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_SoftwareResetTrigger_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_ConfigRegReadError_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_NmiControl_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_WdtoInSleep_Default.h  \
+ ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/reset/processor/../templates/reset_NmiCounter_Default.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/clk/sys_clk.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/osc/plib_osc.h  \
  ../../../../../../../../Applications/microchip/harmony/v2_06/framework/peripheral/osc/processor/osc_processor.h  \

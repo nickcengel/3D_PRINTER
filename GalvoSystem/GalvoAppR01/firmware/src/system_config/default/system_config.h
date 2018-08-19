@@ -94,15 +94,15 @@ extern "C" {
 #define SYS_CLK_CONFIG_SECONDARY_XTAL       32768ul
    
 /*** Ports System Service Configuration ***/
-#define SYS_PORT_A_ANSEL        0x3F22
-#define SYS_PORT_A_TRIS         0xFFFF
+#define SYS_PORT_A_ANSEL        0x3D22
+#define SYS_PORT_A_TRIS         0xFDFF
 #define SYS_PORT_A_LAT          0x0000
 #define SYS_PORT_A_ODC          0x0000
 #define SYS_PORT_A_CNPU         0x0000
 #define SYS_PORT_A_CNPD         0x0000
 #define SYS_PORT_A_CNEN         0x0000
 
-#define SYS_PORT_B_ANSEL        0x0E9A
+#define SYS_PORT_B_ANSEL        0x0E8A
 #define SYS_PORT_B_TRIS         0xFFDB
 #define SYS_PORT_B_LAT          0x0004
 #define SYS_PORT_B_ODC          0x0000
@@ -150,11 +150,11 @@ extern "C" {
 #define SYS_PORT_G_CNPD         0x0000
 #define SYS_PORT_G_CNEN         0x0000
 
-#define SYS_PORT_H_ANSEL        0x0818
-#define SYS_PORT_H_TRIS         0xEF78
-#define SYS_PORT_H_LAT          0x1000
+#define SYS_PORT_H_ANSEL        0x0800
+#define SYS_PORT_H_TRIS         0xEF20
+#define SYS_PORT_H_LAT          0x10C0
 #define SYS_PORT_H_ODC          0x0000
-#define SYS_PORT_H_CNPU         0x0000
+#define SYS_PORT_H_CNPU         0x00C0
 #define SYS_PORT_H_CNPD         0x0000
 #define SYS_PORT_H_CNEN         0x0000
 
@@ -295,6 +295,20 @@ extern "C" {
 #define ADC0_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2)
 #define ADC0_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_2, Value)
 
+/*** Functions for MOTOR0_EN_PIN pin ***/
+#define MOTOR0_EN_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_A, PORTS_BIT_POS_9)
+#define MOTOR0_EN_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_A, PORTS_BIT_POS_9)
+#define MOTOR0_EN_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_A, PORTS_BIT_POS_9)
+#define MOTOR0_EN_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_A, PORTS_BIT_POS_9)
+#define MOTOR0_EN_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_A, PORTS_BIT_POS_9, Value)
+
+/*** Functions for MOTOR1_EN_PIN pin ***/
+#define MOTOR1_EN_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_4)
+#define MOTOR1_EN_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_4)
+#define MOTOR1_EN_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_4)
+#define MOTOR1_EN_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_4)
+#define MOTOR1_EN_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_4, Value)
+
 /*** Functions for DAC1_CS_PIN pin ***/
 #define DAC1_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
 #define DAC1_CS_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_D, PORTS_BIT_POS_14)
@@ -323,12 +337,26 @@ extern "C" {
 #define DAC0_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1)
 #define DAC0_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_K, PORTS_BIT_POS_1, Value)
 
-/*** Functions for TEST_PIN pin ***/
-#define TEST_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
-#define TEST_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
-#define TEST_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
-#define TEST_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
-#define TEST_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7, Value)
+/*** Functions for DRV0_EN_PIN pin ***/
+#define DRV0_EN_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define DRV0_EN_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define DRV0_EN_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define DRV0_EN_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7)
+#define DRV0_EN_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_7, Value)
+
+/*** Functions for LASER_EN_PIN pin ***/
+#define LASER_EN_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_3)
+#define LASER_EN_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_3)
+#define LASER_EN_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_3)
+#define LASER_EN_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_3)
+#define LASER_EN_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_3, Value)
+
+/*** Functions for DRV1_EN_PIN pin ***/
+#define DRV1_EN_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_6)
+#define DRV1_EN_PINOn() PLIB_PORTS_PinSet(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_6)
+#define DRV1_EN_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_6)
+#define DRV1_EN_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_6)
+#define DRV1_EN_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_6, Value)
 
 /*** Functions for ADC1_CS_PIN pin ***/
 #define ADC1_CS_PINToggle() PLIB_PORTS_PinToggle(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
@@ -336,6 +364,15 @@ extern "C" {
 #define ADC1_CS_PINOff() PLIB_PORTS_PinClear(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
 #define ADC1_CS_PINStateGet() PLIB_PORTS_PinGetLatched(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12)
 #define ADC1_CS_PINStateSet(Value) PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_H, PORTS_BIT_POS_12, Value)
+
+/*** Functions for LASER_OK_PIN pin ***/
+#define LASER_OK_PINStateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_F, PORTS_BIT_POS_2)
+
+/*** Functions for MOTOR0_OK_PIN pin ***/
+#define MOTOR0_OK_PINStateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_8)
+
+/*** Functions for MOTOR1_OK_PIN pin ***/
+#define MOTOR1_OK_PINStateGet() PLIB_PORTS_PinGet(PORTS_ID_0, PORT_CHANNEL_B, PORTS_BIT_POS_4)
 
 
 /*** Application Instance 0 Configuration ***/

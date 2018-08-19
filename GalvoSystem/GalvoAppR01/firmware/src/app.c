@@ -84,6 +84,7 @@ DRV_SPI_BUFFER_EVENT volatile APP_SPI1_RX_Status(void) {
 DRV_SPI_BUFFER_EVENT volatile APP_SPI1_TX_Status(void) {
     return spi1_tx_status;
 }
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
@@ -95,7 +96,7 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
     static uint8_t USART0_RX_Count = 0;
     static HCI_REG_INDEX regIndex = 0;
     const uint8_t currentByte = DRV_USART0_ReadByte();
-    if ((USART0_RX_Count < (USART0_RX_BUFF_SIZE - 2))) {
+    if (USART0_RX_Count < (USART0_RX_BUFF_SIZE - 2)) {
         switch (HCI_RX_Status()) {
             case HCI_RX_LOOK_FOR_START:
             {
@@ -123,6 +124,20 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_RUN_JOB);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_DATA);
+                } else if (currentByte == 'E') {
+                    DRV_USART0_WriteByte(currentByte);
+                    DRV0_EN_PINOff();
+                    DRV1_EN_PINOff();
+                    HCI_Set_RX_Status(HCI_RX_COMPLETE);
+                } else if (currentByte == 'e') {
+                    DRV_USART0_WriteByte(currentByte);
+                    DRV0_EN_PINOn();
+                    DRV1_EN_PINOn();
+                    HCI_Set_RX_Status(HCI_RX_COMPLETE);
+                } else if (currentByte == 'R') {
+                    DRV_USART0_WriteByte(currentByte);
+                    SYS_INT_StatusGetAndDisable();
+                    SYS_RESET_SoftwareReset();
                 }
                 break;
             }
@@ -407,6 +422,9 @@ void APP_Compute_StepSize(void) {
 // *****************************************************************************
 // *****************************************************************************
 
+// Initialization
+// *****************************************************************************
+
 void APP_SPI0_Initialize(void) {
     appData.drvSPI0.drvHandle = DRV_HANDLE_INVALID;
     appData.drvSPI0.DAC_clientData.baudRate = 25000000;
@@ -432,6 +450,7 @@ void APP_SPI1_Initialize(void) {
 }
 
 void APP_GALVO_Initialize(void) {
+    appData.Galvo.state = GVO_ABSOLUTE_MOVE;
     appData.Galvo.X.processComplete = 0;
     appData.Galvo.X.stepSize = 0;
     appData.Galvo.X.currentPosition = DAC0_OFFSET;
@@ -469,6 +488,8 @@ void APP_HCI_Initialize(void) {
 }
 
 void APP_Initialize(void) {
+    DRV0_EN_PINOff();
+    DRV1_EN_PINOff();
     appData.state = APP_STATE_INIT;
     GALVO_ADC_Flag = 0;
     GALVO_DAC_Latched = 0;
@@ -480,6 +501,9 @@ void APP_Initialize(void) {
     DRV_USART_ByteReceiveCallbackSet(DRV_USART_INDEX_0, APP_USARTReceiveEventHandler);
     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
 }
+
+// Host<->Client Interface Processes
+// *****************************************************************************
 
 void APP_Open_HCI_Packet(void) {
     uint8_t a_index;
@@ -520,7 +544,7 @@ void APP_Open_HCI_Packet(void) {
                 }
                 case X_START_POS:
                 {
-                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD)
+                    if ((HCI_REG_Action(a_index) == REG_WRITE_REQSTD)&&(appData.Galvo.state != GVO_RELATIVE_MOVE))
                         appData.Galvo.X.currentPosition = ((HCI_REG_Value(a_index) + DAC0_OFFSET));
                     else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
                         HCI_REG_Set_Value(a_index, ((appData.Galvo.X.currentPosition) - DAC0_OFFSET));
@@ -528,15 +552,18 @@ void APP_Open_HCI_Packet(void) {
                 }
                 case X_END_POS:
                 {
-                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD)
-                        appData.Galvo.X.finalPosition = ((HCI_REG_Value(a_index) + DAC0_OFFSET));
-                    else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
+                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD) {
+                        if (appData.Galvo.state == GVO_RELATIVE_MOVE)
+                            appData.Galvo.X.finalPosition = HCI_REG_Value(a_index) + appData.Galvo.X.currentPosition;
+                        else
+                            appData.Galvo.X.finalPosition = HCI_REG_Value(a_index) + DAC0_OFFSET;
+                    } else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
                         HCI_REG_Set_Value(a_index, ((appData.Galvo.X.finalPosition) - DAC0_OFFSET));
                     break;
                 }
                 case Y_START_POS:
                 {
-                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD)
+                    if ((HCI_REG_Action(a_index) == REG_WRITE_REQSTD)&&(appData.Galvo.state != GVO_RELATIVE_MOVE))
                         appData.Galvo.Y.finalPosition = ((HCI_REG_Value(a_index) + DAC1_OFFSET));
                     else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
                         HCI_REG_Set_Value(a_index, ((appData.Galvo.Y.finalPosition) - DAC1_OFFSET));
@@ -544,9 +571,12 @@ void APP_Open_HCI_Packet(void) {
                 }
                 case Y_END_POS:
                 {
-                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD)
-                        appData.Galvo.Y.finalPosition = ((HCI_REG_Value(a_index) + DAC1_OFFSET));
-                    else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
+                    if (HCI_REG_Action(a_index) == REG_WRITE_REQSTD) {
+                        if (appData.Galvo.state == GVO_RELATIVE_MOVE)
+                            appData.Galvo.Y.finalPosition = HCI_REG_Value(a_index) + appData.Galvo.Y.currentPosition;
+                        else
+                            appData.Galvo.Y.finalPosition = HCI_REG_Value(a_index) + DAC1_OFFSET;
+                    } else if (HCI_REG_Action(a_index) == REG_READ_REQSTD)
                         HCI_REG_Set_Value(a_index, ((appData.Galvo.Y.finalPosition) - DAC1_OFFSET));
                     break;
                 }
@@ -627,6 +657,7 @@ void APP_Open_HCI_Packet(void) {
     if ((appData.Galvo.X.ADC_enabled || appData.Galvo.Y.ADC_enabled)
             && ((HCI_REG_Action(X_MEASUREMENT) == REG_READ_REQSTD)
             || (HCI_REG_Action(Y_MEASUREMENT) == REG_READ_REQSTD))) {
+
         appData.Galvo.ADC_jobPending = 1;
     }
 }
@@ -809,12 +840,16 @@ void APP_Write_HCI_Packet(void) {
             client_replyLength = 0;
             HCI_Set_TX_Status(HCI_TX_EMPTY);
             appData.HCI_WritePending = 0;
+
             break;
         }
         default:
             break;
     }
 }
+
+// Galvo Interface Processes
+// *****************************************************************************
 
 void APP_GALVO_Launch_DAC_Process(void) {
     if (appData.Galvo.X.DAC_enabled) {
@@ -894,6 +929,7 @@ void APP_GALVO_Run_DAC_Process(void) {
         while (!GALVO_DAC_Latched);
 
         if (appData.Galvo.X.processComplete && appData.Galvo.Y.processComplete) {
+
             DRV_TMR0_Stop();
             appData.Galvo.DAC_jobPending = 0;
         }
@@ -911,6 +947,7 @@ void APP_GALVO_Launch_ADC_Process(void) {
         DRV_SPI1_ClientConfigure(&(appData.drvSPI1.ADC_clientData));
         appData.Galvo.Y.processComplete = 0;
     } else {
+
         appData.Galvo.Y.processComplete = 1;
     }
     appData.state = APP_READ_FROM_GALVO;
@@ -972,21 +1009,27 @@ void APP_GALVO_Run_ADC_Process(void) {
         }
 
         if (appData.Galvo.X.processComplete && appData.Galvo.Y.processComplete) {
+
             appData.Galvo.ADC_jobPending = 0;
 
         }
     }
 }
 
+// Application State Machine Implementation
+// *****************************************************************************
+
 void APP_Next_Task(void) {
     switch (appData.state) {
         case APP_STATE_INIT:
         {
             appData.Galvo.X.DAC_enabled = 1;
-            appData.Galvo.Y.DAC_enabled = 1;
-            appData.Galvo.DAC_jobPending = 1;
             appData.Galvo.X.ADC_enabled = 1;
+
+            appData.Galvo.Y.DAC_enabled = 1;
             appData.Galvo.Y.ADC_enabled = 1;
+
+            appData.Galvo.DAC_jobPending = 1;
             appData.Galvo.ADC_jobPending = 1;
             APP_GALVO_Launch_DAC_Process();
             break;
@@ -1024,6 +1067,7 @@ void APP_Next_Task(void) {
             if (appData.Galvo.DAC_jobPending) {
                 APP_GALVO_Launch_DAC_Process();
             } else {
+
                 appData.HCI_WritePending = 1;
                 appData.state = APP_WRITE_TO_HOST;
             }

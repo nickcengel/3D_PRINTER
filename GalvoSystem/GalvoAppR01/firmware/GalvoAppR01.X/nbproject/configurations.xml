@@ -115,6 +115,10 @@
             <itemPath>../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/ports/sys_ports.h</itemPath>
             <itemPath>../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/ports/sys_ports_definitions.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="f7" displayName="reset" projectFiles="true">
+            <itemPath>../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/reset/sys_reset.h</itemPath>
+            <itemPath>../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/reset/sys_reset_definitions_pic32m.h</itemPath>
+          </logicalFolder>
           <itemPath>../../../../../../../../Applications/microchip/harmony/v2_06/framework/system/system.h</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -176,6 +180,11 @@
                 <logicalFolder name="f3" displayName="ports" projectFiles="true">
                   <logicalFolder name="f1" displayName="src" projectFiles="true">
                     <itemPath>../src/system_config/default/framework/system/ports/src/sys_ports_static.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="f4" displayName="reset" projectFiles="true">
+                  <logicalFolder name="f1" displayName="src" projectFiles="true">
+                    <itemPath>../src/system_config/default/framework/system/reset/src/sys_reset.c</itemPath>
                   </logicalFolder>
                 </logicalFolder>
               </logicalFolder>

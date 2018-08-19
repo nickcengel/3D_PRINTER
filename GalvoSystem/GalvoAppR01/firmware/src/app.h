@@ -87,6 +87,7 @@ extern "C" {
 #define DAC_UPDATE_PERIOD_COUNTS 774
 #define DAC_UPDATE_PERIOD_uS 20.0
 #define GALVO_DEFAULT_SPEED 13824
+    
 #define ADC0_OFFSET 0x1FFF7
 #define ADC1_OFFSET 0x1FFF7
 #define ADC_HOLDOFF_COUNTS 16
@@ -165,7 +166,7 @@ extern "C" {
 
     // *****************************************************************************
     // *****************************************************************************
-    // Section: Global Data Definitions
+    // Section: Global Data Access
     // *****************************************************************************
     // *****************************************************************************
 
@@ -193,7 +194,6 @@ extern "C" {
 
     void APP_ADC0_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
 
-
     void APP_DAC1_CallBack_Start(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
 
     void APP_DAC1_CallBack_End(DRV_SPI_BUFFER_EVENT eEvent, DRV_SPI_BUFFER_HANDLE bufferHandle, void *context);
@@ -218,8 +218,10 @@ extern "C" {
     // *****************************************************************************
     // *****************************************************************************
 
+    // Initialization
+    // *****************************************************************************
     void APP_SPI0_Initialize(void);
-    
+
     void APP_SPI1_Initialize(void);
 
     void APP_GALVO_Initialize(void);
@@ -232,11 +234,14 @@ extern "C" {
 
     void APP_Initialize(void);
 
-
+    // Host<->Client Interface
+    // *****************************************************************************
     void APP_Open_HCI_Packet(void);
 
     void APP_Write_HCI_Packet(void);
 
+    // Galvo Interface 
+    // *****************************************************************************
     void APP_GALVO_Launch_DAC_Process(void);
 
     void APP_GALVO_Run_DAC_Process(void);
@@ -245,6 +250,8 @@ extern "C" {
 
     void APP_GALVO_Run_ADC_Process(void);
 
+    // Application State Machine 
+    // *****************************************************************************
     void APP_Next_Task(void);
 
     void APP_Tasks(void);
