@@ -1,30 +1,37 @@
-# Galvanometer System 
+# Galvanometer.Laser System 
 	Version R01 8.19.18
 ```
-                     MCU
-                 +----------+           DAQ0            GALVO
-                 |          |         +-------+      +---------+
-                 |   SPI0  <--------> |  DAC  | ---> |  X_CMD  |
-                 |          |         |       |      |         |
-                 |          |     +-> |  ADC  | <--- | X_ERROR |
-                 |          |     |   +-------+      |         |
-                 |   GPIO  +------+     DAQ1         |         |
-                 |          |     |   +-------+      |         |
-    HOST         |          |     +-> |  DAC  | ---> |  Y_CMD  |
- +---------+     |          |         |       |      |         |
- |         |     |   SPI1  <--------> |  ADC  | <--- | Y_ERROR |
- |         |     |          |         +-------+      +---------+
- |   USB/  |     |          |
- |  USART <-------> USART0  |
- |  BRIDGE |     |          |        LASER_CNTRL
- |         |     |          |         +-------+
- |         |     |   GPIO  <--------> | GPIO  |
- +---------+     |          |         |       |
-                 |  USART1 <--------> | USART |
-                 |          |         +-------+
-                 |          |
-                 +----------+
++---------------------------------------------------------------+
+|    HOST            MCU                                        |
+| +---------+   +----------+                                    |
+| |         |   |          |                                    |
+| |   USB/ <-----> USART0  |           DAQ0            GALVO    |
+| |  USART  |   |          |         +-------+      +---------+ |
+| |  BRIDG  |   |   SPI0  <--------> |  DAC  | ---> |  X_CMD  | |
+| +---------+   |          |         |       |      |         | |
+|               |   GPIO  +--------> |  ADC  | <--- | X_ERROR | |
+|               |          |         +-------+      |         | |
+|               |          |           DAQ1         |         | |
+|               |          |         +-------+      |         | |
+|               |   GPIO  +--------> |  DAC  | ---> |  Y_CMD  | |
+|               |          |         |       |      |         | |
+|               |   SPI1  <--------> |  ADC  | <--- | Y_ERROR | |
+|               |          |         +-------+      +---------+ |
+|               |          |        LASER_CNTRL                 |
+|               |          |         +-------+                  |
+|               |   GPIO  <--------> | GPIO  |                  |
+|               |          |         |       |                  |
+|               |  USART1 <--------> | USART |                  |
+|               |          |         +-------+                  |
+|               +----------+                                    |
++---------------------------------------------------------------+
+
 ```
+___
+
+## Introduction
+
+
 ---
 ## Command Line Interface
 Common commands begin with `$` and are contained within matching `( )`
@@ -82,10 +89,21 @@ The following commands can be entered following a `$`
 |         Clear Jobs        	|     '-'     	|
 |          Run Job          	| '{jobNumb}' 	|
 
+---
+## Units
+
+* Galvanometer Coordinates:
+
+* Galvanometer Speed:
+
 ___
 
 ## (*MCU*) *DM320010* Microcontroller Development Board
+
+### Introduction:
+
 * *PIC32MZ2064DAG169*
+
 
 Firmware for the *DM320010* is under development using Microchip's *MPLAB IDE* and *Harmony Configurator*.
 
