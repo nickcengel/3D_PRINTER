@@ -1,11 +1,88 @@
-# Laser-Galvanometer System 
-
-
+# Galvanometer System 
+	Version R01 8.19.18
+```
+                     MCU
+                 +----------+           DAQ0            GALVO
+                 |          |         +-------+      +---------+
+                 |   SPI0  <--------> |  DAC  | ---> |  X_CMD  |
+                 |          |         |       |      |         |
+                 |          |     +-> |  ADC  | <--- | X_ERROR |
+                 |          |     |   +-------+      |         |
+                 |   GPIO  +------+     DAQ1         |         |
+                 |          |     |   +-------+      |         |
+    HOST         |          |     +-> |  DAC  | ---> |  Y_CMD  |
+ +---------+     |          |         |       |      |         |
+ |         |     |   SPI1  <--------> |  ADC  | <--- | Y_ERROR |
+ |         |     |          |         +-------+      +---------+
+ |   USB/  |     |          |
+ |  USART <-------> USART0  |
+ |  BRIDGE |     |          |        LASER_CNTRL
+ |         |     |          |         +-------+
+ |         |     |   GPIO  <--------> | GPIO  |
+ +---------+     |          |         |       |
+                 |  USART1 <--------> | USART |
+                 |          |         +-------+
+                 |          |
+                 +----------+
+```
 ---
-## System Overview
+## Command Line Interface
+Common commands begin with `$` and are contained within matching `( )`
+
+All commands contain at least one parameter label followed by either a read `:`, or write `=` operator.
+
+Write operators are followed by the matching parameter value to be written. 
+
+Multiple parameters are separated by a comma or a single space.
+
+For example, 
+
+  `$(x=10,X=100)`
+
+Sets the start and end position for the X coordinate to 10 and 100 respectively.
+The DAC is incremented between these values. When it complets the values are returned.
+
+  `$(i:,j:)`
+
+Makes and returns a measurement of the X and Y axis using the ADC.
+
+### Application Parameters and Data
+
+|   Parameter   	| Label 	|   Data  	|          Description         	|
+|:-------------:	|:-----:	|:-------:	|:----------------------------:	|
+|    G_STATE    	|  'g'  	| '3','4' 	| Relative Move, Absolute Move 	|
+|    G_SPEED    	|  's'  	|   uint  	|          Galvo Speed         	|
+|  X_START_POS  	|  'x'  	|   int   	|         X Axis Start         	|
+|   X_END_POS   	|  'X'  	|   int   	|          X Axis End          	|
+|  Y_START_POS  	|  'y'  	|   int   	|         Y Axis Start         	|
+|   Y_END_POS   	|  'Y'  	|   int   	|          Y Axis End          	|
+| X_MEASUREMENT 	|  'i'  	|   int   	|      X Axis  ADC Reading     	|
+| Y_MEASUREMENT 	|  'j'  	|   int   	|      Y Axis  ADC Reading     	|
+|     L_ARM     	|  'L'  	| '0','1' 	|         Enabled Laser        	|
+|    L_STATE    	|  'l'  	| '0','1' 	|         Laser On, Off        	|
+|    L_POWER    	|  'p'  	|   int   	|          Laser Power         	|
+|    X_DAC_EN   	|  'Q'  	| '0','1' 	|          Enable DAC          	|
+|    Y_DAC_EN   	|  'W'  	| '0','1' 	|          Enable DAC          	|
+|    X_ADC_EN   	|  'T'  	| '0','1' 	|          Enable ADC          	|
+|    Y_ADC_EN   	|  'V'  	| '0','1' 	|          Enable ADC          	|
+|   JOB_NUMBER  	|  'n'  	|    -    	|        Not Implemented       	|
+|    JOB_TYPE   	|  '~'  	|    -    	|        Not Implemented       	|
+|   REPLY_TYPE  	|  'r'  	|    -    	|        Not Implemented       	|
 
 
----
+### Application Commands
+
+The following commands can be entered following a `$`
+
+|          Command          	|    Label    	|
+|:-------------------------:	|:-----------:	|
+| Enable/Disable DAQ Boards 	|   'E'/'e'   	|
+|         Reset MCU         	|     'R'     	|
+|         List Jobs         	|     '*'     	|
+|         Clear Jobs        	|     '-'     	|
+|          Run Job          	| '{jobNumb}' 	|
+
+___
 
 ## (*MCU*) *DM320010* Microcontroller Development Board
 * *PIC32MZ2064DAG169*
@@ -137,3 +214,14 @@ Power is supplied by a single *18V* supply, and the board is active when the MCU
 |       GND      	|  ADC_GND 	|  9  	|  10 	|  DAC_GND 	|       GND      	|
 |        -       	|    3V3   	|  11 	|  12 	|    3V3   	|        -       	|
 |        -       	|     -    	|  -  	|  x  	|   LDAC   	|  `DAC*_LATCH`  	|
+
+**Analog Connections:**
+
+|     Driver Connection    	| DAQ Connection 	|   Function  	|
+|:------------------------:	|:--------------:	|:-----------:	|
+| Positioning Error [J6,3] 	|      CON2      	|  ADC Input  	|
+|   Command Input- [J7,2]  	|      CON10     	| DAC Output- 	|
+|   Command Input+ [J7,1]  	|      CON11     	| DAC Output+ 	|
+
+___
+
