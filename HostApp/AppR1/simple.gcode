@@ -1,0 +1,19 @@
+(some out of line comment)
+G0 X5
+G28 X (some in line comment)
+G28 Y Z A B
+(NEW_LAYER)
+G90
+G0 X1
+G0 X5 F10
+G91
+G0 Y1
+G0 Y15 F10
+G90
+G0 X1 
+G1 X4 Y55 E10 F10
+G91
+G0 Z5 A4 B88
+G90
+G1 X43 Y4 E
+(NEW_LAYER)

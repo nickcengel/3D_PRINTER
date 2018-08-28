@@ -1,0 +1,56 @@
+Laser	-
+ Port Number	1
+ Device Number	1
+ Axis Number	1
+ Power Density	 
+  Default	100
+  Max	1000
+  Min	1
+
+Galvanometer
+ Port Number	1
+ Device Number	1
+ X Axis
+  Axis Number	2
+  Step [Steps/mm]	100
+  Position Min [mm]	-100
+  Position Max [mm]	100
+  Speed Min [mm/s]	1
+  Speed Max [mm/s]	10000		
+ Y Axis
+  Axis Number	3
+  Step [Steps/mm]	100
+  Position Min [mm]	-100
+  Position Max [mm]	100
+  Speed Min [mm/s]	1
+  Speed Max [mm/s]	10000
+		
+Build Plate
+  Port Number	2
+  Device Number	2
+  Axis Number	4
+  Step [Steps/mm]	100
+  Position Min [mm]	-100
+  Position Max [mm]	100
+  Speed Min [mm/s]	1
+  Speed Max [mm/s]	10000
+
+Hopper Plate
+  Port Number	2
+  Device Number	2
+  Axis Number	5
+  Step [Steps/mm]	100
+  Position Min [mm]	-100
+  Position Max [mm]	100
+  Speed Min [mm/s]	1
+  Speed Max [mm/s]	10000
+  
+Spreader Blade
+  Port Number	2
+  Device Number	2
+  Axis Number	6
+  Step [Steps/mm]	100
+  Position Min [mm]	-100
+  Position Max [mm]	100
+  Speed Min [mm/s]	1
+  Speed Max [mm/s]	10000
