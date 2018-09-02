@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "powderapp.h"
+#include "ui_powderapp.h"
 #include "settings_model.h"
 #include <QFile>
 #include <QFileDialog>
@@ -7,13 +7,19 @@
 #include <QDebug>
 #include <QTreeView>
 #include <QIcon>
+#include <QList>
 
-Widget::Widget(QWidget *parent) :
+PowderApp::PowderApp(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Widget)
+    ui(new Ui::PowderApp)
 {
     ui->setupUi(this);
-    ui->stackedWidget->setCurrentIndex(0);
+    this->QWidget::setMaximumWidth(335);
+    this->QWidget::setMaximumHeight(700);
+
+    QList<int> splitterSizes = {0,325};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->AppPages->setCurrentIndex(0);
     myPart = nullptr;
     PartInfoLabelModel = new QStandardItemModel;
     QStandardItem * partInfoRoot = PartInfoLabelModel->invisibleRootItem();
@@ -56,7 +62,7 @@ Widget::Widget(QWidget *parent) :
     ConfigureMenu_Devices->setIcon(QIcon(":/icons/icons/iosSettingsStrong.png"));
     ConfigureMenuRoot->appendRow(ConfigureMenu_Devices);
 
-    QStandardItem* PrintToolsRoot = new QStandardItem("Preprocessor Tools");
+    QStandardItem* PrintToolsRoot = new QStandardItem("Preprocessor");
     PrintToolsRoot->setIcon(QIcon(":/icons/icons/buffer.png"));
     menuRoot->appendRow(PrintToolsRoot);
 
@@ -65,12 +71,9 @@ Widget::Widget(QWidget *parent) :
     PrintToolsRoot->appendRow(ImportGcodeMenu);
 
     QStandardItem* HardwareToolsRoot = new QStandardItem("Print Tools");
-    HardwareToolsRoot->setIcon(QIcon(":/icons/icons/print.png"));
+    HardwareToolsRoot->setIcon(QIcon(":/icons/icons/Icon-eto-tools.png"));
     menuRoot->appendRow(HardwareToolsRoot);
 
-    QStandardItem* HardwareTools_Monitor = new QStandardItem("Printer");
-    HardwareTools_Monitor->setIcon(QIcon(":/icons/icons/iosAnalytics.png"));
-    HardwareToolsRoot->appendRow(HardwareTools_Monitor);
 
     QStandardItem* HardwareTools_Controller = new QStandardItem("3D View");
     HardwareTools_Controller->setIcon(QIcon(":/icons/icons/iosGlasses.png"));
@@ -79,6 +82,8 @@ Widget::Widget(QWidget *parent) :
     QStandardItem* HardwareTools_CommandLine = new QStandardItem("Debug");
     HardwareTools_CommandLine->setIcon(QIcon(":/icons/icons/code.png"));
     HardwareToolsRoot->appendRow(HardwareTools_CommandLine);
+
+
 
     QStringList headers;
     headers << tr("  ") << tr("  ");
@@ -92,7 +97,7 @@ Widget::Widget(QWidget *parent) :
         ui->settings_view->resizeColumnToContents(column);
 }
 
-Widget::~Widget()
+PowderApp::~PowderApp()
 {
     delete ui;
     if(myPart != nullptr)
@@ -104,7 +109,7 @@ Widget::~Widget()
 
 
 
-void Widget::on_settings_button_refreshPorts_clicked()
+void PowderApp::on_settings_button_refreshPorts_clicked()
 {
     portList.clear();
     QString info;
@@ -131,7 +136,7 @@ void Widget::on_settings_button_refreshPorts_clicked()
         ui->port_view->resizeColumnToContents(column);
 }
 
-void Widget::on_settings_button_resetToDefault_clicked()
+void PowderApp::on_settings_button_resetToDefault_clicked()
 {
     QFile file(":/default/Settings/machineset.txt");
     file.open(QIODevice::ReadOnly);
@@ -145,7 +150,7 @@ void Widget::on_settings_button_resetToDefault_clicked()
         ui->settings_view->resizeColumnToContents(column);
 }
 
-void Widget::on_settings_button_openFile_clicked()
+void PowderApp::on_settings_button_openFile_clicked()
 {
     QFileDialog dialog(this);
     if (dialog.exec())
@@ -162,7 +167,7 @@ void Widget::on_settings_button_openFile_clicked()
 
 }
 
-void Widget::on_settings_buttons_saveFile_clicked()
+void PowderApp::on_settings_buttons_saveFile_clicked()
 {
     if(m_currentCustomSettingsFile.contains("null")){
         QFileDialog dialog(this);
@@ -218,7 +223,7 @@ void Widget::on_settings_buttons_saveFile_clicked()
     }
 }
 
-void Widget::on_settings_button_apply_clicked()
+void PowderApp::on_settings_button_apply_clicked()
 {
     QModelIndex first = settingsModel->index(0,0, QModelIndex());
     QModelIndex root =  settingsModel->parent(first);
@@ -289,40 +294,97 @@ void Widget::on_settings_button_apply_clicked()
 
 
 
-void Widget::on_MenuTree_clicked(const QModelIndex &index)
+void PowderApp::on_MenuTree_clicked(const QModelIndex &index)
 {
-    QModelIndex settingsIndex = menuModel->index(0,0, QModelIndex());
+    // HomePage
+    if(index == menuModel->index(0,0,QModelIndex())){
+        ui->AppPages->setCurrentIndex(0);
+        this->QWidget::setMinimumWidth(335);
+        this->QWidget::setMinimumHeight(700);
 
-    if(index == menuModel->index(0,0,settingsIndex)){
-        ui->stackedWidget->setCurrentIndex(0);
-    }
-    if(index == menuModel->index(1,0,settingsIndex)){
-        ui->stackedWidget->setCurrentIndex(1);
-    }
+        this->QWidget::setMaximumWidth(335);
+        this->QWidget::setMaximumHeight(700);
+        QList<int> splitterSizes = {0,325};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+        ui->MenuTree->collapseAll();
 
-    QModelIndex HomeIndex = menuModel->index(1,0, QModelIndex());
-
-    if(index == menuModel->index(0,0,HomeIndex)){
-        ui->stackedWidget->setCurrentIndex(3);
-    }
-    if(index == menuModel->index(1,0,HomeIndex)){
-        ui->stackedWidget->setCurrentIndex(2);
     }
 
+    //HelpPage
+   if(index == menuModel->index(0,0,menuModel->index(0,0, QModelIndex()))){
+        ui->AppPages->setCurrentIndex(5);
+        this->QWidget::setMaximumWidth(2000);
+        this->QWidget::setMaximumHeight(2000);
+        this->QWidget::setMinimumWidth(880);
+        this->QWidget::setMinimumHeight(640);
+        QList<int> splitterSizes = {210,700};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+
+
+    }
+
+    // Port Page
+    if(index == menuModel->index(0,0,menuModel->index(1,0, QModelIndex()))){
+        ui->AppPages->setCurrentIndex(2);
+        this->QWidget::setMaximumWidth(2000);
+        this->QWidget::setMaximumHeight(2000);
+        this->QWidget::setMinimumWidth(880);
+        this->QWidget::setMinimumHeight(640);
+        QList<int> splitterSizes = {210,700};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+
+    }
+    // Confirgurator Page
+    if(index == menuModel->index(1,0,menuModel->index(1,0, QModelIndex()))){
+        ui->AppPages->setCurrentIndex(1);
+        this->QWidget::setMaximumWidth(2000);
+        this->QWidget::setMaximumHeight(2000);
+        this->QWidget::setMinimumWidth(880);
+        this->QWidget::setMinimumHeight(640);
+        QList<int> splitterSizes = {210,700};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+
+    }
+
+    // G-Code Preprocessor Page
     if(index == menuModel->index(0,0,(menuModel->index(2,0, QModelIndex())))){
-        ui->stackedWidget->setCurrentIndex(4);
+        ui->AppPages->setCurrentIndex(3);
+        this->QWidget::setMaximumWidth(2000);
+        this->QWidget::setMaximumHeight(2000);
+        this->QWidget::setMinimumWidth(1080);
+        this->QWidget::setMinimumHeight(750);
+        QList<int> splitterSizes = {210,1080};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+
     }
 
-    if(index == menuModel->index(0,0,(menuModel->index(3,0, QModelIndex())))){
-        ui->stackedWidget->setCurrentIndex(5);
+    // Print Tools Page
+    if(index == menuModel->index(3,0,QModelIndex())){
+        this->QWidget::setMaximumWidth(2000);
+        this->QWidget::setMaximumHeight(2000);
+        this->QWidget::setMinimumWidth(1080);
+        this->QWidget::setMinimumHeight(750);
+        QList<int> splitterSizes = {210,1080};
+        ui->Menu_Page_Splitter->setSizes(splitterSizes);
+        ui->AppPages->setCurrentIndex(4);
     }
+
+
+
+    // 3D View Page
+    if(index == menuModel->index(0,0,(menuModel->index(3,0, QModelIndex())))){
+        emit view3d_pressed();
+
+    }
+
+    // Debug Terminal Page
     if(index == menuModel->index(1,0,(menuModel->index(3,0, QModelIndex())))){
 
     }
 
 }
 
-void Widget::on_settings_button_openFile_2_clicked()
+void PowderApp::on_settings_button_openFile_2_clicked()
 {
     QString partFileName;
     QFileDialog dialog(this);
@@ -346,6 +408,74 @@ void Widget::on_settings_button_openFile_2_clicked()
     partDataRoot->appendRow(partStatus);
     partDataRoot->appendRow(partBlocks);
     partDataRoot->appendRow(partLayers);
+    emit part_added(*myPart);
 
+
+}
+
+void PowderApp::on_Main_Button_ConfigurationPage_clicked()
+{
+
+    ui->AppPages->setCurrentIndex(1);
+    this->QWidget::setMaximumWidth(2000);
+    this->QWidget::setMaximumHeight(2000);
+    this->QWidget::setMinimumWidth(880);
+    this->QWidget::setMinimumHeight(640);
+    QList<int> splitterSizes = {210,700};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->MenuTree->expand(menuModel->index(1,0,QModelIndex()));
+
+
+}
+
+void PowderApp::on_Main_Button_PortPage_clicked()
+{
+    ui->AppPages->setCurrentIndex(2);
+    this->QWidget::setMaximumWidth(2000);
+    this->QWidget::setMaximumHeight(2000);
+    this->QWidget::setMinimumWidth(880);
+    this->QWidget::setMinimumHeight(640);
+    QList<int> splitterSizes = {210,700};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->MenuTree->expand(menuModel->index(1,0,QModelIndex()));
+
+}
+
+void PowderApp::on_Main_Button_GCodePage_clicked()
+{
+    ui->AppPages->setCurrentIndex(2);
+    this->QWidget::setMaximumWidth(2000);
+    this->QWidget::setMaximumHeight(2000);
+    this->QWidget::setMinimumWidth(1080);
+    this->QWidget::setMinimumHeight(750);
+    QList<int> splitterSizes = {210,1080};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->AppPages->setCurrentIndex(3);
+    ui->MenuTree->expand(menuModel->index(2,0,QModelIndex()));
+
+}
+
+void PowderApp::on_Main_Button_ControllerPage_clicked()
+{
+    ui->AppPages->setCurrentIndex(2);
+    this->QWidget::setMaximumWidth(2000);
+    this->QWidget::setMaximumHeight(2000);
+    this->QWidget::setMinimumWidth(1080);
+    this->QWidget::setMinimumHeight(750);
+    QList<int> splitterSizes = {210,1080};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->AppPages->setCurrentIndex(4);
+    ui->MenuTree->expand(menuModel->index(3,0,QModelIndex()));
+
+}
+
+void PowderApp::on_Main_Button_HelpPage_clicked()
+{
+    ui->AppPages->setCurrentIndex(2);
+    this->QWidget::setFixedSize(880,640);
+    QList<int> splitterSizes = {210,700};
+    ui->Menu_Page_Splitter->setSizes(splitterSizes);
+    ui->AppPages->setCurrentIndex(5);
+    ui->MenuTree->expand(menuModel->index(0,0,QModelIndex()));
 
 }

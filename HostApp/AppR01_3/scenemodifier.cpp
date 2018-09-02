@@ -38,13 +38,13 @@ SceneModifier::SceneModifier(Qt3DCore::QEntity *rootEntity)
 
 
     // Plane shape data
-    QVector3D start(0,0,0);
-    QVector3D end(2,0,4);
-    QVector3D d(2,0,4);
-    QVector3D e(5,0,1);
+//    QVector3D start(0,0,0);
+//    QVector3D end(2,0,4);
+//    QVector3D d(2,0,4);
+//    QVector3D e(5,0,1);
 
-    this->addSegment(generateSegment(start,end,0.125,(Qt::white),rootEntity));
-    this->addSegment(generateSegment(d,e,0.125,(Qt::white),rootEntity));
+//    this->addSegment(generateSegment(start,end,0.125,(Qt::white),rootEntity));
+//    this->addSegment(generateSegment(d,e,0.125,(Qt::white),rootEntity));
 
 
 }
@@ -74,14 +74,14 @@ void SceneModifier::addSegment(Qt3DCore::QEntity *segment){
     m_segments.push_back(segment);
 }
 
-void SceneModifier::addSegment(QVector3D &start,QVector3D &end, int width, QColor color){
+void SceneModifier::addSegment(QVector3D &start,QVector3D &end, float width, QColor color){
     m_segments.push_back(generateSegment(start,end,width,color, m_rootEntity));
 }
 
 
 void SceneModifier::addSegment(float xStart, float yStart, float zStart,
                                float xEnd, float yEnd, float zEnd,
-                               int width, QColor color){
+                               float width, QColor color){
     m_segments.push_back(generateSegment(QVector3D(xStart,yStart, zStart),
                                          QVector3D(xEnd, yEnd, zEnd),
                                          width, color, m_rootEntity));

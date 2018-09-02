@@ -95,5 +95,11 @@
         <file>icons/cube.png</file>
         <file>icons/print.png</file>
         <file>icons/iosGlasses.png</file>
+        <file>icons/iosArrowForward.png</file>
+        <file>icons/iosArrowUp.png</file>
+        <file>icons/iosArrowLeft.png</file>
+        <file>icons/iosArrowDown.png</file>
+        <file>icons/iosArrowRight copy.png</file>
+        <file>icons/Homing.png</file>
     </qresource>
 </RCC>

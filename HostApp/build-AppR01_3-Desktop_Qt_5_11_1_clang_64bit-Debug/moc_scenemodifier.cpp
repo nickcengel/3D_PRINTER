@@ -92,8 +92,8 @@ static const uint qt_meta_data_SceneModifier[] = {
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, 0x80000000 | 6,    7,
-    QMetaType::Void, 0x80000000 | 8, 0x80000000 | 8, QMetaType::Int, QMetaType::QColor,    9,   10,   11,   12,
-    QMetaType::Void, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Int, QMetaType::QColor,   13,   14,   15,   16,   17,   18,   11,   12,
+    QMetaType::Void, 0x80000000 | 8, 0x80000000 | 8, QMetaType::Float, QMetaType::QColor,    9,   10,   11,   12,
+    QMetaType::Void, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::Float, QMetaType::QColor,   13,   14,   15,   16,   17,   18,   11,   12,
     QMetaType::Void, QMetaType::Int,   20,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Bool,    3,
@@ -110,8 +110,8 @@ void SceneModifier::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 0: _t->enableBoundBox((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 1: _t->enableAxis((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 2: _t->addSegment((*reinterpret_cast< Qt3DCore::QEntity*(*)>(_a[1]))); break;
-        case 3: _t->addSegment((*reinterpret_cast< QVector3D(*)>(_a[1])),(*reinterpret_cast< QVector3D(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< QColor(*)>(_a[4]))); break;
-        case 4: _t->addSegment((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2])),(*reinterpret_cast< float(*)>(_a[3])),(*reinterpret_cast< float(*)>(_a[4])),(*reinterpret_cast< float(*)>(_a[5])),(*reinterpret_cast< float(*)>(_a[6])),(*reinterpret_cast< int(*)>(_a[7])),(*reinterpret_cast< QColor(*)>(_a[8]))); break;
+        case 3: _t->addSegment((*reinterpret_cast< QVector3D(*)>(_a[1])),(*reinterpret_cast< QVector3D(*)>(_a[2])),(*reinterpret_cast< float(*)>(_a[3])),(*reinterpret_cast< QColor(*)>(_a[4]))); break;
+        case 4: _t->addSegment((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2])),(*reinterpret_cast< float(*)>(_a[3])),(*reinterpret_cast< float(*)>(_a[4])),(*reinterpret_cast< float(*)>(_a[5])),(*reinterpret_cast< float(*)>(_a[6])),(*reinterpret_cast< float(*)>(_a[7])),(*reinterpret_cast< QColor(*)>(_a[8]))); break;
         case 5: _t->clearSegment((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: _t->clearSegments(); break;
         case 7: _t->showSegments((*reinterpret_cast< bool(*)>(_a[1]))); break;

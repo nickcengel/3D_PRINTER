@@ -29,7 +29,6 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        widget.cpp \
     settings_item.cpp \
     settings_model.cpp \
     serial_port_drivers.cpp \
@@ -40,10 +39,15 @@ SOURCES += \
     menu_model.cpp \
     line3d.cpp \
     scenemodifier.cpp \
-    segment3d.cpp
+    segment3d.cpp \
+    powderapp.cpp \
+    view3dapp.cpp \
+    system_objects/blockobject.cpp \
+    system_objects/partobject.cpp \
+    gcode_utility/gcode_parser.cpp \
+    system_objects/settingsobject.cpp
 
 HEADERS += \
-        widget.h \
     settings_model.h \
     settings_item.h \
     serial_port_drivers.h \
@@ -54,10 +58,16 @@ HEADERS += \
     menu_model.h \
     line3d.h \
     scenemodifier.h \
-    segment3d.h
+    segment3d.h \
+    powderapp.h \
+    view3dapp.h \
+    system_objects/blockobject.h \
+    system_objects/partobject.h \
+    gcode_utility/gcode_parser.h \
+    system_objects/settingsobject.h
 
 FORMS += \
-        widget.ui
+    powderapp.ui
 
 target.path = $$[QT_INSTALL_EXAMPLES]/qt3d/$$TARGET
 INSTALLS += target

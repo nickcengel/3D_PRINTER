@@ -25,8 +25,8 @@ public slots:
     void enableAxis(bool enabled);
 
     void addSegment(Qt3DCore::QEntity *segment);
-    void addSegment(QVector3D &start,QVector3D &end, int width, QColor color);
-    void addSegment(float xStart, float yStart, float zStart, float xEnd, float yEnd, float zEnd, int width, QColor color);
+    void addSegment(QVector3D &start, QVector3D &end, float width, QColor color);
+    void addSegment(float xStart, float yStart, float zStart, float xEnd, float yEnd, float zEnd, float width, QColor color);
 
     void clearSegment(int segmentNumber);
     void clearSegments();

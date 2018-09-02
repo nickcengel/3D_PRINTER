@@ -7,6 +7,8 @@
 #include <qfiledialog.h>
 #include <QString>
 #include <QStringList>
+#include <QMetaType>
+
 #include "hardware_drivers.h"
 
 using namespace HARDWARE_NS;
@@ -154,6 +156,8 @@ public:
     QVector<Block> get() const;
     Block getBlock(const int blockNumber) const;
 
+    int getBlockCount();
+
     void addBlock(const Block &aBlock);
     bool isLayerValid() const;
     void setLayerValid(const bool layerValid);
@@ -219,10 +223,12 @@ private:
     void makePart();    /// used by constructor
 
 };
+
 ////////////////////////////////////////// END PART CLASS //////////////////////////////////////////
 
 
 }
+//Q_DECLARE_METATYPE(GCODE_BLOCK_NS::Part);
 
 
 

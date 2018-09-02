@@ -682,6 +682,10 @@ void Layer::addBlock(const Block &aBlock)
     m_layer.append(aBlock);
 }
 
+int Layer::getBlockCount(){
+
+    return m_layer.size();
+}
 bool Layer::isLayerValid() const
 {
     return m_layerValid;
