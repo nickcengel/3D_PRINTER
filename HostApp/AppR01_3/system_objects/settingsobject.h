@@ -10,17 +10,17 @@ class SettingsObject : public QObject
     Q_PROPERTY(SettingsStatus status READ status WRITE setStatus)
     Q_PROPERTY(uint8_t laser_galvo_portNumber READ laser_galvo_portNumber WRITE setLaser_galvo_portNumber)
     Q_PROPERTY(uint8_t materialDelivery_portNumber READ materialDelivery_portNumber WRITE setMaterialDelivery_portNumber)
-    Q_PROPERTY(DeviceNumber laser_deviceNumber READ laser_deviceNumber WRITE setLaser_deviceNumber)
-    Q_PROPERTY(DeviceNumber galvo_deviceNumber READ galvo_deviceNumber WRITE setGalvo_deviceNumber)
-    Q_PROPERTY(DeviceNumber z_deviceNumber READ z_deviceNumber WRITE setZ_deviceNumber)
-    Q_PROPERTY(DeviceNumber hopper_deviceNumber READ hopper_deviceNumber WRITE setHopper_deviceNumber)
-    Q_PROPERTY(DeviceNumber spreader_deviceNumber READ spreader_deviceNumber WRITE setSpreader_deviceNumber)
-    Q_PROPERTY(AxisNumber laser_axisNumber READ laser_axisNumber WRITE setLaser_axisNumber)
-    Q_PROPERTY(AxisNumber x_axisNumber READ x_axisNumber WRITE setX_axisNumber)
-    Q_PROPERTY(AxisNumber y_axisNumber READ y_axisNumber WRITE setY_axisNumber)
-    Q_PROPERTY(AxisNumber z_axisNumber READ z_axisNumber WRITE setZ_axisNumber)
-    Q_PROPERTY(AxisNumber hopper_axisNumber READ hopper_axisNumber WRITE setHopper_axisNumber)
-    Q_PROPERTY(AxisNumber spreader_axisNumber READ spreader_axisNumber WRITE setSpreader_axisNumber)
+    Q_PROPERTY(uint8_t laser_deviceNumber READ laser_deviceNumber WRITE setLaser_deviceNumber)
+    Q_PROPERTY(uint8_t galvo_deviceNumber READ galvo_deviceNumber WRITE setGalvo_deviceNumber)
+    Q_PROPERTY(uint8_t z_deviceNumber READ z_deviceNumber WRITE setZ_deviceNumber)
+    Q_PROPERTY(uint8_t hopper_deviceNumber READ hopper_deviceNumber WRITE setHopper_deviceNumber)
+    Q_PROPERTY(uint8_t spreader_deviceNumber READ spreader_deviceNumber WRITE setSpreader_deviceNumber)
+    Q_PROPERTY(uint8_t laser_axisNumber READ laser_axisNumber WRITE setLaser_axisNumber)
+    Q_PROPERTY(uint8_t x_axisNumber READ x_axisNumber WRITE setX_axisNumber)
+    Q_PROPERTY(uint8_t y_axisNumber READ y_axisNumber WRITE setY_axisNumber)
+    Q_PROPERTY(uint8_t z_axisNumber READ z_axisNumber WRITE setZ_axisNumber)
+    Q_PROPERTY(uint8_t hopper_axisNumber READ hopper_axisNumber WRITE setHopper_axisNumber)
+    Q_PROPERTY(uint8_t spreader_axisNumber READ spreader_axisNumber WRITE setSpreader_axisNumber)
     Q_PROPERTY(float laser_power_resolution READ laser_power_resolution WRITE setLaser_power_resolution)
     Q_PROPERTY(float x_position_resolution READ x_position_resolution WRITE setX_position_resolution)
     Q_PROPERTY(float y_position_resolution READ y_position_resolution WRITE setY_position_resolution)
@@ -58,26 +58,6 @@ public:
     SettingsObject(const SettingsObject &otherSettings);
     ~SettingsObject();
 
-    enum DeviceNumber: uint8_t
-    {
-        DEVICE_LASER,
-        DEVICE_GALVO,
-        DEVICE_Z_AXIS,
-        DEVICE_SPREADER,
-    };
-    Q_ENUM(DeviceNumber)
-
-    enum AxisNumber : uint8_t
-    {
-        LASER_AXIS,
-        X_AXIS,
-        Y_AXIS,
-        Z_AXIS,
-        HOPPER_AXIS,
-        SPREADER_AXIS
-    };
-    Q_ENUM(AxisNumber)
-
     enum SettingsStatus : uint8_t
     {
         NO_SETTINGS,
@@ -92,43 +72,43 @@ public:
     uint8_t materialDelivery_portNumber() const;
     void setMaterialDelivery_portNumber(const uint8_t &materialDelivery_portNumber);
 
-    DeviceNumber laser_deviceNumber() const;
-    void setLaser_deviceNumber(const DeviceNumber &laser_deviceNumber);
+    uint8_t laser_deviceNumber() const;
+    void setLaser_deviceNumber(const uint8_t &laser_deviceNumber);
 
 
-    DeviceNumber galvo_deviceNumber() const;
-    void setGalvo_deviceNumber(const DeviceNumber &galvo_deviceNumber);
+    uint8_t galvo_deviceNumber() const;
+    void setGalvo_deviceNumber(const uint8_t &galvo_deviceNumber);
 
 
-    DeviceNumber z_deviceNumber() const;
-    void setZ_deviceNumber(const DeviceNumber &z_deviceNumber);
+    uint8_t z_deviceNumber() const;
+    void setZ_deviceNumber(const uint8_t &z_deviceNumber);
 
 
-    DeviceNumber hopper_deviceNumber() const;
-    void setHopper_deviceNumber(const DeviceNumber &hopper_deviceNumber);
+    uint8_t hopper_deviceNumber() const;
+    void setHopper_deviceNumber(const uint8_t &hopper_deviceNumber);
 
 
-    DeviceNumber spreader_deviceNumber() const;
-    void setSpreader_deviceNumber(const DeviceNumber &spreader_deviceNumber);
+    uint8_t spreader_deviceNumber() const;
+    void setSpreader_deviceNumber(const uint8_t &spreader_deviceNumber);
 
 
-    AxisNumber laser_axisNumber() const;
-    void setLaser_axisNumber(const AxisNumber &laser_axisNumber);
+    uint8_t laser_axisNumber() const;
+    void setLaser_axisNumber(const uint8_t &laser_axisNumber);
 
-    AxisNumber x_axisNumber() const;
-    void setX_axisNumber(const AxisNumber &x_axisNumber);
+    uint8_t x_axisNumber() const;
+    void setX_axisNumber(const uint8_t &x_axisNumber);
 
-    AxisNumber y_axisNumber() const;
-    void setY_axisNumber(const AxisNumber &y_axisNumber);
+    uint8_t y_axisNumber() const;
+    void setY_axisNumber(const uint8_t &y_axisNumber);
 
-    AxisNumber z_axisNumber() const;
-    void setZ_axisNumber(const AxisNumber &z_axisNumber);
+    uint8_t z_axisNumber() const;
+    void setZ_axisNumber(const uint8_t &z_axisNumber);
 
-    AxisNumber hopper_axisNumber() const;
-    void setHopper_axisNumber(const AxisNumber &hopper_axisNumber);
+    uint8_t hopper_axisNumber() const;
+    void setHopper_axisNumber(const uint8_t &hopper_axisNumber);
 
-    AxisNumber spreader_axisNumber() const;
-    void setSpreader_axisNumber(const AxisNumber &spreader_axisNumber);
+    uint8_t spreader_axisNumber() const;
+    void setSpreader_axisNumber(const uint8_t &spreader_axisNumber);
 
     float laser_power_resolution() const;
     void setLaser_power_resolution(float laser_power_resolution);
@@ -244,18 +224,18 @@ private:
     uint8_t m_laser_galvo_portNumber;
     uint8_t m_materialDelivery_portNumber;
 
-    DeviceNumber m_laser_deviceNumber;
-    DeviceNumber m_galvo_deviceNumber;
-    DeviceNumber m_z_deviceNumber;
-    DeviceNumber m_hopper_deviceNumber;
-    DeviceNumber m_spreader_deviceNumber;
+    uint8_t m_laser_deviceNumber;
+    uint8_t m_galvo_deviceNumber;
+    uint8_t m_z_deviceNumber;
+    uint8_t m_hopper_deviceNumber;
+    uint8_t m_spreader_deviceNumber;
 
-    AxisNumber m_laser_axisNumber;
-    AxisNumber m_x_axisNumber;
-    AxisNumber m_y_axisNumber;
-    AxisNumber m_z_axisNumber;
-    AxisNumber m_hopper_axisNumber;
-    AxisNumber m_spreader_axisNumber;
+    uint8_t m_laser_axisNumber;
+    uint8_t m_x_axisNumber;
+    uint8_t m_y_axisNumber;
+    uint8_t m_z_axisNumber;
+    uint8_t m_hopper_axisNumber;
+    uint8_t m_spreader_axisNumber;
 
     float m_laser_power_resolution;
     float m_x_position_resolution;

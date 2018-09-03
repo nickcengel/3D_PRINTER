@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SettingsObject_t {
-    QByteArrayData data[61];
-    char stringdata0[1010];
+    QByteArrayData data[49];
+    char stringdata0[872];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,72 +39,60 @@ QT_MOC_LITERAL(4, 54, 22), // "laser_galvo_portNumber"
 QT_MOC_LITERAL(5, 77, 7), // "uint8_t"
 QT_MOC_LITERAL(6, 85, 27), // "materialDelivery_portNumber"
 QT_MOC_LITERAL(7, 113, 18), // "laser_deviceNumber"
-QT_MOC_LITERAL(8, 132, 12), // "DeviceNumber"
-QT_MOC_LITERAL(9, 145, 18), // "galvo_deviceNumber"
-QT_MOC_LITERAL(10, 164, 14), // "z_deviceNumber"
-QT_MOC_LITERAL(11, 179, 19), // "hopper_deviceNumber"
-QT_MOC_LITERAL(12, 199, 21), // "spreader_deviceNumber"
-QT_MOC_LITERAL(13, 221, 16), // "laser_axisNumber"
-QT_MOC_LITERAL(14, 238, 10), // "AxisNumber"
-QT_MOC_LITERAL(15, 249, 12), // "x_axisNumber"
-QT_MOC_LITERAL(16, 262, 12), // "y_axisNumber"
-QT_MOC_LITERAL(17, 275, 12), // "z_axisNumber"
-QT_MOC_LITERAL(18, 288, 17), // "hopper_axisNumber"
-QT_MOC_LITERAL(19, 306, 19), // "spreader_axisNumber"
-QT_MOC_LITERAL(20, 326, 22), // "laser_power_resolution"
-QT_MOC_LITERAL(21, 349, 21), // "x_position_resolution"
-QT_MOC_LITERAL(22, 371, 21), // "y_position_resolution"
-QT_MOC_LITERAL(23, 393, 21), // "z_position_resolution"
-QT_MOC_LITERAL(24, 415, 26), // "hopper_position_resolution"
-QT_MOC_LITERAL(25, 442, 28), // "spreader_position_resolution"
-QT_MOC_LITERAL(26, 471, 19), // "laser_power_default"
-QT_MOC_LITERAL(27, 491, 15), // "laser_power_max"
-QT_MOC_LITERAL(28, 507, 15), // "laser_power_min"
-QT_MOC_LITERAL(29, 523, 14), // "x_position_max"
-QT_MOC_LITERAL(30, 538, 14), // "x_position_min"
-QT_MOC_LITERAL(31, 553, 14), // "y_position_max"
-QT_MOC_LITERAL(32, 568, 14), // "y_position_min"
-QT_MOC_LITERAL(33, 583, 16), // "xy_speed_default"
-QT_MOC_LITERAL(34, 600, 12), // "xy_speed_max"
-QT_MOC_LITERAL(35, 613, 12), // "xy_speed_min"
-QT_MOC_LITERAL(36, 626, 14), // "z_position_max"
-QT_MOC_LITERAL(37, 641, 14), // "z_position_min"
-QT_MOC_LITERAL(38, 656, 15), // "z_speed_default"
-QT_MOC_LITERAL(39, 672, 11), // "z_speed_max"
-QT_MOC_LITERAL(40, 684, 11), // "z_speed_min"
-QT_MOC_LITERAL(41, 696, 19), // "hopper_position_max"
-QT_MOC_LITERAL(42, 716, 19), // "hopper_position_min"
-QT_MOC_LITERAL(43, 736, 20), // "hopper_speed_default"
-QT_MOC_LITERAL(44, 757, 16), // "hopper_speed_max"
-QT_MOC_LITERAL(45, 774, 16), // "hopper_speed_min"
-QT_MOC_LITERAL(46, 791, 21), // "spreader_position_max"
-QT_MOC_LITERAL(47, 813, 21), // "spreader_position_min"
-QT_MOC_LITERAL(48, 835, 22), // "spreader_speed_default"
-QT_MOC_LITERAL(49, 858, 18), // "spreader_speed_max"
-QT_MOC_LITERAL(50, 877, 18), // "spreader_speed_min"
-QT_MOC_LITERAL(51, 896, 12), // "DEVICE_LASER"
-QT_MOC_LITERAL(52, 909, 12), // "DEVICE_GALVO"
-QT_MOC_LITERAL(53, 922, 13), // "DEVICE_Z_AXIS"
-QT_MOC_LITERAL(54, 936, 15), // "DEVICE_SPREADER"
-QT_MOC_LITERAL(55, 952, 10), // "LASER_AXIS"
-QT_MOC_LITERAL(56, 963, 6), // "X_AXIS"
-QT_MOC_LITERAL(57, 970, 6), // "Y_AXIS"
-QT_MOC_LITERAL(58, 977, 6), // "Z_AXIS"
-QT_MOC_LITERAL(59, 984, 11), // "HOPPER_AXIS"
-QT_MOC_LITERAL(60, 996, 13) // "SPREADER_AXIS"
+QT_MOC_LITERAL(8, 132, 18), // "galvo_deviceNumber"
+QT_MOC_LITERAL(9, 151, 14), // "z_deviceNumber"
+QT_MOC_LITERAL(10, 166, 19), // "hopper_deviceNumber"
+QT_MOC_LITERAL(11, 186, 21), // "spreader_deviceNumber"
+QT_MOC_LITERAL(12, 208, 16), // "laser_axisNumber"
+QT_MOC_LITERAL(13, 225, 12), // "x_axisNumber"
+QT_MOC_LITERAL(14, 238, 12), // "y_axisNumber"
+QT_MOC_LITERAL(15, 251, 12), // "z_axisNumber"
+QT_MOC_LITERAL(16, 264, 17), // "hopper_axisNumber"
+QT_MOC_LITERAL(17, 282, 19), // "spreader_axisNumber"
+QT_MOC_LITERAL(18, 302, 22), // "laser_power_resolution"
+QT_MOC_LITERAL(19, 325, 21), // "x_position_resolution"
+QT_MOC_LITERAL(20, 347, 21), // "y_position_resolution"
+QT_MOC_LITERAL(21, 369, 21), // "z_position_resolution"
+QT_MOC_LITERAL(22, 391, 26), // "hopper_position_resolution"
+QT_MOC_LITERAL(23, 418, 28), // "spreader_position_resolution"
+QT_MOC_LITERAL(24, 447, 19), // "laser_power_default"
+QT_MOC_LITERAL(25, 467, 15), // "laser_power_max"
+QT_MOC_LITERAL(26, 483, 15), // "laser_power_min"
+QT_MOC_LITERAL(27, 499, 14), // "x_position_max"
+QT_MOC_LITERAL(28, 514, 14), // "x_position_min"
+QT_MOC_LITERAL(29, 529, 14), // "y_position_max"
+QT_MOC_LITERAL(30, 544, 14), // "y_position_min"
+QT_MOC_LITERAL(31, 559, 16), // "xy_speed_default"
+QT_MOC_LITERAL(32, 576, 12), // "xy_speed_max"
+QT_MOC_LITERAL(33, 589, 12), // "xy_speed_min"
+QT_MOC_LITERAL(34, 602, 14), // "z_position_max"
+QT_MOC_LITERAL(35, 617, 14), // "z_position_min"
+QT_MOC_LITERAL(36, 632, 15), // "z_speed_default"
+QT_MOC_LITERAL(37, 648, 11), // "z_speed_max"
+QT_MOC_LITERAL(38, 660, 11), // "z_speed_min"
+QT_MOC_LITERAL(39, 672, 19), // "hopper_position_max"
+QT_MOC_LITERAL(40, 692, 19), // "hopper_position_min"
+QT_MOC_LITERAL(41, 712, 20), // "hopper_speed_default"
+QT_MOC_LITERAL(42, 733, 16), // "hopper_speed_max"
+QT_MOC_LITERAL(43, 750, 16), // "hopper_speed_min"
+QT_MOC_LITERAL(44, 767, 21), // "spreader_position_max"
+QT_MOC_LITERAL(45, 789, 21), // "spreader_position_min"
+QT_MOC_LITERAL(46, 811, 22), // "spreader_speed_default"
+QT_MOC_LITERAL(47, 834, 18), // "spreader_speed_max"
+QT_MOC_LITERAL(48, 853, 18) // "spreader_speed_min"
 
     },
     "SettingsObject\0settingsFilePath\0status\0"
     "SettingsStatus\0laser_galvo_portNumber\0"
     "uint8_t\0materialDelivery_portNumber\0"
-    "laser_deviceNumber\0DeviceNumber\0"
-    "galvo_deviceNumber\0z_deviceNumber\0"
-    "hopper_deviceNumber\0spreader_deviceNumber\0"
-    "laser_axisNumber\0AxisNumber\0x_axisNumber\0"
-    "y_axisNumber\0z_axisNumber\0hopper_axisNumber\0"
-    "spreader_axisNumber\0laser_power_resolution\0"
-    "x_position_resolution\0y_position_resolution\0"
-    "z_position_resolution\0hopper_position_resolution\0"
+    "laser_deviceNumber\0galvo_deviceNumber\0"
+    "z_deviceNumber\0hopper_deviceNumber\0"
+    "spreader_deviceNumber\0laser_axisNumber\0"
+    "x_axisNumber\0y_axisNumber\0z_axisNumber\0"
+    "hopper_axisNumber\0spreader_axisNumber\0"
+    "laser_power_resolution\0x_position_resolution\0"
+    "y_position_resolution\0z_position_resolution\0"
+    "hopper_position_resolution\0"
     "spreader_position_resolution\0"
     "laser_power_default\0laser_power_max\0"
     "laser_power_min\0x_position_max\0"
@@ -117,10 +105,7 @@ QT_MOC_LITERAL(60, 996, 13) // "SPREADER_AXIS"
     "hopper_speed_max\0hopper_speed_min\0"
     "spreader_position_max\0spreader_position_min\0"
     "spreader_speed_default\0spreader_speed_max\0"
-    "spreader_speed_min\0DEVICE_LASER\0"
-    "DEVICE_GALVO\0DEVICE_Z_AXIS\0DEVICE_SPREADER\0"
-    "LASER_AXIS\0X_AXIS\0Y_AXIS\0Z_AXIS\0"
-    "HOPPER_AXIS\0SPREADER_AXIS"
+    "spreader_speed_min"
 };
 #undef QT_MOC_LITERAL
 
@@ -132,7 +117,7 @@ static const uint qt_meta_data_SettingsObject[] = {
        0,    0, // classinfo
        0,    0, // methods
       46,   14, // properties
-       2,  152, // enums/sets
+       0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
@@ -142,17 +127,19 @@ static const uint qt_meta_data_SettingsObject[] = {
        2, 0x80000000 | 3, 0x0009510b,
        4, 0x80000000 | 5, 0x0009510b,
        6, 0x80000000 | 5, 0x0009510b,
-       7, 0x80000000 | 8, 0x0009510b,
-       9, 0x80000000 | 8, 0x0009510b,
-      10, 0x80000000 | 8, 0x0009510b,
-      11, 0x80000000 | 8, 0x0009510b,
-      12, 0x80000000 | 8, 0x0009510b,
-      13, 0x80000000 | 14, 0x0009510b,
-      15, 0x80000000 | 14, 0x0009510b,
-      16, 0x80000000 | 14, 0x0009510b,
-      17, 0x80000000 | 14, 0x0009510b,
-      18, 0x80000000 | 14, 0x0009510b,
-      19, 0x80000000 | 14, 0x0009510b,
+       7, 0x80000000 | 5, 0x0009510b,
+       8, 0x80000000 | 5, 0x0009510b,
+       9, 0x80000000 | 5, 0x0009510b,
+      10, 0x80000000 | 5, 0x0009510b,
+      11, 0x80000000 | 5, 0x0009510b,
+      12, 0x80000000 | 5, 0x0009510b,
+      13, 0x80000000 | 5, 0x0009510b,
+      14, 0x80000000 | 5, 0x0009510b,
+      15, 0x80000000 | 5, 0x0009510b,
+      16, 0x80000000 | 5, 0x0009510b,
+      17, 0x80000000 | 5, 0x0009510b,
+      18, QMetaType::Float, 0x00095103,
+      19, QMetaType::Float, 0x00095103,
       20, QMetaType::Float, 0x00095103,
       21, QMetaType::Float, 0x00095103,
       22, QMetaType::Float, 0x00095103,
@@ -164,11 +151,11 @@ static const uint qt_meta_data_SettingsObject[] = {
       28, QMetaType::Float, 0x00095103,
       29, QMetaType::Float, 0x00095103,
       30, QMetaType::Float, 0x00095103,
-      31, QMetaType::Float, 0x00095103,
-      32, QMetaType::Float, 0x00095103,
+      31, QMetaType::Float, 0x00095003,
+      32, QMetaType::Float, 0x00095003,
       33, QMetaType::Float, 0x00095003,
-      34, QMetaType::Float, 0x00095003,
-      35, QMetaType::Float, 0x00095003,
+      34, QMetaType::Float, 0x00095103,
+      35, QMetaType::Float, 0x00095103,
       36, QMetaType::Float, 0x00095103,
       37, QMetaType::Float, 0x00095103,
       38, QMetaType::Float, 0x00095103,
@@ -180,26 +167,8 @@ static const uint qt_meta_data_SettingsObject[] = {
       44, QMetaType::Float, 0x00095103,
       45, QMetaType::Float, 0x00095103,
       46, QMetaType::Float, 0x00095103,
-      47, QMetaType::Float, 0x00095103,
-      48, QMetaType::Float, 0x00095103,
-      49, 0x80000000 | 5, 0x0009510b,
-      50, 0x80000000 | 5, 0x0009510b,
-
- // enums: name, flags, count, data
-       8, 0x0,    4,  160,
-      14, 0x0,    6,  168,
-
- // enum data: key, value
-      51, uint(SettingsObject::DEVICE_LASER),
-      52, uint(SettingsObject::DEVICE_GALVO),
-      53, uint(SettingsObject::DEVICE_Z_AXIS),
-      54, uint(SettingsObject::DEVICE_SPREADER),
-      55, uint(SettingsObject::LASER_AXIS),
-      56, uint(SettingsObject::X_AXIS),
-      57, uint(SettingsObject::Y_AXIS),
-      58, uint(SettingsObject::Z_AXIS),
-      59, uint(SettingsObject::HOPPER_AXIS),
-      60, uint(SettingsObject::SPREADER_AXIS),
+      47, 0x80000000 | 5, 0x0009510b,
+      48, 0x80000000 | 5, 0x0009510b,
 
        0        // eod
 };
@@ -217,17 +186,17 @@ void SettingsObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: *reinterpret_cast< SettingsStatus*>(_v) = _t->status(); break;
         case 2: *reinterpret_cast< uint8_t*>(_v) = _t->laser_galvo_portNumber(); break;
         case 3: *reinterpret_cast< uint8_t*>(_v) = _t->materialDelivery_portNumber(); break;
-        case 4: *reinterpret_cast< DeviceNumber*>(_v) = _t->laser_deviceNumber(); break;
-        case 5: *reinterpret_cast< DeviceNumber*>(_v) = _t->galvo_deviceNumber(); break;
-        case 6: *reinterpret_cast< DeviceNumber*>(_v) = _t->z_deviceNumber(); break;
-        case 7: *reinterpret_cast< DeviceNumber*>(_v) = _t->hopper_deviceNumber(); break;
-        case 8: *reinterpret_cast< DeviceNumber*>(_v) = _t->spreader_deviceNumber(); break;
-        case 9: *reinterpret_cast< AxisNumber*>(_v) = _t->laser_axisNumber(); break;
-        case 10: *reinterpret_cast< AxisNumber*>(_v) = _t->x_axisNumber(); break;
-        case 11: *reinterpret_cast< AxisNumber*>(_v) = _t->y_axisNumber(); break;
-        case 12: *reinterpret_cast< AxisNumber*>(_v) = _t->z_axisNumber(); break;
-        case 13: *reinterpret_cast< AxisNumber*>(_v) = _t->hopper_axisNumber(); break;
-        case 14: *reinterpret_cast< AxisNumber*>(_v) = _t->spreader_axisNumber(); break;
+        case 4: *reinterpret_cast< uint8_t*>(_v) = _t->laser_deviceNumber(); break;
+        case 5: *reinterpret_cast< uint8_t*>(_v) = _t->galvo_deviceNumber(); break;
+        case 6: *reinterpret_cast< uint8_t*>(_v) = _t->z_deviceNumber(); break;
+        case 7: *reinterpret_cast< uint8_t*>(_v) = _t->hopper_deviceNumber(); break;
+        case 8: *reinterpret_cast< uint8_t*>(_v) = _t->spreader_deviceNumber(); break;
+        case 9: *reinterpret_cast< uint8_t*>(_v) = _t->laser_axisNumber(); break;
+        case 10: *reinterpret_cast< uint8_t*>(_v) = _t->x_axisNumber(); break;
+        case 11: *reinterpret_cast< uint8_t*>(_v) = _t->y_axisNumber(); break;
+        case 12: *reinterpret_cast< uint8_t*>(_v) = _t->z_axisNumber(); break;
+        case 13: *reinterpret_cast< uint8_t*>(_v) = _t->hopper_axisNumber(); break;
+        case 14: *reinterpret_cast< uint8_t*>(_v) = _t->spreader_axisNumber(); break;
         case 15: *reinterpret_cast< float*>(_v) = _t->laser_power_resolution(); break;
         case 16: *reinterpret_cast< float*>(_v) = _t->x_position_resolution(); break;
         case 17: *reinterpret_cast< float*>(_v) = _t->y_position_resolution(); break;
@@ -270,17 +239,17 @@ void SettingsObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: _t->setStatus(*reinterpret_cast< SettingsStatus*>(_v)); break;
         case 2: _t->setLaser_galvo_portNumber(*reinterpret_cast< uint8_t*>(_v)); break;
         case 3: _t->setMaterialDelivery_portNumber(*reinterpret_cast< uint8_t*>(_v)); break;
-        case 4: _t->setLaser_deviceNumber(*reinterpret_cast< DeviceNumber*>(_v)); break;
-        case 5: _t->setGalvo_deviceNumber(*reinterpret_cast< DeviceNumber*>(_v)); break;
-        case 6: _t->setZ_deviceNumber(*reinterpret_cast< DeviceNumber*>(_v)); break;
-        case 7: _t->setHopper_deviceNumber(*reinterpret_cast< DeviceNumber*>(_v)); break;
-        case 8: _t->setSpreader_deviceNumber(*reinterpret_cast< DeviceNumber*>(_v)); break;
-        case 9: _t->setLaser_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
-        case 10: _t->setX_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
-        case 11: _t->setY_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
-        case 12: _t->setZ_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
-        case 13: _t->setHopper_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
-        case 14: _t->setSpreader_axisNumber(*reinterpret_cast< AxisNumber*>(_v)); break;
+        case 4: _t->setLaser_deviceNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 5: _t->setGalvo_deviceNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 6: _t->setZ_deviceNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 7: _t->setHopper_deviceNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 8: _t->setSpreader_deviceNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 9: _t->setLaser_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 10: _t->setX_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 11: _t->setY_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 12: _t->setZ_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 13: _t->setHopper_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
+        case 14: _t->setSpreader_axisNumber(*reinterpret_cast< uint8_t*>(_v)); break;
         case 15: _t->setLaser_power_resolution(*reinterpret_cast< float*>(_v)); break;
         case 16: _t->setX_position_resolution(*reinterpret_cast< float*>(_v)); break;
         case 17: _t->setY_position_resolution(*reinterpret_cast< float*>(_v)); break;

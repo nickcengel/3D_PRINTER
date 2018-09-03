@@ -1,56 +1,59 @@
-Laser	-
- Port Number	1
+Configuration	Default
+ File Path    /
+ Status	Valid
+ Laser & Galvo Port Number	1
+ Material Delivery Port Number	2
+
+Laser
  Device Number	1
  Axis Number	1
- Power Density	 
-  Default	100
-  Max	1000
-  Min	1
+ Power Step [W/Step]	2
+ Power Default [Step]	128
+ Power Max [Step]	256
+ Power Min [Step]	0
 
 Galvanometer
- Port Number	1
- Device Number	1
+ Device Number	2
+ Default Speed [mm/s]	1000
+ Speed Max [mm/s]	100000
+ Speed Min [mm/s]	1
  X Axis
   Axis Number	2
   Step [Steps/mm]	100
-  Position Min [mm]	-100
   Position Max [mm]	100
-  Speed Min [mm/s]	1
-  Speed Max [mm/s]	10000		
+  Position Min [mm]	-100
  Y Axis
   Axis Number	3
   Step [Steps/mm]	100
-  Position Min [mm]	-100
   Position Max [mm]	100
-  Speed Min [mm/s]	1
-  Speed Max [mm/s]	10000
+  Position Min [mm]	-100
 		
 Build Plate
-  Port Number	2
   Device Number	2
   Axis Number	4
   Step [Steps/mm]	100
-  Position Min [mm]	-100
   Position Max [mm]	100
-  Speed Min [mm/s]	1
+  Position Min [mm]	-100
+  Default Speed [mm/s]	100
   Speed Max [mm/s]	10000
+  Speed Min [mm/s]	1
 
 Hopper Plate
-  Port Number	2
-  Device Number	2
+  Device Number	3
   Axis Number	5
   Step [Steps/mm]	100
-  Position Min [mm]	-100
   Position Max [mm]	100
-  Speed Min [mm/s]	1
+  Position Min [mm]	-100
+  Default Speed [mm/s]	100
   Speed Max [mm/s]	10000
-  
+  Speed Min [mm/s]	1
+
 Spreader Blade
-  Port Number	2
-  Device Number	2
+  Device Number	3
   Axis Number	6
   Step [Steps/mm]	100
-  Position Min [mm]	-100
   Position Max [mm]	100
-  Speed Min [mm/s]	1
+  Position Min [mm]	-100
+  Default Speed [mm/s]	100
   Speed Max [mm/s]	10000
+  Speed Min [mm/s]	1

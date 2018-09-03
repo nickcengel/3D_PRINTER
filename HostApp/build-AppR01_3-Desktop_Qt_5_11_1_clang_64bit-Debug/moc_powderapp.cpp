@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PowderApp_t {
-    QByteArrayData data[20];
-    char stringdata0[507];
+    QByteArrayData data[19];
+    char stringdata0[491];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,34 +34,32 @@ static const qt_meta_stringdata_PowderApp_t qt_meta_stringdata_PowderApp = {
 QT_MOC_LITERAL(0, 0, 9), // "PowderApp"
 QT_MOC_LITERAL(1, 10, 14), // "view3d_pressed"
 QT_MOC_LITERAL(2, 25, 0), // ""
-QT_MOC_LITERAL(3, 26, 10), // "part_added"
-QT_MOC_LITERAL(4, 37, 21), // "GCODE_BLOCK_NS::Part&"
-QT_MOC_LITERAL(5, 59, 7), // "newPart"
-QT_MOC_LITERAL(6, 67, 41), // "on_settings_button_resetToDef..."
-QT_MOC_LITERAL(7, 109, 35), // "on_settings_button_openFile_c..."
-QT_MOC_LITERAL(8, 145, 36), // "on_settings_buttons_saveFile_..."
-QT_MOC_LITERAL(9, 182, 39), // "on_settings_button_refreshPor..."
-QT_MOC_LITERAL(10, 222, 32), // "on_settings_button_apply_clicked"
-QT_MOC_LITERAL(11, 255, 19), // "on_MenuTree_clicked"
-QT_MOC_LITERAL(12, 275, 11), // "QModelIndex"
-QT_MOC_LITERAL(13, 287, 5), // "index"
-QT_MOC_LITERAL(14, 293, 37), // "on_settings_button_openFile_2..."
-QT_MOC_LITERAL(15, 331, 40), // "on_Main_Button_ConfigurationP..."
-QT_MOC_LITERAL(16, 372, 31), // "on_Main_Button_PortPage_clicked"
-QT_MOC_LITERAL(17, 404, 32), // "on_Main_Button_GCodePage_clicked"
-QT_MOC_LITERAL(18, 437, 37), // "on_Main_Button_ControllerPage..."
-QT_MOC_LITERAL(19, 475, 31) // "on_Main_Button_HelpPage_clicked"
+QT_MOC_LITERAL(3, 26, 15), // "NewPartFilePath"
+QT_MOC_LITERAL(4, 42, 8), // "filePath"
+QT_MOC_LITERAL(5, 51, 41), // "on_settings_button_resetToDef..."
+QT_MOC_LITERAL(6, 93, 35), // "on_settings_button_openFile_c..."
+QT_MOC_LITERAL(7, 129, 36), // "on_settings_buttons_saveFile_..."
+QT_MOC_LITERAL(8, 166, 39), // "on_settings_button_refreshPor..."
+QT_MOC_LITERAL(9, 206, 32), // "on_settings_button_apply_clicked"
+QT_MOC_LITERAL(10, 239, 19), // "on_MenuTree_clicked"
+QT_MOC_LITERAL(11, 259, 11), // "QModelIndex"
+QT_MOC_LITERAL(12, 271, 5), // "index"
+QT_MOC_LITERAL(13, 277, 37), // "on_gcode_tool_button_openFile..."
+QT_MOC_LITERAL(14, 315, 40), // "on_Main_Button_ConfigurationP..."
+QT_MOC_LITERAL(15, 356, 31), // "on_Main_Button_PortPage_clicked"
+QT_MOC_LITERAL(16, 388, 32), // "on_Main_Button_GCodePage_clicked"
+QT_MOC_LITERAL(17, 421, 37), // "on_Main_Button_ControllerPage..."
+QT_MOC_LITERAL(18, 459, 31) // "on_Main_Button_HelpPage_clicked"
 
     },
-    "PowderApp\0view3d_pressed\0\0part_added\0"
-    "GCODE_BLOCK_NS::Part&\0newPart\0"
-    "on_settings_button_resetToDefault_clicked\0"
+    "PowderApp\0view3d_pressed\0\0NewPartFilePath\0"
+    "filePath\0on_settings_button_resetToDefault_clicked\0"
     "on_settings_button_openFile_clicked\0"
     "on_settings_buttons_saveFile_clicked\0"
     "on_settings_button_refreshPorts_clicked\0"
     "on_settings_button_apply_clicked\0"
     "on_MenuTree_clicked\0QModelIndex\0index\0"
-    "on_settings_button_openFile_2_clicked\0"
+    "on_gcode_tool_button_openFile_clicked\0"
     "on_Main_Button_ConfigurationPage_clicked\0"
     "on_Main_Button_PortPage_clicked\0"
     "on_Main_Button_GCodePage_clicked\0"
@@ -88,22 +86,22 @@ static const uint qt_meta_data_PowderApp[] = {
        3,    1,   85,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    0,   88,    2, 0x08 /* Private */,
-       7,    0,   89,    2, 0x08 /* Private */,
-       8,    0,   90,    2, 0x08 /* Private */,
-       9,    0,   91,    2, 0x08 /* Private */,
-      10,    0,   92,    2, 0x08 /* Private */,
-      11,    1,   93,    2, 0x08 /* Private */,
-      14,    0,   96,    2, 0x08 /* Private */,
-      15,    0,   97,    2, 0x08 /* Private */,
-      16,    0,   98,    2, 0x08 /* Private */,
-      17,    0,   99,    2, 0x08 /* Private */,
-      18,    0,  100,    2, 0x08 /* Private */,
-      19,    0,  101,    2, 0x08 /* Private */,
+       5,    0,   88,    2, 0x08 /* Private */,
+       6,    0,   89,    2, 0x08 /* Private */,
+       7,    0,   90,    2, 0x08 /* Private */,
+       8,    0,   91,    2, 0x08 /* Private */,
+       9,    0,   92,    2, 0x08 /* Private */,
+      10,    1,   93,    2, 0x08 /* Private */,
+      13,    0,   96,    2, 0x08 /* Private */,
+      14,    0,   97,    2, 0x08 /* Private */,
+      15,    0,   98,    2, 0x08 /* Private */,
+      16,    0,   99,    2, 0x08 /* Private */,
+      17,    0,  100,    2, 0x08 /* Private */,
+      18,    0,  101,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 4,    5,
+    QMetaType::Void, QMetaType::QString,    4,
 
  // slots: parameters
     QMetaType::Void,
@@ -111,7 +109,7 @@ static const uint qt_meta_data_PowderApp[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 12,   13,
+    QMetaType::Void, 0x80000000 | 11,   12,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -129,14 +127,14 @@ void PowderApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->view3d_pressed(); break;
-        case 1: _t->part_added((*reinterpret_cast< GCODE_BLOCK_NS::Part(*)>(_a[1]))); break;
+        case 1: _t->NewPartFilePath((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 2: _t->on_settings_button_resetToDefault_clicked(); break;
         case 3: _t->on_settings_button_openFile_clicked(); break;
         case 4: _t->on_settings_buttons_saveFile_clicked(); break;
         case 5: _t->on_settings_button_refreshPorts_clicked(); break;
         case 6: _t->on_settings_button_apply_clicked(); break;
         case 7: _t->on_MenuTree_clicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
-        case 8: _t->on_settings_button_openFile_2_clicked(); break;
+        case 8: _t->on_gcode_tool_button_openFile_clicked(); break;
         case 9: _t->on_Main_Button_ConfigurationPage_clicked(); break;
         case 10: _t->on_Main_Button_PortPage_clicked(); break;
         case 11: _t->on_Main_Button_GCodePage_clicked(); break;
@@ -154,8 +152,8 @@ void PowderApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             }
         }
         {
-            using _t = void (PowderApp::*)(GCODE_BLOCK_NS::Part & );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderApp::part_added)) {
+            using _t = void (PowderApp::*)(const QString & );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderApp::NewPartFilePath)) {
                 *result = 1;
                 return;
             }
@@ -206,7 +204,7 @@ void PowderApp::view3d_pressed()
 }
 
 // SIGNAL 1
-void PowderApp::part_added(GCODE_BLOCK_NS::Part & _t1)
+void PowderApp::NewPartFilePath(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);

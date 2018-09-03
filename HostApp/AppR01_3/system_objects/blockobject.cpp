@@ -2,10 +2,12 @@
 
 BlockObject::BlockObject(QObject *parent) : QObject(parent)
 {
-
+    qRegisterMetaType<BlockObject>("BlockObject");
+    this->setParent(parent);
 }
 
 BlockObject::BlockObject(const BlockObject &otherBlock){
+    this->setParent(otherBlock.parent());
     m_blockNumber = otherBlock.blockNumber();
     m_layerNumber = otherBlock.layerNumber();
     m_blockTask = otherBlock.blockTask();

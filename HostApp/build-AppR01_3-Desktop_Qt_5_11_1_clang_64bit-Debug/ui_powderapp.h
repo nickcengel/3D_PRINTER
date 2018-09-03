@@ -103,7 +103,7 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QFrame *frame_5;
     QVBoxLayout *verticalLayout_7;
-    QPushButton *settings_button_openFile_2;
+    QPushButton *gcode_tool_button_openFile;
     QHBoxLayout *horizontalLayout_8;
     QSpacerItem *horizontalSpacer;
     QVBoxLayout *verticalLayout_6;
@@ -111,7 +111,7 @@ public:
     QRadioButton *radioButton;
     QRadioButton *radioButton_3;
     QSpacerItem *horizontalSpacer_2;
-    QPushButton *settings_button_apply_2;
+    QPushButton *gcode_tool_button_clearPart;
     QFrame *frame_7;
     QHBoxLayout *horizontalLayout;
     QTableView *PartInfoView;
@@ -933,20 +933,20 @@ public:
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
-        settings_button_openFile_2 = new QPushButton(frame_5);
-        settings_button_openFile_2->setObjectName(QStringLiteral("settings_button_openFile_2"));
-        sizePolicy3.setHeightForWidth(settings_button_openFile_2->sizePolicy().hasHeightForWidth());
-        settings_button_openFile_2->setSizePolicy(sizePolicy3);
-        settings_button_openFile_2->setMinimumSize(QSize(32, 32));
-        settings_button_openFile_2->setBaseSize(QSize(270, 484));
-        settings_button_openFile_2->setFont(font2);
-        settings_button_openFile_2->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
+        gcode_tool_button_openFile = new QPushButton(frame_5);
+        gcode_tool_button_openFile->setObjectName(QStringLiteral("gcode_tool_button_openFile"));
+        sizePolicy3.setHeightForWidth(gcode_tool_button_openFile->sizePolicy().hasHeightForWidth());
+        gcode_tool_button_openFile->setSizePolicy(sizePolicy3);
+        gcode_tool_button_openFile->setMinimumSize(QSize(32, 32));
+        gcode_tool_button_openFile->setBaseSize(QSize(270, 484));
+        gcode_tool_button_openFile->setFont(font2);
+        gcode_tool_button_openFile->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        settings_button_openFile_2->setIcon(icon7);
-        settings_button_openFile_2->setIconSize(QSize(30, 30));
-        settings_button_openFile_2->setFlat(true);
+        gcode_tool_button_openFile->setIcon(icon7);
+        gcode_tool_button_openFile->setIconSize(QSize(30, 30));
+        gcode_tool_button_openFile->setFlat(true);
 
-        verticalLayout_7->addWidget(settings_button_openFile_2);
+        verticalLayout_7->addWidget(gcode_tool_button_openFile);
 
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setSpacing(6);
@@ -986,21 +986,21 @@ public:
 
         verticalLayout_7->addLayout(horizontalLayout_8);
 
-        settings_button_apply_2 = new QPushButton(frame_5);
-        settings_button_apply_2->setObjectName(QStringLiteral("settings_button_apply_2"));
-        sizePolicy3.setHeightForWidth(settings_button_apply_2->sizePolicy().hasHeightForWidth());
-        settings_button_apply_2->setSizePolicy(sizePolicy3);
-        settings_button_apply_2->setMinimumSize(QSize(32, 32));
-        settings_button_apply_2->setFont(font2);
-        settings_button_apply_2->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
+        gcode_tool_button_clearPart = new QPushButton(frame_5);
+        gcode_tool_button_clearPart->setObjectName(QStringLiteral("gcode_tool_button_clearPart"));
+        sizePolicy3.setHeightForWidth(gcode_tool_button_clearPart->sizePolicy().hasHeightForWidth());
+        gcode_tool_button_clearPart->setSizePolicy(sizePolicy3);
+        gcode_tool_button_clearPart->setMinimumSize(QSize(32, 32));
+        gcode_tool_button_clearPart->setFont(font2);
+        gcode_tool_button_clearPart->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
         QIcon icon11;
         icon11.addFile(QStringLiteral(":/icons/icons/iosTrash.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_button_apply_2->setIcon(icon11);
-        settings_button_apply_2->setIconSize(QSize(30, 30));
-        settings_button_apply_2->setFlat(true);
+        gcode_tool_button_clearPart->setIcon(icon11);
+        gcode_tool_button_clearPart->setIconSize(QSize(30, 30));
+        gcode_tool_button_clearPart->setFlat(true);
 
-        verticalLayout_7->addWidget(settings_button_apply_2);
+        verticalLayout_7->addWidget(gcode_tool_button_clearPart);
 
 
         horizontalLayout_7->addWidget(frame_5);
@@ -3078,11 +3078,11 @@ public:
         settings_buttons_saveFile->setText(QApplication::translate("PowderApp", " Export Configuration", nullptr));
         settings_button_apply->setText(QApplication::translate("PowderApp", " Apply", nullptr));
         settings_button_refreshPorts->setText(QApplication::translate("PowderApp", "Rescan Ports", nullptr));
-        settings_button_openFile_2->setText(QApplication::translate("PowderApp", "Open G-Code File", nullptr));
+        gcode_tool_button_openFile->setText(QApplication::translate("PowderApp", "Open G-Code File", nullptr));
         radioButton_2->setText(QApplication::translate("PowderApp", "Display Command Strings", nullptr));
         radioButton->setText(QApplication::translate("PowderApp", "Display Comments", nullptr));
         radioButton_3->setText(QApplication::translate("PowderApp", "Ignore Errors", nullptr));
-        settings_button_apply_2->setText(QApplication::translate("PowderApp", "Clear Part", nullptr));
+        gcode_tool_button_clearPart->setText(QApplication::translate("PowderApp", "Clear Part", nullptr));
         label->setText(QApplication::translate("PowderApp", "Process Output", nullptr));
         settings_buttons_saveFile_2->setText(QApplication::translate("PowderApp", "Add Part To Job List", nullptr));
         label_70->setText(QApplication::translate("PowderApp", "Print Manager", nullptr));

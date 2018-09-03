@@ -44,8 +44,8 @@ SOURCES += \
     view3dapp.cpp \
     system_objects/blockobject.cpp \
     system_objects/partobject.cpp \
-    gcode_utility/gcode_parser.cpp \
-    system_objects/settingsobject.cpp
+    system_objects/settingsobject.cpp \
+    system_objects/partannex.cpp
 
 HEADERS += \
     settings_model.h \
@@ -63,8 +63,8 @@ HEADERS += \
     view3dapp.h \
     system_objects/blockobject.h \
     system_objects/partobject.h \
-    gcode_utility/gcode_parser.h \
-    system_objects/settingsobject.h
+    system_objects/settingsobject.h \
+    system_objects/partannex.h
 
 FORMS += \
     powderapp.ui

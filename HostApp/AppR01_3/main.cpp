@@ -19,12 +19,12 @@ int main(int argc, char *argv[])
 
 
     PowderApp w;
+
     w.setWindowTitle("PowderRoom");
     w.show();
 
 
     View3DApp v;
-
 
 
     QObject::connect(&w, SIGNAL(view3d_pressed()), &v, SLOT(open_3dView()));

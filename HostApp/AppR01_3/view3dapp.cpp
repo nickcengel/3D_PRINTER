@@ -2,6 +2,13 @@
 
 View3DApp::View3DApp(QWidget *parent) : QWidget(parent)
 {
+
+
+}
+
+
+
+void View3DApp::open_3dView(){
     this->setStyleSheet("background:rgb(0,0,0)");
 
     view = new Qt3DExtras::Qt3DWindow();
@@ -12,7 +19,7 @@ View3DApp::View3DApp(QWidget *parent) : QWidget(parent)
     container->setMinimumSize(QSize(200, 100));
     container->setMaximumSize(screenSize);
 
-    QHBoxLayout *hLayout = new QHBoxLayout(this);
+    hLayout = new QHBoxLayout(this);
     hLayout->addWidget(container, 1);
     hLayout->setContentsMargins(0,0,0,0);
     this->setWindowTitle("3D Viewer");
@@ -45,10 +52,6 @@ View3DApp::View3DApp(QWidget *parent) : QWidget(parent)
     camController->setLinearSpeed(128.0);
     modifier = new SceneModifier(rootEntity);
     view->setRootEntity(rootEntity);
-
-}
-
-void View3DApp::open_3dView(){
     this->show();
     this->resize(640,640);
 }
@@ -106,4 +109,12 @@ void View3DApp::get_Part(GCODE_BLOCK_NS::Part &newPart){
         }
     }
 
+}
+
+void View3DApp::closeEvent(QCloseEvent *bar){
+    delete hLayout;
+    container->close();
+    view->close();
+    this->close();
+    bar->accept();
 }

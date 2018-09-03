@@ -13,14 +13,15 @@ PowderApp::PowderApp(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PowderApp)
 {
+//    qDebug()<<f;
     ui->setupUi(this);
     this->QWidget::setMaximumWidth(335);
     this->QWidget::setMaximumHeight(700);
 
+    ui->gcode_tool_button_openFile->setDisabled(true);
     QList<int> splitterSizes = {0,325};
     ui->Menu_Page_Splitter->setSizes(splitterSizes);
     ui->AppPages->setCurrentIndex(0);
-    myPart = nullptr;
     PartInfoLabelModel = new QStandardItemModel;
     QStandardItem * partInfoRoot = PartInfoLabelModel->invisibleRootItem();
     ui->PartInfoView->setModel(PartInfoLabelModel);
@@ -95,14 +96,22 @@ PowderApp::PowderApp(QWidget *parent) :
     ui->settings_view->setModel(settingsModel);
     for (int column = 0; column < settingsModel->columnCount(); ++column)
         ui->settings_view->resizeColumnToContents(column);
+
+    partAnnex = new PartAnnex();
+    partAnnex->setParent(this);
+
+    QObject::connect(this, SIGNAL(NewPartFilePath(const QString&)),
+                     partAnnex, SLOT(loadNewPart(const QString&)));
+
+
+
+
 }
 
 PowderApp::~PowderApp()
 {
     delete ui;
-    if(myPart != nullptr)
-        delete myPart;
-
+    delete partAnnex;
 }
 
 
@@ -221,81 +230,87 @@ void PowderApp::on_settings_buttons_saveFile_clicked()
         }
 
     }
+    file.close();
 }
 
 void PowderApp::on_settings_button_apply_clicked()
 {
+    myConfiguration = new SettingsObject(this);
+
     QModelIndex first = settingsModel->index(0,0, QModelIndex());
     QModelIndex root =  settingsModel->parent(first);
 
-    QModelIndex LaserParent = settingsModel->index(0, 0, root);
-    machineSettings.l_settings.portNumber = (settingsModel->index(0,1,LaserParent).data(Qt::DisplayRole).toInt());   // portnum
-    machineSettings.l_settings.deviceNumber = (settingsModel->index(1,1,LaserParent).data(Qt::DisplayRole).toUInt()); // devicenum
-    machineSettings.l_settings.axisNumber = (settingsModel->index(2,1,LaserParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    QModelIndex LaserPowerParent = settingsModel->index(3, 0, LaserParent);
-    machineSettings.l_settings.homeOffset = (settingsModel->index(0,1,LaserPowerParent).data(Qt::DisplayRole).toFloat());   // defpower
-    machineSettings.l_settings.speedMax = (settingsModel->index(1,1,LaserPowerParent).data(Qt::DisplayRole).toFloat()); // maxpow
-    machineSettings.l_settings.speedMin = (settingsModel->index(2,1,LaserPowerParent).data(Qt::DisplayRole).toFloat()); // minpow
+    QModelIndex configParent = settingsModel->index(0,0,root);
+    myConfiguration->setLaser_galvo_portNumber(settingsModel->index(2,1,configParent).data(Qt::DisplayRole).toUInt());
+    myConfiguration->setMaterialDelivery_portNumber(settingsModel->index(3,1,configParent).data(Qt::DisplayRole).toUInt());
 
-    QModelIndex GalvoParent = settingsModel->index(1, 0, root);
-    machineSettings.x_settings.portNumber = (settingsModel->index(0,1,GalvoParent).data(Qt::DisplayRole).toInt());   // portnum
-    machineSettings.x_settings.deviceNumber = (settingsModel->index(1,1,GalvoParent).data(Qt::DisplayRole).toUInt()); // devicenum
+    QModelIndex LaserParent = settingsModel->index(1, 0, root);
+    myConfiguration->setLaser_deviceNumber(settingsModel->index(1,1,LaserParent).data(Qt::DisplayRole).toUInt());
+    myConfiguration->setLaser_axisNumber(settingsModel->index(2,1,LaserParent).data(Qt::DisplayRole).toUInt());
+    myConfiguration->setLaser_power_resolution(settingsModel->index(3,1,LaserParent).data(Qt::DisplayRole).toFloat());
+    myConfiguration->setLaser_power_default(settingsModel->index(4,1,LaserParent).data(Qt::DisplayRole).toFloat());
+    myConfiguration->setLaser_power_max(settingsModel->index(5,1,LaserParent).data(Qt::DisplayRole).toFloat());
+    myConfiguration->setLaser_power_min(settingsModel->index(6,1,LaserParent).data(Qt::DisplayRole).toFloat());
 
-    QModelIndex GalvoXParent = settingsModel->index(2, 0, GalvoParent);
-    machineSettings.x_settings.axisNumber = (settingsModel->index(0,1,GalvoXParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    machineSettings.x_settings.uStepPerMM = (settingsModel->index(1,1,GalvoXParent).data(Qt::DisplayRole).toFloat());   // steps
-    machineSettings.x_settings.positionMin =  (settingsModel->index(2,1,GalvoXParent).data(Qt::DisplayRole).toFloat()); // posmin
+    QModelIndex GalvoParent = settingsModel->index(2, 0, root);
+    myConfiguration->setGalvo_deviceNumber(settingsModel->index(0,1,GalvoParent).data().toUInt());
+    myConfiguration->setXY_speed_default(settingsModel->index(1,1,GalvoParent).data().toFloat());
+    myConfiguration->setXY_speed_max(settingsModel->index(2,1,GalvoParent).data().toFloat());
+    myConfiguration->setXY_speed_min(settingsModel->index(3,1,GalvoParent).data().toFloat());
 
-    machineSettings.x_settings.positionMax = (settingsModel->index(3,1,GalvoXParent).data(Qt::DisplayRole).toFloat()); // posmax
-    machineSettings.x_settings.speedMin = (settingsModel->index(4,1,GalvoXParent).data(Qt::DisplayRole).toFloat()); // spdmin
-    machineSettings.x_settings.speedMax = (settingsModel->index(5,1,GalvoXParent).data(Qt::DisplayRole).toFloat()); // spdmax
+    QModelIndex GalvoXParent = settingsModel->index(4, 0, GalvoParent);
+    myConfiguration->setX_axisNumber(settingsModel->index(0,1,GalvoXParent).data().toUInt());
+    myConfiguration->setX_position_resolution(settingsModel->index(1,1,GalvoXParent).data().toFloat());
+    myConfiguration->setX_position_max(settingsModel->index(2,1,GalvoXParent).data().toFloat());
+    myConfiguration->setX_position_min(settingsModel->index(3,1,GalvoXParent).data().toFloat());
 
-    QModelIndex GalvoYParent = settingsModel->index(3, 0, GalvoParent);
-    machineSettings.y_settings.axisNumber = (settingsModel->index(0,1,GalvoYParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    machineSettings.y_settings.uStepPerMM = (settingsModel->index(1,1,GalvoYParent).data(Qt::DisplayRole).toFloat());   // steps
-    machineSettings.y_settings.positionMin =  (settingsModel->index(2,1,GalvoYParent).data(Qt::DisplayRole).toFloat()); // posmin
-    machineSettings.y_settings.positionMax = (settingsModel->index(3,1,GalvoYParent).data(Qt::DisplayRole).toFloat()); // posmax
-    machineSettings.y_settings.speedMin = (settingsModel->index(4,1,GalvoYParent).data(Qt::DisplayRole).toFloat()); // spdmin
-    machineSettings.y_settings.speedMax = (settingsModel->index(5,1,GalvoYParent).data(Qt::DisplayRole).toFloat()); // spdmax
+    QModelIndex GalvoYParent = settingsModel->index(5, 0, GalvoParent);
+    myConfiguration->setY_axisNumber(settingsModel->index(0,1,GalvoYParent).data().toUInt());
+    myConfiguration->setY_position_resolution(settingsModel->index(1,1,GalvoYParent).data().toFloat());
+    myConfiguration->setY_position_max(settingsModel->index(2,1,GalvoYParent).data().toFloat());
+    myConfiguration->setY_position_min(settingsModel->index(3,1,GalvoYParent).data().toFloat());
 
-
-    QModelIndex BuildParent = settingsModel->index(2, 0, root);
-    machineSettings.z_settings.portNumber = (settingsModel->index(0,1,BuildParent).data(Qt::DisplayRole).toInt());   // portnum
-    machineSettings.z_settings.deviceNumber = (settingsModel->index(1,1,BuildParent).data(Qt::DisplayRole).toUInt()); // devicenum
-    machineSettings.z_settings.axisNumber = (settingsModel->index(2,1,BuildParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    machineSettings.z_settings.uStepPerMM = (settingsModel->index(3,1,BuildParent).data(Qt::DisplayRole).toFloat());   // steps
-    machineSettings.z_settings.positionMin = (settingsModel->index(4,1,BuildParent).data(Qt::DisplayRole).toFloat()); // posmin
-    machineSettings.z_settings.positionMax = (settingsModel->index(5,1,BuildParent).data(Qt::DisplayRole).toFloat()); // posmax
-    machineSettings.z_settings.speedMin = (settingsModel->index(6,1,BuildParent).data(Qt::DisplayRole).toFloat()); // spdmin
-    machineSettings.z_settings.speedMax = (settingsModel->index(7,1,BuildParent).data(Qt::DisplayRole).toFloat()); // spdmax
-
-
-    QModelIndex HopperParent = settingsModel->index(3, 0, root);
-    machineSettings.a_settings.portNumber = (settingsModel->index(0,1,HopperParent).data(Qt::DisplayRole).toInt());   // portnum
-    machineSettings.a_settings.deviceNumber = (settingsModel->index(1,1,HopperParent).data(Qt::DisplayRole).toUInt()); // devicenum
-    machineSettings.a_settings.axisNumber = (settingsModel->index(2,1,HopperParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    machineSettings.a_settings.uStepPerMM = (settingsModel->index(3,1,HopperParent).data(Qt::DisplayRole).toFloat());   // steps
-    machineSettings.a_settings.positionMin = (settingsModel->index(4,1,HopperParent).data(Qt::DisplayRole).toFloat()); // posmin
-    machineSettings.a_settings.positionMax = (settingsModel->index(5,1,HopperParent).data(Qt::DisplayRole).toFloat()); // posmax
-    machineSettings.a_settings.speedMin = (settingsModel->index(6,1,HopperParent).data(Qt::DisplayRole).toFloat()); // spdmin
-    machineSettings.a_settings.speedMax =  (settingsModel->index(7,1,HopperParent).data(Qt::DisplayRole).toFloat()); // spdmax
+    QModelIndex BuildParent = settingsModel->index(3, 0, root);
+    myConfiguration->setZ_deviceNumber(settingsModel->index(0,1,BuildParent).data().toUInt());
+    myConfiguration->setZ_axisNumber(settingsModel->index(1,1,BuildParent).data().toUInt());
+    myConfiguration->setZ_position_resolution(settingsModel->index(2,1,GalvoYParent).data().toFloat());
+    myConfiguration->setZ_position_max(settingsModel->index(3,1,GalvoYParent).data().toFloat());
+    myConfiguration->setZ_position_min(settingsModel->index(4,1,GalvoYParent).data().toFloat());
+    myConfiguration->setZ_speed_default(settingsModel->index(5,1,GalvoYParent).data().toFloat());
+    myConfiguration->setZ_speed_max(settingsModel->index(6,1,GalvoYParent).data().toFloat());
+    myConfiguration->setZ_speed_min(settingsModel->index(7,1,GalvoYParent).data().toFloat());
 
 
-    QModelIndex SpreaderParent = settingsModel->index(4, 0, root);
-    machineSettings.b_settings.portNumber = (settingsModel->index(0,1,SpreaderParent).data(Qt::DisplayRole).toInt());   // portnum
-    machineSettings.b_settings.deviceNumber = (settingsModel->index(1,1,SpreaderParent).data(Qt::DisplayRole).toUInt()); // devicenum
-    machineSettings.b_settings.axisNumber = (settingsModel->index(2,1,SpreaderParent).data(Qt::DisplayRole).toUInt()); // axisnum
-    machineSettings.b_settings.uStepPerMM = (settingsModel->index(3,1,SpreaderParent).data(Qt::DisplayRole).toFloat());   // steps
-    machineSettings.b_settings.positionMin = (settingsModel->index(4,1,SpreaderParent).data(Qt::DisplayRole).toFloat()); // posmin
-    machineSettings.b_settings.positionMax = (settingsModel->index(5,1,SpreaderParent).data(Qt::DisplayRole).toFloat()); // posmax
-    machineSettings.b_settings.speedMin = (settingsModel->index(6,1,SpreaderParent).data(Qt::DisplayRole).toFloat()); // spdmin
-    machineSettings.b_settings.speedMax =  (settingsModel->index(7,1,SpreaderParent).data(Qt::DisplayRole).toFloat()); // spdmax
+    QModelIndex HopperParent = settingsModel->index(4, 0, root);
+    myConfiguration->setHopper_deviceNumber(settingsModel->index(0,1,HopperParent).data().toUInt());
+    myConfiguration->setHopper_axisNumber(settingsModel->index(1,1,HopperParent).data().toUInt());
+    myConfiguration->setHopper_position_resolution(settingsModel->index(2,1,HopperParent).data().toFloat());
+    myConfiguration->setHopper_position_max(settingsModel->index(3,1,HopperParent).data().toFloat());
+    myConfiguration->setHopper_position_min(settingsModel->index(4,1,HopperParent).data().toFloat());
+    myConfiguration->setHopper_speed_default(settingsModel->index(5,1,HopperParent).data().toFloat());
+    myConfiguration->setHopper_speed_max(settingsModel->index(6,1,HopperParent).data().toFloat());
+    myConfiguration->setHopper_speed_min(settingsModel->index(7,1,HopperParent).data().toFloat());
+
+    QModelIndex SpreaderParent = settingsModel->index(5, 0, root);
+    myConfiguration->setSpreader_deviceNumber(settingsModel->index(0,1,SpreaderParent).data().toUInt());
+    myConfiguration->setSpreader_axisNumber(settingsModel->index(1,1,SpreaderParent).data().toUInt());
+    myConfiguration->setSpreader_position_resolution(settingsModel->index(2,1,SpreaderParent).data().toFloat());
+    myConfiguration->setSpreader_position_max(settingsModel->index(3,1,SpreaderParent).data().toFloat());
+    myConfiguration->setSpreader_position_min(settingsModel->index(4,1,SpreaderParent).data().toFloat());
+    myConfiguration->setSpreader_speed_default(settingsModel->index(5,1,SpreaderParent).data().toFloat());
+    myConfiguration->setSpreader_speed_max(settingsModel->index(6,1,SpreaderParent).data().toFloat());
+    myConfiguration->setSpreader_speed_min(settingsModel->index(7,1,SpreaderParent).data().toFloat());
+    myConfiguration->setStatus(SettingsObject::SettingsStatus::SETTINGS_VALID);
+    partAnnex->setMyConfig(myConfiguration);
+    ui->gcode_tool_button_openFile->setEnabled(true);
+
 }
 
 
 
 void PowderApp::on_MenuTree_clicked(const QModelIndex &index)
 {
+
     // HomePage
     if(index == menuModel->index(0,0,QModelIndex())){
         ui->AppPages->setCurrentIndex(0);
@@ -311,7 +326,7 @@ void PowderApp::on_MenuTree_clicked(const QModelIndex &index)
     }
 
     //HelpPage
-   if(index == menuModel->index(0,0,menuModel->index(0,0, QModelIndex()))){
+    if(index == menuModel->index(0,0,menuModel->index(0,0, QModelIndex()))){
         ui->AppPages->setCurrentIndex(5);
         this->QWidget::setMaximumWidth(2000);
         this->QWidget::setMaximumHeight(2000);
@@ -384,31 +399,26 @@ void PowderApp::on_MenuTree_clicked(const QModelIndex &index)
 
 }
 
-void PowderApp::on_settings_button_openFile_2_clicked()
+void PowderApp::on_gcode_tool_button_openFile_clicked()
 {
     QString partFileName;
     QFileDialog dialog(this);
     if (dialog.exec())
         partFileName = dialog.selectedFiles()[0];
-    myPart = new GCODE_BLOCK_NS::Part(partFileName, &machineSettings);
 
-
-    ui->textBrowser->setText(myPart->debugPart(0).join(""));
-
-    PartInfoDataModel = new QStandardItemModel;
-    QStandardItem * partDataRoot = PartInfoDataModel->invisibleRootItem();
-    ui->PartInfoViewData->setModel(PartInfoDataModel);
-
-
-    QStandardItem *partName = new QStandardItem(myPart->debugPart(0)[0]);
-    QStandardItem *partStatus =new QStandardItem(myPart->debugPart(0)[3]);
-    QStandardItem *partLayers = new QStandardItem(myPart->debugPart(0)[1]);
-    QStandardItem *partBlocks = new QStandardItem(myPart->debugPart(0)[2]);
-    partDataRoot->appendRow(partName);
-    partDataRoot->appendRow(partStatus);
-    partDataRoot->appendRow(partBlocks);
-    partDataRoot->appendRow(partLayers);
-    emit part_added(*myPart);
+    emit NewPartFilePath(partFileName);
+    //    PartInfoDataModel = new QStandardItemModel;
+    //    QStandardItem * partDataRoot = PartInfoDataModel->invisibleRootItem();
+    //    ui->PartInfoViewData->setModel(PartInfoDataModel);
+    //    QStandardItem *partName = new QStandardItem(myPart->debugPart(0)[0]);
+    //    QStandardItem *partStatus =new QStandardItem(myPart->debugPart(0)[3]);
+    //    QStandardItem *partLayers = new QStandardItem(myPart->debugPart(0)[1]);
+    //    QStandardItem *partBlocks = new QStandardItem(myPart->debugPart(0)[2]);
+    //    partDataRoot->appendRow(partName);
+    //    partDataRoot->appendRow(partStatus);
+    //    partDataRoot->appendRow(partBlocks);
+    //    partDataRoot->appendRow(partLayers);
+    //    emit part_added(*myPart);
 
 
 }
@@ -479,3 +489,5 @@ void PowderApp::on_Main_Button_HelpPage_clicked()
     ui->MenuTree->expand(menuModel->index(0,0,QModelIndex()));
 
 }
+
+

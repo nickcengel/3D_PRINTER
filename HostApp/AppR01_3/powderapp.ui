@@ -1309,7 +1309,7 @@ color: rgb(212,215,217);</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <item>
-                 <widget class="QPushButton" name="settings_button_openFile_2">
+                 <widget class="QPushButton" name="gcode_tool_button_openFile">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -1426,7 +1426,7 @@ color: rgb(212,215,217);</string>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="settings_button_apply_2">
+                 <widget class="QPushButton" name="gcode_tool_button_clearPart">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
