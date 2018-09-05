@@ -1,5 +1,6 @@
 #include "segment3d.h"
 #include <Qt3DExtras/QPhongMaterial>
+#include <QtDebug>
 
 Qt3DExtras::QPlaneMesh *segmentMesh(const QVector3D& start, const QVector3D& end, float width){
     const QVector3D seg(end - start);
@@ -13,8 +14,14 @@ Qt3DCore::QTransform *segmentTransform(const QVector3D& start, const QVector3D& 
     const QVector3D seg(end - start);
     Qt3DCore::QTransform *segTransform = new Qt3DCore::QTransform();
     segTransform->setScale(1.0f);
-    segTransform->setRotation(QQuaternion::fromDirection(seg, (QVector3D(0.0f, 1.0f, 0.0f))));
-    segTransform->setTranslation(QVector3D((start.x() + seg.x()/2), seg.y(), (start.z() + seg.z()/2)));
+    if((end.y() > start.y()) ||(end.y() < start.y())){
+        segTransform->setRotation(QQuaternion::fromDirection(seg, (QVector3D(1.0f, 0.0f, 0.0f))));
+        segTransform->setTranslation(QVector3D(start.x(), (start.y() + seg.y()/2), start.z()));
+    }
+    else{
+        segTransform->setRotation(QQuaternion::fromDirection(seg, (QVector3D(0.0f, 1.0f, 0.0f))));
+        segTransform->setTranslation(QVector3D((start.x() + seg.x()/2), start.y(), (start.z() + seg.z()/2)));
+    }
     return  segTransform;
 }
 

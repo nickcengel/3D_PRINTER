@@ -1,5 +1,5 @@
 #include "block3d.h"
-
+#include <QtDebug>
 
 Block3D::Block3D()
 {

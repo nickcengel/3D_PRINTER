@@ -555,10 +555,10 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
             current.setX(m_myPart->getBlock(static_cast<int>(blockCount))->x_position());
         }
         if(task & (BlockObject::BlockTask::SET_Y_POSITION)){
-            current.setY(m_myPart->getBlock(static_cast<int>(blockCount))->y_position());
+            current.setZ(m_myPart->getBlock(static_cast<int>(blockCount))->y_position());
         }
         if(task & (BlockObject::BlockTask::SET_Z_POSITION)){
-            current.setZ(m_myPart->getBlock(static_cast<int>(blockCount))->y_position());
+            current.setY(m_myPart->getBlock(static_cast<int>(blockCount))->z_position());
         }
 
         if(current != previousPosition){

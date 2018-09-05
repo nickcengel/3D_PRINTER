@@ -12,8 +12,14 @@ SceneModifier::SceneModifier(Qt3DCore::QEntity *rootEntity)
 
     m_axis.push_back(generateLine(QVector3D(-50,0,0), QVector3D(50,0,0),QColor(Qt::black),m_rootEntity));
     m_axis.push_back(generateLine(QVector3D(-50,0,0), QVector3D(50,0,0),QColor(Qt::black),m_rootEntity));
-    m_axis.push_back(generateLine(QVector3D(0,-50,0), QVector3D(0,50,0),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(0,0,0), QVector3D(0,100,0),QColor(Qt::black),m_rootEntity));
     m_axis.push_back(generateLine(QVector3D(0,0,-50), QVector3D(0,0,50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(0,0,-50), QVector3D(0,0,50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(-50,0,-50), QVector3D(50,0,-50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(50,0,-50), QVector3D(50,0,50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(50,0,50), QVector3D(-50,0,50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(50,0,50), QVector3D(-50,0,50),QColor(Qt::black),m_rootEntity));
+    m_axis.push_back(generateLine(QVector3D(-50,0,50), QVector3D(-50,0,-50),QColor(Qt::black),m_rootEntity));
 
     // Cuboid shape data
     Qt3DExtras::QCuboidMesh *buildVolume = new Qt3DExtras::QCuboidMesh();
@@ -21,7 +27,7 @@ SceneModifier::SceneModifier(Qt3DCore::QEntity *rootEntity)
     // CuboidMesh Transform
     Qt3DCore::QTransform *cuboidTransform = new Qt3DCore::QTransform();
     cuboidTransform->setScale(100.0f);
-    cuboidTransform->setTranslation(QVector3D(0.0f, 0.0f, 0.0f));
+    cuboidTransform->setTranslation(QVector3D(0.0f, 50.0f, 0.0f));
 
     Qt3DExtras::QPhongAlphaMaterial *cuboidMaterial = new Qt3DExtras::QPhongAlphaMaterial();
     cuboidMaterial->setDiffuse(QColor(QRgb(Qt::white)));
@@ -83,15 +89,11 @@ void SceneModifier::addSegment(float xStart, float yStart, float zStart,
 
 void SceneModifier::addSegment(Block3D b)
 {
-    float w;
-    QColor c;
+    float w = 0.125f;
+    QColor c = Qt::blue;
     if(b.LaserState()){
-        w = 0.50;
+        w = 0.20f;
         c = Qt::red;
-    }
-    else{
-        w = 0.25;
-        c = Qt::white;
     }
 
   m_segments.append(generateSegment(b.start(), b.end(), w, c, m_rootEntity));

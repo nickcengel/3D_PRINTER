@@ -1,7 +1,8 @@
 #include "blockobject.h"
 
 BlockObject::BlockObject(){
-
+    qRegisterMetaType<BlockObject>("BlockObject");
+    m_laser_enabled = false;
 }
 
 BlockObject::BlockObject(uint32_t block_number, uint32_t layer_Number)
@@ -9,6 +10,8 @@ BlockObject::BlockObject(uint32_t block_number, uint32_t layer_Number)
     qRegisterMetaType<BlockObject>("BlockObject");
    m_blockNumber = block_number;
    m_layerNumber = layer_Number;
+   m_laser_enabled = false;
+
 }
 
 BlockObject::BlockObject(const BlockObject &otherBlock){

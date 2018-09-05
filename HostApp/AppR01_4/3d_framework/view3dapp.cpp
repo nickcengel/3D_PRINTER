@@ -52,7 +52,7 @@ void View3DApp::open_3dView(QVector<Block3D> *blocks3d){
         light->setIntensity(1);
 
         lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(cameraEntity->position());
+        lightTransform->setTranslation(QVector3D(25.0f, 25.0f, 25.0f));
         lightEntity->addComponent(lightTransform);
 
         camController = new Qt3DExtras::QFirstPersonCameraController(rootEntity);
@@ -62,7 +62,6 @@ void View3DApp::open_3dView(QVector<Block3D> *blocks3d){
         camController->setLinearSpeed(128.0);
 
         modifier = new SceneModifier(rootEntity);
-        qDebug()<<blocks3d->length();
 
         if(blocks3d != nullptr){
             for(int i = 0; i < blocks3d->size(); i++){
