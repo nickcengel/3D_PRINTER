@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../AppR01_3/system_objects/partannex.h"
+#include "../AppR01_4/powder_objects/partannex.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -34,16 +34,16 @@ static const qt_meta_stringdata_PartAnnex_t qt_meta_stringdata_PartAnnex = {
 QT_MOC_LITERAL(0, 0, 9), // "PartAnnex"
 QT_MOC_LITERAL(1, 10, 16), // "loadPartComplete"
 QT_MOC_LITERAL(2, 27, 0), // ""
-QT_MOC_LITERAL(3, 28, 11), // "loadNewPart"
-QT_MOC_LITERAL(4, 40, 8), // "filePath"
-QT_MOC_LITERAL(5, 49, 6), // "myPart"
-QT_MOC_LITERAL(6, 56, 11), // "PartObject*"
+QT_MOC_LITERAL(3, 28, 11), // "PartObject*"
+QT_MOC_LITERAL(4, 40, 6), // "myPart"
+QT_MOC_LITERAL(5, 47, 11), // "loadNewPart"
+QT_MOC_LITERAL(6, 59, 8), // "filePath"
 QT_MOC_LITERAL(7, 68, 8), // "myConfig"
 QT_MOC_LITERAL(8, 77, 15) // "SettingsObject*"
 
     },
-    "PartAnnex\0loadPartComplete\0\0loadNewPart\0"
-    "filePath\0myPart\0PartObject*\0myConfig\0"
+    "PartAnnex\0loadPartComplete\0\0PartObject*\0"
+    "myPart\0loadNewPart\0filePath\0myConfig\0"
     "SettingsObject*"
 };
 #undef QT_MOC_LITERAL
@@ -55,26 +55,26 @@ static const uint qt_meta_data_PartAnnex[] = {
        0,       // classname
        0,    0, // classinfo
        2,   14, // methods
-       2,   28, // properties
+       2,   30, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   24,    2, 0x06 /* Public */,
+       1,    1,   24,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    1,   25,    2, 0x0a /* Public */,
+       5,    1,   27,    2, 0x0a /* Public */,
 
  // signals: parameters
-    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 3,    4,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::QString,    4,
+    QMetaType::Void, QMetaType::QString,    6,
 
  // properties: name, type, flags
-       5, 0x80000000 | 6, 0x0009510b,
+       4, 0x80000000 | 3, 0x0009510b,
        7, 0x80000000 | 8, 0x0009510b,
 
        0        // eod
@@ -86,14 +86,25 @@ void PartAnnex::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         PartAnnex *_t = static_cast<PartAnnex *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->loadPartComplete(); break;
+        case 0: _t->loadPartComplete((*reinterpret_cast< PartObject*(*)>(_a[1]))); break;
         case 1: _t->loadNewPart((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+        case 0:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< PartObject* >(); break;
+            }
+            break;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (PartAnnex::*)();
+            using _t = void (PartAnnex::*)(PartObject * );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PartAnnex::loadPartComplete)) {
                 *result = 0;
                 return;
@@ -115,8 +126,8 @@ void PartAnnex::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         Q_UNUSED(_t)
         void *_v = _a[0];
         switch (_id) {
-        case 0: *reinterpret_cast< PartObject**>(_v) = _t->getMyPart(); break;
-        case 1: *reinterpret_cast< SettingsObject**>(_v) = _t->getMyConfig(); break;
+        case 0: *reinterpret_cast< PartObject**>(_v) = _t->myPart(); break;
+        case 1: *reinterpret_cast< SettingsObject**>(_v) = _t->myConfig(); break;
         default: break;
         }
     } else if (_c == QMetaObject::WriteProperty) {
@@ -163,7 +174,7 @@ int PartAnnex::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 2;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 2)
-            *reinterpret_cast<int*>(_a[0]) = -1;
+            qt_static_metacall(this, _c, _id, _a);
         _id -= 2;
     }
 #ifndef QT_NO_PROPERTIES
@@ -187,9 +198,10 @@ int PartAnnex::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void PartAnnex::loadPartComplete()
+void PartAnnex::loadPartComplete(PartObject * _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

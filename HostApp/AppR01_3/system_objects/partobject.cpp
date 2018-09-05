@@ -24,7 +24,7 @@ PartObject::PartObject(const PartObject &otherPart)
 }
 
 
-PartObject::PartObject(const QString &filePath, SettingsObject *config, QObject *parent){
+PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> config, QObject *parent){
 
     this->setParent(parent);
 

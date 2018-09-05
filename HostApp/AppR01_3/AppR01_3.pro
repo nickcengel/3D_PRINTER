@@ -32,8 +32,6 @@ SOURCES += \
     settings_item.cpp \
     settings_model.cpp \
     serial_port_drivers.cpp \
-    hardware_drivers.cpp \
-    gcode_tools.cpp \
     print_tools.cpp \
     menu_item.cpp \
     menu_model.cpp \
@@ -51,8 +49,6 @@ HEADERS += \
     settings_model.h \
     settings_item.h \
     serial_port_drivers.h \
-    hardware_drivers.h \
-    gcode_tools.h \
     print_tools.h \
     menu_item.h \
     menu_model.h \

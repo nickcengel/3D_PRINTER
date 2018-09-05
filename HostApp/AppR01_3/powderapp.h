@@ -60,15 +60,12 @@ private:
     Settings_Model *portModel;
     QList<QSerialPortInfo> portList;
 
-//    machine_settings_t machineSettings;
     QStandardItemModel *menuModel;
     QStandardItemModel *PartInfoLabelModel;
     QStandardItemModel *PartInfoDataModel;
-//    GCODE_BLOCK_NS::Part *myPart;
     QItemSelectionModel menuSelectionModel;
-
-     SettingsObject *myConfiguration;
-     PartAnnex *partAnnex;
+    QSharedPointer<SettingsObject> myConfiguration;
+    PartAnnex *partAnnex;
 
 };
 

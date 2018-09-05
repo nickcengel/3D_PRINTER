@@ -6,9 +6,10 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../AppR01_3/view3dapp.h"
+#include "../AppR01_4/3d_framework/view3dapp.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
+#include <QtCore/QVector>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'view3dapp.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
@@ -22,7 +23,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_View3DApp_t {
     QByteArrayData data[6];
-    char stringdata0[62];
+    char stringdata0[63];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,13 +35,13 @@ static const qt_meta_stringdata_View3DApp_t qt_meta_stringdata_View3DApp = {
 QT_MOC_LITERAL(0, 0, 9), // "View3DApp"
 QT_MOC_LITERAL(1, 10, 11), // "open_3dView"
 QT_MOC_LITERAL(2, 22, 0), // ""
-QT_MOC_LITERAL(3, 23, 8), // "get_Part"
-QT_MOC_LITERAL(4, 32, 21), // "GCODE_BLOCK_NS::Part&"
-QT_MOC_LITERAL(5, 54, 7) // "newPart"
+QT_MOC_LITERAL(3, 23, 17), // "QVector<Block3D>*"
+QT_MOC_LITERAL(4, 41, 8), // "blocks3d"
+QT_MOC_LITERAL(5, 50, 12) // "close_3dView"
 
     },
-    "View3DApp\0open_3dView\0\0get_Part\0"
-    "GCODE_BLOCK_NS::Part&\0newPart"
+    "View3DApp\0open_3dView\0\0QVector<Block3D>*\0"
+    "blocks3d\0close_3dView"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,12 +59,12 @@ static const uint qt_meta_data_View3DApp[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   24,    2, 0x0a /* Public */,
-       3,    1,   25,    2, 0x0a /* Public */,
+       1,    1,   24,    2, 0x0a /* Public */,
+       5,    0,   27,    2, 0x0a /* Public */,
 
  // slots: parameters
+    QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 4,    5,
 
        0        // eod
 };
@@ -74,8 +75,8 @@ void View3DApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         View3DApp *_t = static_cast<View3DApp *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->open_3dView(); break;
-        case 1: _t->get_Part((*reinterpret_cast< GCODE_BLOCK_NS::Part(*)>(_a[1]))); break;
+        case 0: _t->open_3dView((*reinterpret_cast< QVector<Block3D>*(*)>(_a[1]))); break;
+        case 1: _t->close_3dView(); break;
         default: ;
         }
     }

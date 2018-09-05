@@ -4,47 +4,47 @@ PartAnnex::PartAnnex(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<PartAnnex>("PartAnnex");
     this->setParent(parent);
-    myPart = nullptr;
-    myConfig = nullptr;
 }
 
 PartAnnex::PartAnnex(const PartAnnex &otherAnnex)
 {
-    myPart = otherAnnex.getMyPart();
-    myConfig = otherAnnex.getMyConfig();
+    m_myPart = otherAnnex.myPart();
+    m_myConfig = otherAnnex.myConfig();
 }
 
 PartAnnex::~PartAnnex()
 {
-    if(myPart != nullptr)
-        delete myPart;
+    m_myPart.clear();
+    m_myConfig.clear();
 }
 
-PartObject *PartAnnex::getMyPart() const
-{
-    return myPart;
-}
-
-void PartAnnex::setMyPart(PartObject *value)
-{
-    myPart = value;
-}
 
 void PartAnnex::loadNewPart(const QString &filePath)
 {
-    myPart = new PartObject(filePath, myConfig, this);
+
+    m_myPart = QSharedPointer<PartObject>(new PartObject(filePath, m_myConfig, this));
     emit loadPartComplete();
 }
 
-
-
-SettingsObject *PartAnnex::getMyConfig() const
+QSharedPointer<SettingsObject> PartAnnex::myConfig() const
 {
-    return myConfig;
+    return m_myConfig;
 }
 
-void PartAnnex::setMyConfig(SettingsObject *value)
+void PartAnnex::setMyConfig(const QSharedPointer<SettingsObject> &myConfig)
 {
-    myConfig = value;
+    m_myConfig = myConfig;
 }
+
+QSharedPointer<PartObject> PartAnnex::myPart() const
+{
+    return m_myPart;
+}
+
+void PartAnnex::setMyPart(const QSharedPointer<PartObject> &myPart)
+{
+    m_myPart = myPart;
+}
+
+
 

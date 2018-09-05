@@ -11,20 +11,19 @@
 class PartAnnex : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(PartObject *myPart READ getMyPart WRITE setMyPart)
-    Q_PROPERTY(SettingsObject *myConfig READ getMyConfig WRITE setMyConfig)
+    Q_PROPERTY(QSharedPointer<PartObject> myPart READ myPart WRITE setMyPart)
+    Q_PROPERTY(QSharedPointer<SettingsObject> myConfig READ myConfig WRITE setMyConfig)
 
 public:
     explicit PartAnnex(QObject *parent = nullptr);
     PartAnnex(const PartAnnex &otherAnnex);
     ~PartAnnex();
 
+    QSharedPointer<PartObject> myPart() const;
+    void setMyPart(const QSharedPointer<PartObject> &myPart);
 
-    PartObject *getMyPart() const;
-    void setMyPart(PartObject *value);
-
-    SettingsObject *getMyConfig() const;
-    void setMyConfig(SettingsObject *value);
+    QSharedPointer<SettingsObject> myConfig() const;
+    void setMyConfig(const QSharedPointer<SettingsObject> &myConfig);
 
 signals:
     void loadPartComplete();
@@ -34,9 +33,8 @@ public slots:
 
 
 private:
-    PartObject *myPart;
-    SettingsObject *myConfig;
-
+    QSharedPointer<PartObject> m_myPart;
+    QSharedPointer<SettingsObject> m_myConfig;
 };
 
 Q_DECLARE_METATYPE(PartAnnex);

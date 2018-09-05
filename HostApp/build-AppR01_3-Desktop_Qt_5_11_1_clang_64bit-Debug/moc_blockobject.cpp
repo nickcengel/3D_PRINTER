@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../AppR01_3/system_objects/blockobject.h"
+#include "../AppR01_4/powder_objects/blockobject.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_BlockObject_t {
-    QByteArrayData data[47];
-    char stringdata0[656];
+    QByteArrayData data[43];
+    char stringdata0[594];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -54,30 +54,26 @@ QT_MOC_LITERAL(19, 215, 17), // "spreader_position"
 QT_MOC_LITERAL(20, 233, 14), // "spreader_speed"
 QT_MOC_LITERAL(21, 248, 9), // "dwellTime"
 QT_MOC_LITERAL(22, 258, 11), // "g_code_line"
-QT_MOC_LITERAL(23, 270, 19), // "laser_galvo_command"
-QT_MOC_LITERAL(24, 290, 9), // "z_command"
-QT_MOC_LITERAL(25, 300, 14), // "hopper_command"
-QT_MOC_LITERAL(26, 315, 16), // "spreader_command"
-QT_MOC_LITERAL(27, 332, 9), // "BlockTask"
-QT_MOC_LITERAL(28, 342, 11), // "BLOCK_EMPTY"
-QT_MOC_LITERAL(29, 354, 19), // "SET_LASER_ARM_STATE"
-QT_MOC_LITERAL(30, 374, 22), // "SET_LASER_ENABLE_STATE"
-QT_MOC_LITERAL(31, 397, 15), // "SET_LASER_POWER"
-QT_MOC_LITERAL(32, 413, 17), // "SET_POSITION_MODE"
-QT_MOC_LITERAL(33, 431, 14), // "SET_X_POSITION"
-QT_MOC_LITERAL(34, 446, 14), // "SET_Y_POSITION"
-QT_MOC_LITERAL(35, 461, 12), // "SET_XY_SPEED"
-QT_MOC_LITERAL(36, 474, 14), // "SET_Z_POSITION"
-QT_MOC_LITERAL(37, 489, 11), // "SET_Z_SPEED"
-QT_MOC_LITERAL(38, 501, 19), // "SET_HOPPER_POSITION"
-QT_MOC_LITERAL(39, 521, 16), // "SET_HOPPER_SPEED"
-QT_MOC_LITERAL(40, 538, 21), // "SET_SPREADER_POSITION"
-QT_MOC_LITERAL(41, 560, 18), // "SET_SPREADER_SPEED"
-QT_MOC_LITERAL(42, 579, 13), // "SET_HOME_AXIS"
-QT_MOC_LITERAL(43, 593, 14), // "SET_DWELL_TIME"
-QT_MOC_LITERAL(44, 608, 11), // "BLOCK_ERROR"
-QT_MOC_LITERAL(45, 620, 17), // "Position_Absolute"
-QT_MOC_LITERAL(46, 638, 17) // "Position_Relative"
+QT_MOC_LITERAL(23, 270, 9), // "BlockTask"
+QT_MOC_LITERAL(24, 280, 11), // "BLOCK_EMPTY"
+QT_MOC_LITERAL(25, 292, 19), // "SET_LASER_ARM_STATE"
+QT_MOC_LITERAL(26, 312, 22), // "SET_LASER_ENABLE_STATE"
+QT_MOC_LITERAL(27, 335, 15), // "SET_LASER_POWER"
+QT_MOC_LITERAL(28, 351, 17), // "SET_POSITION_MODE"
+QT_MOC_LITERAL(29, 369, 14), // "SET_X_POSITION"
+QT_MOC_LITERAL(30, 384, 14), // "SET_Y_POSITION"
+QT_MOC_LITERAL(31, 399, 12), // "SET_XY_SPEED"
+QT_MOC_LITERAL(32, 412, 14), // "SET_Z_POSITION"
+QT_MOC_LITERAL(33, 427, 11), // "SET_Z_SPEED"
+QT_MOC_LITERAL(34, 439, 19), // "SET_HOPPER_POSITION"
+QT_MOC_LITERAL(35, 459, 16), // "SET_HOPPER_SPEED"
+QT_MOC_LITERAL(36, 476, 21), // "SET_SPREADER_POSITION"
+QT_MOC_LITERAL(37, 498, 18), // "SET_SPREADER_SPEED"
+QT_MOC_LITERAL(38, 517, 13), // "SET_HOME_AXIS"
+QT_MOC_LITERAL(39, 531, 14), // "SET_DWELL_TIME"
+QT_MOC_LITERAL(40, 546, 11), // "BLOCK_ERROR"
+QT_MOC_LITERAL(41, 558, 17), // "Position_Absolute"
+QT_MOC_LITERAL(42, 576, 17) // "Position_Relative"
 
     },
     "BlockObject\0blockNumber\0uint32_t\0"
@@ -88,8 +84,6 @@ QT_MOC_LITERAL(46, 638, 17) // "Position_Relative"
     "z_position\0z_speed\0hopper_position\0"
     "hopper_speed\0spreader_position\0"
     "spreader_speed\0dwellTime\0g_code_line\0"
-    "laser_galvo_command\0z_command\0"
-    "hopper_command\0spreader_command\0"
     "BlockTask\0BLOCK_EMPTY\0SET_LASER_ARM_STATE\0"
     "SET_LASER_ENABLE_STATE\0SET_LASER_POWER\0"
     "SET_POSITION_MODE\0SET_X_POSITION\0"
@@ -109,8 +103,8 @@ static const uint qt_meta_data_BlockObject[] = {
        0,       // classname
        0,    0, // classinfo
        0,    0, // methods
-      22,   14, // properties
-       2,   80, // enums/sets
+      18,   14, // properties
+       2,   68, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
@@ -134,35 +128,31 @@ static const uint qt_meta_data_BlockObject[] = {
       20, QMetaType::Float, 0x00095103,
       21, QMetaType::Float, 0x00095103,
       22, QMetaType::QString, 0x00095103,
-      23, QMetaType::QString, 0x00095103,
-      24, QMetaType::QString, 0x00095103,
-      25, QMetaType::QString, 0x00095103,
-      26, QMetaType::QString, 0x00095103,
 
  // enums: name, flags, count, data
-      27, 0x0,   17,   88,
-      11, 0x0,    2,  122,
+      23, 0x0,   17,   76,
+      11, 0x0,    2,  110,
 
  // enum data: key, value
-      28, uint(BlockObject::BLOCK_EMPTY),
-      29, uint(BlockObject::SET_LASER_ARM_STATE),
-      30, uint(BlockObject::SET_LASER_ENABLE_STATE),
-      31, uint(BlockObject::SET_LASER_POWER),
-      32, uint(BlockObject::SET_POSITION_MODE),
-      33, uint(BlockObject::SET_X_POSITION),
-      34, uint(BlockObject::SET_Y_POSITION),
-      35, uint(BlockObject::SET_XY_SPEED),
-      36, uint(BlockObject::SET_Z_POSITION),
-      37, uint(BlockObject::SET_Z_SPEED),
-      38, uint(BlockObject::SET_HOPPER_POSITION),
-      39, uint(BlockObject::SET_HOPPER_SPEED),
-      40, uint(BlockObject::SET_SPREADER_POSITION),
-      41, uint(BlockObject::SET_SPREADER_SPEED),
-      42, uint(BlockObject::SET_HOME_AXIS),
-      43, uint(BlockObject::SET_DWELL_TIME),
-      44, uint(BlockObject::BLOCK_ERROR),
-      45, uint(BlockObject::Position_Absolute),
-      46, uint(BlockObject::Position_Relative),
+      24, uint(BlockObject::BLOCK_EMPTY),
+      25, uint(BlockObject::SET_LASER_ARM_STATE),
+      26, uint(BlockObject::SET_LASER_ENABLE_STATE),
+      27, uint(BlockObject::SET_LASER_POWER),
+      28, uint(BlockObject::SET_POSITION_MODE),
+      29, uint(BlockObject::SET_X_POSITION),
+      30, uint(BlockObject::SET_Y_POSITION),
+      31, uint(BlockObject::SET_XY_SPEED),
+      32, uint(BlockObject::SET_Z_POSITION),
+      33, uint(BlockObject::SET_Z_SPEED),
+      34, uint(BlockObject::SET_HOPPER_POSITION),
+      35, uint(BlockObject::SET_HOPPER_SPEED),
+      36, uint(BlockObject::SET_SPREADER_POSITION),
+      37, uint(BlockObject::SET_SPREADER_SPEED),
+      38, uint(BlockObject::SET_HOME_AXIS),
+      39, uint(BlockObject::SET_DWELL_TIME),
+      40, uint(BlockObject::BLOCK_ERROR),
+      41, uint(BlockObject::Position_Absolute),
+      42, uint(BlockObject::Position_Relative),
 
        0        // eod
 };
@@ -194,10 +184,6 @@ void BlockObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 15: *reinterpret_cast< float*>(_v) = _t->spreader_speed(); break;
         case 16: *reinterpret_cast< float*>(_v) = _t->dwellTime(); break;
         case 17: *reinterpret_cast< QString*>(_v) = _t->g_code_line(); break;
-        case 18: *reinterpret_cast< QString*>(_v) = _t->laser_galvo_command(); break;
-        case 19: *reinterpret_cast< QString*>(_v) = _t->z_command(); break;
-        case 20: *reinterpret_cast< QString*>(_v) = _t->hopper_command(); break;
-        case 21: *reinterpret_cast< QString*>(_v) = _t->spreader_command(); break;
         default: break;
         }
     } else if (_c == QMetaObject::WriteProperty) {
@@ -223,10 +209,6 @@ void BlockObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 15: _t->setSpreader_speed(*reinterpret_cast< float*>(_v)); break;
         case 16: _t->setDwellTime(*reinterpret_cast< float*>(_v)); break;
         case 17: _t->setG_code_line(*reinterpret_cast< QString*>(_v)); break;
-        case 18: _t->setLaser_galvo_command(*reinterpret_cast< QString*>(_v)); break;
-        case 19: _t->setZ_command(*reinterpret_cast< QString*>(_v)); break;
-        case 20: _t->setHopper_command(*reinterpret_cast< QString*>(_v)); break;
-        case 21: _t->setSpreader_command(*reinterpret_cast< QString*>(_v)); break;
         default: break;
         }
     } else if (_c == QMetaObject::ResetProperty) {
@@ -267,17 +249,17 @@ int BlockObject::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
    if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
             || _c == QMetaObject::ResetProperty || _c == QMetaObject::RegisterPropertyMetaType) {
         qt_static_metacall(this, _c, _id, _a);
-        _id -= 22;
+        _id -= 18;
     } else if (_c == QMetaObject::QueryPropertyDesignable) {
-        _id -= 22;
+        _id -= 18;
     } else if (_c == QMetaObject::QueryPropertyScriptable) {
-        _id -= 22;
+        _id -= 18;
     } else if (_c == QMetaObject::QueryPropertyStored) {
-        _id -= 22;
+        _id -= 18;
     } else if (_c == QMetaObject::QueryPropertyEditable) {
-        _id -= 22;
+        _id -= 18;
     } else if (_c == QMetaObject::QueryPropertyUser) {
-        _id -= 22;
+        _id -= 18;
     }
 #endif // QT_NO_PROPERTIES
     return _id;

@@ -56,60 +56,60 @@ void View3DApp::open_3dView(){
     this->resize(640,640);
 }
 
-void View3DApp::get_Part(GCODE_BLOCK_NS::Part &newPart){
-    myPart = &newPart;
-    QVector3D oldVector;
-    QVector3D newVector;
-    bool laserOn = 0;
-    HARDWARE_NS::POSITION_MODE positionMode = ABSOLUTE;
+//void View3DApp::get_Part(GCODE_BLOCK_NS::Part &newPart){
+//    myPart = &newPart;
+//    QVector3D oldVector;
+//    QVector3D newVector;
+//    bool laserOn = 0;
+//    HARDWARE_NS::POSITION_MODE positionMode = ABSOLUTE;
 
-    for(int l = 0; l < myPart->get_LayerCount(); l++){
-        for(int b = 0; b < myPart->getLayer(l).getBlockCount(); b++){
+//    for(int l = 0; l < myPart->get_LayerCount(); l++){
+//        for(int b = 0; b < myPart->getLayer(l).getBlockCount(); b++){
 
-            if((myPart->getBlock(l,b).Plate()->task)|(CHANGE_MD_POSITION_MODE)){
-                positionMode = myPart->getBlock(l,b).Plate()->get_positionMode();
-            }
-            if((myPart->getBlock(l,b).Plate()->task)|(CHANGE_MD_POSITION)){
-                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
-                    newVector.setY(myPart->getBlock(l,b).Plate()->get_position() + oldVector.y());
-                }
-                else{
-                    newVector.setY(myPart->getBlock(l,b).Plate()->get_position());
-                }
-            }
+//            if((myPart->getBlock(l,b).Plate()->task)|(CHANGE_MD_POSITION_MODE)){
+//                positionMode = myPart->getBlock(l,b).Plate()->get_positionMode();
+//            }
+//            if((myPart->getBlock(l,b).Plate()->task)|(CHANGE_MD_POSITION)){
+//                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
+//                    newVector.setY(myPart->getBlock(l,b).Plate()->get_position() + oldVector.y());
+//                }
+//                else{
+//                    newVector.setY(myPart->getBlock(l,b).Plate()->get_position());
+//                }
+//            }
 
-            if((myPart->getBlock(l,b).Laser_Galvo()->laser.is_enabled())){
-                laserOn = true;
-            }
-            if((myPart->getBlock(l,b).Laser_Galvo()->task)|(CHANGE_LG_POSITION_MODE)){
-                positionMode = myPart->getBlock(l,b).Laser_Galvo()->get_positionMode();
-            }
-            if((myPart->getBlock(l,b).Laser_Galvo()->task)|CHANGE_LG_X_POSITION){
-                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
-                    newVector.setX(myPart->getBlock(l,b).Laser_Galvo()->x_axis.get_position() + oldVector.x());
-                }
-                else{
-                    newVector.setX(myPart->getBlock(l,b).Laser_Galvo()->x_axis.get_position());
-                }
-            }
-            if((myPart->getBlock(l,b).Laser_Galvo()->task)|CHANGE_LG_Y_POSITION){
-                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
-                    newVector.setZ(myPart->getBlock(l,b).Laser_Galvo()->y_axis.get_position() + oldVector.z());
-                }
-                else{
-                    newVector.setZ(myPart->getBlock(l,b).Laser_Galvo()->y_axis.get_position());
-                }
-            }
-            if(oldVector != newVector){
-                this->modifier->addSegment(oldVector, newVector, 0.125, Qt::red);
-                oldVector = newVector;
-            }
+//            if((myPart->getBlock(l,b).Laser_Galvo()->laser.is_enabled())){
+//                laserOn = true;
+//            }
+//            if((myPart->getBlock(l,b).Laser_Galvo()->task)|(CHANGE_LG_POSITION_MODE)){
+//                positionMode = myPart->getBlock(l,b).Laser_Galvo()->get_positionMode();
+//            }
+//            if((myPart->getBlock(l,b).Laser_Galvo()->task)|CHANGE_LG_X_POSITION){
+//                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
+//                    newVector.setX(myPart->getBlock(l,b).Laser_Galvo()->x_axis.get_position() + oldVector.x());
+//                }
+//                else{
+//                    newVector.setX(myPart->getBlock(l,b).Laser_Galvo()->x_axis.get_position());
+//                }
+//            }
+//            if((myPart->getBlock(l,b).Laser_Galvo()->task)|CHANGE_LG_Y_POSITION){
+//                if(positionMode == HARDWARE_NS::POSITION_MODE::RELATIVE){
+//                    newVector.setZ(myPart->getBlock(l,b).Laser_Galvo()->y_axis.get_position() + oldVector.z());
+//                }
+//                else{
+//                    newVector.setZ(myPart->getBlock(l,b).Laser_Galvo()->y_axis.get_position());
+//                }
+//            }
+//            if(oldVector != newVector){
+//                this->modifier->addSegment(oldVector, newVector, 0.125, Qt::red);
+//                oldVector = newVector;
+//            }
 
 
-        }
-    }
+//        }
+//    }
 
-}
+//}
 
 void View3DApp::closeEvent(QCloseEvent *bar){
     delete hLayout;

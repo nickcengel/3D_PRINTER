@@ -235,7 +235,7 @@ void PowderApp::on_settings_buttons_saveFile_clicked()
 
 void PowderApp::on_settings_button_apply_clicked()
 {
-    myConfiguration = new SettingsObject(this);
+    myConfiguration = QSharedPointer<SettingsObject>(new SettingsObject);
 
     QModelIndex first = settingsModel->index(0,0, QModelIndex());
     QModelIndex root =  settingsModel->parent(first);

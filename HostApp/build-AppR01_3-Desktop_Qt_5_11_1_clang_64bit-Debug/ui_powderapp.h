@@ -71,26 +71,26 @@ public:
     QSpacerItem *horizontalSpacer_14;
     QWidget *settingsPage;
     QHBoxLayout *horizontalLayout_3;
-    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *settings_page_layout;
     QSpacerItem *verticalSpacer_2;
-    QFrame *frame;
+    QFrame *settings_page_button_frame;
     QHBoxLayout *horizontalLayout_4;
     QPushButton *settings_button_resetToDefault;
     QPushButton *settings_button_openFile;
     QPushButton *settings_buttons_saveFile;
     QPushButton *settings_button_apply;
-    QFrame *frame_3;
+    QFrame *settings_page_view_frame;
     QVBoxLayout *verticalLayout_13;
     QSpacerItem *verticalSpacer_5;
-    QHBoxLayout *horizontalLayout_2;
+    QHBoxLayout *settings_view_layout;
     QSpacerItem *horizontalSpacer_7;
     QTreeView *settings_view;
     QSpacerItem *horizontalSpacer_8;
     QWidget *portPage;
     QHBoxLayout *horizontalLayout_6;
-    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *portPage_layout;
     QSpacerItem *verticalSpacer_3;
-    QFrame *frame_4;
+    QFrame *portPage_button_frame;
     QHBoxLayout *horizontalLayout_5;
     QSpacerItem *horizontalSpacer_3;
     QPushButton *settings_button_refreshPorts;
@@ -98,32 +98,39 @@ public:
     QTreeView *port_view;
     QWidget *printToolsPage;
     QVBoxLayout *verticalLayout_5;
-    QFrame *frame_6;
+    QFrame *printToolsPage_Frame;
     QVBoxLayout *verticalLayout_10;
-    QHBoxLayout *horizontalLayout_7;
-    QFrame *frame_5;
+    QHBoxLayout *printToolsPage_upper_layout;
+    QFrame *printTools_button_frame;
     QVBoxLayout *verticalLayout_7;
     QPushButton *gcode_tool_button_openFile;
-    QHBoxLayout *horizontalLayout_8;
+    QHBoxLayout *printTools_radio_button_frame;
     QSpacerItem *horizontalSpacer;
-    QVBoxLayout *verticalLayout_6;
-    QRadioButton *radioButton_2;
-    QRadioButton *radioButton;
-    QRadioButton *radioButton_3;
+    QVBoxLayout *printTools_button_frame_layout;
+    QRadioButton *printTools_display_commands_button;
+    QRadioButton *printTools_displayComments_button;
+    QRadioButton *printTools_ignoreErrors_button;
     QSpacerItem *horizontalSpacer_2;
     QPushButton *gcode_tool_button_clearPart;
-    QFrame *frame_7;
+    QFrame *partInfoView_frame;
     QHBoxLayout *horizontalLayout;
     QTableView *PartInfoView;
     QTableView *PartInfoViewData;
-    QVBoxLayout *verticalLayout_12;
-    QLabel *label;
-    QTextBrowser *textBrowser;
-    QHBoxLayout *horizontalLayout_9;
+    QHBoxLayout *horizontalLayout_2;
+    QVBoxLayout *verticalLayout_2;
+    QLabel *printTools_outputBrowser_title;
+    QTextBrowser *printTools_gCodeBrowser;
+    QVBoxLayout *verticalLayout_3;
+    QLabel *printTools_outputBrowser_title_2;
+    QTextBrowser *printTools_outputBrowser;
+    QVBoxLayout *verticalLayout_6;
+    QLabel *printTools_outputBrowser_title_3;
+    QTextBrowser *printTools_errorBrowser;
+    QHBoxLayout *printTools_page_acceptPart_button_layou;
     QSpacerItem *horizontalSpacer_5;
-    QFrame *frame_8;
+    QFrame *printTools_page_acceptPart_button_frame;
     QVBoxLayout *verticalLayout_8;
-    QPushButton *settings_buttons_saveFile_2;
+    QPushButton *printTools_page_acceptPart_button;
     QSpacerItem *horizontalSpacer_6;
     QWidget *dashboardPage;
     QHBoxLayout *horizontalLayout_47;
@@ -341,7 +348,7 @@ public:
     {
         if (PowderApp->objectName().isEmpty())
             PowderApp->setObjectName(QStringLiteral("PowderApp"));
-        PowderApp->resize(880, 750);
+        PowderApp->resize(1037, 750);
         PowderApp->setMinimumSize(QSize(325, 700));
         PowderApp->setAutoFillBackground(false);
         PowderApp->setStyleSheet(QLatin1String("background:rgb(22, 22, 22);\n"
@@ -656,31 +663,31 @@ public:
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setSpacing(2);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        settings_page_layout = new QVBoxLayout();
+        settings_page_layout->setSpacing(2);
+        settings_page_layout->setObjectName(QStringLiteral("settings_page_layout"));
         verticalSpacer_2 = new QSpacerItem(183, 9, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        verticalLayout_2->addItem(verticalSpacer_2);
+        settings_page_layout->addItem(verticalSpacer_2);
 
-        frame = new QFrame(settingsPage);
-        frame->setObjectName(QStringLiteral("frame"));
-        frame->setMinimumSize(QSize(640, 56));
-        frame->setMaximumSize(QSize(16777215, 56));
+        settings_page_button_frame = new QFrame(settingsPage);
+        settings_page_button_frame->setObjectName(QStringLiteral("settings_page_button_frame"));
+        settings_page_button_frame->setMinimumSize(QSize(640, 56));
+        settings_page_button_frame->setMaximumSize(QSize(16777215, 56));
         QFont font2;
         font2.setPointSize(14);
-        frame->setFont(font2);
-        frame->setStyleSheet(QLatin1String("background:\n"
+        settings_page_button_frame->setFont(font2);
+        settings_page_button_frame->setStyleSheet(QLatin1String("background:\n"
 "rgba(0,0,0,0);\n"
 "\n"
 "border-radius: 8;"));
-        frame->setFrameShape(QFrame::StyledPanel);
-        frame->setFrameShadow(QFrame::Raised);
-        horizontalLayout_4 = new QHBoxLayout(frame);
+        settings_page_button_frame->setFrameShape(QFrame::StyledPanel);
+        settings_page_button_frame->setFrameShadow(QFrame::Raised);
+        horizontalLayout_4 = new QHBoxLayout(settings_page_button_frame);
         horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        settings_button_resetToDefault = new QPushButton(frame);
+        settings_button_resetToDefault = new QPushButton(settings_page_button_frame);
         settings_button_resetToDefault->setObjectName(QStringLiteral("settings_button_resetToDefault"));
         sizePolicy3.setHeightForWidth(settings_button_resetToDefault->sizePolicy().hasHeightForWidth());
         settings_button_resetToDefault->setSizePolicy(sizePolicy3);
@@ -696,7 +703,7 @@ public:
 
         horizontalLayout_4->addWidget(settings_button_resetToDefault);
 
-        settings_button_openFile = new QPushButton(frame);
+        settings_button_openFile = new QPushButton(settings_page_button_frame);
         settings_button_openFile->setObjectName(QStringLiteral("settings_button_openFile"));
         sizePolicy3.setHeightForWidth(settings_button_openFile->sizePolicy().hasHeightForWidth());
         settings_button_openFile->setSizePolicy(sizePolicy3);
@@ -713,7 +720,7 @@ public:
 
         horizontalLayout_4->addWidget(settings_button_openFile);
 
-        settings_buttons_saveFile = new QPushButton(frame);
+        settings_buttons_saveFile = new QPushButton(settings_page_button_frame);
         settings_buttons_saveFile->setObjectName(QStringLiteral("settings_buttons_saveFile"));
         sizePolicy3.setHeightForWidth(settings_buttons_saveFile->sizePolicy().hasHeightForWidth());
         settings_buttons_saveFile->setSizePolicy(sizePolicy3);
@@ -730,7 +737,7 @@ public:
 
         horizontalLayout_4->addWidget(settings_buttons_saveFile);
 
-        settings_button_apply = new QPushButton(frame);
+        settings_button_apply = new QPushButton(settings_page_button_frame);
         settings_button_apply->setObjectName(QStringLiteral("settings_button_apply"));
         sizePolicy3.setHeightForWidth(settings_button_apply->sizePolicy().hasHeightForWidth());
         settings_button_apply->setSizePolicy(sizePolicy3);
@@ -747,18 +754,18 @@ public:
         horizontalLayout_4->addWidget(settings_button_apply);
 
 
-        verticalLayout_2->addWidget(frame);
+        settings_page_layout->addWidget(settings_page_button_frame);
 
-        frame_3 = new QFrame(settingsPage);
-        frame_3->setObjectName(QStringLiteral("frame_3"));
+        settings_page_view_frame = new QFrame(settingsPage);
+        settings_page_view_frame->setObjectName(QStringLiteral("settings_page_view_frame"));
         QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Expanding);
         sizePolicy4.setHorizontalStretch(0);
         sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(frame_3->sizePolicy().hasHeightForWidth());
-        frame_3->setSizePolicy(sizePolicy4);
-        frame_3->setMinimumSize(QSize(512, 256));
-        frame_3->setMaximumSize(QSize(16777215, 16777215));
-        frame_3->setStyleSheet(QLatin1String("background:\n"
+        sizePolicy4.setHeightForWidth(settings_page_view_frame->sizePolicy().hasHeightForWidth());
+        settings_page_view_frame->setSizePolicy(sizePolicy4);
+        settings_page_view_frame->setMinimumSize(QSize(512, 256));
+        settings_page_view_frame->setMaximumSize(QSize(16777215, 16777215));
+        settings_page_view_frame->setStyleSheet(QLatin1String("background:\n"
 "\n"
 "qlineargradient(spread:pad, x1:0.527, y1:1, x2:0.516852, y2:0, stop:0 rgba(89, 84, 91, 12), stop:1 rgba(128, 128, 128, 35));\n"
 "\n"
@@ -766,9 +773,9 @@ public:
 "\n"
 "border-radius: 8;\n"
 "color: rgb(212,215,217);"));
-        frame_3->setFrameShape(QFrame::StyledPanel);
-        frame_3->setFrameShadow(QFrame::Raised);
-        verticalLayout_13 = new QVBoxLayout(frame_3);
+        settings_page_view_frame->setFrameShape(QFrame::StyledPanel);
+        settings_page_view_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_13 = new QVBoxLayout(settings_page_view_frame);
         verticalLayout_13->setSpacing(6);
         verticalLayout_13->setContentsMargins(11, 11, 11, 11);
         verticalLayout_13->setObjectName(QStringLiteral("verticalLayout_13"));
@@ -776,14 +783,14 @@ public:
 
         verticalLayout_13->addItem(verticalSpacer_5);
 
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        settings_view_layout = new QHBoxLayout();
+        settings_view_layout->setSpacing(6);
+        settings_view_layout->setObjectName(QStringLiteral("settings_view_layout"));
         horizontalSpacer_7 = new QSpacerItem(64, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer_7);
+        settings_view_layout->addItem(horizontalSpacer_7);
 
-        settings_view = new QTreeView(frame_3);
+        settings_view = new QTreeView(settings_page_view_frame);
         settings_view->setObjectName(QStringLiteral("settings_view"));
         sizePolicy4.setHeightForWidth(settings_view->sizePolicy().hasHeightForWidth());
         settings_view->setSizePolicy(sizePolicy4);
@@ -805,20 +812,20 @@ public:
         settings_view->header()->setMinimumSectionSize(200);
         settings_view->header()->setStretchLastSection(false);
 
-        horizontalLayout_2->addWidget(settings_view);
+        settings_view_layout->addWidget(settings_view);
 
         horizontalSpacer_8 = new QSpacerItem(211, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer_8);
+        settings_view_layout->addItem(horizontalSpacer_8);
 
 
-        verticalLayout_13->addLayout(horizontalLayout_2);
+        verticalLayout_13->addLayout(settings_view_layout);
 
 
-        verticalLayout_2->addWidget(frame_3);
+        settings_page_layout->addWidget(settings_page_view_frame);
 
 
-        horizontalLayout_3->addLayout(verticalLayout_2);
+        horizontalLayout_3->addLayout(settings_page_layout);
 
         AppPages->addWidget(settingsPage);
         portPage = new QWidget();
@@ -827,18 +834,18 @@ public:
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        portPage_layout = new QVBoxLayout();
+        portPage_layout->setSpacing(6);
+        portPage_layout->setObjectName(QStringLiteral("portPage_layout"));
         verticalSpacer_3 = new QSpacerItem(183, 9, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        verticalLayout_3->addItem(verticalSpacer_3);
+        portPage_layout->addItem(verticalSpacer_3);
 
-        frame_4 = new QFrame(portPage);
-        frame_4->setObjectName(QStringLiteral("frame_4"));
-        frame_4->setFrameShape(QFrame::StyledPanel);
-        frame_4->setFrameShadow(QFrame::Raised);
-        horizontalLayout_5 = new QHBoxLayout(frame_4);
+        portPage_button_frame = new QFrame(portPage);
+        portPage_button_frame->setObjectName(QStringLiteral("portPage_button_frame"));
+        portPage_button_frame->setFrameShape(QFrame::StyledPanel);
+        portPage_button_frame->setFrameShadow(QFrame::Raised);
+        horizontalLayout_5 = new QHBoxLayout(portPage_button_frame);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
@@ -846,7 +853,7 @@ public:
 
         horizontalLayout_5->addItem(horizontalSpacer_3);
 
-        settings_button_refreshPorts = new QPushButton(frame_4);
+        settings_button_refreshPorts = new QPushButton(portPage_button_frame);
         settings_button_refreshPorts->setObjectName(QStringLiteral("settings_button_refreshPorts"));
         sizePolicy.setHeightForWidth(settings_button_refreshPorts->sizePolicy().hasHeightForWidth());
         settings_button_refreshPorts->setSizePolicy(sizePolicy);
@@ -868,7 +875,7 @@ public:
         horizontalLayout_5->addItem(horizontalSpacer_4);
 
 
-        verticalLayout_3->addWidget(frame_4);
+        portPage_layout->addWidget(portPage_button_frame);
 
         port_view = new QTreeView(portPage);
         port_view->setObjectName(QStringLiteral("port_view"));
@@ -887,10 +894,10 @@ public:
         port_view->header()->setDefaultSectionSize(125);
         port_view->header()->setMinimumSectionSize(125);
 
-        verticalLayout_3->addWidget(port_view);
+        portPage_layout->addWidget(port_view);
 
 
-        horizontalLayout_6->addLayout(verticalLayout_3);
+        horizontalLayout_6->addLayout(portPage_layout);
 
         AppPages->addWidget(portPage);
         printToolsPage = new QWidget();
@@ -900,13 +907,13 @@ public:
         verticalLayout_5->setSpacing(6);
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        frame_6 = new QFrame(printToolsPage);
-        frame_6->setObjectName(QStringLiteral("frame_6"));
-        sizePolicy4.setHeightForWidth(frame_6->sizePolicy().hasHeightForWidth());
-        frame_6->setSizePolicy(sizePolicy4);
-        frame_6->setMinimumSize(QSize(512, 256));
-        frame_6->setMaximumSize(QSize(16777215, 16777215));
-        frame_6->setStyleSheet(QLatin1String("background:\n"
+        printToolsPage_Frame = new QFrame(printToolsPage);
+        printToolsPage_Frame->setObjectName(QStringLiteral("printToolsPage_Frame"));
+        sizePolicy4.setHeightForWidth(printToolsPage_Frame->sizePolicy().hasHeightForWidth());
+        printToolsPage_Frame->setSizePolicy(sizePolicy4);
+        printToolsPage_Frame->setMinimumSize(QSize(512, 256));
+        printToolsPage_Frame->setMaximumSize(QSize(16777215, 16777215));
+        printToolsPage_Frame->setStyleSheet(QLatin1String("background:\n"
 "\n"
 "qlineargradient(spread:pad, x1:0.527, y1:1, x2:0.516852, y2:0, stop:0 rgba(89, 84, 91, 12), stop:1 rgba(128, 128, 128, 35));\n"
 "\n"
@@ -914,26 +921,26 @@ public:
 "\n"
 "border-radius: 8;\n"
 "color: rgb(212,215,217);"));
-        frame_6->setFrameShape(QFrame::StyledPanel);
-        frame_6->setFrameShadow(QFrame::Raised);
-        verticalLayout_10 = new QVBoxLayout(frame_6);
+        printToolsPage_Frame->setFrameShape(QFrame::StyledPanel);
+        printToolsPage_Frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_10 = new QVBoxLayout(printToolsPage_Frame);
         verticalLayout_10->setSpacing(6);
         verticalLayout_10->setContentsMargins(11, 11, 11, 11);
         verticalLayout_10->setObjectName(QStringLiteral("verticalLayout_10"));
-        horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setSpacing(6);
-        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        frame_5 = new QFrame(frame_6);
-        frame_5->setObjectName(QStringLiteral("frame_5"));
-        frame_5->setMaximumSize(QSize(16777215, 235));
-        frame_5->setStyleSheet(QStringLiteral("background:rgb(22, 22, 22,);"));
-        frame_5->setFrameShape(QFrame::StyledPanel);
-        frame_5->setFrameShadow(QFrame::Raised);
-        verticalLayout_7 = new QVBoxLayout(frame_5);
+        printToolsPage_upper_layout = new QHBoxLayout();
+        printToolsPage_upper_layout->setSpacing(6);
+        printToolsPage_upper_layout->setObjectName(QStringLiteral("printToolsPage_upper_layout"));
+        printTools_button_frame = new QFrame(printToolsPage_Frame);
+        printTools_button_frame->setObjectName(QStringLiteral("printTools_button_frame"));
+        printTools_button_frame->setMaximumSize(QSize(16777215, 235));
+        printTools_button_frame->setStyleSheet(QStringLiteral("background:rgb(22, 22, 22,);"));
+        printTools_button_frame->setFrameShape(QFrame::StyledPanel);
+        printTools_button_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_7 = new QVBoxLayout(printTools_button_frame);
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
-        gcode_tool_button_openFile = new QPushButton(frame_5);
+        gcode_tool_button_openFile = new QPushButton(printTools_button_frame);
         gcode_tool_button_openFile->setObjectName(QStringLiteral("gcode_tool_button_openFile"));
         sizePolicy3.setHeightForWidth(gcode_tool_button_openFile->sizePolicy().hasHeightForWidth());
         gcode_tool_button_openFile->setSizePolicy(sizePolicy3);
@@ -948,45 +955,45 @@ public:
 
         verticalLayout_7->addWidget(gcode_tool_button_openFile);
 
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        printTools_radio_button_frame = new QHBoxLayout();
+        printTools_radio_button_frame->setSpacing(6);
+        printTools_radio_button_frame->setObjectName(QStringLiteral("printTools_radio_button_frame"));
         horizontalSpacer = new QSpacerItem(16, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
 
-        horizontalLayout_8->addItem(horizontalSpacer);
+        printTools_radio_button_frame->addItem(horizontalSpacer);
 
-        verticalLayout_6 = new QVBoxLayout();
-        verticalLayout_6->setSpacing(25);
-        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
-        radioButton_2 = new QRadioButton(frame_5);
-        radioButton_2->setObjectName(QStringLiteral("radioButton_2"));
-        radioButton_2->setAutoExclusive(false);
+        printTools_button_frame_layout = new QVBoxLayout();
+        printTools_button_frame_layout->setSpacing(25);
+        printTools_button_frame_layout->setObjectName(QStringLiteral("printTools_button_frame_layout"));
+        printTools_display_commands_button = new QRadioButton(printTools_button_frame);
+        printTools_display_commands_button->setObjectName(QStringLiteral("printTools_display_commands_button"));
+        printTools_display_commands_button->setAutoExclusive(false);
 
-        verticalLayout_6->addWidget(radioButton_2);
+        printTools_button_frame_layout->addWidget(printTools_display_commands_button);
 
-        radioButton = new QRadioButton(frame_5);
-        radioButton->setObjectName(QStringLiteral("radioButton"));
-        radioButton->setAutoExclusive(false);
+        printTools_displayComments_button = new QRadioButton(printTools_button_frame);
+        printTools_displayComments_button->setObjectName(QStringLiteral("printTools_displayComments_button"));
+        printTools_displayComments_button->setAutoExclusive(false);
 
-        verticalLayout_6->addWidget(radioButton);
+        printTools_button_frame_layout->addWidget(printTools_displayComments_button);
 
-        radioButton_3 = new QRadioButton(frame_5);
-        radioButton_3->setObjectName(QStringLiteral("radioButton_3"));
-        radioButton_3->setAutoExclusive(false);
+        printTools_ignoreErrors_button = new QRadioButton(printTools_button_frame);
+        printTools_ignoreErrors_button->setObjectName(QStringLiteral("printTools_ignoreErrors_button"));
+        printTools_ignoreErrors_button->setAutoExclusive(false);
 
-        verticalLayout_6->addWidget(radioButton_3);
+        printTools_button_frame_layout->addWidget(printTools_ignoreErrors_button);
 
 
-        horizontalLayout_8->addLayout(verticalLayout_6);
+        printTools_radio_button_frame->addLayout(printTools_button_frame_layout);
 
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_8->addItem(horizontalSpacer_2);
+        printTools_radio_button_frame->addItem(horizontalSpacer_2);
 
 
-        verticalLayout_7->addLayout(horizontalLayout_8);
+        verticalLayout_7->addLayout(printTools_radio_button_frame);
 
-        gcode_tool_button_clearPart = new QPushButton(frame_5);
+        gcode_tool_button_clearPart = new QPushButton(printTools_button_frame);
         gcode_tool_button_clearPart->setObjectName(QStringLiteral("gcode_tool_button_clearPart"));
         sizePolicy3.setHeightForWidth(gcode_tool_button_clearPart->sizePolicy().hasHeightForWidth());
         gcode_tool_button_clearPart->setSizePolicy(sizePolicy3);
@@ -1003,21 +1010,21 @@ public:
         verticalLayout_7->addWidget(gcode_tool_button_clearPart);
 
 
-        horizontalLayout_7->addWidget(frame_5);
+        printToolsPage_upper_layout->addWidget(printTools_button_frame);
 
-        frame_7 = new QFrame(frame_6);
-        frame_7->setObjectName(QStringLiteral("frame_7"));
-        frame_7->setMaximumSize(QSize(512, 235));
-        frame_7->setStyleSheet(QLatin1String("background:rgba(22, 22, 22);\n"
+        partInfoView_frame = new QFrame(printToolsPage_Frame);
+        partInfoView_frame->setObjectName(QStringLiteral("partInfoView_frame"));
+        partInfoView_frame->setMaximumSize(QSize(512, 235));
+        partInfoView_frame->setStyleSheet(QLatin1String("background:rgba(22, 22, 22);\n"
 "border-radius: 8;\n"
 ""));
-        frame_7->setFrameShape(QFrame::StyledPanel);
-        frame_7->setFrameShadow(QFrame::Raised);
-        horizontalLayout = new QHBoxLayout(frame_7);
+        partInfoView_frame->setFrameShape(QFrame::StyledPanel);
+        partInfoView_frame->setFrameShadow(QFrame::Raised);
+        horizontalLayout = new QHBoxLayout(partInfoView_frame);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        PartInfoView = new QTableView(frame_7);
+        PartInfoView = new QTableView(partInfoView_frame);
         PartInfoView->setObjectName(QStringLiteral("PartInfoView"));
         PartInfoView->setMinimumSize(QSize(0, 200));
         PartInfoView->setMaximumSize(QSize(150, 200));
@@ -1032,7 +1039,7 @@ public:
 
         horizontalLayout->addWidget(PartInfoView);
 
-        PartInfoViewData = new QTableView(frame_7);
+        PartInfoViewData = new QTableView(partInfoView_frame);
         PartInfoViewData->setObjectName(QStringLiteral("PartInfoViewData"));
         PartInfoViewData->setMinimumSize(QSize(0, 200));
         PartInfoViewData->setMaximumSize(QSize(16777215, 200));
@@ -1049,79 +1056,128 @@ public:
         horizontalLayout->addWidget(PartInfoViewData);
 
 
-        horizontalLayout_7->addWidget(frame_7);
+        printToolsPage_upper_layout->addWidget(partInfoView_frame);
 
 
-        verticalLayout_10->addLayout(horizontalLayout_7);
+        verticalLayout_10->addLayout(printToolsPage_upper_layout);
 
-        verticalLayout_12 = new QVBoxLayout();
-        verticalLayout_12->setSpacing(6);
-        verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
-        label = new QLabel(frame_6);
-        label->setObjectName(QStringLiteral("label"));
-        label->setStyleSheet(QStringLiteral("background: rgba(0,0,0,0)"));
-        label->setAlignment(Qt::AlignCenter);
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        printTools_outputBrowser_title = new QLabel(printToolsPage_Frame);
+        printTools_outputBrowser_title->setObjectName(QStringLiteral("printTools_outputBrowser_title"));
+        QFont font3;
+        font3.setPointSize(16);
+        printTools_outputBrowser_title->setFont(font3);
+        printTools_outputBrowser_title->setStyleSheet(QStringLiteral("background: rgba(0,0,0,0)"));
+        printTools_outputBrowser_title->setAlignment(Qt::AlignCenter);
 
-        verticalLayout_12->addWidget(label);
+        verticalLayout_2->addWidget(printTools_outputBrowser_title);
 
-        textBrowser = new QTextBrowser(frame_6);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
-        textBrowser->setStyleSheet(QStringLiteral("background: rgb(22,22,22);"));
+        printTools_gCodeBrowser = new QTextBrowser(printToolsPage_Frame);
+        printTools_gCodeBrowser->setObjectName(QStringLiteral("printTools_gCodeBrowser"));
+        printTools_gCodeBrowser->setStyleSheet(QStringLiteral("background: rgb(22,22,22);"));
 
-        verticalLayout_12->addWidget(textBrowser);
+        verticalLayout_2->addWidget(printTools_gCodeBrowser);
 
 
-        verticalLayout_10->addLayout(verticalLayout_12);
+        horizontalLayout_2->addLayout(verticalLayout_2);
 
-        horizontalLayout_9 = new QHBoxLayout();
-        horizontalLayout_9->setSpacing(6);
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        printTools_outputBrowser_title_2 = new QLabel(printToolsPage_Frame);
+        printTools_outputBrowser_title_2->setObjectName(QStringLiteral("printTools_outputBrowser_title_2"));
+        printTools_outputBrowser_title_2->setFont(font3);
+        printTools_outputBrowser_title_2->setStyleSheet(QStringLiteral("background: rgba(0,0,0,0)"));
+        printTools_outputBrowser_title_2->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_3->addWidget(printTools_outputBrowser_title_2);
+
+        printTools_outputBrowser = new QTextBrowser(printToolsPage_Frame);
+        printTools_outputBrowser->setObjectName(QStringLiteral("printTools_outputBrowser"));
+        printTools_outputBrowser->setStyleSheet(QStringLiteral("background: rgb(22,22,22);"));
+
+        verticalLayout_3->addWidget(printTools_outputBrowser);
+
+
+        horizontalLayout_2->addLayout(verticalLayout_3);
+
+        verticalLayout_6 = new QVBoxLayout();
+        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
+        printTools_outputBrowser_title_3 = new QLabel(printToolsPage_Frame);
+        printTools_outputBrowser_title_3->setObjectName(QStringLiteral("printTools_outputBrowser_title_3"));
+        printTools_outputBrowser_title_3->setFont(font3);
+        printTools_outputBrowser_title_3->setStyleSheet(QStringLiteral("background: rgba(0,0,0,0)"));
+        printTools_outputBrowser_title_3->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_6->addWidget(printTools_outputBrowser_title_3);
+
+        printTools_errorBrowser = new QTextBrowser(printToolsPage_Frame);
+        printTools_errorBrowser->setObjectName(QStringLiteral("printTools_errorBrowser"));
+        printTools_errorBrowser->setStyleSheet(QStringLiteral("background: rgb(22,22,22);"));
+
+        verticalLayout_6->addWidget(printTools_errorBrowser);
+
+
+        horizontalLayout_2->addLayout(verticalLayout_6);
+
+
+        verticalLayout_10->addLayout(horizontalLayout_2);
+
+        printTools_page_acceptPart_button_layou = new QHBoxLayout();
+        printTools_page_acceptPart_button_layou->setSpacing(6);
+        printTools_page_acceptPart_button_layou->setObjectName(QStringLiteral("printTools_page_acceptPart_button_layou"));
         horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_9->addItem(horizontalSpacer_5);
+        printTools_page_acceptPart_button_layou->addItem(horizontalSpacer_5);
 
-        frame_8 = new QFrame(frame_6);
-        frame_8->setObjectName(QStringLiteral("frame_8"));
-        frame_8->setMinimumSize(QSize(5, 0));
-        frame_8->setMaximumSize(QSize(191, 56));
-        frame_8->setStyleSheet(QLatin1String("background:\n"
+        printTools_page_acceptPart_button_frame = new QFrame(printToolsPage_Frame);
+        printTools_page_acceptPart_button_frame->setObjectName(QStringLiteral("printTools_page_acceptPart_button_frame"));
+        printTools_page_acceptPart_button_frame->setMinimumSize(QSize(5, 0));
+        printTools_page_acceptPart_button_frame->setMaximumSize(QSize(191, 56));
+        printTools_page_acceptPart_button_frame->setStyleSheet(QLatin1String("background:\n"
 "\n"
 "qlineargradient(spread:pad, x1:0.527, y1:1, x2:0.516852, y2:0, stop:0 rgba(89, 84, 91, 45), stop:1 rgba(212, 215, 217, 60));"));
-        frame_8->setFrameShape(QFrame::StyledPanel);
-        frame_8->setFrameShadow(QFrame::Raised);
-        verticalLayout_8 = new QVBoxLayout(frame_8);
+        printTools_page_acceptPart_button_frame->setFrameShape(QFrame::StyledPanel);
+        printTools_page_acceptPart_button_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_8 = new QVBoxLayout(printTools_page_acceptPart_button_frame);
         verticalLayout_8->setSpacing(6);
         verticalLayout_8->setContentsMargins(11, 11, 11, 11);
         verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
-        settings_buttons_saveFile_2 = new QPushButton(frame_8);
-        settings_buttons_saveFile_2->setObjectName(QStringLiteral("settings_buttons_saveFile_2"));
-        sizePolicy3.setHeightForWidth(settings_buttons_saveFile_2->sizePolicy().hasHeightForWidth());
-        settings_buttons_saveFile_2->setSizePolicy(sizePolicy3);
-        settings_buttons_saveFile_2->setMinimumSize(QSize(32, 32));
-        settings_buttons_saveFile_2->setBaseSize(QSize(270, 484));
-        settings_buttons_saveFile_2->setFont(font2);
-        settings_buttons_saveFile_2->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
+        printTools_page_acceptPart_button = new QPushButton(printTools_page_acceptPart_button_frame);
+        printTools_page_acceptPart_button->setObjectName(QStringLiteral("printTools_page_acceptPart_button"));
+        sizePolicy3.setHeightForWidth(printTools_page_acceptPart_button->sizePolicy().hasHeightForWidth());
+        printTools_page_acceptPart_button->setSizePolicy(sizePolicy3);
+        printTools_page_acceptPart_button->setMinimumSize(QSize(32, 32));
+        printTools_page_acceptPart_button->setBaseSize(QSize(270, 484));
+        printTools_page_acceptPart_button->setFont(font2);
+        printTools_page_acceptPart_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
         QIcon icon12;
         icon12.addFile(QStringLiteral(":/icons/icons/iosPlus.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_buttons_saveFile_2->setIcon(icon12);
-        settings_buttons_saveFile_2->setIconSize(QSize(30, 30));
-        settings_buttons_saveFile_2->setFlat(true);
+        printTools_page_acceptPart_button->setIcon(icon12);
+        printTools_page_acceptPart_button->setIconSize(QSize(30, 30));
+        printTools_page_acceptPart_button->setFlat(true);
 
-        verticalLayout_8->addWidget(settings_buttons_saveFile_2);
+        verticalLayout_8->addWidget(printTools_page_acceptPart_button);
 
 
-        horizontalLayout_9->addWidget(frame_8);
+        printTools_page_acceptPart_button_layou->addWidget(printTools_page_acceptPart_button_frame);
 
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_9->addItem(horizontalSpacer_6);
+        printTools_page_acceptPart_button_layou->addItem(horizontalSpacer_6);
 
 
-        verticalLayout_10->addLayout(horizontalLayout_9);
+        verticalLayout_10->addLayout(printTools_page_acceptPart_button_layou);
 
 
-        verticalLayout_5->addWidget(frame_6);
+        verticalLayout_5->addWidget(printToolsPage_Frame);
 
         AppPages->addWidget(printToolsPage);
         dashboardPage = new QWidget();
@@ -1164,11 +1220,11 @@ public:
         label_70->setObjectName(QStringLiteral("label_70"));
         label_70->setMinimumSize(QSize(150, 32));
         label_70->setMaximumSize(QSize(555, 16777215));
-        QFont font3;
-        font3.setPointSize(15);
-        font3.setBold(true);
-        font3.setWeight(75);
-        label_70->setFont(font3);
+        QFont font4;
+        font4.setPointSize(15);
+        font4.setBold(true);
+        font4.setWeight(75);
+        label_70->setFont(font4);
         label_70->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_70->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1213,10 +1269,10 @@ public:
 
         label_4 = new QLabel(frame_10);
         label_4->setObjectName(QStringLiteral("label_4"));
-        QFont font4;
-        font4.setBold(true);
-        font4.setWeight(75);
-        label_4->setFont(font4);
+        QFont font5;
+        font5.setBold(true);
+        font5.setWeight(75);
+        label_4->setFont(font5);
         label_4->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -1237,7 +1293,7 @@ public:
         horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
         label_2 = new QLabel(frame_10);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setFont(font4);
+        label_2->setFont(font5);
         label_2->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -1538,7 +1594,7 @@ public:
         label_46->setObjectName(QStringLiteral("label_46"));
         label_46->setMinimumSize(QSize(225, 32));
         label_46->setMaximumSize(QSize(1000, 16777215));
-        label_46->setFont(font3);
+        label_46->setFont(font4);
         label_46->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_46->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1624,11 +1680,11 @@ public:
         label_73->setSizePolicy(sizePolicy);
         label_73->setMinimumSize(QSize(0, 18));
         label_73->setMaximumSize(QSize(200, 24));
-        QFont font5;
-        font5.setPointSize(14);
-        font5.setBold(false);
-        font5.setWeight(50);
-        label_73->setFont(font5);
+        QFont font6;
+        font6.setPointSize(14);
+        font6.setBold(false);
+        font6.setWeight(50);
+        label_73->setFont(font6);
         label_73->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,150);"));
         label_73->setAlignment(Qt::AlignCenter);
@@ -1654,9 +1710,9 @@ public:
         label_23->setObjectName(QStringLiteral("label_23"));
         label_23->setMinimumSize(QSize(35, 24));
         label_23->setMaximumSize(QSize(40, 24));
-        QFont font6;
-        font6.setPointSize(12);
-        label_23->setFont(font6);
+        QFont font7;
+        font7.setPointSize(12);
+        label_23->setFont(font7);
         label_23->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
         label_23->setAlignment(Qt::AlignCenter);
@@ -1683,11 +1739,11 @@ public:
         label_48->setObjectName(QStringLiteral("label_48"));
         label_48->setMinimumSize(QSize(100, 24));
         label_48->setMaximumSize(QSize(300, 24));
-        QFont font7;
-        font7.setPointSize(15);
-        font7.setBold(false);
-        font7.setWeight(50);
-        label_48->setFont(font7);
+        QFont font8;
+        font8.setPointSize(15);
+        font8.setBold(false);
+        font8.setWeight(50);
+        label_48->setFont(font8);
         label_48->setStyleSheet(QLatin1String("background: rgba(0,0,0,50);\n"
 "color: rgba(212,215,217,150);"));
         label_48->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1701,11 +1757,11 @@ public:
         pushButton_16 = new QPushButton(frame_38);
         pushButton_16->setObjectName(QStringLiteral("pushButton_16"));
         pushButton_16->setMinimumSize(QSize(40, 68));
-        QFont font8;
-        font8.setPointSize(19);
-        font8.setBold(true);
-        font8.setWeight(75);
-        pushButton_16->setFont(font8);
+        QFont font9;
+        font9.setPointSize(19);
+        font9.setBold(true);
+        font9.setWeight(75);
+        pushButton_16->setFont(font9);
         pushButton_16->setLayoutDirection(Qt::LeftToRight);
         pushButton_16->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         QIcon icon20;
@@ -1722,7 +1778,7 @@ public:
         pushButton_12 = new QPushButton(frame_38);
         pushButton_12->setObjectName(QStringLiteral("pushButton_12"));
         pushButton_12->setMinimumSize(QSize(0, 32));
-        pushButton_12->setFont(font8);
+        pushButton_12->setFont(font9);
         pushButton_12->setLayoutDirection(Qt::RightToLeft);
         pushButton_12->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         QIcon icon21;
@@ -1736,7 +1792,7 @@ public:
         pushButton_15 = new QPushButton(frame_38);
         pushButton_15->setObjectName(QStringLiteral("pushButton_15"));
         pushButton_15->setMinimumSize(QSize(64, 32));
-        pushButton_15->setFont(font8);
+        pushButton_15->setFont(font9);
         pushButton_15->setLayoutDirection(Qt::RightToLeft);
         pushButton_15->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         QIcon icon22;
@@ -1753,7 +1809,7 @@ public:
         pushButton_17 = new QPushButton(frame_38);
         pushButton_17->setObjectName(QStringLiteral("pushButton_17"));
         pushButton_17->setMinimumSize(QSize(40, 68));
-        pushButton_17->setFont(font8);
+        pushButton_17->setFont(font9);
         pushButton_17->setLayoutDirection(Qt::RightToLeft);
         pushButton_17->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         QIcon icon23;
@@ -1791,7 +1847,7 @@ public:
         label_63->setObjectName(QStringLiteral("label_63"));
         label_63->setMinimumSize(QSize(85, 28));
         label_63->setMaximumSize(QSize(90, 24));
-        label_63->setFont(font7);
+        label_63->setFont(font8);
         label_63->setStyleSheet(QLatin1String("background: rgba(0,0,0,50);\n"
 "color: rgba(212,215,217,150);"));
         label_63->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1803,7 +1859,7 @@ public:
         label_69->setObjectName(QStringLiteral("label_69"));
         label_69->setMinimumSize(QSize(85, 28));
         label_69->setMaximumSize(QSize(90, 24));
-        label_69->setFont(font7);
+        label_69->setFont(font8);
         label_69->setStyleSheet(QLatin1String("background: rgba(0,0,0,50);\n"
 "color: rgba(212,215,217,150);"));
         label_69->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1815,7 +1871,7 @@ public:
         label_75->setObjectName(QStringLiteral("label_75"));
         label_75->setMinimumSize(QSize(85, 28));
         label_75->setMaximumSize(QSize(90, 24));
-        label_75->setFont(font7);
+        label_75->setFont(font8);
         label_75->setStyleSheet(QLatin1String("background: rgba(0,0,0,50);\n"
 "color: rgba(212,215,217,150);"));
         label_75->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -1836,7 +1892,7 @@ public:
         pushButton_18->setObjectName(QStringLiteral("pushButton_18"));
         pushButton_18->setMinimumSize(QSize(80, 32));
         pushButton_18->setMaximumSize(QSize(85, 16777215));
-        pushButton_18->setFont(font8);
+        pushButton_18->setFont(font9);
         pushButton_18->setLayoutDirection(Qt::RightToLeft);
         pushButton_18->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_18->setIcon(icon21);
@@ -1849,7 +1905,7 @@ public:
         pushButton_19->setObjectName(QStringLiteral("pushButton_19"));
         pushButton_19->setMinimumSize(QSize(80, 32));
         pushButton_19->setMaximumSize(QSize(85, 16777215));
-        pushButton_19->setFont(font8);
+        pushButton_19->setFont(font9);
         pushButton_19->setLayoutDirection(Qt::RightToLeft);
         pushButton_19->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_19->setIcon(icon22);
@@ -1868,7 +1924,7 @@ public:
         pushButton_20->setObjectName(QStringLiteral("pushButton_20"));
         pushButton_20->setMinimumSize(QSize(80, 32));
         pushButton_20->setMaximumSize(QSize(85, 16777215));
-        pushButton_20->setFont(font8);
+        pushButton_20->setFont(font9);
         pushButton_20->setLayoutDirection(Qt::RightToLeft);
         pushButton_20->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_20->setIcon(icon21);
@@ -1881,7 +1937,7 @@ public:
         pushButton_21->setObjectName(QStringLiteral("pushButton_21"));
         pushButton_21->setMinimumSize(QSize(80, 32));
         pushButton_21->setMaximumSize(QSize(85, 16777215));
-        pushButton_21->setFont(font8);
+        pushButton_21->setFont(font9);
         pushButton_21->setLayoutDirection(Qt::RightToLeft);
         pushButton_21->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_21->setIcon(icon22);
@@ -1905,7 +1961,7 @@ public:
         pushButton_22->setSizePolicy(sizePolicy6);
         pushButton_22->setMinimumSize(QSize(40, 32));
         pushButton_22->setMaximumSize(QSize(50, 64));
-        pushButton_22->setFont(font8);
+        pushButton_22->setFont(font9);
         pushButton_22->setLayoutDirection(Qt::LeftToRight);
         pushButton_22->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_22->setIcon(icon20);
@@ -1920,7 +1976,7 @@ public:
         pushButton_23->setSizePolicy(sizePolicy);
         pushButton_23->setMinimumSize(QSize(40, 32));
         pushButton_23->setMaximumSize(QSize(50, 64));
-        pushButton_23->setFont(font8);
+        pushButton_23->setFont(font9);
         pushButton_23->setLayoutDirection(Qt::RightToLeft);
         pushButton_23->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
         pushButton_23->setIcon(icon23);
@@ -1999,7 +2055,7 @@ public:
         label_43->setObjectName(QStringLiteral("label_43"));
         label_43->setMinimumSize(QSize(150, 32));
         label_43->setMaximumSize(QSize(400, 16777215));
-        label_43->setFont(font3);
+        label_43->setFont(font4);
         label_43->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_43->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -2026,7 +2082,7 @@ public:
         label_44->setObjectName(QStringLiteral("label_44"));
         label_44->setMinimumSize(QSize(0, 24));
         label_44->setMaximumSize(QSize(64, 24));
-        label_44->setFont(font4);
+        label_44->setFont(font5);
         label_44->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2036,11 +2092,11 @@ public:
         label_60->setObjectName(QStringLiteral("label_60"));
         label_60->setMinimumSize(QSize(0, 24));
         label_60->setMaximumSize(QSize(16777215, 24));
-        QFont font9;
-        font9.setBold(false);
-        font9.setItalic(true);
-        font9.setWeight(50);
-        label_60->setFont(font9);
+        QFont font10;
+        font10.setBold(false);
+        font10.setItalic(true);
+        font10.setWeight(50);
+        label_60->setFont(font10);
         label_60->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2056,9 +2112,9 @@ public:
         label_24->setObjectName(QStringLiteral("label_24"));
         label_24->setMinimumSize(QSize(0, 24));
         label_24->setMaximumSize(QSize(16777215, 24));
-        QFont font10;
-        font10.setPointSize(13);
-        label_24->setFont(font10);
+        QFont font11;
+        font11.setPointSize(13);
+        label_24->setFont(font11);
         label_24->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2076,7 +2132,7 @@ public:
         label_26->setObjectName(QStringLiteral("label_26"));
         label_26->setMinimumSize(QSize(40, 24));
         label_26->setMaximumSize(QSize(16777215, 24));
-        label_26->setFont(font6);
+        label_26->setFont(font7);
         label_26->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
         label_26->setAlignment(Qt::AlignCenter);
@@ -2112,13 +2168,13 @@ public:
         label_61 = new QLabel(frame_36);
         label_61->setObjectName(QStringLiteral("label_61"));
         label_61->setMaximumSize(QSize(300, 16777215));
-        QFont font11;
-        font11.setFamily(QStringLiteral(".SF NS Display Condensed"));
-        font11.setPointSize(48);
-        font11.setBold(true);
-        font11.setItalic(true);
-        font11.setWeight(75);
-        label_61->setFont(font11);
+        QFont font12;
+        font12.setFamily(QStringLiteral(".SF NS Display Condensed"));
+        font12.setPointSize(48);
+        font12.setBold(true);
+        font12.setItalic(true);
+        font12.setWeight(75);
+        label_61->setFont(font12);
         label_61->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_61->setAlignment(Qt::AlignCenter);
@@ -2185,7 +2241,7 @@ public:
         label_41->setObjectName(QStringLiteral("label_41"));
         label_41->setMinimumSize(QSize(150, 32));
         label_41->setMaximumSize(QSize(400, 16777215));
-        label_41->setFont(font3);
+        label_41->setFont(font4);
         label_41->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_41->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -2212,7 +2268,7 @@ public:
         label_42->setObjectName(QStringLiteral("label_42"));
         label_42->setMinimumSize(QSize(0, 24));
         label_42->setMaximumSize(QSize(64, 24));
-        label_42->setFont(font4);
+        label_42->setFont(font5);
         label_42->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2222,7 +2278,7 @@ public:
         label_49->setObjectName(QStringLiteral("label_49"));
         label_49->setMinimumSize(QSize(0, 24));
         label_49->setMaximumSize(QSize(16777215, 24));
-        label_49->setFont(font9);
+        label_49->setFont(font10);
         label_49->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2238,7 +2294,7 @@ public:
         label_21->setObjectName(QStringLiteral("label_21"));
         label_21->setMinimumSize(QSize(0, 24));
         label_21->setMaximumSize(QSize(16777215, 24));
-        label_21->setFont(font10);
+        label_21->setFont(font11);
         label_21->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2256,7 +2312,7 @@ public:
         label_22->setObjectName(QStringLiteral("label_22"));
         label_22->setMinimumSize(QSize(40, 24));
         label_22->setMaximumSize(QSize(16777215, 24));
-        label_22->setFont(font6);
+        label_22->setFont(font7);
         label_22->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
         label_22->setAlignment(Qt::AlignCenter);
@@ -2296,13 +2352,13 @@ public:
         label_56 = new QLabel(frame_30);
         label_56->setObjectName(QStringLiteral("label_56"));
         label_56->setMaximumSize(QSize(66, 16777215));
-        QFont font12;
-        font12.setFamily(QStringLiteral(".SF NS Display Condensed"));
-        font12.setPointSize(52);
-        font12.setBold(true);
-        font12.setItalic(false);
-        font12.setWeight(75);
-        label_56->setFont(font12);
+        QFont font13;
+        font13.setFamily(QStringLiteral(".SF NS Display Condensed"));
+        font13.setPointSize(52);
+        font13.setBold(true);
+        font13.setItalic(false);
+        font13.setWeight(75);
+        label_56->setFont(font13);
         label_56->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(141,158,198,180)"));
         label_56->setAlignment(Qt::AlignCenter);
@@ -2312,7 +2368,7 @@ public:
 
         label_57 = new QLabel(frame_30);
         label_57->setObjectName(QStringLiteral("label_57"));
-        label_57->setFont(font11);
+        label_57->setFont(font12);
         label_57->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_57->setAlignment(Qt::AlignCenter);
@@ -2338,7 +2394,7 @@ public:
         label_58 = new QLabel(frame_31);
         label_58->setObjectName(QStringLiteral("label_58"));
         label_58->setMaximumSize(QSize(66, 16777215));
-        label_58->setFont(font12);
+        label_58->setFont(font13);
         label_58->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(141,158,198,180)"));
         label_58->setAlignment(Qt::AlignCenter);
@@ -2348,7 +2404,7 @@ public:
 
         label_59 = new QLabel(frame_31);
         label_59->setObjectName(QStringLiteral("label_59"));
-        label_59->setFont(font11);
+        label_59->setFont(font12);
         label_59->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_59->setAlignment(Qt::AlignCenter);
@@ -2418,7 +2474,7 @@ public:
         label_39->setObjectName(QStringLiteral("label_39"));
         label_39->setMinimumSize(QSize(150, 32));
         label_39->setMaximumSize(QSize(16777215, 16777215));
-        label_39->setFont(font3);
+        label_39->setFont(font4);
         label_39->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_39->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -2445,7 +2501,7 @@ public:
         label_45->setObjectName(QStringLiteral("label_45"));
         label_45->setMinimumSize(QSize(0, 24));
         label_45->setMaximumSize(QSize(64, 24));
-        label_45->setFont(font4);
+        label_45->setFont(font5);
         label_45->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2455,7 +2511,7 @@ public:
         label_71->setObjectName(QStringLiteral("label_71"));
         label_71->setMinimumSize(QSize(0, 24));
         label_71->setMaximumSize(QSize(16777215, 24));
-        label_71->setFont(font9);
+        label_71->setFont(font10);
         label_71->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2491,7 +2547,7 @@ public:
         label_54 = new QLabel(frame_28);
         label_54->setObjectName(QStringLiteral("label_54"));
         label_54->setMaximumSize(QSize(66, 16777215));
-        label_54->setFont(font12);
+        label_54->setFont(font13);
         label_54->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(141,158,198,180)"));
         label_54->setAlignment(Qt::AlignCenter);
@@ -2501,7 +2557,7 @@ public:
 
         label_55 = new QLabel(frame_28);
         label_55->setObjectName(QStringLiteral("label_55"));
-        label_55->setFont(font11);
+        label_55->setFont(font12);
         label_55->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_55->setAlignment(Qt::AlignCenter);
@@ -2568,7 +2624,7 @@ public:
         label_38->setObjectName(QStringLiteral("label_38"));
         label_38->setMinimumSize(QSize(150, 32));
         label_38->setMaximumSize(QSize(400, 16777215));
-        label_38->setFont(font3);
+        label_38->setFont(font4);
         label_38->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_38->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -2595,7 +2651,7 @@ public:
         label_47->setObjectName(QStringLiteral("label_47"));
         label_47->setMinimumSize(QSize(0, 24));
         label_47->setMaximumSize(QSize(64, 24));
-        label_47->setFont(font4);
+        label_47->setFont(font5);
         label_47->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2605,7 +2661,7 @@ public:
         label_72->setObjectName(QStringLiteral("label_72"));
         label_72->setMinimumSize(QSize(0, 24));
         label_72->setMaximumSize(QSize(16777215, 24));
-        label_72->setFont(font9);
+        label_72->setFont(font10);
         label_72->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2648,7 +2704,7 @@ public:
         label_50 = new QLabel(frame_25);
         label_50->setObjectName(QStringLiteral("label_50"));
         label_50->setMaximumSize(QSize(66, 16777215));
-        label_50->setFont(font12);
+        label_50->setFont(font13);
         label_50->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(141,158,198,180)"));
         label_50->setAlignment(Qt::AlignCenter);
@@ -2658,7 +2714,7 @@ public:
 
         label_51 = new QLabel(frame_25);
         label_51->setObjectName(QStringLiteral("label_51"));
-        label_51->setFont(font11);
+        label_51->setFont(font12);
         label_51->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_51->setAlignment(Qt::AlignCenter);
@@ -2684,7 +2740,7 @@ public:
         label_52 = new QLabel(frame_26);
         label_52->setObjectName(QStringLiteral("label_52"));
         label_52->setMaximumSize(QSize(66, 16777215));
-        label_52->setFont(font12);
+        label_52->setFont(font13);
         label_52->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(141,158,198,180)"));
         label_52->setAlignment(Qt::AlignCenter);
@@ -2694,7 +2750,7 @@ public:
 
         label_53 = new QLabel(frame_26);
         label_53->setObjectName(QStringLiteral("label_53"));
-        label_53->setFont(font11);
+        label_53->setFont(font12);
         label_53->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_53->setAlignment(Qt::AlignCenter);
@@ -2764,7 +2820,7 @@ public:
         label_40->setObjectName(QStringLiteral("label_40"));
         label_40->setMinimumSize(QSize(150, 32));
         label_40->setMaximumSize(QSize(400, 16777215));
-        label_40->setFont(font3);
+        label_40->setFont(font4);
         label_40->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,180)"));
         label_40->setInputMethodHints(Qt::ImhNoEditMenu);
@@ -2794,7 +2850,7 @@ public:
         label_62->setObjectName(QStringLiteral("label_62"));
         label_62->setMinimumSize(QSize(0, 24));
         label_62->setMaximumSize(QSize(64, 24));
-        label_62->setFont(font4);
+        label_62->setFont(font5);
         label_62->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2804,7 +2860,7 @@ public:
         label_74->setObjectName(QStringLiteral("label_74"));
         label_74->setMinimumSize(QSize(0, 24));
         label_74->setMaximumSize(QSize(16777215, 24));
-        label_74->setFont(font9);
+        label_74->setFont(font10);
         label_74->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
@@ -2833,11 +2889,11 @@ public:
         label_68->setSizePolicy(sizePolicy7);
         label_68->setMinimumSize(QSize(0, 24));
         label_68->setMaximumSize(QSize(200, 24));
-        QFont font13;
-        font13.setPointSize(12);
-        font13.setBold(true);
-        font13.setWeight(75);
-        label_68->setFont(font13);
+        QFont font14;
+        font14.setPointSize(12);
+        font14.setBold(true);
+        font14.setWeight(75);
+        label_68->setFont(font14);
         label_68->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
         label_68->setAlignment(Qt::AlignCenter);
@@ -2886,11 +2942,11 @@ public:
         label_67->setSizePolicy(sizePolicy);
         label_67->setMinimumSize(QSize(0, 24));
         label_67->setMaximumSize(QSize(200, 24));
-        QFont font14;
-        font14.setPointSize(14);
-        font14.setBold(true);
-        font14.setWeight(75);
-        label_67->setFont(font14);
+        QFont font15;
+        font15.setPointSize(14);
+        font15.setBold(true);
+        font15.setWeight(75);
+        label_67->setFont(font15);
         label_67->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(141,158,198,180)"));
         label_67->setAlignment(Qt::AlignCenter);
@@ -2899,12 +2955,12 @@ public:
 
         label_17 = new QLabel(frame_15);
         label_17->setObjectName(QStringLiteral("label_17"));
-        QFont font15;
-        font15.setPointSize(32);
-        font15.setBold(true);
-        font15.setItalic(true);
-        font15.setWeight(75);
-        label_17->setFont(font15);
+        QFont font16;
+        font16.setPointSize(32);
+        font16.setBold(true);
+        font16.setItalic(true);
+        font16.setWeight(75);
+        label_17->setFont(font16);
         label_17->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_17->setAlignment(Qt::AlignCenter);
@@ -2932,7 +2988,7 @@ public:
         label_64->setSizePolicy(sizePolicy);
         label_64->setMinimumSize(QSize(0, 24));
         label_64->setMaximumSize(QSize(200, 24));
-        label_64->setFont(font14);
+        label_64->setFont(font15);
         label_64->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(141,158,198,180)"));
         label_64->setAlignment(Qt::AlignCenter);
@@ -2941,7 +2997,7 @@ public:
 
         label_3 = new QLabel(frame_12);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setFont(font15);
+        label_3->setFont(font16);
         label_3->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_3->setAlignment(Qt::AlignCenter);
@@ -2967,7 +3023,7 @@ public:
         label_66->setSizePolicy(sizePolicy7);
         label_66->setMinimumSize(QSize(0, 24));
         label_66->setMaximumSize(QSize(200, 24));
-        label_66->setFont(font14);
+        label_66->setFont(font15);
         label_66->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(141,158,198,180)"));
         label_66->setAlignment(Qt::AlignCenter);
@@ -2976,7 +3032,7 @@ public:
 
         label_16 = new QLabel(frame_14);
         label_16->setObjectName(QStringLiteral("label_16"));
-        label_16->setFont(font15);
+        label_16->setFont(font16);
         label_16->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_16->setAlignment(Qt::AlignCenter);
@@ -3004,7 +3060,7 @@ public:
         label_65->setSizePolicy(sizePolicy7);
         label_65->setMinimumSize(QSize(0, 24));
         label_65->setMaximumSize(QSize(200, 24));
-        label_65->setFont(font14);
+        label_65->setFont(font15);
         label_65->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(141,158,198,180)"));
         label_65->setAlignment(Qt::AlignCenter);
@@ -3013,7 +3069,7 @@ public:
 
         label_15 = new QLabel(frame_13);
         label_15->setObjectName(QStringLiteral("label_15"));
-        label_15->setFont(font15);
+        label_15->setFont(font16);
         label_15->setStyleSheet(QLatin1String("background: rgba(212,215,217,16);\n"
 "color: rgba(55,255,139, 180)"));
         label_15->setAlignment(Qt::AlignCenter);
@@ -3079,12 +3135,14 @@ public:
         settings_button_apply->setText(QApplication::translate("PowderApp", " Apply", nullptr));
         settings_button_refreshPorts->setText(QApplication::translate("PowderApp", "Rescan Ports", nullptr));
         gcode_tool_button_openFile->setText(QApplication::translate("PowderApp", "Open G-Code File", nullptr));
-        radioButton_2->setText(QApplication::translate("PowderApp", "Display Command Strings", nullptr));
-        radioButton->setText(QApplication::translate("PowderApp", "Display Comments", nullptr));
-        radioButton_3->setText(QApplication::translate("PowderApp", "Ignore Errors", nullptr));
+        printTools_display_commands_button->setText(QApplication::translate("PowderApp", "Display Command Strings", nullptr));
+        printTools_displayComments_button->setText(QApplication::translate("PowderApp", "Display Comments", nullptr));
+        printTools_ignoreErrors_button->setText(QApplication::translate("PowderApp", "Ignore Errors", nullptr));
         gcode_tool_button_clearPart->setText(QApplication::translate("PowderApp", "Clear Part", nullptr));
-        label->setText(QApplication::translate("PowderApp", "Process Output", nullptr));
-        settings_buttons_saveFile_2->setText(QApplication::translate("PowderApp", "Add Part To Job List", nullptr));
+        printTools_outputBrowser_title->setText(QApplication::translate("PowderApp", "Original G-Code", nullptr));
+        printTools_outputBrowser_title_2->setText(QApplication::translate("PowderApp", "Command Codes", nullptr));
+        printTools_outputBrowser_title_3->setText(QApplication::translate("PowderApp", "Errors", nullptr));
+        printTools_page_acceptPart_button->setText(QApplication::translate("PowderApp", "Add Part To Job List", nullptr));
         label_70->setText(QApplication::translate("PowderApp", "Print Manager", nullptr));
         pushButton_13->setText(QString());
         label_4->setText(QApplication::translate("PowderApp", "  Status:", nullptr));

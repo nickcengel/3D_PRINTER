@@ -1,0 +1,52 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/Icon-eto-flow-cascade.png</file>
+        <file>icons/Icon-elusive-cogs.png</file>
+        <file>icons/angle-double-right.png</file>
+        <file>icons/Icon-eto-help-circled.png</file>
+        <file>icons/buffer.png</file>
+        <file>icons/Icon-eto-tools.png</file>
+        <file>icons/iosUpload.png</file>
+        <file>icons/iosDownload.png</file>
+        <file>icons/linea--basic-elaboration-document-refresh.png</file>
+        <file>icons/linea--basic-elaboration-document-next.png</file>
+        <file>icons/iosUndoOutline.png</file>
+        <file>icons/iosRedo.png</file>
+        <file>icons/newhw.png</file>
+        <file>icons/codeWorking.png</file>
+        <file>icons/iosSettingsStrong.png</file>
+        <file>icons/code.png</file>
+        <file>icons/arrows.png</file>
+        <file>icons/iosAnalytics.png</file>
+        <file>icons/iosTrash.png</file>
+        <file>icons/iosPlus.png</file>
+        <file>icons/toggle-on1.png</file>
+        <file>icons/toggle-off1.png</file>
+        <file>icons/iosSkipforward.png</file>
+        <file>icons/stop.png</file>
+        <file>icons/pict--tag-gray-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-purple-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-blue-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-green-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-yellow-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-orange-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/pict--tag-red-glyph-icons-vector-stencils-library.png</file>
+        <file>icons/greybut.png</file>
+        <file>icons/redbutton.png</file>
+        <file>icons/orangebut.png</file>
+        <file>icons/greenbut.png</file>
+        <file>icons/iosPlay.png</file>
+        <file>icons/iosPause.png</file>
+        <file>icons/lock.png</file>
+        <file>icons/unlock-alt.png</file>
+        <file>icons/cube.png</file>
+        <file>icons/print.png</file>
+        <file>icons/iosGlasses.png</file>
+        <file>icons/iosArrowForward.png</file>
+        <file>icons/iosArrowUp.png</file>
+        <file>icons/iosArrowLeft.png</file>
+        <file>icons/iosArrowDown.png</file>
+        <file>icons/iosArrowRight copy.png</file>
+        <file>icons/Homing.png</file>
+    </qresource>
+</RCC>

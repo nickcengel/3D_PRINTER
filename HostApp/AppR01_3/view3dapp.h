@@ -30,7 +30,6 @@
 #include <Qt3DExtras/qt3dwindow.h>
 #include <Qt3DExtras/qfirstpersoncameracontroller.h>
 
-#include "gcode_tools.h"
 #include "QCloseEvent"
 
 class View3DApp : public QWidget
@@ -43,7 +42,6 @@ public:
 public slots:
     void open_3dView();
 
-    void get_Part(GCODE_BLOCK_NS::Part &newPart);
 
 private:
     Qt3DExtras::Qt3DWindow *view;
@@ -58,7 +56,6 @@ private:
     Qt3DExtras::QFirstPersonCameraController *camController;
     SceneModifier *modifier;
 
-    GCODE_BLOCK_NS::Part *myPart;
     void closeEvent(QCloseEvent *bar);
 };
 

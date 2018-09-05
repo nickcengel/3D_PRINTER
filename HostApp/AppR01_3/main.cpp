@@ -8,7 +8,6 @@
 
 #include <QObject>
 
-#include "gcode_tools.h"
 #include <QMetaType>
 
 

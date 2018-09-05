@@ -4,8 +4,11 @@
 #include <QObject>
 #include <QVector>
 #include <QString>
+#include <QSharedPointer>
+
 #include "blockobject.h"
 #include "settingsobject.h"
+
 class PartObject : public QObject
 {
     Q_OBJECT
@@ -19,7 +22,7 @@ class PartObject : public QObject
 
 public:
     explicit PartObject(QObject *parent = nullptr);
-    PartObject(const QString &filePath, SettingsObject *config, QObject *parent = nullptr);
+    PartObject(const QString &filePath, QSharedPointer<SettingsObject> config, QObject *parent = nullptr);
     PartObject(const PartObject &otherPart); // copy constructor
     ~PartObject(); // destructor
 
