@@ -7,14 +7,15 @@
 #include <QSerialPortInfo>
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
+#include <QSharedPointer>
+#include <QtSerialPort>
 
 #include "powder_objects/partobject.h"
 #include "powder_objects/settingsobject.h"
-
 #include "model_item_frameworks/settings_model.h"
 #include "model_item_frameworks/menu_model.h"
-
 #include "3d_framework/block3d.h"
+#include "powderdaemon.h"
 
 namespace Ui {
 class PowderApp;
@@ -23,20 +24,26 @@ class PowderApp;
 class PowderApp : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(PartObject *myPart READ myPart WRITE setMyPart)
-    Q_PROPERTY(QVector<Block3D> *block3d READ block3d WRITE setBlock3d)
 
+    Q_PROPERTY(QVector<Block3D*> *block3d READ block3d WRITE setBlock3d)
 
 public:
     explicit PowderApp(QWidget *parent = nullptr);
     ~PowderApp();
 
 
-    PartObject *myPart() const;
-    void setMyPart(PartObject *myPart);
+    QVector<Block3D*>  *block3d() const;
+    void setBlock3d(QVector<Block3D*> *block3d);
 
-    QVector<Block3D > *block3d() const;
-    void setBlock3d(QVector<Block3D > *block3d);
+
+
+
+    QSharedPointer<PartObject> myPart() const;
+    void setMyPart(const QSharedPointer<PartObject> &myPart);
+
+
+    QSharedPointer<SettingsObject> getMyConfiguration() const;
+    void setMyConfiguration(const QSharedPointer<SettingsObject> &value);
 
 public slots:
 
@@ -58,11 +65,44 @@ private slots:
     void on_Main_Button_ControllerPage_clicked();
     void on_Main_Button_HelpPage_clicked();
 
+    void on_printManager_start_button_pressed();
+
+    void on_PortManager_options_box_activated(int index);
+
+
+    void on_PortManager_options_box_activated(const QString &arg1);
+
+    void on_laserGalvoPort_connectionRequested(const bool open);
+    void on_materialDeliveryPort_connectionRequested(const bool open);
+
+
+    void on_ManualControlEnable_button_toggled(bool checked);
+
+    void on_galvoDisplayEnable_button_toggled(bool checked);
+
+    void on_buildPlateEnable_button_toggled(bool checked);
+
+    void on_materialDeliveryDisplayEnable_button_toggled(bool checked);
+
+    void on_PrintManagerEnable_button_toggled(bool checked);
+
 signals:
-//    void view3d_pressed();
-    void view3d_pressed(QVector<Block3D> *block3d);
+    void newPartAvailable();
+    void view3d_pressed(QVector<Block3D*> *block3d);
 
     void close_view3d();
+
+    void laserGalvoPort_opened(QSerialPort * const port);
+    void materialDeliveryPort_opened(QSerialPort * const port);
+
+    void laserGalvoPort_connectionRequested(const bool open);
+    void materialDeliveryPort_connectionRequested(const bool open);
+
+    void laserGalvoPort_connectionError(const QString &connectionError);
+    void materialDeliveryPort_connectionError(const QString &connectionError);
+
+    void laserGalvoPort_connectionChanged(const bool open);
+    void materialDeliveryPort_connectionChanged(const bool open);
 
 private:
     Ui::PowderApp *ui;
@@ -75,13 +115,24 @@ private:
     QStandardItemModel *PartInfoLabelModel;
     QStandardItemModel *PartInfoDataModel;
     QItemSelectionModel menuSelectionModel;
-    SettingsObject *myConfiguration;
     bool m_file_open;
 
-    PartObject *m_myPart;
-    QVector<Block3D> *m_block3d;
+
+    QVector<Block3D*> *m_block3d;
+    QSharedPointer<PartObject> m_myPart;
+    QSharedPointer<SettingsObject> myConfiguration;
+
+
+    PowderDaemon *deviceTransport;
+    QStringList serialPortNames;
+    QSerialPort *laserGalvoPort;
+    QSerialPort *materialDeliveryPort;
+
 
     void applySettings();
+
+    void refreshSerialPorts();
+
 
 };
 

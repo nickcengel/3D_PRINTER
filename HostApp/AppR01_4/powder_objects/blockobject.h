@@ -3,6 +3,7 @@
 #include <QString>
 
 #include <QMetaType>
+#include <QStringList>
 
 class BlockObject
 {
@@ -88,8 +89,8 @@ public:
     QString lg_string() const;
     void setLg_string(const QString &lg_string);
 
-    QString md_string() const;
-    void setMd_string(const QString &md_string);
+    QStringList md_string() const;
+    void setMd_string(const QStringList &md_string);
 
 private:
     uint32_t m_blockNumber;
@@ -119,7 +120,7 @@ private:
     float m_dwellTime;
 
     QString m_lg_string;
-    QString m_md_string;
+    QStringList m_md_string;
 
 };
 

@@ -37,14 +37,17 @@
 class View3DApp : public QWidget
 {
     Q_OBJECT
-
+    Q_PROPERTY(QVector<Block3D *> *blocks3d READ blocks3d WRITE setBlocks3d)
 public:
     explicit View3DApp(QWidget *parent = nullptr);
 
 
+    QVector<Block3D *> *blocks3d() const;
+    void setBlocks3d(QVector<Block3D *> *blocks3d);
+
 public slots:
-//    void open_3dView();
-    void open_3dView(QVector<Block3D> *blocks3d);
+    //    void open_3dView();
+    void open_3dView(QVector<Block3D*> *blocks3d);
 
     void close_3dView();
 
@@ -60,7 +63,7 @@ private:
     Qt3DCore::QTransform *lightTransform;
     Qt3DExtras::QFirstPersonCameraController *camController;
     SceneModifier *modifier;
-    QVector<Block3D> *m_blocks3d;
+    QVector<Block3D*> *m_blocks3d;
     void closeEvent(QCloseEvent *bar);
 };
 

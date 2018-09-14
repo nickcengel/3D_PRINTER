@@ -10,7 +10,9 @@ class ZaberUtility
 public:
     ZaberUtility();
 
-    static QString composeCommandString(BlockObject *block, SettingsObject *config);
+    static QStringList composeCommandString(BlockObject *block, SettingsObject *config);
+    static QString composeJogCommandString(BlockObject::BlockTask axisTask, int32_t distance);
+
 };
 
 #endif // ZABER_UTILITY_H

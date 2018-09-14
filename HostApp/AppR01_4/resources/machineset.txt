@@ -1,8 +1,8 @@
 Configuration	Default
  File Path    /
  Status	Valid
- Laser & Galvo Port Number	1
- Material Delivery Port Number	2
+ Laser & Galvo Port Number	0
+ Material Delivery Port Number	1
 
 Laser
  Device Number	1

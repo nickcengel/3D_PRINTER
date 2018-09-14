@@ -1,4 +1,5 @@
 #include "blockobject.h"
+#include "QtDebug"
 
 BlockObject::BlockObject(){
     qRegisterMetaType<BlockObject>("BlockObject");
@@ -31,6 +32,8 @@ BlockObject::BlockObject(const BlockObject &otherBlock){
     m_hopper_speed = otherBlock.hopper_speed();
     m_spreader_position = otherBlock.spreader_position();
     m_spreader_speed = otherBlock.spreader_speed();
+    m_lg_string = otherBlock.lg_string();
+    m_md_string = otherBlock.md_string();
 }
 
 BlockObject::~BlockObject()
@@ -256,14 +259,19 @@ void BlockObject::setLg_string(const QString &lg_string)
     m_lg_string = lg_string;
 }
 
-QString BlockObject::md_string() const
+QStringList BlockObject::md_string() const
 {
     return m_md_string;
 }
 
-void BlockObject::setMd_string(const QString &md_string)
+void BlockObject::setMd_string(const QStringList &md_string)
 {
-    m_md_string = md_string;
+    m_md_string.append(md_string.at(0));
+    m_md_string.append(md_string.at(1));
+    m_md_string.append(md_string.at(2));
+
+    qDebug()<<m_md_string;
+
 }
 
 

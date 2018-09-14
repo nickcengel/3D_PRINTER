@@ -1,18 +1,16 @@
 #include "zaber_utility.h"
+#include "QtDebug"
 ZaberUtility::ZaberUtility()
 {
 
 }
 
-QString ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *config)
+QStringList ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *config)
 {
     uint16_t task = block->blockTask();
+    QStringList outputList;
 
     QString modeString;
-    QString Zoutput;
-    QString Houtput;
-    QString Soutput;
-    QString cat_output;
 
     if(task & BlockObject::BlockTask::SET_HOME_AXIS){
         modeString = " home\r";
@@ -28,7 +26,7 @@ QString ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *c
         uint8_t devNum = config->z_deviceNumber();
         uint8_t axisNum = config->z_axisNumber();
         float res = config->z_position_resolution();
-        Zoutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        QString Zoutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
         if(modeString != " home\r"){
             float pos = res * (block->z_position());
             Zoutput += (modeString + QString::number(pos) + "\r");
@@ -37,13 +35,17 @@ QString ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *c
         {
             Zoutput += modeString;
         }
+        outputList.append(Zoutput);
     }
+    else
+        outputList.append("EMPTY");
+
 
     if(task & (BlockObject::BlockTask::SET_HOPPER_POSITION)){
         uint8_t devNum = config->hopper_deviceNumber();
         uint8_t axisNum = config->hopper_axisNumber();
         float res = config->hopper_position_resolution();
-        Houtput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        QString Houtput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
         if(modeString != " home\r"){
             float pos = res * (block->hopper_position());
             Houtput += (modeString + QString::number(pos) + "\r");
@@ -52,13 +54,16 @@ QString ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *c
         {
             Houtput += modeString;
         }
+        outputList.append(Houtput);
     }
+    else
+        outputList.append("EMPTY");
 
     if(task & (BlockObject::BlockTask::SET_SPREADER_POSITION)){
         uint8_t devNum = config->spreader_deviceNumber();
         uint8_t axisNum = config->spreader_axisNumber();
         float res = config->spreader_position_resolution();
-        Soutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        QString Soutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
         if(modeString != " home\r"){
             float pos = res * (block->spreader_position());
             Soutput += (modeString + QString::number(pos) + "\r");
@@ -67,15 +72,34 @@ QString ZaberUtility::composeCommandString(BlockObject *block, SettingsObject *c
         {
             Soutput += modeString;
         }
+        outputList.append(Soutput);
     }
+    else
+        outputList.append("EMPTY");
+//    qDebug()<<outputList;
+    return outputList;
+}
 
-    if(!Zoutput.isEmpty())
-        cat_output = Zoutput;
-    if(!Houtput.isEmpty())
-        cat_output += Houtput;
-    if(!Soutput.isEmpty())
-        cat_output += Soutput;
-    if(cat_output.isEmpty())
-        cat_output = "EMPTY";
-    return cat_output;
+QString ZaberUtility::composeJogCommandString(BlockObject::BlockTask axisTask, int32_t distance)
+{
+    QString output = "/";
+    //    if(axisTask & BlockObject::BlockTask::SET_Z_POSITION){
+    //        output += QString::number(config->z_deviceNumber());
+    //        output += " " + QString::number(config->z_axisNumber());
+    //        float pos = config->z_position_resolution() * distance;
+    //        output += " " + QString::number(pos) + "\r";
+    //    }
+    //    else if (axisTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
+    //        output += QString::number(config->hopper_deviceNumber());
+    //        output += " " + QString::number(config->hopper_axisNumber());
+    //        float pos = config->hopper_position_resolution() * distance;
+    //        output += " " + QString::number(pos) + "\r";
+    //    }
+    //    else if (axisTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
+    //        output += QString::number(config->spreader_deviceNumber());
+    //        output += " " + QString::number(config->spreader_axisNumber());
+    //        float pos = config->spreader_position_resolution() * distance;
+    //        output += " " + QString::number(pos) + "\r";
+    //    }
+    return output;
 }

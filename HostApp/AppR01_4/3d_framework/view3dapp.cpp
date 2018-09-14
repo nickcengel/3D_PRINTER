@@ -18,7 +18,7 @@ View3DApp::View3DApp(QWidget *parent) : QWidget(parent)
 
 
 
-void View3DApp::open_3dView(QVector<Block3D> *blocks3d){
+void View3DApp::open_3dView(QVector<Block3D*> *blocks3d){
 
 
     if(!(this->isVisible())){
@@ -42,17 +42,17 @@ void View3DApp::open_3dView(QVector<Block3D> *blocks3d){
         // Camera
         cameraEntity = view->camera();
         cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-        cameraEntity->setPosition(QVector3D(25.0f, 25.0f, 25.0f));
+        cameraEntity->setPosition(QVector3D(50.0f, 0.0f, 50.0f));
         cameraEntity->setUpVector(QVector3D(0, 1, 0));
-        cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+        cameraEntity->setViewCenter(QVector3D(0, -100.0f, 0));
 
         lightEntity = new Qt3DCore::QEntity(rootEntity);
         light = new Qt3DRender::QPointLight(lightEntity);
         light->setColor("white");
-        light->setIntensity(1);
+        light->setIntensity(1.0f);
 
         lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(25.0f, 25.0f, 25.0f));
+        lightTransform->setTranslation(cameraEntity->position());
         lightEntity->addComponent(lightTransform);
 
         camController = new Qt3DExtras::QFirstPersonCameraController(rootEntity);
@@ -81,6 +81,16 @@ void View3DApp::close_3dView()
     if(this->isVisible()){
         this->closeEvent(new QCloseEvent());
     }
+}
+
+QVector<Block3D *> *View3DApp::blocks3d() const
+{
+    return m_blocks3d;
+}
+
+void View3DApp::setBlocks3d(QVector<Block3D *> *blocks3d)
+{
+    m_blocks3d = blocks3d;
 }
 
 

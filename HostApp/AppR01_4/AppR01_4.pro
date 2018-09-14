@@ -4,12 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets \
-            serialport
-
+QT += core gui widgets
 QT += 3dextras
 QT += 3dcore 3drender 3dinput 3dextras
 QT += widgets
+QT += widgets serialport
 
 TARGET = AppR01_2
 TEMPLATE = app
@@ -40,12 +39,12 @@ SOURCES += \
     powder_objects/blockobject.cpp \
     powder_objects/partobject.cpp \
     powder_objects/settingsobject.cpp \
-    serial_thread_tools/print_tools.cpp \
-    serial_thread_tools/serial_port_drivers.cpp \
     main.cpp \
     hardware_tools/zaber_utility.cpp \
     hardware_tools/lasergalvo_utility.cpp \
-    3d_framework/block3d.cpp
+    3d_framework/block3d.cpp \
+    powder_app/printmanager.cpp \
+    powder_app/powderdaemon.cpp
 
 HEADERS += \
     3d_framework/line3d.h \
@@ -60,11 +59,12 @@ HEADERS += \
     powder_objects/blockobject.h \
     powder_objects/partobject.h \
     powder_objects/settingsobject.h \
-    serial_thread_tools/print_tools.h \
-    serial_thread_tools/serial_port_drivers.h \
     hardware_tools/zaber_utility.h \
     hardware_tools/lasergalvo_utility.h \
-    3d_framework/block3d.h
+    3d_framework/block3d.h \
+    hardware_tools/serialtransport.h \
+    powder_app/printmanager.h \
+    powder_app/powderdaemon.h
 
 FORMS += \
     powder_app/powderapp.ui

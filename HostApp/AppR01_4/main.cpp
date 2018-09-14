@@ -11,6 +11,7 @@
 #include <QMetaType>
 #include "3d_framework/block3d.h"
 
+
 int main(int argc, char *argv[])
 {
     qRegisterMetaType<SettingsObject>("SettingsObject");
@@ -20,9 +21,10 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/icons/MenuIcons/cube.png"));
-
-
     PowderApp w;
+
+
+
 
     w.setWindowTitle("PowderRoom");
     w.show();
@@ -31,7 +33,7 @@ int main(int argc, char *argv[])
     View3DApp v;
 
 
-    QObject::connect(&w, SIGNAL(view3d_pressed(QVector<Block3D>*)), &v, SLOT(open_3dView(QVector<Block3D>*)));
+    QObject::connect(&w, SIGNAL(view3d_pressed(QVector<Block3D*>*)), &v, SLOT(open_3dView(QVector<Block3D*>*)));
 
     QObject::connect(&w, SIGNAL(close_view3d()),
                      &v, SLOT(close_3dView()));

@@ -77,3 +77,20 @@ QString LaserGalvo_Utility::composeCommandString(BlockObject *block, SettingsObj
 
     return output;
 }
+
+QString LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask axisTask, int32_t steps)
+{
+    QString output = "$(g=3,";
+    if(axisTask & BlockObject::BlockTask::SET_X_POSITION){
+        output += ("X=" + QString::number(steps));
+    }
+
+    else if(axisTask & BlockObject::BlockTask::SET_Y_POSITION){
+        output += ("Y=" + QString::number(steps));
+    }
+    output += ")";
+    if(output == "$(g=3,"){
+        output = "";
+    }
+    return output;
+}

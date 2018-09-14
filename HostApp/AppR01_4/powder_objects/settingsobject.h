@@ -20,8 +20,8 @@ public:
         SETTINGS_VALID
     };
 
-    uint8_t laser_galvo_portNumber() const;
-    void setLaser_galvo_portNumber(const uint8_t &laser_galvo_portNumber);
+    uint8_t laserGalvo_portNumber() const;
+    void setLaser_galvo_portNumber(const uint8_t &laserGalvo_portNumber);
 
     uint8_t materialDelivery_portNumber() const;
     void setMaterialDelivery_portNumber(const uint8_t &materialDelivery_portNumber);

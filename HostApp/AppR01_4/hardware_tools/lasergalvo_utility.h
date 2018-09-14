@@ -9,6 +9,7 @@ class LaserGalvo_Utility
 public:
     LaserGalvo_Utility();
     static QString composeCommandString(BlockObject *block, SettingsObject *config);
+    static QString composeJogCommandString(BlockObject::BlockTask axisTask, int32_t steps);
 
 };
 

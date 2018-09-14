@@ -16,17 +16,16 @@ PartObject::PartObject(const PartObject &otherPart)
     m_blockCount = otherPart.blockCount();
     m_layerCount = otherPart.layerCount();
     m_layerFlags = otherPart.layerFlags();
-    m_blocks = otherPart.blocks();
+    m_blocks = otherPart.getBlocks();
     m_partFilePath = otherPart.partFilePath();
     m_partStatus = otherPart.partStatus();
     m_gcode = otherPart.gcode();
     m_errorStr = otherPart.errorStr();
-    //    m_laserGalvo_commands = otherPart.laserGalvo_commands();
-    //    m_materialDelivery_commands = otherPart.materialDelivery_commands();
+
 }
 
 
-PartObject::PartObject(const QString &filePath, SettingsObject *config){
+PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> config){
 
 
     this->setPartFilePath(filePath);
@@ -56,6 +55,8 @@ PartObject::PartObject(const QString &filePath, SettingsObject *config){
         uint32_t layerNum = 0;
         QStringList::iterator line_iterator = m_gcode.begin();
         m_parserStatus = PARSER_READY;
+
+        m_blocks = QSharedPointer<QVector<BlockObject>>(new QVector<BlockObject>);
         while(line_iterator != m_gcode.end()){
             BlockObject *block = new BlockObject(blockNum, layerNum);
             block->clearTask();
@@ -357,9 +358,12 @@ PartObject::PartObject(const QString &filePath, SettingsObject *config){
                 }
             }
 
-            block->setLg_string(LaserGalvo_Utility::composeCommandString(block, config));
-            block->setMd_string(ZaberUtility::composeCommandString(block, config));
-            m_blocks.append(block);
+            block->setLg_string(LaserGalvo_Utility::composeCommandString(block, config.get()));
+
+            const QStringList md = ZaberUtility::composeCommandString(block, config.get());
+            block->setMd_string(md);
+            m_blocks->append(*block);
+            delete  block;
             blockNum++;
             ++line_iterator;
         }
@@ -377,9 +381,7 @@ PartObject::PartObject(const QString &filePath, SettingsObject *config){
 
 PartObject::~PartObject()
 {
-    for(int i = 0; i < m_blocks.size(); i++){
-        delete m_blocks.takeAt(i);
-    }
+    m_blocks.clear();
 
 }
 
@@ -439,18 +441,8 @@ void PartObject::setLayerFlags(const QVector<uint32_t> &layerFlags)
 
 
 
-void PartObject::addBlock(BlockObject *block){
-    m_blocks.append(block);
-}
-
-QVector<BlockObject *> PartObject::blocks() const
-{
-    return m_blocks;
-}
-
-void PartObject::setBlocks(QVector<BlockObject *> blocks)
-{
-    m_blocks = blocks;
+void PartObject::addBlock(const BlockObject &block){
+    m_blocks.get()->append(block);
 }
 
 PartObject::ParserStatus PartObject::parserStatus() const
@@ -503,17 +495,15 @@ void PartObject::setGcode(const QStringList &gcode)
 //    m_materialDelivery_commands = materialDelivery_commands;
 //}
 
-BlockObject *PartObject::getBlock(int blockNum)
+BlockObject PartObject::getBlock(const int blockNum) const
 {
-    return m_blocks.at(blockNum);
+    return m_blocks.get()->at(blockNum);
 }
 
 void PartObject::clearPart()
 {
-    for(int i = 0; i < m_blocks.size(); i++){
-        delete m_blocks.takeAt(i);
-    }
-    m_blocks.clear();
+
+    m_blocks->clear();
     m_partFilePath = "";
     m_errorStr = "";
     m_gcode.clear();
@@ -522,6 +512,16 @@ void PartObject::clearPart()
     m_partStatus = PART_IS_EMPTY;
     m_layerFlags.clear();
     m_parserStatus = PARSER_INIT;
+}
+
+QSharedPointer<QVector<BlockObject> > PartObject::getBlocks() const
+{
+    return m_blocks;
+}
+
+void PartObject::setBlocks(const QSharedPointer<QVector<BlockObject> > &blocks)
+{
+    m_blocks = blocks;
 }
 
 

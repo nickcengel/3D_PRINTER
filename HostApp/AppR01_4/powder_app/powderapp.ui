@@ -90,23 +90,22 @@ border-radius: 8;</string>
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>183</width>
-           <height>9</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item alignment="Qt::AlignTop">
         <widget class="QTreeView" name="MenuTree">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -117,13 +116,13 @@ border-radius: 8;</string>
          <property name="minimumSize">
           <size>
            <width>150</width>
-           <height>0</height>
+           <height>350</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>300</width>
-           <height>16777215</height>
+           <height>450</height>
           </size>
          </property>
          <property name="styleSheet">
@@ -149,6 +148,450 @@ color:white;
          <attribute name="headerMinimumSectionSize">
           <number>150</number>
          </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="PortManagerDisplay_frame">
+         <property name="minimumSize">
+          <size>
+           <width>175</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background: rgba(212,215,217,16)</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="PortManagerTitle_frame">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background: rgba(212,215,217,16)</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_15">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="PortManagerDisplay_title">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>1000</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="baseSize">
+                <size>
+                 <width>0</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>15</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background:none;
+color: rgba(212,215,217,180)</string>
+               </property>
+               <property name="inputMethodHints">
+                <set>Qt::ImhNoEditMenu</set>
+               </property>
+               <property name="text">
+                <string>Port Manager</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+              <widget class="QComboBox" name="PortManager_options_box">
+               <property name="minimumSize">
+                <size>
+                 <width>170</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background:rgb(55, 55, 58);
+color:rgba(212,215,217,200)</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Manage Connections</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Open Laser &amp; Galvanometer Port</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Open Build Plate &amp; Material Delivery Port</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="LaserGalvoPort_frame">
+            <property name="styleSheet">
+             <string notr="true">background: rgba(212,215,217,12)</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_23">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="LaserGalvoPort_title">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+               </property>
+               <property name="text">
+                <string>Laser &amp; Galvanometer</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="LaserGalvoPort_layout">
+               <item>
+                <widget class="QPushButton" name="LaserGalvoPortStatus_indicator">
+                 <property name="maximumSize">
+                  <size>
+                   <width>20</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/redbutton.png</normaloff>:/icons/icons/redbutton.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="LaserGalvoPortStatus_field">
+                 <property name="font">
+                  <font>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+                 </property>
+                 <property name="text">
+                  <string>Not Assigned</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="MaterialDeliveryPort_frame">
+            <property name="styleSheet">
+             <string notr="true">background: rgba(212,215,217,12)</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_24">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="MaterialDeliveryPort_title">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+               </property>
+               <property name="text">
+                <string>Build Plate &amp; Mat. Deliv.</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="MaterialDeliveryPort_layout">
+               <item>
+                <widget class="QPushButton" name="MaterialDeliveryPortStatus_indicator">
+                 <property name="maximumSize">
+                  <size>
+                   <width>20</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/redbutton.png</normaloff>:/icons/icons/redbutton.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="MaterialDeliveryPortStatus_field">
+                 <property name="font">
+                  <font>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+                 </property>
+                 <property name="text">
+                  <string>Not Assigned</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="EnvironmentPort_frame">
+            <property name="styleSheet">
+             <string notr="true">background: rgba(212,215,217,12)</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_28">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="EnvironmentPortStatus_title">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+               </property>
+               <property name="text">
+                <string>Environment Control</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="EnvironmentPort_layout">
+               <item>
+                <widget class="QPushButton" name="EnvironmentPortStatus_indicator">
+                 <property name="maximumSize">
+                  <size>
+                   <width>20</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/redbutton.png</normaloff>:/icons/icons/redbutton.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="EnvironmentPortStatus_field">
+                 <property name="font">
+                  <font>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+                 </property>
+                 <property name="text">
+                  <string>Not Assigned</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextBrowser" name="PortManagerInfo_browser">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>100</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -1775,9 +2218,9 @@ color: rgb(212,215,217);</string>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_47">
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <widget class="QSplitter" name="splitter_2">
+         <widget class="QSplitter" name="PrintControl_splitter">
           <property name="maximumSize">
            <size>
             <width>16777215</width>
@@ -1787,7 +2230,7 @@ color: rgb(212,215,217);</string>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QFrame" name="frame_9">
+          <widget class="QFrame" name="printManager_frame">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -1821,21 +2264,21 @@ color: rgb(212,215,217);</string>
              <number>6</number>
             </property>
             <item>
-             <widget class="QFrame" name="frame_39">
+             <widget class="QFrame" name="PrintManagerTitle_frame">
               <property name="minimumSize">
                <size>
-                <width>0</width>
-                <height>28</height>
+                <width>286</width>
+                <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>24</height>
+                <height>40</height>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background:rgba(212,215,217,25);
+               <string notr="true">background:rgba(212,215,217,10);
 </string>
               </property>
               <property name="frameShape">
@@ -1844,33 +2287,79 @@ color: rgb(212,215,217);</string>
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_39">
+              <layout class="QHBoxLayout" name="horizontalLayout_35">
                <property name="spacing">
                 <number>4</number>
                </property>
                <property name="leftMargin">
-                <number>6</number>
+                <number>4</number>
                </property>
                <property name="topMargin">
-                <number>6</number>
+                <number>4</number>
                </property>
                <property name="rightMargin">
-                <number>6</number>
+                <number>4</number>
                </property>
                <property name="bottomMargin">
-                <number>6</number>
+                <number>4</number>
                </property>
-               <item alignment="Qt::AlignHCenter">
-                <widget class="QLabel" name="label_70">
+               <item alignment="Qt::AlignLeft">
+                <widget class="QPushButton" name="PrintManagerEnable_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
-                   <width>150</width>
+                   <width>28</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>32</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:none;
+color: rgba(212,215,217,100)</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/toggle-off1.png</normaloff>
+                   <normalon>:/icons/icons/toggle-on1.png</normalon>:/icons/icons/toggle-off1.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>34</width>
+                   <height>22</height>
+                  </size>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_47">
+                 <property name="minimumSize">
+                  <size>
+                   <width>225</width>
                    <height>32</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>555</width>
+                   <width>1000</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1892,7 +2381,7 @@ color: rgba(212,215,217,180)</string>
                   <string>Print Manager</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignHCenter|Qt::AlignTop</set>
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
@@ -1900,7 +2389,7 @@ color: rgba(212,215,217,180)</string>
              </widget>
             </item>
             <item>
-             <widget class="QFrame" name="frame_10">
+             <widget class="QFrame" name="printManagerInfo_frame">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                 <horstretch>0</horstretch>
@@ -1951,12 +2440,12 @@ color: rgba(212,215,217,180)</string>
                 <number>6</number>
                </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_28">
+                <layout class="QHBoxLayout" name="printManagerStatus_layout">
                  <property name="spacing">
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QPushButton" name="pushButton_13">
+                  <widget class="QPushButton" name="printManagerStatus_indicator">
                    <property name="maximumSize">
                     <size>
                      <width>20</width>
@@ -1979,7 +2468,7 @@ color: rgba(212,215,217,180)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_4">
+                  <widget class="QLabel" name="printManagerStatus_title">
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -1996,7 +2485,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_5">
+                  <widget class="QLabel" name="printManager_status_field">
                    <property name="styleSheet">
                     <string notr="true">background: none;
 color: rgba(212,215,217,200)</string>
@@ -2009,9 +2498,9 @@ color: rgba(212,215,217,200)</string>
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <layout class="QHBoxLayout" name="printManagerFile_layout">
                  <item>
-                  <widget class="QLabel" name="label_2">
+                  <widget class="QLabel" name="activeFile_titleLabel">
                    <property name="font">
                     <font>
                      <weight>75</weight>
@@ -2028,7 +2517,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_6">
+                  <widget class="QLabel" name="printManager_file_field">
                    <property name="styleSheet">
                     <string notr="true">background: none;
 color: rgba(212,215,217,200)</string>
@@ -2041,7 +2530,7 @@ color: rgba(212,215,217,200)</string>
                 </layout>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox_7">
+                <widget class="QComboBox" name="printManager_options_box">
                  <property name="styleSheet">
                   <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -2057,7 +2546,7 @@ color:rgba(212,215,217,200)</string>
              </widget>
             </item>
             <item>
-             <widget class="QFrame" name="frame_16">
+             <widget class="QFrame" name="printManagerControls_frame">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -2096,7 +2585,7 @@ color:rgba(212,215,217,200)</string>
                 <number>6</number>
                </property>
                <item>
-                <widget class="QPushButton" name="settings_button_apply_4">
+                <widget class="QPushButton" name="printManager_stop_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2137,7 +2626,7 @@ color: rgb(212,215,217);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="settings_button_apply_5">
+                <widget class="QPushButton" name="printManager_pause_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2178,7 +2667,7 @@ color: rgb(212,215,217);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="settings_button_apply_3">
+                <widget class="QPushButton" name="printManager_stepThrough_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2219,7 +2708,7 @@ color: rgb(212,215,217);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="settings_button_apply_6">
+                <widget class="QPushButton" name="printManager_start_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2263,7 +2752,7 @@ color: rgb(212,215,217);</string>
              </widget>
             </item>
             <item>
-             <widget class="QTextBrowser" name="textBrowser_2">
+             <widget class="QTextBrowser" name="printManager_textBrowser">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -2279,7 +2768,7 @@ color: rgb(212,215,217);</string>
              </widget>
             </item>
             <item>
-             <widget class="QFrame" name="frame_11">
+             <widget class="QFrame" name="blockProgress_frame">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -2325,7 +2814,7 @@ color: rgb(212,215,217);</string>
                 <number>6</number>
                </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <layout class="QHBoxLayout" name="blockProgress_layout">
                  <item>
                   <spacer name="horizontalSpacer_11">
                    <property name="orientation">
@@ -2340,7 +2829,7 @@ color: rgb(212,215,217);</string>
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_9">
+                  <widget class="QLabel" name="blockTitle_label">
                    <property name="styleSheet">
                     <string notr="true">background: none;
 color: rgba(212,215,217,200)</string>
@@ -2351,7 +2840,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_13">
+                  <widget class="QLabel" name="currentBlock_field">
                    <property name="minimumSize">
                     <size>
                      <width>12</width>
@@ -2368,7 +2857,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_10">
+                  <widget class="QLabel" name="blockOf_label">
                    <property name="maximumSize">
                     <size>
                      <width>12</width>
@@ -2385,7 +2874,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_14">
+                  <widget class="QLabel" name="totalBlocks_field">
                    <property name="minimumSize">
                     <size>
                      <width>12</width>
@@ -2417,7 +2906,7 @@ color: rgba(212,215,217,200)</string>
                 </layout>
                </item>
                <item>
-                <widget class="QProgressBar" name="progressBar_2">
+                <widget class="QProgressBar" name="printManager_block_bar">
                  <property name="styleSheet">
                   <string notr="true">background: rgba(0,0,0,0)</string>
                  </property>
@@ -2430,7 +2919,7 @@ color: rgba(212,215,217,200)</string>
              </widget>
             </item>
             <item>
-             <widget class="QFrame" name="frame_35">
+             <widget class="QFrame" name="layerProgress_frame">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -2476,7 +2965,7 @@ color: rgba(212,215,217,200)</string>
                 <number>6</number>
                </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <layout class="QHBoxLayout" name="LayerProgress_layout">
                  <item>
                   <spacer name="horizontalSpacer_12">
                    <property name="orientation">
@@ -2491,7 +2980,7 @@ color: rgba(212,215,217,200)</string>
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_11">
+                  <widget class="QLabel" name="layerTitle_label">
                    <property name="styleSheet">
                     <string notr="true">background: none;
 color: rgba(212,215,217,200)</string>
@@ -2502,7 +2991,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_18">
+                  <widget class="QLabel" name="currentLayer_field">
                    <property name="minimumSize">
                     <size>
                      <width>12</width>
@@ -2519,7 +3008,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_12">
+                  <widget class="QLabel" name="layerOf_label">
                    <property name="maximumSize">
                     <size>
                      <width>12</width>
@@ -2536,7 +3025,7 @@ color: rgba(212,215,217,200)</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_19">
+                  <widget class="QLabel" name="totalLayers_field">
                    <property name="minimumSize">
                     <size>
                      <width>12</width>
@@ -2568,7 +3057,7 @@ color: rgba(212,215,217,200)</string>
                 </layout>
                </item>
                <item>
-                <widget class="QProgressBar" name="progressBar_3">
+                <widget class="QProgressBar" name="printManager_layer_bar">
                  <property name="styleSheet">
                   <string notr="true">background: rgba(0,0,0,0)</string>
                  </property>
@@ -2582,7 +3071,7 @@ color: rgba(212,215,217,200)</string>
             </item>
            </layout>
           </widget>
-          <widget class="QFrame" name="frame_37">
+          <widget class="QFrame" name="ManualControl_Frame">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -2622,7 +3111,7 @@ color: rgba(212,215,217,200)</string>
              <number>6</number>
             </property>
             <item>
-             <widget class="QFrame" name="frame_44">
+             <widget class="QFrame" name="ManualControlTitle_frame">
               <property name="minimumSize">
                <size>
                 <width>286</width>
@@ -2662,7 +3151,7 @@ color: rgba(212,215,217,200)</string>
                 <number>4</number>
                </property>
                <item alignment="Qt::AlignLeft">
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="ManualControlEnable_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -2736,7 +3225,7 @@ color: rgba(212,215,217,180)</string>
                   <set>Qt::ImhNoEditMenu</set>
                  </property>
                  <property name="text">
-                  <string>Manual Control</string>
+                  <string>Manual Controller</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -2747,7 +3236,7 @@ color: rgba(212,215,217,180)</string>
              </widget>
             </item>
             <item alignment="Qt::AlignHCenter">
-             <widget class="QFrame" name="frame_45">
+             <widget class="QFrame" name="ManualControlHome_frame">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -2789,7 +3278,7 @@ color: rgba(212,215,217,180)</string>
                 <number>4</number>
                </property>
                <item>
-                <widget class="QPushButton" name="settings_button_apply_7">
+                <widget class="QPushButton" name="ManualControlHome_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2833,7 +3322,7 @@ color: rgb(143, 143, 143);</string>
                 </widget>
                </item>
                <item alignment="Qt::AlignVCenter">
-                <widget class="QComboBox" name="comboBox_5">
+                <widget class="QComboBox" name="ManualControlHome_options_box">
                  <property name="styleSheet">
                   <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -2884,7 +3373,7 @@ color:rgba(212,215,217,200)</string>
              </widget>
             </item>
             <item alignment="Qt::AlignHCenter">
-             <widget class="QFrame" name="frame_48">
+             <widget class="QFrame" name="ManualControlTop_frame">
               <property name="minimumSize">
                <size>
                 <width>286</width>
@@ -2920,7 +3409,7 @@ color:rgba(212,215,217,200)</string>
                 <number>4</number>
                </property>
                <item>
-                <widget class="QFrame" name="frame_46">
+                <widget class="QFrame" name="JogDistanceFrame">
                  <property name="styleSheet">
                   <string notr="true">color: rgba(212,215,217,150);</string>
                  </property>
@@ -2947,7 +3436,7 @@ color:rgba(212,215,217,200)</string>
                    <number>4</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_73">
+                   <widget class="QLabel" name="jogDistance_title">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -2986,7 +3475,7 @@ color: rgba(212,215,217,150);</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QFrame" name="frame_47">
+                   <widget class="QFrame" name="jogDistanceSubFrame">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -3016,10 +3505,10 @@ color: rgba(212,215,217,150);</string>
                       <number>4</number>
                      </property>
                      <item>
-                      <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                      <widget class="QDoubleSpinBox" name="printManager_JogDistance_Input"/>
                      </item>
                      <item>
-                      <widget class="QLabel" name="label_23">
+                      <widget class="QLabel" name="jog_units_label">
                        <property name="minimumSize">
                         <size>
                          <width>35</width>
@@ -3056,7 +3545,7 @@ color: rgba(212,215,217,200)</string>
                 </widget>
                </item>
                <item>
-                <widget class="QFrame" name="frame_38">
+                <widget class="QFrame" name="GalvoJog_frame">
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
@@ -3086,7 +3575,7 @@ color: rgba(212,215,217,200)</string>
                    <number>4</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_48">
+                   <widget class="QLabel" name="galvo_jog_control_title">
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
@@ -3122,12 +3611,12 @@ color: rgba(212,215,217,150);</string>
                    </widget>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_17">
+                   <layout class="QHBoxLayout" name="GalvoJog_layout">
                     <property name="spacing">
                      <number>4</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="pushButton_16">
+                     <widget class="QPushButton" name="jogXminus_button">
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
@@ -3169,12 +3658,12 @@ color: rgba(212,215,217,150);</string>
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_24">
+                     <layout class="QVBoxLayout" name="yJogLayout">
                       <property name="spacing">
                        <number>4</number>
                       </property>
                       <item>
-                       <widget class="QPushButton" name="pushButton_12">
+                       <widget class="QPushButton" name="jogYplus_button">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>
@@ -3216,7 +3705,7 @@ color: rgba(212,215,217,150);</string>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QPushButton" name="pushButton_15">
+                       <widget class="QPushButton" name="jogYminus_button">
                         <property name="minimumSize">
                          <size>
                           <width>64</width>
@@ -3260,7 +3749,7 @@ color: rgba(212,215,217,150);</string>
                      </layout>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_17">
+                     <widget class="QPushButton" name="jogXplus_button">
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
@@ -3310,7 +3799,7 @@ color: rgba(212,215,217,150);</string>
              </widget>
             </item>
             <item alignment="Qt::AlignHCenter">
-             <widget class="QFrame" name="frame_43">
+             <widget class="QFrame" name="materialDeliveryControl_frame">
               <property name="minimumSize">
                <size>
                 <width>286</width>
@@ -3346,12 +3835,12 @@ color: rgba(212,215,217,150);</string>
                 <number>4</number>
                </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_38">
+                <layout class="QHBoxLayout" name="jogControl_titleLayout">
                  <property name="spacing">
                   <number>4</number>
                  </property>
                  <item>
-                  <widget class="QLabel" name="label_63">
+                  <widget class="QLabel" name="build_jog_control_title">
                    <property name="minimumSize">
                     <size>
                      <width>85</width>
@@ -3387,7 +3876,7 @@ color: rgba(212,215,217,150);</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_69">
+                  <widget class="QLabel" name="hopper_jog_control_title">
                    <property name="minimumSize">
                     <size>
                      <width>85</width>
@@ -3423,7 +3912,7 @@ color: rgba(212,215,217,150);</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_75">
+                  <widget class="QLabel" name="spreader_jog_control_title">
                    <property name="minimumSize">
                     <size>
                      <width>85</width>
@@ -3461,17 +3950,17 @@ color: rgba(212,215,217,150);</string>
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_46">
+                <layout class="QHBoxLayout" name="materialDeliveryJog_layout">
                  <property name="spacing">
                   <number>0</number>
                  </property>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_28">
+                  <layout class="QVBoxLayout" name="zJog_layout">
                    <property name="spacing">
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_18">
+                    <widget class="QPushButton" name="jogZplus_button">
                      <property name="minimumSize">
                       <size>
                        <width>80</width>
@@ -3519,7 +4008,7 @@ color: rgba(212,215,217,150);</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_19">
+                    <widget class="QPushButton" name="jogZminus_button">
                      <property name="minimumSize">
                       <size>
                        <width>80</width>
@@ -3569,12 +4058,12 @@ color: rgba(212,215,217,150);</string>
                   </layout>
                  </item>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_30">
+                  <layout class="QVBoxLayout" name="hJog_layout">
                    <property name="spacing">
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_20">
+                    <widget class="QPushButton" name="jogHplus_button">
                      <property name="minimumSize">
                       <size>
                        <width>80</width>
@@ -3622,7 +4111,7 @@ color: rgba(212,215,217,150);</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_21">
+                    <widget class="QPushButton" name="jogHminus_button">
                      <property name="minimumSize">
                       <size>
                        <width>80</width>
@@ -3672,12 +4161,12 @@ color: rgba(212,215,217,150);</string>
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_35">
+                  <layout class="QHBoxLayout" name="sJog_layout">
                    <property name="spacing">
                     <number>2</number>
                    </property>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_22">
+                    <widget class="QPushButton" name="jogSminus_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -3731,7 +4220,7 @@ color: rgba(212,215,217,150);</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QPushButton" name="pushButton_23">
+                    <widget class="QPushButton" name="jogSplus_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -3796,12 +4285,12 @@ color: rgba(212,215,217,150);</string>
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_15">
+         <layout class="QVBoxLayout" name="DeviceDisplay_Layout">
           <property name="spacing">
            <number>6</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame_32">
+           <widget class="QFrame" name="laserDisplay_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -3841,7 +4330,7 @@ color: rgba(212,215,217,150);</string>
               <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_33">
+              <widget class="QFrame" name="LaserDisplayInfo_frame">
                <property name="minimumSize">
                 <size>
                  <width>225</width>
@@ -3877,7 +4366,7 @@ color: rgba(212,215,217,150);</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="frame_34">
+                 <widget class="QFrame" name="laserDisplaTitle_frame">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 </string>
@@ -3888,7 +4377,7 @@ color: rgba(212,215,217,150);</string>
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_31">
+                  <layout class="QHBoxLayout" name="horizontalLayout_37">
                    <property name="spacing">
                     <number>4</number>
                    </property>
@@ -3905,7 +4394,7 @@ color: rgba(212,215,217,150);</string>
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
-                    <widget class="QPushButton" name="pushButton_4">
+                    <widget class="QPushButton" name="laserDisplayEnable_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -3951,7 +4440,7 @@ color: rgba(212,215,217,100)</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QLabel" name="label_43">
+                    <widget class="QLabel" name="laserDispla_title">
                      <property name="minimumSize">
                       <size>
                        <width>150</width>
@@ -3990,12 +4479,12 @@ color: rgba(212,215,217,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_37">
+                 <layout class="QHBoxLayout" name="LaserDisplayStatus_layout">
                   <property name="spacing">
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton_9">
+                   <widget class="QPushButton" name="LaserDisplayStatus_indicator">
                     <property name="maximumSize">
                      <size>
                       <width>20</width>
@@ -4018,7 +4507,7 @@ color: rgba(212,215,217,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_44">
+                   <widget class="QLabel" name="LaserDisplayStatus_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4047,7 +4536,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_60">
+                   <widget class="QLabel" name="LaserDisplayStatus_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4079,9 +4568,9 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_16">
+                 <layout class="QHBoxLayout" name="LaserDisplayPower_layout">
                   <item>
-                   <widget class="QLabel" name="label_24">
+                   <widget class="QLabel" name="LaserDisplayPower_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4109,7 +4598,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QTextEdit" name="textEdit_5">
+                   <widget class="QTextEdit" name="LaserDisplayPower_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4135,7 +4624,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_26">
+                   <widget class="QLabel" name="LaserDisplayPower_units">
                     <property name="minimumSize">
                      <size>
                       <width>40</width>
@@ -4168,7 +4657,7 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_4">
+                 <widget class="QComboBox" name="Laser_options_box">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -4184,7 +4673,7 @@ color:rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="frame_36">
+              <widget class="QFrame" name="LaserDisplayField_frame">
                <property name="minimumSize">
                 <size>
                  <width>280</width>
@@ -4215,7 +4704,7 @@ color:rgba(212,215,217,200)</string>
                  <number>6</number>
                 </property>
                 <item>
-                 <widget class="QLabel" name="label_61">
+                 <widget class="QLabel" name="laserDisplay_EnableState_field">
                   <property name="maximumSize">
                    <size>
                     <width>300</width>
@@ -4251,7 +4740,7 @@ Off</string>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_22">
+           <widget class="QFrame" name="galvoDisplay_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -4291,7 +4780,7 @@ Off</string>
               <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_23">
+              <widget class="QFrame" name="galvoDisplayInfo_frame">
                <property name="minimumSize">
                 <size>
                  <width>225</width>
@@ -4327,7 +4816,7 @@ Off</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="frame_29">
+                 <widget class="QFrame" name="galvoDisplayTitle_frame">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 </string>
@@ -4355,7 +4844,7 @@ Off</string>
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
-                    <widget class="QPushButton" name="pushButton_3">
+                    <widget class="QPushButton" name="galvoDisplayEnable_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -4401,7 +4890,7 @@ color: rgba(212,215,217,100)</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QLabel" name="label_41">
+                    <widget class="QLabel" name="galvoDisplay_title">
                      <property name="minimumSize">
                       <size>
                        <width>150</width>
@@ -4440,12 +4929,12 @@ color: rgba(212,215,217,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_36">
+                 <layout class="QHBoxLayout" name="galvoStatus_layout">
                   <property name="spacing">
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton_8">
+                   <widget class="QPushButton" name="galvoDisplayStatus_indicator">
                     <property name="maximumSize">
                      <size>
                       <width>20</width>
@@ -4468,7 +4957,7 @@ color: rgba(212,215,217,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_42">
+                   <widget class="QLabel" name="galvoStatus_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4497,7 +4986,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_49">
+                   <widget class="QLabel" name="galvoStatus_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4529,9 +5018,9 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_15">
+                 <layout class="QHBoxLayout" name="galvoSpeed_layout">
                   <item>
-                   <widget class="QLabel" name="label_21">
+                   <widget class="QLabel" name="galvoSpeed_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4559,7 +5048,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QTextEdit" name="textEdit_4">
+                   <widget class="QTextEdit" name="galvoSpeed_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -4585,7 +5074,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_22">
+                   <widget class="QLabel" name="galvoSpeed_units">
                     <property name="minimumSize">
                      <size>
                       <width>40</width>
@@ -4618,7 +5107,7 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_3">
+                 <widget class="QComboBox" name="galvoOptions_box">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -4634,12 +5123,12 @@ color:rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_33">
+              <layout class="QVBoxLayout" name="GalvoDisplayField_vertLayout">
                <property name="spacing">
                 <number>4</number>
                </property>
                <item>
-                <widget class="QFrame" name="frame_30">
+                <widget class="QFrame" name="xDisplayField_frame">
                  <property name="minimumSize">
                   <size>
                    <width>280</width>
@@ -4676,7 +5165,7 @@ color:rgba(212,215,217,200)</string>
                    <number>6</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_56">
+                   <widget class="QLabel" name="xPosition_title">
                     <property name="maximumSize">
                      <size>
                       <width>66</width>
@@ -4708,7 +5197,7 @@ color: rgba(141,158,198,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_57">
+                   <widget class="QLabel" name="xPositionDisplay_field">
                     <property name="font">
                      <font>
                       <family>.SF NS Display Condensed</family>
@@ -4734,7 +5223,7 @@ color: rgba(55,255,139, 180)</string>
                 </widget>
                </item>
                <item>
-                <widget class="QFrame" name="frame_31">
+                <widget class="QFrame" name="yDisplayField_frame">
                  <property name="minimumSize">
                   <size>
                    <width>280</width>
@@ -4771,7 +5260,7 @@ color: rgba(55,255,139, 180)</string>
                    <number>6</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_58">
+                   <widget class="QLabel" name="yPosition_title">
                     <property name="maximumSize">
                      <size>
                       <width>66</width>
@@ -4803,7 +5292,7 @@ color: rgba(141,158,198,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_59">
+                   <widget class="QLabel" name="yPositionDisplay_field">
                     <property name="font">
                      <font>
                       <family>.SF NS Display Condensed</family>
@@ -4834,7 +5323,7 @@ color: rgba(55,255,139, 180)</string>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_21">
+           <widget class="QFrame" name="buildPlateDisplay_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -4874,7 +5363,7 @@ color: rgba(55,255,139, 180)</string>
               <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_24">
+              <widget class="QFrame" name="buildPlateDisplayInfo_Frame">
                <property name="minimumSize">
                 <size>
                  <width>225</width>
@@ -4910,7 +5399,7 @@ color: rgba(55,255,139, 180)</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="frame_27">
+                 <widget class="QFrame" name="buildPlateTitle_frame">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 </string>
@@ -4938,7 +5427,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
-                    <widget class="QPushButton" name="pushButton_2">
+                    <widget class="QPushButton" name="buildPlateEnable_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -4984,7 +5473,7 @@ color: rgba(212,215,217,100)</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QLabel" name="label_39">
+                    <widget class="QLabel" name="buildPlate_title">
                      <property name="minimumSize">
                       <size>
                        <width>150</width>
@@ -5023,12 +5512,12 @@ color: rgba(212,215,217,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_40">
+                 <layout class="QHBoxLayout" name="buildPlateDisplayStatus_layout">
                   <property name="spacing">
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton_10">
+                   <widget class="QPushButton" name="buildPlateDisplayStatus_indicator">
                     <property name="maximumSize">
                      <size>
                       <width>20</width>
@@ -5051,7 +5540,7 @@ color: rgba(212,215,217,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_45">
+                   <widget class="QLabel" name="buildPlateDisplayStatus_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -5080,7 +5569,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_71">
+                   <widget class="QLabel" name="buildPlateDisplayStatus_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -5112,7 +5601,7 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_2">
+                 <widget class="QComboBox" name="buildPlate_options_box">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -5128,7 +5617,7 @@ color:rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="frame_28">
+              <widget class="QFrame" name="BuildPlateDisplayField_frame">
                <property name="minimumSize">
                 <size>
                  <width>280</width>
@@ -5165,7 +5654,7 @@ color:rgba(212,215,217,200)</string>
                  <number>6</number>
                 </property>
                 <item>
-                 <widget class="QLabel" name="label_54">
+                 <widget class="QLabel" name="buildPlateDisplayField_title">
                   <property name="maximumSize">
                    <size>
                     <width>66</width>
@@ -5197,7 +5686,7 @@ color: rgba(141,158,198,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_55">
+                 <widget class="QLabel" name="zPositionDisplay_field">
                   <property name="font">
                    <font>
                     <family>.SF NS Display Condensed</family>
@@ -5226,7 +5715,7 @@ color: rgba(55,255,139, 180)</string>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_18">
+           <widget class="QFrame" name="materialDeliveryDisplay_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -5266,7 +5755,7 @@ color: rgba(55,255,139, 180)</string>
               <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_19">
+              <widget class="QFrame" name="materialDeliveryDisplayInfo_frame">
                <property name="minimumSize">
                 <size>
                  <width>225</width>
@@ -5302,7 +5791,7 @@ color: rgba(55,255,139, 180)</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="frame_20">
+                 <widget class="QFrame" name="materialDeliveryDisplayTitle_frame">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 </string>
@@ -5330,7 +5819,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
-                    <widget class="QPushButton" name="pushButton">
+                    <widget class="QPushButton" name="materialDeliveryDisplayEnable_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -5376,7 +5865,7 @@ color: rgba(212,215,217,100)</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QLabel" name="label_38">
+                    <widget class="QLabel" name="materialDeliveryDisplay_title">
                      <property name="minimumSize">
                       <size>
                        <width>150</width>
@@ -5415,12 +5904,12 @@ color: rgba(212,215,217,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_41">
+                 <layout class="QHBoxLayout" name="materialDeliveryDisplayStatus_layout">
                   <property name="spacing">
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton_11">
+                   <widget class="QPushButton" name="materialDeliveryDisplayStatus_indicator">
                     <property name="maximumSize">
                      <size>
                       <width>20</width>
@@ -5443,7 +5932,7 @@ color: rgba(212,215,217,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_47">
+                   <widget class="QLabel" name="materialDeliveryDisplayStatus_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -5472,7 +5961,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_72">
+                   <widget class="QLabel" name="materialDeliveryDisplayStatus_field">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -5517,7 +6006,7 @@ color: rgba(212,215,217,200)</string>
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox">
+                 <widget class="QComboBox" name="materialDelivery_options_box">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -5533,12 +6022,12 @@ color:rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_32">
+              <layout class="QVBoxLayout" name="materialDeliveryDisplayField_frame">
                <property name="spacing">
                 <number>4</number>
                </property>
                <item>
-                <widget class="QFrame" name="frame_25">
+                <widget class="QFrame" name="HdisplayField_frame">
                  <property name="minimumSize">
                   <size>
                    <width>280</width>
@@ -5575,7 +6064,7 @@ color:rgba(212,215,217,200)</string>
                    <number>6</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_50">
+                   <widget class="QLabel" name="hPositionDisplay_title">
                     <property name="maximumSize">
                      <size>
                       <width>66</width>
@@ -5607,7 +6096,7 @@ color: rgba(141,158,198,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_51">
+                   <widget class="QLabel" name="hPositionDisplay_field">
                     <property name="font">
                      <font>
                       <family>.SF NS Display Condensed</family>
@@ -5633,7 +6122,7 @@ color: rgba(55,255,139, 180)</string>
                 </widget>
                </item>
                <item>
-                <widget class="QFrame" name="frame_26">
+                <widget class="QFrame" name="SdisplayField_frame">
                  <property name="minimumSize">
                   <size>
                    <width>280</width>
@@ -5670,7 +6159,7 @@ color: rgba(55,255,139, 180)</string>
                    <number>6</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_52">
+                   <widget class="QLabel" name="sPositionDisplay_title">
                     <property name="maximumSize">
                      <size>
                       <width>66</width>
@@ -5702,7 +6191,7 @@ color: rgba(141,158,198,180)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_53">
+                   <widget class="QLabel" name="sPositionDisplay_field">
                     <property name="font">
                      <font>
                       <family>.SF NS Display Condensed</family>
@@ -5733,7 +6222,7 @@ color: rgba(55,255,139, 180)</string>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_40">
+           <widget class="QFrame" name="enviroDisplay_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -5773,7 +6262,7 @@ color: rgba(55,255,139, 180)</string>
               <number>6</number>
              </property>
              <item>
-              <widget class="QFrame" name="frame_41">
+              <widget class="QFrame" name="enviroDisplayInfo_frame">
                <property name="minimumSize">
                 <size>
                  <width>225</width>
@@ -5809,7 +6298,7 @@ color: rgba(55,255,139, 180)</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QFrame" name="frame_42">
+                 <widget class="QFrame" name="enviroDisplayTitleFrame">
                   <property name="styleSheet">
                    <string notr="true">background:rgba(212,215,217,10);
 </string>
@@ -5837,7 +6326,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item alignment="Qt::AlignLeft">
-                    <widget class="QPushButton" name="pushButton_7">
+                    <widget class="QPushButton" name="enviroDisplayEnable_button">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -5883,7 +6372,7 @@ color: rgba(212,215,217,100)</string>
                     </widget>
                    </item>
                    <item alignment="Qt::AlignHCenter">
-                    <widget class="QLabel" name="label_40">
+                    <widget class="QLabel" name="enviroDisplay_title">
                      <property name="minimumSize">
                       <size>
                        <width>150</width>
@@ -5922,17 +6411,17 @@ color: rgba(212,215,217,180)</string>
                  </widget>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_23">
+                 <layout class="QVBoxLayout" name="enviroDisplayInfo_layout">
                   <property name="spacing">
                    <number>0</number>
                   </property>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_43">
+                   <layout class="QHBoxLayout" name="enviroDisplayStatus_layout">
                     <property name="spacing">
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="pushButton_14">
+                     <widget class="QPushButton" name="enviroDisplayStatus_indicator">
                       <property name="maximumSize">
                        <size>
                         <width>20</width>
@@ -5955,7 +6444,7 @@ color: rgba(212,215,217,180)</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="label_62">
+                     <widget class="QLabel" name="enviroDisplayStatus_title">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -5984,7 +6473,7 @@ color: rgba(212,215,217,200)</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="label_74">
+                     <widget class="QLabel" name="enviroDisplayStatus_field">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -6016,7 +6505,7 @@ color: rgba(212,215,217,200)</string>
                    </layout>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_6">
+                   <widget class="QPushButton" name="enviroDisplayDoorState_icon">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -6042,7 +6531,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item alignment="Qt::AlignHCenter">
-                   <widget class="QLabel" name="label_68">
+                   <widget class="QLabel" name="enviroDisplayDoorState_field">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -6081,7 +6570,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_6">
+                   <widget class="QComboBox" name="enviro_options_box">
                     <property name="styleSheet">
                      <string notr="true">background:rgba(212,215,217,10);
 color:rgba(212,215,217,200)</string>
@@ -6099,7 +6588,7 @@ color:rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item alignment="Qt::AlignHCenter">
-              <widget class="QFrame" name="frame_17">
+              <widget class="QFrame" name="enviroDisplayData_frame">
                <property name="minimumSize">
                 <size>
                  <width>280</width>
@@ -6133,7 +6622,7 @@ color:rgba(212,215,217,200)</string>
                  <number>4</number>
                 </property>
                 <item row="1" column="0">
-                 <widget class="QFrame" name="frame_15">
+                 <widget class="QFrame" name="enviroDisplayPressure_frame">
                   <property name="minimumSize">
                    <size>
                     <width>100</width>
@@ -6163,7 +6652,7 @@ color:rgba(212,215,217,200)</string>
                     <number>4</number>
                    </property>
                    <item>
-                    <widget class="QLabel" name="label_67">
+                    <widget class="QLabel" name="enviroDisplayPressure_title">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -6202,7 +6691,7 @@ color: rgba(141,158,198,180)</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_17">
+                    <widget class="QLabel" name="enviroDisplayPressure_field">
                      <property name="font">
                       <font>
                        <pointsize>32</pointsize>
@@ -6227,7 +6716,7 @@ color: rgba(55,255,139, 180)</string>
                  </widget>
                 </item>
                 <item row="0" column="0">
-                 <widget class="QFrame" name="frame_12">
+                 <widget class="QFrame" name="enviroDisplayBuildTemperature_frame">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -6263,7 +6752,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item>
-                    <widget class="QLabel" name="label_64">
+                    <widget class="QLabel" name="enviroDisplayBuildTemperature_title">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -6302,7 +6791,7 @@ color: rgba(141,158,198,180)</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_3">
+                    <widget class="QLabel" name="enviroDisplayBuildTemperature_field">
                      <property name="font">
                       <font>
                        <pointsize>32</pointsize>
@@ -6327,7 +6816,7 @@ color: rgba(55,255,139, 180)</string>
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QFrame" name="frame_14">
+                 <widget class="QFrame" name="enviroDisplayOxygen_frame">
                   <property name="minimumSize">
                    <size>
                     <width>100</width>
@@ -6357,7 +6846,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item>
-                    <widget class="QLabel" name="label_66">
+                    <widget class="QLabel" name="enviroDisplayOxygen_title">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -6396,7 +6885,7 @@ color: rgba(141,158,198,180)</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_16">
+                    <widget class="QLabel" name="enviroDisplayOxygen_field">
                      <property name="font">
                       <font>
                        <pointsize>32</pointsize>
@@ -6421,7 +6910,7 @@ color: rgba(55,255,139, 180)</string>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QFrame" name="frame_13">
+                 <widget class="QFrame" name="enviroDisplayTemperature_frame">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -6457,7 +6946,7 @@ color: rgba(55,255,139, 180)</string>
                     <number>4</number>
                    </property>
                    <item>
-                    <widget class="QLabel" name="label_65">
+                    <widget class="QLabel" name="enviroDisplayTemperature_title">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -6496,7 +6985,7 @@ color: rgba(141,158,198,180)</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_15">
+                    <widget class="QLabel" name="enviroDisplayTemperature_field">
                      <property name="font">
                       <font>
                        <pointsize>32</pointsize>

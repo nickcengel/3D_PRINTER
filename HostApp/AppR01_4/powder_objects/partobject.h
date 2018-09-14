@@ -6,12 +6,13 @@
 
 #include "blockobject.h"
 #include "settingsobject.h"
+#include "QSharedPointer"
 
 class PartObject
 {
 public:
     explicit PartObject();
-    PartObject(const QString &filePath, SettingsObject *config);
+    PartObject(const QString &filePath,  QSharedPointer<SettingsObject> config);
     PartObject(const PartObject &otherPart); // copy constructor
     ~PartObject(); // destructor
 
@@ -46,10 +47,9 @@ public:
     QVector<uint32_t> layerFlags() const;
     void setLayerFlags(const QVector<uint32_t> &layerFlags);
 
-    void addBlock(BlockObject *block);
+    void addBlock(const BlockObject &block);
 
-    QVector<BlockObject *> blocks() const;
-    void setBlocks(QVector<BlockObject *> blocks);
+
 
     ParserStatus parserStatus() const;
     void setParserStatus(const ParserStatus &parserStatus);
@@ -68,18 +68,22 @@ public:
 //    QStringList materialDelivery_commands() const;
 //    void setMaterialDelivery_commands(const QStringList &materialDelivery_commands);
 
-    BlockObject *getBlock(int blockNum);
+    BlockObject getBlock(const int blockNum) const;
 
     void clearPart();
+
+    QSharedPointer<QVector<BlockObject> > getBlocks() const;
+    void setBlocks(const QSharedPointer<QVector<BlockObject> > &blocks);
 
 private:
     QString m_partFilePath;
     QString m_errorStr;
     QStringList m_gcode;
-//    QStringList m_laserGalvo_commands;
-//    QStringList m_materialDelivery_commands;
+    //    QStringList m_laserGalvo_commands;
+    //    QStringList m_materialDelivery_commands;
 
-    QVector<BlockObject*> m_blocks;
+//    QVector<BlockObject*> *m_blocks;
+    QSharedPointer<QVector<BlockObject>> m_blocks;
     uint32_t m_blockCount;
     uint32_t m_layerCount;
     PartStatus m_partStatus;

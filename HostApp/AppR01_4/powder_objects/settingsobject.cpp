@@ -66,7 +66,7 @@ SettingsObject::SettingsObject(const SettingsObject &otherSettings)
 
      m_status = otherSettings.status();
 
-     m_laser_galvo_portNumber = otherSettings.laser_galvo_portNumber();
+     m_laser_galvo_portNumber = otherSettings.laserGalvo_portNumber();
      m_materialDelivery_portNumber = otherSettings.materialDelivery_portNumber();
 
      m_laser_deviceNumber = otherSettings.laser_deviceNumber();
@@ -125,7 +125,7 @@ SettingsObject::~SettingsObject()
 
 }
 
-uint8_t SettingsObject::laser_galvo_portNumber() const
+uint8_t SettingsObject::laserGalvo_portNumber() const
 {
     return m_laser_galvo_portNumber;
 }

@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SceneModifier_t {
     QByteArrayData data[25];
-    char stringdata0[220];
+    char stringdata0[221];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -50,19 +50,19 @@ QT_MOC_LITERAL(15, 134, 6), // "zStart"
 QT_MOC_LITERAL(16, 141, 4), // "xEnd"
 QT_MOC_LITERAL(17, 146, 4), // "yEnd"
 QT_MOC_LITERAL(18, 151, 4), // "zEnd"
-QT_MOC_LITERAL(19, 156, 7), // "Block3D"
-QT_MOC_LITERAL(20, 164, 1), // "b"
-QT_MOC_LITERAL(21, 166, 12), // "clearSegment"
-QT_MOC_LITERAL(22, 179, 13), // "segmentNumber"
-QT_MOC_LITERAL(23, 193, 13), // "clearSegments"
-QT_MOC_LITERAL(24, 207, 12) // "showSegments"
+QT_MOC_LITERAL(19, 156, 8), // "Block3D*"
+QT_MOC_LITERAL(20, 165, 1), // "b"
+QT_MOC_LITERAL(21, 167, 12), // "clearSegment"
+QT_MOC_LITERAL(22, 180, 13), // "segmentNumber"
+QT_MOC_LITERAL(23, 194, 13), // "clearSegments"
+QT_MOC_LITERAL(24, 208, 12) // "showSegments"
 
     },
     "SceneModifier\0enableBoundBox\0\0enabled\0"
     "enableAxis\0addSegment\0Qt3DCore::QEntity*\0"
     "segment\0QVector3D&\0start\0end\0width\0"
     "color\0xStart\0yStart\0zStart\0xEnd\0yEnd\0"
-    "zEnd\0Block3D\0b\0clearSegment\0segmentNumber\0"
+    "zEnd\0Block3D*\0b\0clearSegment\0segmentNumber\0"
     "clearSegments\0showSegments"
 };
 #undef QT_MOC_LITERAL
@@ -116,7 +116,7 @@ void SceneModifier::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 2: _t->addSegment((*reinterpret_cast< Qt3DCore::QEntity*(*)>(_a[1]))); break;
         case 3: _t->addSegment((*reinterpret_cast< QVector3D(*)>(_a[1])),(*reinterpret_cast< QVector3D(*)>(_a[2])),(*reinterpret_cast< float(*)>(_a[3])),(*reinterpret_cast< QColor(*)>(_a[4]))); break;
         case 4: _t->addSegment((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2])),(*reinterpret_cast< float(*)>(_a[3])),(*reinterpret_cast< float(*)>(_a[4])),(*reinterpret_cast< float(*)>(_a[5])),(*reinterpret_cast< float(*)>(_a[6])),(*reinterpret_cast< float(*)>(_a[7])),(*reinterpret_cast< QColor(*)>(_a[8]))); break;
-        case 5: _t->addSegment((*reinterpret_cast< Block3D(*)>(_a[1]))); break;
+        case 5: _t->addSegment((*reinterpret_cast< Block3D*(*)>(_a[1]))); break;
         case 6: _t->clearSegment((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 7: _t->clearSegments(); break;
         case 8: _t->showSegments((*reinterpret_cast< bool(*)>(_a[1]))); break;
@@ -130,13 +130,6 @@ void SceneModifier::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
                 *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< Qt3DCore::QEntity* >(); break;
-            }
-            break;
-        case 5:
-            switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-            case 0:
-                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< Block3D >(); break;
             }
             break;
         }
