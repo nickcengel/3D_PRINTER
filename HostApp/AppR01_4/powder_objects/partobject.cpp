@@ -13,15 +13,15 @@ PartObject::PartObject()
 
 PartObject::PartObject(const PartObject &otherPart)
 {
+    m_partFilePath = otherPart.partFilePath();
+    m_errorStr = otherPart.errorStr();
+    m_gcode = otherPart.gcode();
+    m_blocks = otherPart.getBlocks();
     m_blockCount = otherPart.blockCount();
     m_layerCount = otherPart.layerCount();
     m_layerFlags = otherPart.layerFlags();
-    m_blocks = otherPart.getBlocks();
-    m_partFilePath = otherPart.partFilePath();
     m_partStatus = otherPart.partStatus();
-    m_gcode = otherPart.gcode();
-    m_errorStr = otherPart.errorStr();
-
+    m_parserStatus = otherPart.parserStatus();
 }
 
 
@@ -51,8 +51,8 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
     }
 
     if(!m_gcode.isEmpty()){
-        uint32_t blockNum = 0;
-        uint32_t layerNum = 0;
+        unsigned int blockNum = 0;
+        unsigned int layerNum = 0;
         QStringList::iterator line_iterator = m_gcode.begin();
         m_parserStatus = PARSER_READY;
 
@@ -97,7 +97,7 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                     if(QRegExp("[Gg]"+regEx_uInt).exactMatch(*data_iterator)){
                         block->clearTask();
                         (*data_iterator).remove(0,1);
-                        const uint8_t val = (*data_iterator).toUInt();
+                        const unsigned int val = (*data_iterator).toUInt();
 
                         if(val == 90){
                             prevailPosMode =  BlockObject::PositionMode::Position_Absolute;
@@ -108,13 +108,11 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                         else if(val == 28){
                             block->setBlockTask(BlockObject::BlockTask::SET_HOME_AXIS);
                         }
-
-
                     }
 
                     else if(QRegExp("[Mm]"+regEx_uInt).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
-                        const uint8_t val = (*data_iterator).toUInt();
+                        const unsigned int val = (*data_iterator).toUInt();
                         if(val == 3){
                             block->setLaser_enabled(true);
                         }
@@ -126,7 +124,7 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                     else if(QRegExp("[Ss]"+regEx_uInt).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
                         bool valid;
-                        const uint8_t value = (*data_iterator).toUInt(&valid);
+                        const unsigned int value = (*data_iterator).toUInt(&valid);
 
                         if(valid && (value < config->laser_power_max()) && (value > config->laser_power_min())){
                             block->setLaser_power(value);
@@ -189,9 +187,11 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                             {
                                 m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
                                                + ", Layer: " + QString::number(layerNum,10)
-                                               + " Error: Invalid Z Speed!");                                this->setPartStatus(PartObject::PartStatus::PART_IS_INVALID);
+                                               + " Error: Invalid Z Speed!");
+                                this->setPartStatus(PartObject::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(BlockObject::BlockTask::BLOCK_ERROR);
-                                m_parserStatus= PARSER_FAILED_INVALID_PART;                                this->setPartStatus(PartObject::PartStatus::PART_IS_INVALID);
+                                m_parserStatus= PARSER_FAILED_INVALID_PART;
+                                this->setPartStatus(PartObject::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(BlockObject::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
@@ -385,22 +385,22 @@ PartObject::~PartObject()
 
 }
 
-uint32_t PartObject::blockCount() const
+unsigned int PartObject::blockCount() const
 {
     return m_blockCount;
 }
 
-void PartObject::setBlockCount(const uint32_t &blockCount)
+void PartObject::setBlockCount(const unsigned int &blockCount)
 {
     m_blockCount = blockCount;
 }
 
-uint32_t PartObject::layerCount() const
+unsigned int PartObject::layerCount() const
 {
     return m_layerCount;
 }
 
-void PartObject::setLayerCount(const uint32_t &layerCount)
+void PartObject::setLayerCount(const unsigned int &layerCount)
 {
     m_layerCount = layerCount;
 }
@@ -495,9 +495,9 @@ void PartObject::setGcode(const QStringList &gcode)
 //    m_materialDelivery_commands = materialDelivery_commands;
 //}
 
-BlockObject PartObject::getBlock(const int blockNum) const
+BlockObject PartObject::getBlock(const unsigned int blockNum) const
 {
-    return m_blocks.get()->at(blockNum);
+    return m_blocks.get()->at(static_cast<int>(blockNum));
 }
 
 void PartObject::clearPart()

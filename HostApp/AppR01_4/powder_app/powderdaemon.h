@@ -18,6 +18,11 @@ public:
 
     ~PowderDaemon();
 
+    QSerialPort *m_lg_port;
+    QSerialPort *m_md_port;
+    QStateMachine *printRoutine;
+
+
     float xPosition() const;
     void setXPosition(float xPosition);
 
@@ -63,29 +68,39 @@ public:
     void write_to_lg_port(const QString &txString);
     void write_to_md_port(const QString &txString);
 
+    float xySpeed() const;
+    void setXYSpeed(float xySpeed);
+
 signals:
-    void xPosition_changed(const float position);
-    void yPosition_changed(const float position);
-    void zPosition_changed(const float position);
-    void hPosition_changed(const float position);
-    void sPosition_changed(const float position);
-    void laserPower_changed(const float power);
-    void laserEnableState_changed(bool enabled);
+    void xPosition_changed(double position);
+    void yPosition_changed(double position);
+    void xySpeed_changed(double speed);
+
+    void zPosition_changed(double position);
+    void hPosition_changed(double position);
+    void sPosition_changed(double position);
+    void laserPower_changed(int power);
+
+    void laserEnableState_changed(const QString &laserState);
     void laserArmState_changed(bool armed);
-    void currentBlockNumber_changed(const int blockNum);
-    void currentLayerNumber_changed(const int layerNumber);
+    void currentBlockNumber_changed(int blockNum);
+    void currentLayerNumber_changed(int layerNumber);
 
     void md_port_txFinished();
     void md_port_rxFinished();
     void md_port_deviceReply(const QString &reply);
-    void md_port_error(const QString &error);
 
     void lg_port_txFinished();
     void lg_port_rxFinished();
     void lg_port_deviceReply(const QString &reply);
-    void lg_port_error(const QString &error);
 
+    void lg_port_error(const QString &error);
+    void md_port_error(const QString &error);
     void printRoutine_error(const QString &error);
+
+    void lg_port_connectionChanged(bool open);
+    void md_port_connectionChanged(bool open);
+
 
     void startPrint();
     void stopPrint();
@@ -95,17 +110,24 @@ signals:
     void blocksRemaining();
     void blockComplete();
 
-    //    void enter_printManager_mode();
-    //    void enter_manualControl_mode();
+    void jogComplete();
 
     void lg_commandPending();
     void md_commandPending();
 
-public slots:
-    void on_lg_port_opened(QSerialPort * const port);
-    void on_md_port_opened(QSerialPort * const port);
+    void resetDaemon();
 
-    //    void on_printManager_enabled(const bool enabled);
+public slots:
+
+    void on_printManager_enabled( bool enabled);
+    void on_manualControl_enabled( bool enabled);
+
+    void on_lgPortName_changed(const QString &name);
+    void on_mdPortName_changed(const QString &name);
+
+    void on_lg_port_connectionRequested(bool open);
+    void on_md_port_connectionRequested(bool open);
+
     void on_config_available(QSharedPointer<SettingsObject> config);
     void on_partFile_available(QSharedPointer<PartObject> part);
 
@@ -118,7 +140,6 @@ public slots:
 
     void on_md_port_bytesWritten(qint64 bytes);
     void on_md_port_bytesRead();
-
 
 
     void on_lg_portTimeout();
@@ -142,55 +163,54 @@ public slots:
 
 
 
+    void on_jogIncrement_changed(double jogIncrement);
 
-    //    void on_manualControl_enabled(const bool enabled);
+    void on_homeOption_change(int homeOption);
+    void on_home_request();
+    void on_increment_xPosition_request();
+    void on_decrement_xPosition_request();
+    void on_increment_yPosition_request();
+    void on_decrement_yPosition_request();
+    void on_increment_zPosition_request();
+    void on_decrement_zPosition_request();
+    void on_increment_hPosition_request();
+    void on_decrement_hPosition_request();
+    void on_increment_sPosition_request();
+    void on_decrement_sPosition_request();
 
-    //    void on_jogIncrement_change(const float jogIncrement);
-    //    void on_homeOption_change(const int homeOption);
-    //    void on_home_request();
-
-    //    void on_increment_xPosition_request();
-    //    void on_decrement_xPosition_request();
-    //    void on_increment_yPosition_request();
-    //    void on_decrement_yPosition_request();
-    //    void on_increment_zPosition_request();
-    //    void on_decrement_zPosition_request();
-    //    void on_increment_hPosition_request();
-    //    void on_decrement_hPosition_request();
-    //    void on_increment_sPosition_request();
-    //    void on_decrement_sPosition_request();
-    //    void on_lg_jogTransactionComplete();
-    //    void on_md_jogTransactionComplete();
 
 private:
-    QSerialPort *m_lg_port;
-    QSerialPort *m_md_port;
-
     QTimer *lg_port_timer;
     QTimer *md_port_timer;
-    QStateMachine *printRoutine;
 
     QSharedPointer<PartObject> m_part;
     QSharedPointer<SettingsObject> m_config;
+
+    bool m_manualModeEnabled;
+    bool m_printModeEnabled;
 
     float m_xPosition;
     float m_yPosition;
     float m_zPosition;
     float m_sPosition;
     float m_hPosition;
+    float m_xySpeed;
     int m_laserPower;
     bool m_laserEnableState;
     bool m_laserArmState;
 
     float m_jogIncrement;
+    float m_jogSign;
+    int m_homeOption;
+
     bool m_xHomed;
     bool m_yHomed;
     bool m_zHomed;
     bool m_hHomed;
     bool m_sHomed;
 
-    uint32_t m_currentBlockNumber;
-    uint32_t m_currentLayerNumber;
+    unsigned int m_currentBlockNumber;
+    unsigned int m_currentLayerNumber;
 
     uint16_t m_pendingTasks;
     uint16_t m_activeTask;

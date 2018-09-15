@@ -3,55 +3,72 @@
 PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
 {
 
+    m_lg_port = new QSerialPort(this);
+    m_md_port = new QSerialPort(this);
+
+    m_lg_port->setBaudRate(115200);
+    m_md_port->setBaudRate(115200);
+
+    m_manualModeEnabled = false;
+    m_printModeEnabled = false;
+
+    m_xPosition = 0;
+    m_yPosition = 0;
+    m_zPosition = 0;
+    m_sPosition = 0;
+    m_hPosition = 0;
+    m_xySpeed = 0;
+    m_laserPower = 0;
+    m_laserEnableState = false;
+    m_laserArmState = false;
+
+    m_jogIncrement = 1.0;
+    m_jogSign = 1.0;
+    m_homeOption = 1;
+
+    m_xHomed = false;
+    m_yHomed = false;
+    m_zHomed = false;
+    m_hHomed = false;
+    m_sHomed = false;
+
+    m_currentBlockNumber = 0;
+    m_currentLayerNumber = 0;
+
+    m_pendingTasks = 0;
+    m_activeTask = 0;
+
+    lg_port_TxBytesRemaining = 0;
+    md_port_TxBytesRemaining = 0;
+
+    connect(m_lg_port, SIGNAL(bytesWritten(qint64)),
+            this, SLOT(on_lg_port_bytesWritten(qint64)));
+
+    connect(m_lg_port, SIGNAL(readyRead()),
+            this, SLOT(on_lg_port_bytesRead()));
+
+    connect(m_lg_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
+            this, SLOT(on_lg_port_error(QSerialPort::SerialPortError)));
+
+    connect(m_md_port, SIGNAL(bytesWritten(qint64)),
+            this, SLOT(on_md_port_bytesWritten(qint64)));
+
+    connect(m_md_port, SIGNAL(readyRead()),
+            this, SLOT(on_md_port_bytesRead()));
+
+    connect(m_md_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
+            this, SLOT(on_md_port_error(QSerialPort::SerialPortError)));
+
     lg_port_timer = new QTimer(this);
     lg_port_timer->setSingleShot(true);
-    lg_port_timer->setInterval(1000);
     md_port_timer = new QTimer(this);
     md_port_timer->setSingleShot(true);
-    md_port_timer->setInterval(1000);
 
     QObject::connect(lg_port_timer, SIGNAL(timeout()), this, SLOT(on_lg_portTimeout()));
     QObject::connect(md_port_timer, SIGNAL(timeout()), this, SLOT(on_md_portTimeout()));
 
 
-    //    QState *machineInit_state = new QState(stateMachine);
-    //    QStateMachine *machineJogControl_mode = new QStateMachine(stateMachine);
-    //    QState *machineError_state = new QState(stateMachine);
 
-    //    stateMachine->setInitialState(machineInit_state);
-    //    machineInit_state->addTransition(this, SIGNAL(enter_manualControl_mode()), machineJogControl_mode);
-    //    machineJogControl_mode->addTransition(this, SIGNAL(enter_printManager_mode()), machinePrintFile_mode);
-    //    machineJogControl_mode->addTransition(lg_port_timer, SIGNAL(timeout()), machineError_state);
-    //    machineJogControl_mode->addTransition(md_port_timer, SIGNAL(timeout()), machineError_state);
-    //    machineJogControl_mode->addTransition(this, SIGNAL(md_port_deviceError(const QString&)), machineError_state);
-    //    machineJogControl_mode->addTransition(this, SIGNAL(lg_port_deviceError(const QString&)), machineError_state);
-
-
-    //    machineInit_state->addTransition(this, SIGNAL(enter_printManager_mode()), machinePrintFile_mode);
-    //    machinePrintFile_mode->addTransition(this, SIGNAL(enter_manualControl_mode()), machineJogControl_mode);
-    //    machinePrintFile_mode->addTransition(lg_port_timer, SIGNAL(timeout()), machineError_state);
-    //    machinePrintFile_mode->addTransition(md_port_timer, SIGNAL(timeout()), machineError_state);
-    //    machinePrintFile_mode->addTransition(this, SIGNAL(md_port_deviceError(const QString&)), machineError_state);
-    //    machinePrintFile_mode->addTransition(this, SIGNAL(lg_port_deviceError(const QString&)), machineError_state);
-
-    //    QState *jogControlInit_state = new QState(machineJogControl_mode);
-    //    QState *jogControl_send_lgCommand_state = new QState(machineJogControl_mode);
-    //    QState *jogControl_send_mdCommand_state = new QState(machineJogControl_mode);
-    //    QState *jogControl_receive_lgReply_state = new QState(machineJogControl_mode);
-    //    QState *jogControl_receive_mdReply_state = new QState(machineJogControl_mode);
-
-    //    jogControlInit_state->addTransition(this, SIGNAL(lg_commandPending()), jogControl_send_lgCommand_state);
-    //    jogControl_send_lgCommand_state->addTransition(this, SIGNAL(lg_port_txFinished()), jogControl_receive_lgReply_state);
-    //    jogControl_receive_lgReply_state->addTransition(this, SIGNAL(lg_port_rxFinished()), jogControlInit_state);
-
-    //    jogControlInit_state->addTransition(this, SIGNAL(md_commandPending()), jogControl_send_mdCommand_state);
-    //    jogControl_send_mdCommand_state->addTransition(this, SIGNAL(md_port_txFinished()), jogControl_receive_mdReply_state);
-    //    jogControl_receive_mdReply_state->addTransition(this, SIGNAL(md_port_rxFinished()), jogControlInit_state);
-    //    machineJogControl_mode->setInitialState(jogControlInit_state);
-    //    connect(this, SIGNAL(enter_manualControl_mode()), machineJogControl_mode, SLOT(start()));
-    //    connect(this, SIGNAL(enter_manualControl_mode()), machinePrintFile_mode, SLOT(stop()));
-    //    connect(this, SIGNAL(enter_printManager_mode()), machinePrintFile_mode, SLOT(start()));
-    //    connect(this, SIGNAL(enter_printManager_mode()), machineJogControl_mode, SLOT(stop()));
 
     printRoutine = new QStateMachine(this);
 
@@ -124,34 +141,45 @@ PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
     send_lgCommand_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     send_lgCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
     receive_lgReply_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     receive_lgReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
-    send_mdCommand_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
     send_mdCommand_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     send_mdCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
-    receive_mdReply_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
     receive_mdReply_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     receive_mdReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
-    selectNextBlockToProcess_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+
+    lg_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+    md_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+
+    printRoutine_init_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
+    lg_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
+
+    printRoutine_init_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
+    md_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
+
+
+    printRoutine_error_state->addTransition(this, SIGNAL(resetDaemon()), printRoutine_init_state);
 
     printRoutine->start();
 }
 
 
-
-
-
 PowderDaemon::~PowderDaemon(){
-
+    if(m_lg_port->isOpen()){
+        m_lg_port->clear();
+        m_lg_port->close();
+    }
+    if(m_md_port->isOpen()){
+        m_md_port->clear();
+        m_md_port->close();
+    }
 
 }
 
@@ -162,10 +190,9 @@ float PowderDaemon::xPosition() const
 
 void PowderDaemon::setXPosition(float xPosition)
 {
-    if(xPosition > m_xPosition || xPosition < m_xPosition){
-        m_xPosition = xPosition;
-        emit xPosition_changed(m_xPosition);
-    }
+    m_xPosition = xPosition;
+    emit xPosition_changed(static_cast<double>(m_xPosition));
+
 }
 
 float PowderDaemon::yPosition() const
@@ -175,10 +202,9 @@ float PowderDaemon::yPosition() const
 
 void PowderDaemon::setYPosition(float yPosition)
 {
-    if(yPosition > m_yPosition || yPosition < m_yPosition){
-        m_yPosition = yPosition;
-        emit yPosition_changed(m_yPosition);
-    }
+    m_yPosition = yPosition;
+    emit yPosition_changed(static_cast<double>(m_yPosition));
+
 }
 
 float PowderDaemon::zPosition() const
@@ -188,10 +214,9 @@ float PowderDaemon::zPosition() const
 
 void PowderDaemon::setZPosition(float zPosition)
 {
-    if(zPosition > m_zPosition || zPosition < m_zPosition){
-        m_zPosition = zPosition;
-        emit zPosition_changed(m_zPosition);
-    }
+    m_zPosition = zPosition;
+    emit zPosition_changed(static_cast<double>(m_zPosition));
+
 }
 
 float PowderDaemon::sPosition() const
@@ -201,10 +226,9 @@ float PowderDaemon::sPosition() const
 
 void PowderDaemon::setSPosition(float sPosition)
 {
-    if(sPosition > m_sPosition || sPosition < m_sPosition){
-        m_sPosition = sPosition;
-        emit sPosition_changed(m_sPosition);
-    }
+    m_sPosition = sPosition;
+    emit sPosition_changed(static_cast<double>(m_sPosition));
+
 }
 
 float PowderDaemon::hPosition() const
@@ -214,10 +238,9 @@ float PowderDaemon::hPosition() const
 
 void PowderDaemon::setHPosition(float hPosition)
 {
-    if(hPosition > m_hPosition || hPosition < m_hPosition){
-        m_hPosition = hPosition;
-        emit hPosition_changed(m_hPosition);
-    }
+    m_hPosition = hPosition;
+    emit hPosition_changed(static_cast<double>(m_hPosition));
+
 }
 int PowderDaemon::laserPower() const
 {
@@ -226,10 +249,9 @@ int PowderDaemon::laserPower() const
 
 void PowderDaemon::setLaserPower(int laserPower)
 {
-    if(laserPower != m_laserPower){
-        m_laserPower = laserPower;
-        emit laserPower_changed(m_laserPower);
-    }
+    m_laserPower = laserPower;
+    emit laserPower_changed(m_laserPower);
+
 }
 
 bool PowderDaemon::laserEnableState() const
@@ -241,7 +263,10 @@ void PowderDaemon::setLaserEnableState(bool laserEnableState)
 {
     if(laserEnableState != m_laserEnableState){
         m_laserEnableState = laserEnableState;
-        emit laserEnableState_changed(m_laserEnableState);
+        if(m_laserEnableState)
+            emit laserEnableState_changed("Laser\nOn");
+        else
+            emit laserEnableState_changed("Laser\nOff");
     }
 }
 
@@ -252,10 +277,9 @@ bool PowderDaemon::laserArmState() const
 
 void PowderDaemon::setLaserArmState(bool laserArmState)
 {
-    if(m_laserArmState != laserArmState){
-        m_laserArmState = laserArmState;
-        emit laserArmState_changed(m_laserArmState);
-    }
+    m_laserArmState = laserArmState;
+    emit laserArmState_changed(m_laserArmState);
+
 }
 
 float PowderDaemon::jogIncrement() const
@@ -320,32 +344,37 @@ void PowderDaemon::setSHomed(bool sHomed)
 
 void PowderDaemon::write_to_lg_port(const QString &txString)
 {
-    lg_port_rxBytes.clear();
-    const QByteArray txBytes = txString.toUtf8();
-    lg_port_TxBytesRemaining = txBytes.length();
-    lg_port_timer->start(1000);
-    m_lg_port->write(txBytes);
+    if(m_lg_port->isOpen()){
+        lg_port_rxBytes.clear();
+        const QByteArray txBytes = txString.toUtf8();
+        lg_port_TxBytesRemaining = txBytes.length();
+        lg_port_timer->start(1000);
+        m_lg_port->write(txBytes);
+    }
+    else
+        emit lg_port_error("Cannot write to closed port");
 }
 
 void PowderDaemon::write_to_md_port(const QString &txString)
 {
-    md_port_rxBytes.clear();
-    const QByteArray txBytes = txString.toUtf8();
-    md_port_TxBytesRemaining = txBytes.length();
-    md_port_timer->start(1000);
-    m_md_port->write(txBytes);
+    if(m_md_port->isOpen()){
+        qDebug()<<"port is open?";
+        md_port_rxBytes.clear();
+        const QByteArray txBytes = txString.toUtf8();
+        md_port_TxBytesRemaining = txBytes.length();
+        md_port_timer->start(1000);
+        m_md_port->write(txBytes);
+    }
+    else
+        emit md_port_error("Cannot write to closed port");
 }
 
-//void PowderDaemon::on_printManager_enabled(const bool enabled)
-//{
-//    if(enabled){
-//        disconnect(this, SIGNAL(lg_port_rxFinished()), this, SLOT(on_lg_jogTransactionComplete()));
-//        disconnect(this, SIGNAL(md_port_rxFinished()), this, SLOT(on_md_jogTransactionComplete()));
-//        connect(this, SIGNAL(lg_port_rxFinished()), this, SLOT(on_lg_transactionComplete()));
-//        connect(this, SIGNAL(md_port_rxFinished()), this, SLOT(on_md_transactionComplete()));
-//        emit enter_printManager_mode();
-//    }
-//}
+void PowderDaemon::on_printManager_enabled(bool enabled)
+{
+    m_printModeEnabled = enabled;
+    if(enabled)
+        m_manualModeEnabled = false;
+}
 
 void PowderDaemon::on_config_available(QSharedPointer<SettingsObject> config)
 {
@@ -367,17 +396,6 @@ void PowderDaemon::on_stopPrint_request()
     emit stopPrint();
 }
 
-void PowderDaemon::on_lg_port_opened(QSerialPort * const port)
-{
-    m_lg_port = port;
-
-}
-
-void PowderDaemon::on_md_port_opened(QSerialPort * const port)
-{
-    m_md_port = port;
-
-}
 
 
 
@@ -446,19 +464,22 @@ void PowderDaemon::on_lg_portTimeout()
 void PowderDaemon::on_md_portTimeout()
 {
     emit md_port_error("Error: Time out");
-
 }
 
 void PowderDaemon::on_lg_port_error(QSerialPort::SerialPortError portError)
 {
-    QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
-    emit lg_port_error(metaEnum.valueToKey(portError));
+    if(portError != QSerialPort::SerialPortError::NoError){
+        QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
+        emit lg_port_error(metaEnum.valueToKey(portError));
+    }
 }
 
 void PowderDaemon::on_md_port_error(QSerialPort::SerialPortError portError)
 {
-    QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
-    emit md_port_error(metaEnum.valueToKey(portError));
+    if(portError != QSerialPort::SerialPortError::NoError){
+        QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
+        emit md_port_error(metaEnum.valueToKey(portError));
+    }
 }
 
 
@@ -472,19 +493,20 @@ void PowderDaemon::on_printRoutine_init()
 
 void PowderDaemon::on_generateProcessQueueFromBlock()
 {
+    qDebug()<<"entered generateProcessQueueFromBlock_state";
     bool empty = true;
     m_lg_commandStr.clear();
     m_md_commandStr.clear();
-    m_pendingTasks = m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).blockTask();
+    m_pendingTasks = m_part.get()->getBlock(m_currentBlockNumber).blockTask();
 
     if(m_pendingTasks != 0){
         if(!m_lg_commandStr.isEmpty()){
-            m_lg_commandStr = m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).lg_string();
+            m_lg_commandStr = m_part.get()->getBlock(m_currentBlockNumber).lg_string();
             empty &= m_lg_commandStr.contains("EMPTY");
         }
 
         if(!m_md_commandStr.isEmpty()){
-            m_md_commandStr =  m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).md_string();
+            m_md_commandStr =  m_part.get()->getBlock(m_currentBlockNumber).md_string();
             empty &= m_md_commandStr.at(0).contains("EMPTY");
             empty &= m_md_commandStr.at(1).contains("EMPTY");
             empty &= m_md_commandStr.at(2).contains("EMPTY");
@@ -505,6 +527,8 @@ void PowderDaemon::on_generateProcessQueueFromBlock()
 
 void PowderDaemon::on_selectProcessFromQueue()
 {
+    qDebug()<<"entered selectProcessFromQueue_state";
+
     m_activeTask = 0;
 
     if(m_pendingTasks & BlockObject::BlockTask::SET_HOME_AXIS)
@@ -543,49 +567,84 @@ void PowderDaemon::on_selectProcessFromQueue()
 
 void PowderDaemon::on_send_lgCommand()
 {
+    qDebug()<<"entered send_lgCommand_state";
     write_to_lg_port(m_lg_commandStr);
 }
 
 void PowderDaemon::on_receive_lgReply()
 {
-
+    qDebug()<<"entered receive_lgReply_state";
+    lg_port_timer->start(1000);
 }
 
 
 void PowderDaemon::on_lg_transactionFinished()
 {
-    if(m_activeTask & BlockObject::BlockTask::SET_X_POSITION){
-        setXPosition(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).x_position());
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            setXHomed(true);
-    }
-    if(m_activeTask & BlockObject::BlockTask::SET_Y_POSITION){
-        setYPosition(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).y_position());
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            setYHomed(true);
-    }
-    //    if(m_activeTask & BlockObject::BlockTask::SET_XY_SPEED)
-    //        set(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).xy_speed());
+    qDebug()<<"entered lg_transactionFinished_state";
 
-    if(m_activeTask & BlockObject::BlockTask::SET_LASER_ENABLE_STATE)
-        setLaserEnableState(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).laser_enabled());
-    if(m_activeTask & BlockObject::BlockTask::SET_LASER_ARM_STATE)
-        setLaserArmState(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).laser_armed());
-    if(m_activeTask & BlockObject::BlockTask::SET_LASER_POWER)
-        setLaserPower(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).laser_power());
+    if(m_printModeEnabled){
+        if(m_activeTask & BlockObject::BlockTask::SET_X_POSITION){
+            setXPosition(m_part.get()->getBlock(m_currentBlockNumber).x_position());
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                setXHomed(true);
+        }
+        if(m_activeTask & BlockObject::BlockTask::SET_Y_POSITION){
+            setYPosition(m_part.get()->getBlock(m_currentBlockNumber).y_position());
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                setYHomed(true);
+        }
+        if(m_activeTask & BlockObject::BlockTask::SET_XY_SPEED)
+            setXYSpeed(m_part.get()->getBlock(m_currentBlockNumber).xy_speed());
 
-    m_pendingTasks &= (m_activeTask^0xFFFF);
-    if(m_pendingTasks != 0){
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            m_pendingTasks |= BlockObject::BlockTask::SET_HOME_AXIS;
-        emit tasksRemaining();
+        if(m_activeTask & BlockObject::BlockTask::SET_LASER_ENABLE_STATE)
+            setLaserEnableState(m_part.get()->getBlock(m_currentBlockNumber).laser_enabled());
+        if(m_activeTask & BlockObject::BlockTask::SET_LASER_ARM_STATE)
+            setLaserArmState(m_part.get()->getBlock(m_currentBlockNumber).laser_armed());
+        if(m_activeTask & BlockObject::BlockTask::SET_LASER_POWER)
+            setLaserPower(m_part.get()->getBlock(m_currentBlockNumber).laser_power());
+
+        m_pendingTasks &= (m_activeTask^0xFFFF);
+
+        if(m_pendingTasks != 0){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                m_pendingTasks |= BlockObject::BlockTask::SET_HOME_AXIS;
+            emit tasksRemaining();
+        }
+        else
+            emit blockComplete();
+    }
+    else if(m_manualModeEnabled){
+        if(m_activeTask & BlockObject::BlockTask::SET_X_POSITION){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
+                setXHomed(true);
+                setXPosition(0);
+            }
+            else
+                setXPosition(xPosition() + m_jogSign*m_jogIncrement);
+            m_activeTask = 0;
+            emit jogComplete();
+        }
+
+        if(m_activeTask & BlockObject::BlockTask::SET_Y_POSITION){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
+                setYHomed(true);
+                setYPosition(0);
+            }
+            else
+                setYPosition(yPosition() + m_jogSign*m_jogIncrement);
+            m_activeTask = 0;
+            emit jogComplete();
+        }
     }
     else
-        emit blockComplete();
+        emit printRoutine_error("No Mode Selected");
 }
 
 void PowderDaemon::on_send_mdCommand()
 {
+    qDebug()<<"entered send_mdCommand_state";
+    qDebug()<<m_md_commandStr.at(0);
+
     if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION)
         write_to_md_port(m_md_commandStr.at(0));
     else if(m_pendingTasks & BlockObject::BlockTask::SET_HOPPER_POSITION)
@@ -596,38 +655,79 @@ void PowderDaemon::on_send_mdCommand()
 
 void PowderDaemon::on_receive_mdReply()
 {
+    qDebug()<<"entered receive_mdReply_state";
 
 }
 
 void PowderDaemon::on_md_transactionFinished()
 {
-    if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
-        setZPosition(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).z_position());
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            setZHomed(true);
+    qDebug()<<"entered transactionFinished_state";
+
+    if(m_printModeEnabled){
+        if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
+            setZPosition(m_part.get()->getBlock(m_currentBlockNumber).z_position());
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                setZHomed(true);
+        }
+        else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
+            setHPosition(m_part.get()->getBlock(m_currentBlockNumber).hopper_position());
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                setHHomed(true);
+        }
+        else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
+            setSPosition(m_part.get()->getBlock(m_currentBlockNumber).spreader_position());
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                setSHomed(true);
+        }
+        m_pendingTasks &= (m_activeTask^0xFFFF);
+        if(m_pendingTasks != 0){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
+                m_pendingTasks |= BlockObject::BlockTask::SET_HOME_AXIS;
+            emit tasksRemaining();
+        }
+        else
+            emit blockComplete();
     }
-    else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
-        setHPosition(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).hopper_position());
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            setHHomed(true);
-    }
-    else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
-        setSPosition(m_part.get()->getBlock(static_cast<int>(m_currentBlockNumber)).spreader_position());
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            setSHomed(true);
-    }
-    m_pendingTasks &= (m_activeTask^0xFFFF);
-    if(m_pendingTasks != 0){
-        if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
-            m_pendingTasks |= BlockObject::BlockTask::SET_HOME_AXIS;
-        emit tasksRemaining();
+    else if(m_manualModeEnabled){
+        if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
+                setZHomed(true);
+                setZPosition(0);
+            }
+            else
+                setZPosition(zPosition() + m_jogSign*m_jogIncrement);
+            m_activeTask = 0;
+            emit jogComplete();
+        }
+        else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
+                setHHomed(true);
+                setHPosition(0);
+            }
+            else
+                setHPosition(hPosition() + m_jogSign*m_jogIncrement);
+            m_activeTask = 0;
+            emit jogComplete();
+        }
+        else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
+            if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
+                setSHomed(true);
+                setSPosition(0);
+            }
+            else
+                setSPosition(sPosition() + m_jogSign*m_jogIncrement);
+            m_activeTask = 0;
+            emit jogComplete();
+        }
     }
     else
-        emit blockComplete();
+        emit printRoutine_error("No Mode Selected");
 }
 
 void PowderDaemon::on_selectNextBlockToProcess()
 {
+    qDebug()<<"entered selectNextBlockToProcess_state";
+
     m_currentBlockNumber += 1;
     emit currentBlockNumber_changed(m_currentBlockNumber);
     if(m_currentLayerNumber != m_part.get()->getBlock(m_currentBlockNumber).layerNumber()){
@@ -644,189 +744,277 @@ void PowderDaemon::on_selectNextBlockToProcess()
 
 void PowderDaemon::on_printRoutine_finished()
 {
+    qDebug()<<"entered printRoutine_finished_state";
 
 }
 
 void PowderDaemon::on_printRoutine_error()
 {
-
+    qDebug()<<"entered printRoutine_error_state";
+    if(m_lg_port->error() != QSerialPort::SerialPortError::NoError)
+        m_lg_port->clearError();
+    if(m_md_port->error() != QSerialPort::SerialPortError::NoError)
+        m_md_port->clearError();
+    m_activeTask = 0;
+    m_pendingTasks = 0;
+    emit resetDaemon();
 }
-//void PowderDaemon::on_manualControl_enabled(const bool enabled)
-//{
-//    if(enabled){
-//        disconnect(this, SIGNAL(lg_port_rxFinished()), this, SLOT(on_lg_transactionComplete()));
-//        disconnect(this, SIGNAL(md_port_rxFinished()), this, SLOT(on_md_transactionComplete()));
-//        connect(this, SIGNAL(lg_port_rxFinished()), this, SLOT(on_lg_jogTransactionComplete()));
-//        connect(this, SIGNAL(md_port_rxFinished()), this, SLOT(on_md_jogTransactionComplete()));
-//        emit enter_manualControl_mode();
-//    }
-//}
-//void PowderDaemon::on_lg_jogTransactionComplete()
-//{
-//    if(pendingTasks & BlockObject::BlockTask::SET_X_POSITION){
-//        if(m_lg_commandStr.contains("-")){
-//            setXPosition(xPosition()-jogIncrement());
-//        }
-//        else
-//            setXPosition(xPosition()+jogIncrement());
-//    }
-//    else if(pendingTasks & BlockObject::BlockTask::SET_Y_POSITION){
-//        if(m_lg_commandStr.contains("-")){
-//            setYPosition(yPosition()-jogIncrement());
-//        }
-//        else
-//            setYPosition(yPosition()+jogIncrement());
-//    }
-//    m_lg_commandStr.clear();
-//    pendingTasks = 0;
-//}
 
-//void PowderDaemon::on_md_jogTransactionComplete()
-//{
-//    if(pendingTasks & BlockObject::BlockTask::SET_Z_POSITION){
-//        if(m_md_commandStr.contains("-")){
-//            setZPosition(zPosition()-jogIncrement());
-//        }
-//        else
-//            setZPosition(zPosition()+jogIncrement());
-//    }
-//    else if(pendingTasks & BlockObject::BlockTask::SET_HOPPER_POSITION){
-//        if(m_md_commandStr.contains("-")){
-//            setHPosition(hPosition()-jogIncrement());
-//        }
-//        else
-//            setHPosition(hPosition()+jogIncrement());
-//    }
-//    else if(pendingTasks & BlockObject::BlockTask::SET_SPREADER_POSITION){
-//        if(m_md_commandStr.contains("-")){
-//            setSPosition(sPosition()-jogIncrement());
-//        }
-//        else
-//            setSPosition(sPosition()+jogIncrement());
-//    }
-//    m_md_commandStr.clear();
-//    pendingTasks = 0;
-//}
-//void PowderDaemon::on_jogIncrement_change(const float jogIncrement)
-//{
-//    m_jogIncrement = jogIncrement;
-//}
+float PowderDaemon::xySpeed() const
+{
+    return m_xySpeed;
+}
 
-//void PowderDaemon::on_homeOption_change(const int homeOption)
-//{
+void PowderDaemon::setXYSpeed(float xySpeed)
+{
+    m_xySpeed = xySpeed;
+    emit  xySpeed_changed(m_xySpeed);
+}
 
-//}
+void PowderDaemon::on_manualControl_enabled(bool enabled)
+{
+    m_manualModeEnabled = enabled;
+    if(enabled)
+        m_printModeEnabled = false;
+}
 
-//void PowderDaemon::on_home_request()
-//{
+void PowderDaemon::on_lgPortName_changed(const QString &name)
+{
+    if(m_lg_port->isOpen())
+        m_lg_port->close();
+    m_lg_port->setPortName(name);
+}
 
-//}
+void PowderDaemon::on_mdPortName_changed(const QString &name)
+{
+    if(m_md_port->isOpen())
+        m_md_port->close();
+    m_md_port->setPortName(name);
+}
 
-//void PowderDaemon::on_increment_xPosition_request()
-//{
+void PowderDaemon::on_lg_port_connectionRequested(bool open)
+{
+    if(open && !m_lg_port->isOpen()){
+        m_lg_port->open(QIODevice::ReadWrite);
+        if(m_lg_port->isOpen())
+            emit lg_port_connectionChanged(true);
+        else
+            emit lg_port_error("Could not open LG port");
+    }
+    else if(!open && m_lg_port->isOpen()){
+        m_lg_port->close();
+        emit lg_port_connectionChanged(false);
+    }
+}
 
-//    if(((m_xPosition + jogIncrement())) < m_config.get()->x_position_max()){
-//        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->x_position_resolution());
-//        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_X_POSITION, steps);
-//        pendingTasks = BlockObject::BlockTask::SET_X_POSITION;
-//        emit lg_commandPending();
-//    }
+void PowderDaemon::on_md_port_connectionRequested(bool open)
+{
+    if(open && !m_md_port->isOpen()){
+        m_md_port->open(QIODevice::ReadWrite);
+        if(m_md_port->isOpen())
+            emit md_port_connectionChanged(true);
+        else
+            emit lg_port_error("Could not open MD port");
+    }
+    else if(!open && m_md_port->isOpen()){
+        m_md_port->close();
+        emit md_port_connectionChanged(false);
+    }
+}
 
-//}
 
-//void PowderDaemon::on_decrement_xPosition_request()
-//{
 
-//    if(((m_xPosition - jogIncrement())) > m_config.get()->x_position_min()){
-//        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->x_position_resolution());
-//        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_X_POSITION, steps);
-//        pendingTasks = BlockObject::BlockTask::SET_X_POSITION;
-//        emit lg_commandPending();
-//    }
-//}
+void PowderDaemon::on_jogIncrement_changed(double jogIncrement)
+{
+    m_jogIncrement = jogIncrement;
+}
 
-//void PowderDaemon::on_increment_yPosition_request()
-//{
-//    if(((m_yPosition + jogIncrement())) < m_config.get()->y_position_max()){
-//        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->y_position_resolution());
-//        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_Y_POSITION, steps);
-//        pendingTasks = BlockObject::BlockTask::SET_Y_POSITION;
-//        emit lg_commandPending();
-//    }
-//}
+void PowderDaemon::on_homeOption_change(int homeOption)
+{
+    m_homeOption = homeOption;
+}
 
-//void PowderDaemon::on_decrement_yPosition_request()
-//{
-//    if(((m_yPosition - jogIncrement())) > m_config.get()->y_position_min()){
-//        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->y_position_resolution());
-//        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_Y_POSITION, steps);
-//        emit lg_commandPending();
-//        pendingTasks = BlockObject::BlockTask::SET_Y_POSITION;
-//    }
-//}
+void PowderDaemon::on_home_request()
+{
+    switch (m_homeOption) {
+    case 0:
+    {
+        m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_X_POSITION);
+        if(m_lg_port->isOpen())
+            emit lg_commandPending();
+        break;
+    }
+    case 1:
+    {
+        m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_Y_POSITION);
+        if(m_lg_port->isOpen())
+            emit lg_commandPending();
+        break;
+    }
+    case 2:
+    {
+        m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_Z_POSITION);
+        if(m_md_port->isOpen())
+            emit md_commandPending();
+        break;
+    }
+    case 3:
+    {
+        m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_HOPPER_POSITION);
+        if(m_md_port->isOpen())
+            emit md_commandPending();
+        break;
+    }
+    case 4:
+    {
+        m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_SPREADER_POSITION);
+        if(m_md_port->isOpen())
+            emit md_commandPending();
+        break;
+    }
+    default:
+        m_activeTask = 0;
+        emit printRoutine_error("No Axis to Home");
+        break;
+    }
+}
 
-//void PowderDaemon::on_increment_zPosition_request()
-//{
-//    if(((m_zPosition + jogIncrement())) < m_config.get()->z_position_max()){
-//        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->z_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_Z_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_increment_xPosition_request()
+{
+    if(((m_xPosition + jogIncrement())) < m_config.get()->x_position_max()){
+        m_jogSign = 1.0;
+        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->x_position_resolution());
+        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_X_POSITION, steps);
+        m_activeTask = BlockObject::BlockTask::SET_X_POSITION;
+        emit lg_commandPending();
+    }
+}
 
-//void PowderDaemon::on_decrement_zPosition_request()
-//{
-//    if(((m_zPosition - jogIncrement())) > m_config.get()->z_position_min()){
-//        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->z_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_Z_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_decrement_xPosition_request()
+{
+    if(((m_xPosition - jogIncrement())) > m_config.get()->x_position_min()){
+        m_jogSign = -1.0;
+        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->x_position_resolution());
+        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_X_POSITION, steps);
+        m_activeTask = BlockObject::BlockTask::SET_X_POSITION;
+        emit lg_commandPending();
+    }
+}
 
-//void PowderDaemon::on_increment_hPosition_request()
-//{
-//    if(((m_hPosition + jogIncrement())) < m_config.get()->hopper_position_max()){
-//        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->hopper_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_HOPPER_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_increment_yPosition_request()
+{
+    if(((m_yPosition + jogIncrement())) < m_config.get()->y_position_max()){
+        m_jogSign = 1.0;
+        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->y_position_resolution());
+        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_Y_POSITION, steps);
+        m_activeTask = BlockObject::BlockTask::SET_Y_POSITION;
+        emit lg_commandPending();
+    }
+}
 
-//void PowderDaemon::on_decrement_hPosition_request()
-//{
-//    if(((m_hPosition - jogIncrement())) > m_config.get()->hopper_position_min()){
-//        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->hopper_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_HOPPER_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_decrement_yPosition_request()
+{
+    if(((m_yPosition - jogIncrement())) > m_config.get()->y_position_min()){
+        m_jogSign = -1.0;
+        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->y_position_resolution());
+        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(BlockObject::BlockTask::SET_Y_POSITION, steps);
+        m_activeTask = BlockObject::BlockTask::SET_Y_POSITION;
+        emit lg_commandPending();
+    }
+}
 
-//void PowderDaemon::on_increment_sPosition_request()
-//{
-//    if(((m_sPosition + jogIncrement())) < m_config.get()->spreader_position_max()){
-//        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->spreader_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_SPREADER_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_increment_zPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_zPosition + jogIncrement())) < m_config.get()->z_position_max()){
+        m_jogSign = 1.0;
+        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->z_position_resolution());
+        QString z ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
+        z += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append(z);
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
+        m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
+        emit md_commandPending();
+    }
+}
 
-//void PowderDaemon::on_decrement_sPosition_request()
-//{
-//    if(((m_sPosition - jogIncrement())) > m_config.get()->spreader_position_min()){
-//        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->spreader_position_resolution());
-//        m_md_commandStr = "/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber());
-//        m_md_commandStr += " rel " + QString::number(steps) + "\r";
-//        pendingTasks = BlockObject::BlockTask::SET_SPREADER_POSITION;
-//        emit md_commandPending();
-//    }
-//}
+void PowderDaemon::on_decrement_zPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_zPosition - jogIncrement())) > m_config.get()->z_position_min()){
+        m_jogSign = -1.0;
+        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->z_position_resolution());
+        QString z ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
+        z += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append(z);
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
+        m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
+        emit md_commandPending();
+    }
+}
+
+void PowderDaemon::on_increment_hPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_hPosition + jogIncrement())) < m_config.get()->hopper_position_max()){
+        m_jogSign = 1.0;
+        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->hopper_position_resolution());
+        QString h ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber());
+        h += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append(h);
+        m_md_commandStr.append("EMPTY");
+        m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
+        emit md_commandPending();
+    }
+}
+
+void PowderDaemon::on_decrement_hPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_hPosition - jogIncrement())) > m_config.get()->hopper_position_min()){
+        m_jogSign = -1.0;
+        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->hopper_position_resolution());
+        QString h ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber());
+        h += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append(h);
+        m_md_commandStr.append("EMPTY");
+        m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
+        emit md_commandPending();
+    }
+}
+
+void PowderDaemon::on_increment_sPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_sPosition + jogIncrement())) < m_config.get()->spreader_position_max()){
+        m_jogSign = 1.0;
+        const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->spreader_position_resolution());
+        QString s ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber());
+        s += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append(s);
+        m_activeTask = BlockObject::BlockTask::SET_SPREADER_POSITION;
+        emit md_commandPending();
+    }
+}
+
+void PowderDaemon::on_decrement_sPosition_request()
+{
+    m_md_commandStr.clear();
+    if(((m_sPosition - jogIncrement())) > m_config.get()->spreader_position_min()){
+        m_jogSign = -1.0;
+        const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->spreader_position_resolution());
+        QString s ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber());
+        s += " move rel " + QString::number(steps) + "\r";
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append(s);
+        m_activeTask = BlockObject::BlockTask::SET_SPREADER_POSITION;
+        emit md_commandPending();
+    }
+}

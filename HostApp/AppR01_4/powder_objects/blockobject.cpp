@@ -6,7 +6,7 @@ BlockObject::BlockObject(){
     m_laser_enabled = false;
 }
 
-BlockObject::BlockObject(uint32_t block_number, uint32_t layer_Number)
+BlockObject::BlockObject(const unsigned int block_number, const unsigned int layer_Number)
 {
     qRegisterMetaType<BlockObject>("BlockObject");
    m_blockNumber = block_number;
@@ -41,22 +41,22 @@ BlockObject::~BlockObject()
 
 }
 
-uint32_t BlockObject::blockNumber() const
+unsigned int BlockObject::blockNumber() const
 {
     return m_blockNumber;
 }
 
-void BlockObject::setBlockNumber(const uint32_t &blockNumber)
+void BlockObject::setBlockNumber(const unsigned int &blockNumber)
 {
     m_blockNumber = blockNumber;
 }
 
-uint32_t BlockObject::layerNumber() const
+unsigned int BlockObject::layerNumber() const
 {
     return m_layerNumber;
 }
 
-void BlockObject::setLayerNumber(const uint32_t &layerNumber)
+void BlockObject::setLayerNumber(const unsigned int &layerNumber)
 {
     m_layerNumber = layerNumber;
 }
@@ -97,12 +97,12 @@ void BlockObject::setLaser_armed(bool l_armed)
     setBlockTask(BlockTask::SET_LASER_ARM_STATE);
 }
 
-uint8_t BlockObject::laser_power() const
+unsigned int BlockObject::laser_power() const
 {
     return m_laser_power;
 }
 
-void BlockObject::setLaser_power(const uint8_t &l_power)
+void BlockObject::setLaser_power(const unsigned int &l_power)
 {
     m_laser_power = l_power;
     setBlockTask(BlockTask::SET_LASER_POWER);
@@ -269,9 +269,6 @@ void BlockObject::setMd_string(const QStringList &md_string)
     m_md_string.append(md_string.at(0));
     m_md_string.append(md_string.at(1));
     m_md_string.append(md_string.at(2));
-
-    qDebug()<<m_md_string;
-
 }
 
 

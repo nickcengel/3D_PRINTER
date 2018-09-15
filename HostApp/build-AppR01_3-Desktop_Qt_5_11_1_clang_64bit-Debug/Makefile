@@ -66,7 +66,6 @@ SOURCES       = ../AppR01_4/3d_framework/line3d.cpp \
 		../AppR01_4/hardware_tools/zaber_utility.cpp \
 		../AppR01_4/hardware_tools/lasergalvo_utility.cpp \
 		../AppR01_4/3d_framework/block3d.cpp \
-		../AppR01_4/powder_app/printmanager.cpp \
 		../AppR01_4/powder_app/powderdaemon.cpp qrc_icons.cpp \
 		qrc_settings.cpp \
 		moc_scenemodifier.cpp \
@@ -74,7 +73,6 @@ SOURCES       = ../AppR01_4/3d_framework/line3d.cpp \
 		moc_menu_model.cpp \
 		moc_settings_model.cpp \
 		moc_powderapp.cpp \
-		moc_printmanager.cpp \
 		moc_powderdaemon.cpp
 OBJECTS       = line3d.o \
 		scenemodifier.o \
@@ -92,7 +90,6 @@ OBJECTS       = line3d.o \
 		zaber_utility.o \
 		lasergalvo_utility.o \
 		block3d.o \
-		printmanager.o \
 		powderdaemon.o \
 		qrc_icons.o \
 		qrc_settings.o \
@@ -101,7 +98,6 @@ OBJECTS       = line3d.o \
 		moc_menu_model.o \
 		moc_settings_model.o \
 		moc_powderapp.o \
-		moc_printmanager.o \
 		moc_powderdaemon.o
 DIST          = ../AppR01_4/resources/icons/angle-double-right.png \
 		../AppR01_4/resources/icons/apply.png \
@@ -365,7 +361,6 @@ DIST          = ../AppR01_4/resources/icons/angle-double-right.png \
 		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		../AppR01_4/3d_framework/block3d.h \
 		../AppR01_4/hardware_tools/serialtransport.h \
-		../AppR01_4/powder_app/printmanager.h \
 		../AppR01_4/powder_app/powderdaemon.h ../AppR01_4/3d_framework/line3d.cpp \
 		../AppR01_4/3d_framework/scenemodifier.cpp \
 		../AppR01_4/3d_framework/segment3d.cpp \
@@ -382,7 +377,6 @@ DIST          = ../AppR01_4/resources/icons/angle-double-right.png \
 		../AppR01_4/hardware_tools/zaber_utility.cpp \
 		../AppR01_4/hardware_tools/lasergalvo_utility.cpp \
 		../AppR01_4/3d_framework/block3d.cpp \
-		../AppR01_4/powder_app/printmanager.cpp \
 		../AppR01_4/powder_app/powderdaemon.cpp
 QMAKE_TARGET  = AppR01_2
 DESTDIR       = 
@@ -837,8 +831,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR01_4/resources/icons.qrc ../AppR01_4/resources/settings.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Applications/Qt/5.11.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.h ../AppR01_4/3d_framework/scenemodifier.h ../AppR01_4/3d_framework/segment3d.h ../AppR01_4/3d_framework/view3dapp.h ../AppR01_4/model_item_frameworks/menu_item.h ../AppR01_4/model_item_frameworks/menu_model.h ../AppR01_4/model_item_frameworks/settings_item.h ../AppR01_4/model_item_frameworks/settings_model.h ../AppR01_4/powder_app/powderapp.h ../AppR01_4/powder_objects/blockobject.h ../AppR01_4/powder_objects/partobject.h ../AppR01_4/powder_objects/settingsobject.h ../AppR01_4/hardware_tools/zaber_utility.h ../AppR01_4/hardware_tools/lasergalvo_utility.h ../AppR01_4/3d_framework/block3d.h ../AppR01_4/hardware_tools/serialtransport.h ../AppR01_4/powder_app/printmanager.h ../AppR01_4/powder_app/powderdaemon.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.cpp ../AppR01_4/3d_framework/scenemodifier.cpp ../AppR01_4/3d_framework/segment3d.cpp ../AppR01_4/3d_framework/view3dapp.cpp ../AppR01_4/model_item_frameworks/menu_item.cpp ../AppR01_4/model_item_frameworks/menu_model.cpp ../AppR01_4/model_item_frameworks/settings_item.cpp ../AppR01_4/model_item_frameworks/settings_model.cpp ../AppR01_4/powder_app/powderapp.cpp ../AppR01_4/powder_objects/blockobject.cpp ../AppR01_4/powder_objects/partobject.cpp ../AppR01_4/powder_objects/settingsobject.cpp ../AppR01_4/main.cpp ../AppR01_4/hardware_tools/zaber_utility.cpp ../AppR01_4/hardware_tools/lasergalvo_utility.cpp ../AppR01_4/3d_framework/block3d.cpp ../AppR01_4/powder_app/printmanager.cpp ../AppR01_4/powder_app/powderdaemon.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.h ../AppR01_4/3d_framework/scenemodifier.h ../AppR01_4/3d_framework/segment3d.h ../AppR01_4/3d_framework/view3dapp.h ../AppR01_4/model_item_frameworks/menu_item.h ../AppR01_4/model_item_frameworks/menu_model.h ../AppR01_4/model_item_frameworks/settings_item.h ../AppR01_4/model_item_frameworks/settings_model.h ../AppR01_4/powder_app/powderapp.h ../AppR01_4/powder_objects/blockobject.h ../AppR01_4/powder_objects/partobject.h ../AppR01_4/powder_objects/settingsobject.h ../AppR01_4/hardware_tools/zaber_utility.h ../AppR01_4/hardware_tools/lasergalvo_utility.h ../AppR01_4/3d_framework/block3d.h ../AppR01_4/hardware_tools/serialtransport.h ../AppR01_4/powder_app/powderdaemon.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.cpp ../AppR01_4/3d_framework/scenemodifier.cpp ../AppR01_4/3d_framework/segment3d.cpp ../AppR01_4/3d_framework/view3dapp.cpp ../AppR01_4/model_item_frameworks/menu_item.cpp ../AppR01_4/model_item_frameworks/menu_model.cpp ../AppR01_4/model_item_frameworks/settings_item.cpp ../AppR01_4/model_item_frameworks/settings_model.cpp ../AppR01_4/powder_app/powderapp.cpp ../AppR01_4/powder_objects/blockobject.cpp ../AppR01_4/powder_objects/partobject.cpp ../AppR01_4/powder_objects/settingsobject.cpp ../AppR01_4/main.cpp ../AppR01_4/hardware_tools/zaber_utility.cpp ../AppR01_4/hardware_tools/lasergalvo_utility.cpp ../AppR01_4/3d_framework/block3d.cpp ../AppR01_4/powder_app/powderdaemon.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR01_4/powder_app/powderapp.ui $(DISTDIR)/
 
 
@@ -928,9 +922,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Applications/Qt/5.11.1/clang_64/mkspecs/features/data/dummy.cpp
 	/Library/Developer/CommandLineTools/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.11 -Wall -W -dM -E -o moc_predefs.h /Applications/Qt/5.11.1/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_scenemodifier.cpp moc_view3dapp.cpp moc_menu_model.cpp moc_settings_model.cpp moc_powderapp.cpp moc_printmanager.cpp moc_powderdaemon.cpp
+compiler_moc_header_make_all: moc_scenemodifier.cpp moc_view3dapp.cpp moc_menu_model.cpp moc_settings_model.cpp moc_powderapp.cpp moc_powderdaemon.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_scenemodifier.cpp moc_view3dapp.cpp moc_menu_model.cpp moc_settings_model.cpp moc_powderapp.cpp moc_printmanager.cpp moc_powderdaemon.cpp
+	-$(DEL_FILE) moc_scenemodifier.cpp moc_view3dapp.cpp moc_menu_model.cpp moc_settings_model.cpp moc_powderapp.cpp moc_powderdaemon.cpp
 moc_scenemodifier.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QVector \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qvector.h \
 		../AppR01_4/3d_framework/block3d.h \
@@ -939,6 +933,8 @@ moc_scenemodifier.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Hea
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/3d_framework/segment3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
@@ -958,6 +954,8 @@ moc_view3dapp.cpp: ../AppR01_4/3d_framework/scenemodifier.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/3d_framework/segment3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
@@ -1020,6 +1018,8 @@ moc_powderapp.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Head
 		../AppR01_4/powder_objects/blockobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/powder_objects/settingsobject.h \
 		../AppR01_4/model_item_frameworks/settings_model.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QAbstractItemModel \
@@ -1032,24 +1032,40 @@ moc_powderapp.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Head
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QVector3D \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qvector3d.h \
+		../AppR01_4/powder_app/powderdaemon.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		../AppR01_4/powder_app/powderapp.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.1/clang_64/bin/moc
 	/Applications/Qt/5.11.1/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang -I/Users/h.tosh/git_repos/3D_PRINTER/HostApp/AppR01_4 -I/Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DExtras.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DRender.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DInput.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DLogic.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DCore.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGamepad.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtNetwork.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.1/clang_64/lib ../AppR01_4/powder_app/powderapp.h -o moc_powderapp.cpp
 
-moc_printmanager.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStateMachine \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstatemachine.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QState \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstate.h \
-		../AppR01_4/powder_app/printmanager.h \
-		moc_predefs.h \
-		/Applications/Qt/5.11.1/clang_64/bin/moc
-	/Applications/Qt/5.11.1/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang -I/Users/h.tosh/git_repos/3D_PRINTER/HostApp/AppR01_4 -I/Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DExtras.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DRender.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DInput.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DLogic.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DCore.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGamepad.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtNetwork.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk/usr/include -F/Applications/Qt/5.11.1/clang_64/lib ../AppR01_4/powder_app/printmanager.h -o moc_printmanager.cpp
-
 moc_powderdaemon.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/QtSerialPort \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialportglobal.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialport.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialportinfo.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qtserialportversion.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
+		../AppR01_4/powder_objects/partobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QVector \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../AppR01_4/powder_objects/blockobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		../AppR01_4/powder_objects/settingsobject.h \
+		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		../AppR01_4/powder_app/powderdaemon.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.1/clang_64/bin/moc
@@ -1126,6 +1142,8 @@ scenemodifier.o: ../AppR01_4/3d_framework/scenemodifier.cpp ../AppR01_4/3d_frame
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/3d_framework/segment3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
@@ -1194,6 +1212,8 @@ view3dapp.o: ../AppR01_4/3d_framework/view3dapp.cpp ../AppR01_4/3d_framework/vie
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/3d_framework/segment3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
@@ -1417,6 +1437,8 @@ powderapp.o: ../AppR01_4/powder_app/powderapp.cpp ../AppR01_4/powder_app/powdera
 		../AppR01_4/powder_objects/blockobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/powder_objects/settingsobject.h \
 		../AppR01_4/model_item_frameworks/settings_model.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QAbstractItemModel \
@@ -1429,6 +1451,12 @@ powderapp.o: ../AppR01_4/powder_app/powderapp.cpp ../AppR01_4/powder_app/powdera
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QVector3D \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qvector3d.h \
+		../AppR01_4/powder_app/powderdaemon.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		ui_powderapp.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QFile \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qfile.h \
@@ -1450,7 +1478,11 @@ blockobject.o: ../AppR01_4/powder_objects/blockobject.cpp ../AppR01_4/powder_obj
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QtDebug \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o blockobject.o ../AppR01_4/powder_objects/blockobject.cpp
 
 partobject.o: ../AppR01_4/powder_objects/partobject.cpp ../AppR01_4/powder_objects/partobject.h \
@@ -1461,6 +1493,8 @@ partobject.o: ../AppR01_4/powder_objects/partobject.cpp ../AppR01_4/powder_objec
 		../AppR01_4/powder_objects/blockobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/powder_objects/settingsobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
@@ -1510,6 +1544,8 @@ main.o: ../AppR01_4/main.cpp ../AppR01_4/powder_app/powderapp.h \
 		../AppR01_4/powder_objects/blockobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/powder_objects/settingsobject.h \
 		../AppR01_4/model_item_frameworks/settings_model.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QAbstractItemModel \
@@ -1522,6 +1558,12 @@ main.o: ../AppR01_4/main.cpp ../AppR01_4/powder_app/powderapp.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QVector3D \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qvector3d.h \
+		../AppR01_4/powder_app/powderdaemon.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		../AppR01_4/3d_framework/view3dapp.h \
 		../AppR01_4/3d_framework/scenemodifier.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
@@ -1531,9 +1573,7 @@ main.o: ../AppR01_4/main.cpp ../AppR01_4/powder_app/powderapp.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QIcon \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qicon.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QGuiApplication \
-		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qguiapplication.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h
+		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qguiapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../AppR01_4/main.cpp
 
 zaber_utility.o: ../AppR01_4/hardware_tools/zaber_utility.cpp ../AppR01_4/hardware_tools/zaber_utility.h \
@@ -1544,7 +1584,11 @@ zaber_utility.o: ../AppR01_4/hardware_tools/zaber_utility.cpp ../AppR01_4/hardwa
 		../AppR01_4/powder_objects/blockobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
-		../AppR01_4/powder_objects/settingsobject.h
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		../AppR01_4/powder_objects/settingsobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QtDebug \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o zaber_utility.o ../AppR01_4/hardware_tools/zaber_utility.cpp
 
 lasergalvo_utility.o: ../AppR01_4/hardware_tools/lasergalvo_utility.cpp ../AppR01_4/hardware_tools/lasergalvo_utility.h \
@@ -1555,6 +1599,8 @@ lasergalvo_utility.o: ../AppR01_4/hardware_tools/lasergalvo_utility.cpp ../AppR0
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/powder_objects/settingsobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lasergalvo_utility.o ../AppR01_4/hardware_tools/lasergalvo_utility.cpp
 
@@ -1564,6 +1610,8 @@ block3d.o: ../AppR01_4/3d_framework/block3d.cpp ../AppR01_4/3d_framework/block3d
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../AppR01_4/3d_framework/segment3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qcolor.h \
@@ -1573,18 +1621,30 @@ block3d.o: ../AppR01_4/3d_framework/block3d.cpp ../AppR01_4/3d_framework/block3d
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o block3d.o ../AppR01_4/3d_framework/block3d.cpp
 
-printmanager.o: ../AppR01_4/powder_app/printmanager.cpp ../AppR01_4/powder_app/printmanager.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStateMachine \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstatemachine.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QState \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstate.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o printmanager.o ../AppR01_4/powder_app/printmanager.cpp
-
 powderdaemon.o: ../AppR01_4/powder_app/powderdaemon.cpp ../AppR01_4/powder_app/powderdaemon.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/QtSerialPort \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialportglobal.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialport.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qserialportinfo.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers/qtserialportversion.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
+		../AppR01_4/powder_objects/partobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QVector \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qvector.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../AppR01_4/powder_objects/blockobject.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		../AppR01_4/powder_objects/settingsobject.h \
+		../AppR01_4/hardware_tools/lasergalvo_utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o powderdaemon.o ../AppR01_4/powder_app/powderdaemon.cpp
 
 qrc_icons.o: qrc_icons.cpp 
@@ -1607,9 +1667,6 @@ moc_settings_model.o: moc_settings_model.cpp
 
 moc_powderapp.o: moc_powderapp.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_powderapp.o moc_powderapp.cpp
-
-moc_printmanager.o: moc_printmanager.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_printmanager.o moc_printmanager.cpp
 
 moc_powderdaemon.o: moc_powderdaemon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_powderdaemon.o moc_powderdaemon.cpp

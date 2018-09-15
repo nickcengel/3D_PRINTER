@@ -3324,24 +3324,9 @@ color: rgb(143, 143, 143);</string>
                <item alignment="Qt::AlignVCenter">
                 <widget class="QComboBox" name="ManualControlHome_options_box">
                  <property name="styleSheet">
-                  <string notr="true">background:rgba(212,215,217,10);
+                  <string notr="true">background:rgb(55, 55, 58);
 color:rgba(212,215,217,200)</string>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>All Axis</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>X &amp; Y &amp; Z</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>X &amp; Y</string>
-                  </property>
-                 </item>
                  <item>
                   <property name="text">
                    <string>X</string>
@@ -4568,7 +4553,7 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="LaserDisplayPower_layout">
+                 <layout class="QHBoxLayout" name="horizontalLayout_8">
                   <item>
                    <widget class="QLabel" name="LaserDisplayPower_title">
                     <property name="minimumSize">
@@ -4598,28 +4583,12 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QTextEdit" name="LaserDisplayPower_field">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>128</width>
-                      <height>24</height>
-                     </size>
-                    </property>
+                   <widget class="QLabel" name="LaserDisplayPower_field">
                     <property name="styleSheet">
                      <string notr="true">color: rgba(212,215,217,200)</string>
                     </property>
-                    <property name="html">
-                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    <property name="text">
+                     <string/>
                     </property>
                    </widget>
                   </item>
@@ -5018,7 +4987,7 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="galvoSpeed_layout">
+                 <layout class="QHBoxLayout" name="horizontalLayout_9">
                   <item>
                    <widget class="QLabel" name="galvoSpeed_title">
                     <property name="minimumSize">
@@ -5048,28 +5017,12 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QTextEdit" name="galvoSpeed_field">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>128</width>
-                      <height>24</height>
-                     </size>
-                    </property>
+                   <widget class="QLabel" name="galvoSpeed_field">
                     <property name="styleSheet">
                      <string notr="true">color: rgba(212,215,217,200)</string>
                     </property>
-                    <property name="html">
-                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    <property name="text">
+                     <string/>
                     </property>
                    </widget>
                   </item>

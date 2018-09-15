@@ -43,7 +43,6 @@ SOURCES += \
     hardware_tools/zaber_utility.cpp \
     hardware_tools/lasergalvo_utility.cpp \
     3d_framework/block3d.cpp \
-    powder_app/printmanager.cpp \
     powder_app/powderdaemon.cpp
 
 HEADERS += \
@@ -63,7 +62,6 @@ HEADERS += \
     hardware_tools/lasergalvo_utility.h \
     3d_framework/block3d.h \
     hardware_tools/serialtransport.h \
-    powder_app/printmanager.h \
     powder_app/powderdaemon.h
 
 FORMS += \

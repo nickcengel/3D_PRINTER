@@ -45,7 +45,6 @@ public:
     QSharedPointer<SettingsObject> getMyConfiguration() const;
     void setMyConfiguration(const QSharedPointer<SettingsObject> &value);
 
-public slots:
 
 private slots:
 
@@ -72,9 +71,6 @@ private slots:
 
     void on_PortManager_options_box_activated(const QString &arg1);
 
-    void on_laserGalvoPort_connectionRequested(const bool open);
-    void on_materialDeliveryPort_connectionRequested(const bool open);
-
 
     void on_ManualControlEnable_button_toggled(bool checked);
 
@@ -86,23 +82,28 @@ private slots:
 
     void on_PrintManagerEnable_button_toggled(bool checked);
 
+    void on_lg_port_connectionChanged(bool open);
+    void on_md_port_connectionChanged(bool open);
+    void on_lg_portError(const QString &Error);
+    void on_lg_portReply(const QString &reply);
+    void on_md_portError(const QString &Error);
+    void on_md_portReply(const QString &reply);
+    void on_transportError(const QString &Error);
+
+
 signals:
-    void newPartAvailable();
+    void newPartAvailable(QSharedPointer<PartObject> part);
+    void newConfigAvailable(QSharedPointer<SettingsObject> config);
+    void lgPort_name_changed(const QString &name);
+    void mdPort_name_changed(const QString &name);
+
+    void lgPort_connectionRequested(bool open);
+    void mdPort_connectionRequested(bool open);
+
     void view3d_pressed(QVector<Block3D*> *block3d);
 
     void close_view3d();
 
-    void laserGalvoPort_opened(QSerialPort * const port);
-    void materialDeliveryPort_opened(QSerialPort * const port);
-
-    void laserGalvoPort_connectionRequested(const bool open);
-    void materialDeliveryPort_connectionRequested(const bool open);
-
-    void laserGalvoPort_connectionError(const QString &connectionError);
-    void materialDeliveryPort_connectionError(const QString &connectionError);
-
-    void laserGalvoPort_connectionChanged(const bool open);
-    void materialDeliveryPort_connectionChanged(const bool open);
 
 private:
     Ui::PowderApp *ui;
@@ -125,9 +126,6 @@ private:
 
     PowderDaemon *deviceTransport;
     QStringList serialPortNames;
-    QSerialPort *laserGalvoPort;
-    QSerialPort *materialDeliveryPort;
-
 
     void applySettings();
 

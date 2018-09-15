@@ -15,32 +15,6 @@ PowderApp::PowderApp(QWidget *parent) :
     ui->setupUi(this);
 
     deviceTransport = new PowderDaemon(this);
-    laserGalvoPort = new QSerialPort(this);
-    materialDeliveryPort = new QSerialPort(this);
-
-    QObject::connect(this, SIGNAL(laserGalvoPort_opened(QSerialPort * const)),
-                     deviceTransport, SLOT(on_lg_port_opened(QSerialPort * const)));
-
-    QObject::connect(laserGalvoPort, SIGNAL(bytesWritten(qint64)),
-                     deviceTransport, SLOT(on_lg_port_bytesWritten(qint64)));
-
-    QObject::connect(laserGalvoPort, SIGNAL(readyRead()),
-                     deviceTransport, SLOT(on_lg_port_bytesRead()));
-
-    QObject::connect(laserGalvoPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
-                     deviceTransport, SLOT(on_lg_port_error(QSerialPort::SerialPortError)));
-
-    QObject::connect(this, SIGNAL(materialDeliveryPort_opened(QSerialPort * const)),
-                     deviceTransport, SLOT(on_md_port_opened(QSerialPort * const)));
-
-    QObject::connect(materialDeliveryPort, SIGNAL(bytesWritten(qint64)),
-                     deviceTransport, SLOT(on_lg_port_bytesWritten(qint64)));
-
-    QObject::connect(materialDeliveryPort, SIGNAL(readyRead()),
-                     deviceTransport, SLOT(on_lg_port_bytesRead()));
-
-    QObject::connect(materialDeliveryPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
-                     deviceTransport, SLOT(on_md_port_error(QSerialPort::SerialPortError)));
 
     this->QWidget::setMaximumWidth(335);
     this->QWidget::setMaximumHeight(700);
@@ -139,13 +113,137 @@ PowderApp::PowderApp(QWidget *parent) :
     ui->printManager_block_bar->setValue(0);
     ui->printManager_layer_bar->setValue(0);
 
-    this->applySettings();
 
     ui->PortManagerDisplay_frame->setVisible(false);
 
-    connect(this, SIGNAL(laserGalvoPort_connectionRequested(const bool)), this, SLOT(on_laserGalvoPort_connectionRequested(const bool)));
-    connect(this, SIGNAL(materialDeliveryPort_connectionRequested(const bool)), this, SLOT(on_materialDeliveryPort_connectionRequested(const bool)));
+    QObject::connect(this, SIGNAL(lgPort_name_changed(const QString&)),
+                     deviceTransport, SLOT(on_lgPortName_changed(const QString&)));
 
+    QObject::connect(this, SIGNAL(lgPort_connectionRequested(bool)),
+                     deviceTransport, SLOT(on_lg_port_connectionRequested(bool)));
+
+    QObject::connect(deviceTransport, SIGNAL(lg_port_connectionChanged(bool)),
+                     this, SLOT(on_lg_port_connectionChanged(bool)));
+
+    QObject::connect(this, SIGNAL(mdPort_name_changed(const QString&)),
+                     deviceTransport, SLOT(on_mdPortName_changed(const QString&)));
+
+    QObject::connect(this, SIGNAL(mdPort_connectionRequested(bool)),
+                     deviceTransport, SLOT(on_md_port_connectionRequested(bool)));
+
+    QObject::connect(deviceTransport, SIGNAL(md_port_connectionChanged(bool)),
+                     this, SLOT(on_md_port_connectionChanged(bool)));
+
+    QObject::connect(deviceTransport, SIGNAL(printRoutine_error(const QString&)),
+                     this, SLOT(on_transportError(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(lg_port_error(const QString&)),
+                     this, SLOT(on_lg_portError(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(md_port_error(const QString&)),
+                     this, SLOT(on_md_portError(const QString&)));
+
+
+    QObject::connect(deviceTransport, SIGNAL(lg_port_deviceReply(const QString&)),
+                     this, SLOT(on_lg_portReply(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(md_port_deviceReply(const QString&)),
+                     this, SLOT(on_md_portReply(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(currentBlockNumber_changed(int)),
+                     ui->currentBlock_field, SLOT(setNum(int)));
+
+    QObject::connect(deviceTransport, SIGNAL(currentLayerNumber_changed(int)),
+                     ui->currentLayer_field, SLOT(setNum(int)));
+
+    QObject::connect(this, SIGNAL(newPartAvailable(QSharedPointer<PartObject>)),
+                     deviceTransport, SLOT(on_partFile_available(QSharedPointer<PartObject>)));
+
+    QObject::connect(this, SIGNAL(newConfigAvailable(QSharedPointer<SettingsObject>)),
+                     deviceTransport, SLOT(on_config_available(QSharedPointer<SettingsObject>)));
+
+    QObject::connect(ui->PrintManagerEnable_button, SIGNAL(clicked(bool)),
+                     deviceTransport, SLOT(on_printManager_enabled(bool)));
+
+    QObject::connect(ui->ManualControlEnable_button, SIGNAL(clicked(bool)),
+                     deviceTransport, SLOT(on_manualControl_enabled(bool)));
+
+    QObject::connect(ui->printManager_start_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_startPrint_request()));
+
+    QObject::connect(ui->printManager_stop_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_stopPrint_request()));
+
+    QObject::connect(ui->ManualControlHome_options_box, SIGNAL(currentIndexChanged(int)),
+                     deviceTransport, SLOT(on_homeOption_change(int)));
+
+    QObject::connect(ui->ManualControlHome_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_home_request()));
+
+    QObject::connect(ui->printManager_JogDistance_Input, SIGNAL(valueChanged(double)),
+                     deviceTransport, SLOT(on_jogIncrement_changed(double)));
+
+
+    QObject::connect(ui->jogXplus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_increment_xPosition_request()));
+    QObject::connect(ui->jogXminus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_decrement_xPosition_request()));
+
+    QObject::connect(ui->jogYplus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_increment_yPosition_request()));
+    QObject::connect(ui->jogYminus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_decrement_yPosition_request()));
+
+    QObject::connect(ui->jogZplus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_increment_zPosition_request()));
+    QObject::connect(ui->jogZminus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_decrement_zPosition_request()));
+
+    QObject::connect(ui->jogHplus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_increment_hPosition_request()));
+    QObject::connect(ui->jogHminus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_decrement_hPosition_request()));
+
+
+    QObject::connect(ui->jogSplus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_increment_sPosition_request()));
+    QObject::connect(ui->jogSminus_button, SIGNAL(pressed()),
+                     deviceTransport, SLOT(on_decrement_sPosition_request()));
+
+
+
+    QObject::connect(deviceTransport, SIGNAL(laserEnableState_changed(const QString&)),
+                     ui->laserDisplay_EnableState_field, SLOT(setText(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(xPosition_changed(double)),
+                     ui->xPositionDisplay_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(yPosition_changed(double)),
+                     ui->yPositionDisplay_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(zPosition_changed(double)),
+                     ui->zPositionDisplay_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(hPosition_changed(double)),
+                     ui->hPositionDisplay_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(sPosition_changed(double)),
+                     ui->sPositionDisplay_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(laserPower_changed(int)),
+                     ui->LaserDisplayPower_field, SLOT(setNum(int)));
+
+    QObject::connect(deviceTransport, SIGNAL(xySpeed_changed(double)),
+                     ui->galvoSpeed_field, SLOT(setNum(double)));
+
+
+
+
+
+
+
+
+    this->applySettings();
 }
 
 PowderApp::~PowderApp()
@@ -154,13 +252,6 @@ PowderApp::~PowderApp()
     myConfiguration.clear();
     m_myPart.clear();
 
-
-    if(laserGalvoPort->isOpen())
-        laserGalvoPort->close();
-    laserGalvoPort->deleteLater();
-    if(materialDeliveryPort->isOpen())
-        materialDeliveryPort->close();
-    materialDeliveryPort->deleteLater();
 
     deviceTransport->deleteLater();
 
@@ -251,6 +342,8 @@ void PowderApp::applySettings()
     ui->jogZminus_button->setEnabled(false);
     ui->jogZplus_button->setEnabled(false);
     ui->ManualControl_Frame->setEnabled(true);
+    ui->printManagerControls_frame->setEnabled(false);
+
 
     if(serialPortNames.isEmpty()){
         refreshSerialPorts();
@@ -258,16 +351,17 @@ void PowderApp::applySettings()
 
     for(int i = 0; i < serialPortNames.length(); i++){
         if(i == myConfiguration.get()->laserGalvo_portNumber()){
-            laserGalvoPort->setPortName(serialPortNames.at(i));
+            emit lgPort_name_changed(serialPortNames.at(i));
             ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->LaserGalvoPortStatus_field->setText("Closed");
         }
         else if (i == myConfiguration.get()->materialDelivery_portNumber()){
-            materialDeliveryPort->setPortName(serialPortNames.at(i));
+            emit mdPort_name_changed(serialPortNames.at(i));
             ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->MaterialDeliveryPortStatus_field->setText("Closed");
         }
     }
+    emit newConfigAvailable(myConfiguration);
 }
 
 void PowderApp::refreshSerialPorts()
@@ -638,29 +732,29 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
 
         QString commandOut = ("[Block " + QString::number(blockCount) + ", Layer " + QString::number(layerCount) + "]\n");
         commandOut += " Laser/Galvo:\n";
-        commandOut += "   " + m_myPart.get()->getBlock(static_cast<int>(blockCount)).lg_string();
+        commandOut += "   " + m_myPart.get()->getBlock(blockCount).lg_string();
         commandOut += "\n Material Delivery:";
-        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(static_cast<int>(blockCount)).md_string().at(0);
-        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(static_cast<int>(blockCount)).md_string().at(1);
-        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(static_cast<int>(blockCount)).md_string().at(2);
+        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(blockCount).md_string().at(0);
+        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(blockCount).md_string().at(1);
+        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(blockCount).md_string().at(2);
         commandOut += "\n";
         ui->printTools_outputBrowser->append(commandOut);
 
-        uint16_t task = m_myPart.get()->getBlock(static_cast<int>(blockCount)).blockTask();
+        uint16_t task = m_myPart.get()->getBlock(blockCount).blockTask();
 
         QVector3D current(previousPosition);
         if(task & (BlockObject::BlockTask::SET_X_POSITION)){
-            current.setX(m_myPart.get()->getBlock(static_cast<int>(blockCount)).x_position());
+            current.setX(m_myPart.get()->getBlock(blockCount).x_position());
         }
         if(task & (BlockObject::BlockTask::SET_Y_POSITION)){
-            current.setZ(m_myPart.get()->getBlock(static_cast<int>(blockCount)).y_position());
+            current.setZ(m_myPart.get()->getBlock(blockCount).y_position());
         }
         if(task & (BlockObject::BlockTask::SET_Z_POSITION)){
-            current.setY(m_myPart.get()->getBlock(static_cast<int>(blockCount)).z_position());
+            current.setY(m_myPart.get()->getBlock(blockCount).z_position());
         }
 
         if(current != previousPosition){
-            bool lenabled = m_myPart.get()->getBlock(static_cast<int>(blockCount)).laser_enabled();
+            bool lenabled = m_myPart.get()->getBlock(blockCount).laser_enabled();
             m_block3d->append(new Block3D(previousPosition,current,lenabled));
         }
         previousPosition = current;
@@ -672,11 +766,19 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
 
     if(m_myPart.get()->parserStatus() == PartObject::ParserStatus::PARSER_SUCCESS){
         ui->printManager_frame->setEnabled(true);
-        ui->printManagerControls_frame->setEnabled(false);
         ui->printManagerStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
         ui->printManager_status_field->setText("Part File Loaded");
+        QString pf = partFileName;
+        int i = pf.lastIndexOf("/");
         ui->printManager_file_field->setText(partFileName);
-
+        ui->printManager_block_bar->setValue(0);
+        ui->printManager_block_bar->setMaximum(m_myPart.get()->blockCount());
+        ui->printManager_layer_bar->setValue(0);
+        ui->printManager_layer_bar->setMaximum(m_myPart.get()->layerCount());
+        ui->totalBlocks_field->setNum(static_cast<int>(m_myPart.get()->blockCount()));
+        ui->totalLayers_field->setNum(static_cast<int>(m_myPart.get()->layerCount()));
+        ui->printManagerControls_frame->setEnabled(true);
+        emit newPartAvailable(m_myPart);
     }
 }
 
@@ -740,105 +842,22 @@ void PowderApp::on_PortManager_options_box_activated(int index)
 
 void PowderApp::on_PortManager_options_box_activated(const QString &arg1)
 {
-    if(arg1 == "Close Laser & Galvanometer Port" && laserGalvoPort->isOpen()){
-        emit laserGalvoPort_connectionRequested(false);
+    if(arg1 == "Close Laser & Galvanometer Port"){
+        emit lgPort_connectionRequested(false);
     }
-    else if(arg1 == "Open Laser & Galvanometer Port" && !laserGalvoPort->isOpen())
+    else if(arg1 == "Open Laser & Galvanometer Port")
     {
-        emit laserGalvoPort_connectionRequested(true);
+        emit lgPort_connectionRequested(true);
     }
-    else if(arg1 == "Close Build Plate & Material Delivery Port" && materialDeliveryPort->isOpen()){
-        emit materialDeliveryPort_connectionRequested(false);
+    else if(arg1 == "Close Build Plate & Material Delivery Port"){
+        emit mdPort_connectionRequested(false);
     }
-    else if(arg1 == "Open Build Plate & Material Delivery Port" && !materialDeliveryPort->isOpen()){
-        emit materialDeliveryPort_connectionRequested(true);
+    else if(arg1 == "Open Build Plate & Material Delivery Port"){
+        emit mdPort_connectionRequested(true);
     }
     ui->PortManager_options_box->setCurrentIndex(0);
 }
 
-void PowderApp::on_laserGalvoPort_connectionRequested(const bool open)
-{
-    if(open && !laserGalvoPort->isOpen()){
-        laserGalvoPort->open(QIODevice::ReadWrite);
-        if(!laserGalvoPort->isOpen()){
-            emit laserGalvoPort_connectionError("Could Not Open Port For Laser & Galvanometer!");
-            ui->PortManagerInfo_browser->setStyleSheet("color:rgb(252,33,37)");
-            ui->PortManagerInfo_browser->setText("Could Not Open Port For Laser & Galvanometer!");
-            ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->laserGalvo_portNumber()));
-            ui->PortManagerInfo_browser->append(laserGalvoPort->portName());
-        }
-        else{
-            ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
-            ui->LaserGalvoPortStatus_field->setText("Open");
-            ui->laserDisplay_frame->setEnabled(true);
-            ui->galvoDisplay_frame->setEnabled(true);
-            ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-            ui->PortManagerInfo_browser->setText("Port Opened For Laser & Galvanometer!");
-            ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->laserGalvo_portNumber()));
-            ui->PortManagerInfo_browser->append(laserGalvoPort->portName());
-            ui->PortManager_options_box->setItemText(1,"Close Laser & Galvanometer Port");
-            emit laserGalvoPort_connectionChanged(true);
-        }
-    }
-    else if(!open && laserGalvoPort->isOpen()){
-        laserGalvoPort->close();
-        ui->laserDisplayEnable_button->setChecked(false);
-        ui->galvoDisplayEnable_button->setChecked(false);
-        ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-        ui->LaserGalvoPortStatus_field->setText("Closed");
-        ui->laserDisplay_frame->setEnabled(false);
-        ui->galvoDisplay_frame->setEnabled(false);
-        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-        ui->PortManagerInfo_browser->setText("Port Closed For Laser & Galvanometer!");
-        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->laserGalvo_portNumber()));
-        ui->PortManagerInfo_browser->append(laserGalvoPort->portName());
-        ui->PortManager_options_box->setItemText(1,"Open Laser & Galvanometer Port");
-        emit laserGalvoPort_connectionChanged(false);
-    }
-}
-
-void PowderApp::on_materialDeliveryPort_connectionRequested(const bool open)
-{
-    if(open && !materialDeliveryPort->isOpen()){
-        materialDeliveryPort->open(QIODevice::ReadWrite);
-        if(!materialDeliveryPort->isOpen()){
-
-            emit materialDeliveryPort_connectionError("Could Not Open Port For Build Plate & Material Delivery!");
-            ui->PortManagerInfo_browser->setStyleSheet("color:rgb(252,33,37)");
-            ui->PortManagerInfo_browser->setText("Could Not Open Port For Build Plate & Material Delivery!");
-            ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->materialDelivery_portNumber()));
-            ui->PortManagerInfo_browser->append(materialDeliveryPort->portName());
-        }
-        else
-        {
-            ui->materialDeliveryDisplayEnable_button->setChecked(false);
-            ui->buildPlateEnable_button->setChecked(false);
-            ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
-            ui->MaterialDeliveryPortStatus_field->setText("Open");
-            ui->materialDeliveryDisplay_frame->setEnabled(true);
-            ui->buildPlateDisplay_frame->setEnabled(true);
-            ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-            ui->PortManagerInfo_browser->setText("Port Opened For Build Plate & Material Delivery!");
-            ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->materialDelivery_portNumber()));
-            ui->PortManagerInfo_browser->append(materialDeliveryPort->portName());
-            ui->PortManager_options_box->setItemText(2,"Close Build Plate & Material Delivery Port");
-            emit materialDeliveryPort_connectionChanged(true);
-        }
-    }
-    else if(!open && materialDeliveryPort->isOpen()){
-        materialDeliveryPort->close();
-        ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-        ui->MaterialDeliveryPortStatus_field->setText("Closed");
-        ui->materialDeliveryDisplay_frame->setEnabled(false);
-        ui->buildPlateDisplay_frame->setEnabled(false);
-        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-        ui->PortManagerInfo_browser->setText("Port Closed For Build Plate & Material Delivery!");
-        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->materialDelivery_portNumber()));
-        ui->PortManagerInfo_browser->append(materialDeliveryPort->portName());
-        ui->PortManager_options_box->setItemText(2,"Open Build Plate & Material Delivery Port");
-        emit materialDeliveryPort_connectionChanged(false);
-    }
-}
 
 void PowderApp::on_ManualControlEnable_button_toggled(bool checked)
 {
@@ -918,6 +937,88 @@ void PowderApp::on_PrintManagerEnable_button_toggled(bool checked)
 {
     if(checked && ui->printManager_status_field->text() == "Part File Loaded"){
         ui->ManualControlEnable_button->setChecked(false);
-        ui->printManagerControls_frame->setEnabled(true);
     }
+}
+
+void PowderApp::on_lg_port_connectionChanged(bool open)
+{
+    if(open){
+        ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->LaserGalvoPortStatus_field->setText("Open");
+        ui->laserDisplay_frame->setEnabled(true);
+        ui->galvoDisplay_frame->setEnabled(true);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Opened For Laser & Galvanometer!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->laserGalvo_portNumber()));
+        ui->PortManagerInfo_browser->append(serialPortNames.at(myConfiguration.get()->laserGalvo_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Close Laser & Galvanometer Port");
+    }
+    else{
+        ui->laserDisplayEnable_button->setChecked(false);
+        ui->galvoDisplayEnable_button->setChecked(false);
+        ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->LaserGalvoPortStatus_field->setText("Closed");
+        ui->laserDisplay_frame->setEnabled(false);
+        ui->galvoDisplay_frame->setEnabled(false);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Closed For Laser & Galvanometer!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->laserGalvo_portNumber()));
+        ui->PortManagerInfo_browser->append(serialPortNames.at(myConfiguration.get()->laserGalvo_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Open Laser & Galvanometer Port");
+    }
+}
+
+void PowderApp::on_md_port_connectionChanged(bool open)
+{
+    if(open){
+        ui->materialDeliveryDisplayEnable_button->setChecked(false);
+        ui->buildPlateEnable_button->setChecked(false);
+        ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->MaterialDeliveryPortStatus_field->setText("Open");
+        ui->materialDeliveryDisplay_frame->setEnabled(true);
+        ui->buildPlateDisplay_frame->setEnabled(true);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Opened For Build Plate & Material Delivery!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->materialDelivery_portNumber()));
+        ui->PortManagerInfo_browser->append(serialPortNames.at(myConfiguration.get()->materialDelivery_portNumber()));
+        ui->PortManager_options_box->setItemText(2,"Close Build Plate & Material Delivery Port");
+    }
+    else{
+        ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->MaterialDeliveryPortStatus_field->setText("Closed");
+        ui->materialDeliveryDisplay_frame->setEnabled(false);
+        ui->buildPlateDisplay_frame->setEnabled(false);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Closed For Build Plate & Material Delivery!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(myConfiguration.get()->materialDelivery_portNumber()));
+        ui->PortManagerInfo_browser->append(serialPortNames.at(myConfiguration.get()->materialDelivery_portNumber()));
+        ui->PortManager_options_box->setItemText(2,"Open Build Plate & Material Delivery Port");
+    }
+}
+
+void PowderApp::on_lg_portError(const QString &Error)
+{
+    qDebug()<<Error;
+}
+
+void PowderApp::on_lg_portReply(const QString &reply)
+{
+    qDebug()<<reply;
+
+}
+
+void PowderApp::on_md_portError(const QString &Error)
+{
+    qDebug()<<Error;
+}
+
+void PowderApp::on_md_portReply(const QString &reply)
+{
+    qDebug()<<reply;
+
+}
+
+void PowderApp::on_transportError(const QString &Error)
+{
+    qDebug()<<Error;
 }

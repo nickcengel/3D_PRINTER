@@ -76,7 +76,6 @@ QStringList ZaberUtility::composeCommandString(BlockObject *block, SettingsObjec
     }
     else
         outputList.append("EMPTY");
-//    qDebug()<<outputList;
     return outputList;
 }
 

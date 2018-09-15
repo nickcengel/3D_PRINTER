@@ -32,11 +32,11 @@ public:
         PARSER_FAILED_INVALID_PART,
     };
 
-    uint32_t blockCount() const;
-    void setBlockCount(const uint32_t &blockCount);
+    unsigned int blockCount() const;
+    void setBlockCount(const unsigned int &blockCount);
 
-    uint32_t layerCount() const;
-    void setLayerCount(const uint32_t &layerCount);
+    unsigned int layerCount() const;
+    void setLayerCount(const unsigned int &layerCount);
 
     PartStatus partStatus() const;
     void setPartStatus(const PartStatus &partStatus);
@@ -68,7 +68,7 @@ public:
 //    QStringList materialDelivery_commands() const;
 //    void setMaterialDelivery_commands(const QStringList &materialDelivery_commands);
 
-    BlockObject getBlock(const int blockNum) const;
+    BlockObject getBlock(const unsigned int blockNum) const;
 
     void clearPart();
 
@@ -79,13 +79,10 @@ private:
     QString m_partFilePath;
     QString m_errorStr;
     QStringList m_gcode;
-    //    QStringList m_laserGalvo_commands;
-    //    QStringList m_materialDelivery_commands;
 
-//    QVector<BlockObject*> *m_blocks;
     QSharedPointer<QVector<BlockObject>> m_blocks;
-    uint32_t m_blockCount;
-    uint32_t m_layerCount;
+    unsigned int m_blockCount;
+    unsigned int m_layerCount;
     PartStatus m_partStatus;
     QVector<uint32_t> m_layerFlags;
     ParserStatus m_parserStatus;

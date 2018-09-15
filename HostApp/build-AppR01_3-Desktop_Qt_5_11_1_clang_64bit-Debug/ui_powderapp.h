@@ -27,7 +27,6 @@
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextBrowser>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -259,9 +258,9 @@ public:
     QPushButton *LaserDisplayStatus_indicator;
     QLabel *LaserDisplayStatus_title;
     QLabel *LaserDisplayStatus_field;
-    QHBoxLayout *LaserDisplayPower_layout;
+    QHBoxLayout *horizontalLayout_8;
     QLabel *LaserDisplayPower_title;
-    QTextEdit *LaserDisplayPower_field;
+    QLabel *LaserDisplayPower_field;
     QLabel *LaserDisplayPower_units;
     QComboBox *Laser_options_box;
     QFrame *LaserDisplayField_frame;
@@ -279,9 +278,9 @@ public:
     QPushButton *galvoDisplayStatus_indicator;
     QLabel *galvoStatus_title;
     QLabel *galvoStatus_field;
-    QHBoxLayout *galvoSpeed_layout;
+    QHBoxLayout *horizontalLayout_9;
     QLabel *galvoSpeed_title;
-    QTextEdit *galvoSpeed_field;
+    QLabel *galvoSpeed_field;
     QLabel *galvoSpeed_units;
     QComboBox *galvoOptions_box;
     QVBoxLayout *GalvoDisplayField_vertLayout;
@@ -1876,11 +1875,8 @@ public:
         ManualControlHome_options_box->addItem(QString());
         ManualControlHome_options_box->addItem(QString());
         ManualControlHome_options_box->addItem(QString());
-        ManualControlHome_options_box->addItem(QString());
-        ManualControlHome_options_box->addItem(QString());
-        ManualControlHome_options_box->addItem(QString());
         ManualControlHome_options_box->setObjectName(QStringLiteral("ManualControlHome_options_box"));
-        ManualControlHome_options_box->setStyleSheet(QLatin1String("background:rgba(212,215,217,10);\n"
+        ManualControlHome_options_box->setStyleSheet(QLatin1String("background:rgb(55, 55, 58);\n"
 "color:rgba(212,215,217,200)"));
 
         horizontalLayout_42->addWidget(ManualControlHome_options_box, 0, Qt::AlignVCenter);
@@ -2340,9 +2336,9 @@ public:
 
         verticalLayout_4->addLayout(LaserDisplayStatus_layout);
 
-        LaserDisplayPower_layout = new QHBoxLayout();
-        LaserDisplayPower_layout->setSpacing(6);
-        LaserDisplayPower_layout->setObjectName(QStringLiteral("LaserDisplayPower_layout"));
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setSpacing(6);
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
         LaserDisplayPower_title = new QLabel(LaserDisplayInfo_frame);
         LaserDisplayPower_title->setObjectName(QStringLiteral("LaserDisplayPower_title"));
         LaserDisplayPower_title->setMinimumSize(QSize(0, 24));
@@ -2353,15 +2349,13 @@ public:
         LaserDisplayPower_title->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
-        LaserDisplayPower_layout->addWidget(LaserDisplayPower_title);
+        horizontalLayout_8->addWidget(LaserDisplayPower_title);
 
-        LaserDisplayPower_field = new QTextEdit(LaserDisplayInfo_frame);
+        LaserDisplayPower_field = new QLabel(LaserDisplayInfo_frame);
         LaserDisplayPower_field->setObjectName(QStringLiteral("LaserDisplayPower_field"));
-        LaserDisplayPower_field->setMinimumSize(QSize(0, 20));
-        LaserDisplayPower_field->setMaximumSize(QSize(128, 24));
         LaserDisplayPower_field->setStyleSheet(QStringLiteral("color: rgba(212,215,217,200)"));
 
-        LaserDisplayPower_layout->addWidget(LaserDisplayPower_field);
+        horizontalLayout_8->addWidget(LaserDisplayPower_field);
 
         LaserDisplayPower_units = new QLabel(LaserDisplayInfo_frame);
         LaserDisplayPower_units->setObjectName(QStringLiteral("LaserDisplayPower_units"));
@@ -2372,10 +2366,10 @@ public:
 "color: rgba(212,215,217,200)"));
         LaserDisplayPower_units->setAlignment(Qt::AlignCenter);
 
-        LaserDisplayPower_layout->addWidget(LaserDisplayPower_units);
+        horizontalLayout_8->addWidget(LaserDisplayPower_units);
 
 
-        verticalLayout_4->addLayout(LaserDisplayPower_layout);
+        verticalLayout_4->addLayout(horizontalLayout_8);
 
         Laser_options_box = new QComboBox(LaserDisplayInfo_frame);
         Laser_options_box->addItem(QString());
@@ -2522,9 +2516,9 @@ public:
 
         verticalLayout_29->addLayout(galvoStatus_layout);
 
-        galvoSpeed_layout = new QHBoxLayout();
-        galvoSpeed_layout->setSpacing(6);
-        galvoSpeed_layout->setObjectName(QStringLiteral("galvoSpeed_layout"));
+        horizontalLayout_9 = new QHBoxLayout();
+        horizontalLayout_9->setSpacing(6);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
         galvoSpeed_title = new QLabel(galvoDisplayInfo_frame);
         galvoSpeed_title->setObjectName(QStringLiteral("galvoSpeed_title"));
         galvoSpeed_title->setMinimumSize(QSize(0, 24));
@@ -2533,15 +2527,13 @@ public:
         galvoSpeed_title->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
-        galvoSpeed_layout->addWidget(galvoSpeed_title);
+        horizontalLayout_9->addWidget(galvoSpeed_title);
 
-        galvoSpeed_field = new QTextEdit(galvoDisplayInfo_frame);
+        galvoSpeed_field = new QLabel(galvoDisplayInfo_frame);
         galvoSpeed_field->setObjectName(QStringLiteral("galvoSpeed_field"));
-        galvoSpeed_field->setMinimumSize(QSize(0, 20));
-        galvoSpeed_field->setMaximumSize(QSize(128, 24));
         galvoSpeed_field->setStyleSheet(QStringLiteral("color: rgba(212,215,217,200)"));
 
-        galvoSpeed_layout->addWidget(galvoSpeed_field);
+        horizontalLayout_9->addWidget(galvoSpeed_field);
 
         galvoSpeed_units = new QLabel(galvoDisplayInfo_frame);
         galvoSpeed_units->setObjectName(QStringLiteral("galvoSpeed_units"));
@@ -2552,10 +2544,10 @@ public:
 "color: rgba(212,215,217,200)"));
         galvoSpeed_units->setAlignment(Qt::AlignCenter);
 
-        galvoSpeed_layout->addWidget(galvoSpeed_units);
+        horizontalLayout_9->addWidget(galvoSpeed_units);
 
 
-        verticalLayout_29->addLayout(galvoSpeed_layout);
+        verticalLayout_29->addLayout(horizontalLayout_9);
 
         galvoOptions_box = new QComboBox(galvoDisplayInfo_frame);
         galvoOptions_box->addItem(QString());
@@ -3416,14 +3408,11 @@ public:
         ManualControlEnable_button->setText(QString());
         label_46->setText(QApplication::translate("PowderApp", "Manual Controller", nullptr));
         ManualControlHome_button->setText(QApplication::translate("PowderApp", " Home", nullptr));
-        ManualControlHome_options_box->setItemText(0, QApplication::translate("PowderApp", "All Axis", nullptr));
-        ManualControlHome_options_box->setItemText(1, QApplication::translate("PowderApp", "X & Y & Z", nullptr));
-        ManualControlHome_options_box->setItemText(2, QApplication::translate("PowderApp", "X & Y", nullptr));
-        ManualControlHome_options_box->setItemText(3, QApplication::translate("PowderApp", "X", nullptr));
-        ManualControlHome_options_box->setItemText(4, QApplication::translate("PowderApp", "Y", nullptr));
-        ManualControlHome_options_box->setItemText(5, QApplication::translate("PowderApp", "Z", nullptr));
-        ManualControlHome_options_box->setItemText(6, QApplication::translate("PowderApp", "H", nullptr));
-        ManualControlHome_options_box->setItemText(7, QApplication::translate("PowderApp", "S", nullptr));
+        ManualControlHome_options_box->setItemText(0, QApplication::translate("PowderApp", "X", nullptr));
+        ManualControlHome_options_box->setItemText(1, QApplication::translate("PowderApp", "Y", nullptr));
+        ManualControlHome_options_box->setItemText(2, QApplication::translate("PowderApp", "Z", nullptr));
+        ManualControlHome_options_box->setItemText(3, QApplication::translate("PowderApp", "H", nullptr));
+        ManualControlHome_options_box->setItemText(4, QApplication::translate("PowderApp", "S", nullptr));
 
         jogDistance_title->setText(QApplication::translate("PowderApp", "Jog Distance", nullptr));
         jog_units_label->setText(QApplication::translate("PowderApp", "[mm]", nullptr));
@@ -3447,11 +3436,7 @@ public:
         LaserDisplayStatus_title->setText(QApplication::translate("PowderApp", "  Status:", nullptr));
         LaserDisplayStatus_field->setText(QApplication::translate("PowderApp", " Disabled", nullptr));
         LaserDisplayPower_title->setText(QApplication::translate("PowderApp", "Power:", nullptr));
-        LaserDisplayPower_field->setHtml(QApplication::translate("PowderApp", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
+        LaserDisplayPower_field->setText(QString());
         LaserDisplayPower_units->setText(QApplication::translate("PowderApp", "[W]", nullptr));
         Laser_options_box->setItemText(0, QApplication::translate("PowderApp", "Options", nullptr));
 
@@ -3463,11 +3448,7 @@ public:
         galvoStatus_title->setText(QApplication::translate("PowderApp", "  Status:", nullptr));
         galvoStatus_field->setText(QApplication::translate("PowderApp", " Disabled", nullptr));
         galvoSpeed_title->setText(QApplication::translate("PowderApp", "Speed:", nullptr));
-        galvoSpeed_field->setHtml(QApplication::translate("PowderApp", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
+        galvoSpeed_field->setText(QString());
         galvoSpeed_units->setText(QApplication::translate("PowderApp", "[mm/s]", nullptr));
         galvoOptions_box->setItemText(0, QApplication::translate("PowderApp", "Options", nullptr));
 
