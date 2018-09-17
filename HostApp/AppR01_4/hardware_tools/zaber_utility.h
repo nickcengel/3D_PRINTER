@@ -11,7 +11,6 @@ public:
     ZaberUtility();
 
     static QStringList composeCommandString(BlockObject *block, SettingsObject *config);
-    static QString composeJogCommandString(BlockObject::BlockTask axisTask, int32_t distance);
 
 };
 

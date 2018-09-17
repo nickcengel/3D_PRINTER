@@ -51,8 +51,8 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
     }
 
     if(!m_gcode.isEmpty()){
-        unsigned int blockNum = 0;
-        unsigned int layerNum = 0;
+        int blockNum = 0;
+        int layerNum = 0;
         QStringList::iterator line_iterator = m_gcode.begin();
         m_parserStatus = PARSER_READY;
 
@@ -97,7 +97,7 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                     if(QRegExp("[Gg]"+regEx_uInt).exactMatch(*data_iterator)){
                         block->clearTask();
                         (*data_iterator).remove(0,1);
-                        const unsigned int val = (*data_iterator).toUInt();
+                        const int val = (*data_iterator).toInt();
 
                         if(val == 90){
                             prevailPosMode =  BlockObject::PositionMode::Position_Absolute;
@@ -112,7 +112,7 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
 
                     else if(QRegExp("[Mm]"+regEx_uInt).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
-                        const unsigned int val = (*data_iterator).toUInt();
+                        const int val = (*data_iterator).toInt();
                         if(val == 3){
                             block->setLaser_enabled(true);
                         }
@@ -124,7 +124,7 @@ PartObject::PartObject(const QString &filePath, QSharedPointer<SettingsObject> c
                     else if(QRegExp("[Ss]"+regEx_uInt).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
                         bool valid;
-                        const unsigned int value = (*data_iterator).toUInt(&valid);
+                        const int value = (*data_iterator).toInt(&valid);
 
                         if(valid && (value < config->laser_power_max()) && (value > config->laser_power_min())){
                             block->setLaser_power(value);
@@ -385,22 +385,22 @@ PartObject::~PartObject()
 
 }
 
-unsigned int PartObject::blockCount() const
+int PartObject::blockCount() const
 {
     return m_blockCount;
 }
 
-void PartObject::setBlockCount(const unsigned int &blockCount)
+void PartObject::setBlockCount(const int &blockCount)
 {
     m_blockCount = blockCount;
 }
 
-unsigned int PartObject::layerCount() const
+int PartObject::layerCount() const
 {
     return m_layerCount;
 }
 
-void PartObject::setLayerCount(const unsigned int &layerCount)
+void PartObject::setLayerCount(const int &layerCount)
 {
     m_layerCount = layerCount;
 }
@@ -428,12 +428,12 @@ void PartObject::setPartFilePath(const QString &partFilePath)
 }
 
 
-QVector<uint32_t> PartObject::layerFlags() const
+QVector<int> PartObject::layerFlags() const
 {
     return m_layerFlags;
 }
 
-void PartObject::setLayerFlags(const QVector<uint32_t> &layerFlags)
+void PartObject::setLayerFlags(const QVector<int> &layerFlags)
 {
     m_layerFlags = layerFlags;
 }
@@ -495,7 +495,7 @@ void PartObject::setGcode(const QStringList &gcode)
 //    m_materialDelivery_commands = materialDelivery_commands;
 //}
 
-BlockObject PartObject::getBlock(const unsigned int blockNum) const
+BlockObject PartObject::getBlock(const int blockNum) const
 {
     return m_blocks.get()->at(static_cast<int>(blockNum));
 }

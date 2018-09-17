@@ -32,11 +32,11 @@ public:
         PARSER_FAILED_INVALID_PART,
     };
 
-    unsigned int blockCount() const;
-    void setBlockCount(const unsigned int &blockCount);
+    int blockCount() const;
+    void setBlockCount(const int &blockCount);
 
-    unsigned int layerCount() const;
-    void setLayerCount(const unsigned int &layerCount);
+    int layerCount() const;
+    void setLayerCount(const int &layerCount);
 
     PartStatus partStatus() const;
     void setPartStatus(const PartStatus &partStatus);
@@ -44,8 +44,8 @@ public:
     QString partFilePath() const;
     void setPartFilePath(const QString &partFilePath);
 
-    QVector<uint32_t> layerFlags() const;
-    void setLayerFlags(const QVector<uint32_t> &layerFlags);
+    QVector<int> layerFlags() const;
+    void setLayerFlags(const QVector<int> &layerFlags);
 
     void addBlock(const BlockObject &block);
 
@@ -68,7 +68,7 @@ public:
 //    QStringList materialDelivery_commands() const;
 //    void setMaterialDelivery_commands(const QStringList &materialDelivery_commands);
 
-    BlockObject getBlock(const unsigned int blockNum) const;
+    BlockObject getBlock(const int blockNum) const;
 
     void clearPart();
 
@@ -81,10 +81,10 @@ private:
     QStringList m_gcode;
 
     QSharedPointer<QVector<BlockObject>> m_blocks;
-    unsigned int m_blockCount;
-    unsigned int m_layerCount;
+    int m_blockCount;
+    int m_layerCount;
     PartStatus m_partStatus;
-    QVector<uint32_t> m_layerFlags;
+    QVector<int> m_layerFlags;
     ParserStatus m_parserStatus;
 
 };

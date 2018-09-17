@@ -5,6 +5,7 @@
         <group>
             <file>file:/Users/h.tosh/git_repos/3D_PRINTER/GalvoLaser_System/GalvoAppR01/firmware/src/app.c</file>
             <file>file:/Users/h.tosh/git_repos/3D_PRINTER/GalvoLaser_System/GalvoAppR01/firmware/src/app_host_client_interface.c</file>
+            <file>file:/Users/h.tosh/git_repos/3D_PRINTER/GalvoLaser_System/GalvoAppR01/firmware/src/main.c</file>
         </group>
     </open-files>
 </project-private>

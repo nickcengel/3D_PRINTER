@@ -1,7 +1,39 @@
 #include "powderdaemon.h"
 
+void writeMessageToSyslogd(int type, const QString &message){
+    openlog("Powder", LOG_PID, LOG_USER);
+    const char *c_str = message.toLatin1();
+    switch (type) {
+    case LOG_INFO:
+    {
+        syslog(LOG_INFO, "%s", c_str);
+        break;
+    }
+
+    case LOG_ERR:
+    {
+        syslog(LOG_ERR, "%s", c_str);
+
+        break;
+    }
+    case LOG_DEBUG:
+    {
+        syslog(LOG_DEBUG, "%s", c_str);
+
+        break;
+    }
+    default:
+        break;
+    }
+    closelog();
+}
+
+
+
+
 PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
 {
+
 
     m_lg_port = new QSerialPort(this);
     m_md_port = new QSerialPort(this);
@@ -63,12 +95,12 @@ PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
     lg_port_timer->setSingleShot(true);
     md_port_timer = new QTimer(this);
     md_port_timer->setSingleShot(true);
+    md_transaction_timer = new QTimer(this);
+    md_transaction_timer->setSingleShot(true);
 
     QObject::connect(lg_port_timer, SIGNAL(timeout()), this, SLOT(on_lg_portTimeout()));
     QObject::connect(md_port_timer, SIGNAL(timeout()), this, SLOT(on_md_portTimeout()));
-
-
-
+    QObject::connect(md_transaction_timer, SIGNAL(timeout()), this, SLOT(poll_mdPort()));
 
     printRoutine = new QStateMachine(this);
 
@@ -102,72 +134,69 @@ PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
     connect(printRoutine_error_state, SIGNAL(entered()), SLOT(on_printRoutine_error()));
 
     printRoutine_init_state->addTransition(this, SIGNAL(startPrint()), generateProcessQueueFromBlock_state);
-    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
-    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
-
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_txFinished()), receive_lgReply_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_rxFinished()), lg_transactionFinished_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
-
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
-    send_mdCommand_state->addTransition(this, SIGNAL(md_port_txFinished()), receive_mdReply_state);
-    receive_mdReply_state->addTransition(this, SIGNAL(md_port_rxFinished()), md_transactionFinished_state);
-    md_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
-    md_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
-
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
-
-    selectNextBlockToProcess_state->addTransition(this, SIGNAL(blocksRemaining()), generateProcessQueueFromBlock_state);
-    selectNextBlockToProcess_state->addTransition(this, SIGNAL(printFinished()), printRoutine_finished_state);
-
     printRoutine_init_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    send_mdCommand_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    receive_mdReply_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    selectNextBlockToProcess_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-    printRoutine_error_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
-
     printRoutine_init_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
     printRoutine_init_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     printRoutine_init_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+    printRoutine_init_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
+    printRoutine_init_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
 
+    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
+    generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
+
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
-    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-
-    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-
-    send_mdCommand_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
-    send_mdCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-
-    receive_mdReply_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
-    receive_mdReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-
+    selectNextBlockToProcess_state->addTransition(this, SIGNAL(blocksRemaining()), generateProcessQueueFromBlock_state);
+    selectNextBlockToProcess_state->addTransition(this, SIGNAL(printFinished()), printRoutine_finished_state);
+    selectNextBlockToProcess_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
 
-    lg_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-    md_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
-
-    printRoutine_init_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
-
-    printRoutine_init_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
-    md_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
-
-
+    printRoutine_error_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
     printRoutine_error_state->addTransition(this, SIGNAL(resetDaemon()), printRoutine_init_state);
 
+    printRoutine_finished_state->addTransition(this, SIGNAL(startPrint()), printRoutine_init_state);
+    printRoutine_finished_state->addTransition(this, SIGNAL(resetDaemon()), printRoutine_init_state);
+
+    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_txFinished()), receive_lgReply_state);
+    send_lgCommand_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
+    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
+    send_lgCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+
+    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_rxFinished()), lg_transactionFinished_state);
+    receive_lgReply_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
+    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), printRoutine_error_state);
+    receive_lgReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+
+    lg_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
+    lg_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    lg_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+    lg_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
+
+    send_mdCommand_state->addTransition(this, SIGNAL(md_port_txFinished()), receive_mdReply_state);
+    send_mdCommand_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
+    send_mdCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+    send_mdCommand_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
+
+    receive_mdReply_state->addTransition(this, SIGNAL(md_port_rxFinished()), md_transactionFinished_state);
+    receive_mdReply_state->addTransition(this, SIGNAL(stopPrint()), printRoutine_finished_state);
+    receive_mdReply_state->addTransition(this, SIGNAL(md_port_error(const QString&)), printRoutine_error_state);
+    receive_mdReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+
+    md_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
+    md_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    md_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), printRoutine_error_state);
+    md_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
+
     printRoutine->start();
+    qDebug("yofsdafasdfdsafas");
 }
 
 
@@ -358,7 +387,6 @@ void PowderDaemon::write_to_lg_port(const QString &txString)
 void PowderDaemon::write_to_md_port(const QString &txString)
 {
     if(m_md_port->isOpen()){
-        qDebug()<<"port is open?";
         md_port_rxBytes.clear();
         const QByteArray txBytes = txString.toUtf8();
         md_port_TxBytesRemaining = txBytes.length();
@@ -396,8 +424,19 @@ void PowderDaemon::on_stopPrint_request()
     emit stopPrint();
 }
 
+void PowderDaemon::on_reset_request()
+{
+    m_currentBlockNumber = 0;
+    m_currentLayerNumber = 0;
+    m_pendingTasks = 0;
+    m_activeTask = 0;
+    m_lg_commandStr.clear();
+    m_md_commandStr.clear();
+    currentBlockNumber_changed(0);
+    currentLayerNumber_changed(0);
+    emit resetDaemon();
 
-
+}
 
 void PowderDaemon::on_lg_port_bytesWritten(qint64 bytes)
 {
@@ -408,7 +447,6 @@ void PowderDaemon::on_lg_port_bytesWritten(qint64 bytes)
 
 void PowderDaemon::on_lg_port_bytesRead()
 {
-
     lg_port_rxBytes +=  m_lg_port->readAll();
 
     if(lg_port_rxBytes.length() > 2){
@@ -424,7 +462,6 @@ void PowderDaemon::on_lg_port_bytesRead()
         lg_port_rxBytes.clear();
     }
 }
-
 
 void PowderDaemon::on_md_port_bytesWritten(qint64 bytes)
 {
@@ -442,7 +479,12 @@ void PowderDaemon::on_md_port_bytesRead()
         QString reply = QString::fromUtf8(md_port_rxBytes);
         if(reply.contains("ok", Qt::CaseInsensitive)){
             emit md_port_deviceReply(reply);
-            emit md_port_rxFinished();
+            if(reply.contains("IDLE")){
+                emit md_port_rxFinished();
+            }
+            else if(reply.contains("BUSY")){
+                md_transaction_timer->start(500);
+            }
         }
         else{
             emit md_port_error(reply);
@@ -450,7 +492,6 @@ void PowderDaemon::on_md_port_bytesRead()
         md_port_rxBytes.clear();
     }
 }
-
 
 
 
@@ -482,10 +523,6 @@ void PowderDaemon::on_md_port_error(QSerialPort::SerialPortError portError)
     }
 }
 
-
-
-
-
 void PowderDaemon::on_printRoutine_init()
 {
     qDebug()<<"entered printRoutine_init_state";
@@ -500,25 +537,20 @@ void PowderDaemon::on_generateProcessQueueFromBlock()
     m_pendingTasks = m_part.get()->getBlock(m_currentBlockNumber).blockTask();
 
     if(m_pendingTasks != 0){
-        if(!m_lg_commandStr.isEmpty()){
-            m_lg_commandStr = m_part.get()->getBlock(m_currentBlockNumber).lg_string();
-            empty &= m_lg_commandStr.contains("EMPTY");
-        }
+        m_lg_commandStr = m_part.get()->getBlock(m_currentBlockNumber).lg_string();
+        m_md_commandStr =  m_part.get()->getBlock(m_currentBlockNumber).md_string();
+        if(!m_lg_commandStr.contains("EMPTY"))
+            empty = false;
+        if(!m_md_commandStr.at(0).contains("EMPTY"))
+            empty = false;
+        if(!m_md_commandStr.at(1).contains("EMPTY"))
+            empty = false;
+        if(!m_md_commandStr.at(2).contains("EMPTY"))
+            empty = false;
+    }
 
-        if(!m_md_commandStr.isEmpty()){
-            m_md_commandStr =  m_part.get()->getBlock(m_currentBlockNumber).md_string();
-            empty &= m_md_commandStr.at(0).contains("EMPTY");
-            empty &= m_md_commandStr.at(1).contains("EMPTY");
-            empty &= m_md_commandStr.at(2).contains("EMPTY");
-        }
-
-        if(!empty){
-            emit tasksRemaining();
-        }
-        else{
-            m_pendingTasks = 0;
-            emit blockComplete();
-        }
+    if(!empty){
+        emit tasksRemaining();
     }
     else{
         emit blockComplete();
@@ -568,6 +600,8 @@ void PowderDaemon::on_selectProcessFromQueue()
 void PowderDaemon::on_send_lgCommand()
 {
     qDebug()<<"entered send_lgCommand_state";
+    if(m_activeTask & (BlockObject::BlockTask::SET_X_POSITION|BlockObject::BlockTask::SET_Y_POSITION))
+        emit galvoBusy();
     write_to_lg_port(m_lg_commandStr);
 }
 
@@ -637,7 +671,7 @@ void PowderDaemon::on_lg_transactionFinished()
         }
     }
     else
-        emit printRoutine_error("No Mode Selected");
+        emit jogComplete();
 }
 
 void PowderDaemon::on_send_mdCommand()
@@ -645,12 +679,18 @@ void PowderDaemon::on_send_mdCommand()
     qDebug()<<"entered send_mdCommand_state";
     qDebug()<<m_md_commandStr.at(0);
 
-    if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION)
+    if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
+        emit buildPlateBusy();
         write_to_md_port(m_md_commandStr.at(0));
-    else if(m_pendingTasks & BlockObject::BlockTask::SET_HOPPER_POSITION)
+    }
+    else if(m_pendingTasks & BlockObject::BlockTask::SET_HOPPER_POSITION){
+        emit hopperBusy();
         write_to_md_port(m_md_commandStr.at(1));
-    else if(m_pendingTasks & BlockObject::BlockTask::SET_SPREADER_POSITION)
+    }
+    else if(m_pendingTasks & BlockObject::BlockTask::SET_SPREADER_POSITION){
+         emit spreaderBusy();
         write_to_md_port(m_md_commandStr.at(2));
+    }
 }
 
 void PowderDaemon::on_receive_mdReply()
@@ -721,25 +761,24 @@ void PowderDaemon::on_md_transactionFinished()
         }
     }
     else
-        emit printRoutine_error("No Mode Selected");
+        emit jogComplete();
 }
 
 void PowderDaemon::on_selectNextBlockToProcess()
 {
     qDebug()<<"entered selectNextBlockToProcess_state";
 
-    m_currentBlockNumber += 1;
-    emit currentBlockNumber_changed(m_currentBlockNumber);
-    if(m_currentLayerNumber != m_part.get()->getBlock(m_currentBlockNumber).layerNumber()){
-        m_currentLayerNumber = m_part.get()->getBlock(m_currentBlockNumber).layerNumber();
-        emit currentLayerNumber_changed(m_currentLayerNumber);
-    }
-    if(m_currentBlockNumber < m_part.get()->blockCount()){
+    if(m_currentBlockNumber < (m_part.get()->blockCount()-1)){
+        m_currentBlockNumber += 1;
+        emit currentBlockNumber_changed(m_currentBlockNumber);
+        if(m_currentLayerNumber != m_part.get()->getBlock(m_currentBlockNumber).layerNumber()){
+            m_currentLayerNumber = m_part.get()->getBlock(m_currentBlockNumber).layerNumber();
+            emit currentLayerNumber_changed(m_currentLayerNumber);
+        }
         emit blocksRemaining();
     }
     else
         emit printFinished();
-
 }
 
 void PowderDaemon::on_printRoutine_finished()
@@ -757,8 +796,9 @@ void PowderDaemon::on_printRoutine_error()
         m_md_port->clearError();
     m_activeTask = 0;
     m_pendingTasks = 0;
-    emit resetDaemon();
 }
+
+
 
 float PowderDaemon::xySpeed() const
 {
@@ -768,7 +808,7 @@ float PowderDaemon::xySpeed() const
 void PowderDaemon::setXYSpeed(float xySpeed)
 {
     m_xySpeed = xySpeed;
-    emit  xySpeed_changed(m_xySpeed);
+    emit  xySpeed_changed(static_cast<double>(m_xySpeed));
 }
 
 void PowderDaemon::on_manualControl_enabled(bool enabled)
@@ -826,7 +866,7 @@ void PowderDaemon::on_md_port_connectionRequested(bool open)
 
 void PowderDaemon::on_jogIncrement_changed(double jogIncrement)
 {
-    m_jogIncrement = jogIncrement;
+    m_jogIncrement = static_cast<float>(jogIncrement);
 }
 
 void PowderDaemon::on_homeOption_change(int homeOption)
@@ -847,6 +887,7 @@ void PowderDaemon::on_home_request()
     case 1:
     {
         m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_Y_POSITION);
+
         if(m_lg_port->isOpen())
             emit lg_commandPending();
         break;
@@ -854,22 +895,31 @@ void PowderDaemon::on_home_request()
     case 2:
     {
         m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_Z_POSITION);
-        if(m_md_port->isOpen())
+        if(m_md_port->isOpen()){
+            QString homeStr ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber()) + " home\r";
+            m_md_commandStr.insert(0,homeStr);
             emit md_commandPending();
+        }
         break;
     }
     case 3:
     {
         m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_HOPPER_POSITION);
-        if(m_md_port->isOpen())
+        if(m_md_port->isOpen()){
+            QString homeStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber()) + " home\r";
+            m_md_commandStr.insert(1,homeStr);
             emit md_commandPending();
+        }
         break;
     }
     case 4:
     {
         m_activeTask = (BlockObject::BlockTask::SET_HOME_AXIS|BlockObject::BlockTask::SET_SPREADER_POSITION);
-        if(m_md_port->isOpen())
+        if(m_md_port->isOpen()){
+            QString homeStr ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber()) + " home\r";
+            m_md_commandStr.insert(2,homeStr);
             emit md_commandPending();
+        }
         break;
     }
     default:
@@ -1017,4 +1067,53 @@ void PowderDaemon::on_decrement_sPosition_request()
         m_activeTask = BlockObject::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending();
     }
+}
+
+void PowderDaemon::on_zPosition_request()
+{
+    QString posReqStr ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
+    m_md_commandStr.insert(0, posReqStr);
+    m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
+    emit md_commandPending();
+}
+
+void PowderDaemon::ping_laserGalvo()
+{
+    m_lg_commandStr = "$()";
+    m_activeTask = BlockObject::BlockTask::SET_X_POSITION|BlockObject::BlockTask::SET_Y_POSITION;
+    emit lg_commandPending();
+}
+
+void PowderDaemon::ping_materialDelivery()
+{
+    QString pingStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " 0\r";
+    m_md_commandStr.insert(1, pingStr);
+    m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
+    emit md_commandPending();
+}
+
+void PowderDaemon::on_clearError_request()
+{
+    emit resetDaemon();
+}
+
+void PowderDaemon::poll_mdPort()
+{
+    QString requestStr;
+    if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
+        requestStr ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber())
+                + " get pos" + "\r";
+    }
+    else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
+        requestStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber()) + "\r";
+    }
+    else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
+        requestStr ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber()) + "\r";
+    }
+
+    if(!requestStr.isEmpty()){
+        write_to_md_port(requestStr);
+    }
+    else
+        emit md_port_error("Could Not Confirm Command");
 }

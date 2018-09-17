@@ -26,7 +26,7 @@
    <string notr="true">background:rgb(22, 22, 22);
 </string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_14">
+  <layout class="QVBoxLayout" name="verticalLayout_55">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -289,6 +289,11 @@ color:rgba(212,215,217,200)</string>
                <item>
                 <property name="text">
                  <string>Open Build Plate &amp; Material Delivery Port</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clear Errors</string>
                 </property>
                </item>
               </widget>
@@ -1152,396 +1157,3492 @@ color: rgb(212,215,217);</string>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout_53">
         <item>
-         <layout class="QVBoxLayout" name="settings_page_layout">
-          <property name="spacing">
-           <number>2</number>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>183</width>
-              <height>9</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QFrame" name="settings_page_button_frame">
-            <property name="minimumSize">
-             <size>
-              <width>640</width>
-              <height>56</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>56</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>14</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background:
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>183</width>
+            <height>13</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QFrame" name="settings_page_button_frame">
+          <property name="minimumSize">
+           <size>
+            <width>640</width>
+            <height>56</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>56</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:
 rgba(0,0,0,0);
 
 border-radius: 8;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QPushButton" name="settings_button_resetToDefault">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string extracomment="rervert"/>
-               </property>
-               <property name="statusTip">
-                <string/>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background: rgba(0,0,0,0);
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QPushButton" name="settings_button_saveAsDefault">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string extracomment="rervert"/>
+             </property>
+             <property name="statusTip">
+              <string/>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background: rgba(0,0,0,0);
 color: rgb(212,215,217);</string>
-               </property>
-               <property name="text">
-                <string> Reset</string>
-               </property>
-               <property name="icon">
-                <iconset resource="../resources/icons.qrc">
-                 <normaloff>:/icons/icons/iosUndoOutline.png</normaloff>:/icons/icons/iosUndoOutline.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="settings_button_openFile">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>270</width>
-                 <height>484</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background: rgba(0,0,0,0);
+             </property>
+             <property name="text">
+              <string> Save</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/icons.qrc">
+               <normaloff>:/icons/icons/save.png</normaloff>:/icons/icons/save.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>33</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="settings_button_resetToDefault">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string extracomment="rervert"/>
+             </property>
+             <property name="statusTip">
+              <string/>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background: rgba(0,0,0,0);
 color: rgb(212,215,217);</string>
-               </property>
-               <property name="text">
-                <string> Import Configuration</string>
-               </property>
-               <property name="icon">
-                <iconset resource="../resources/icons.qrc">
-                 <normaloff>:/icons/icons/iosDownload.png</normaloff>:/icons/icons/iosDownload.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="settings_buttons_saveFile">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>270</width>
-                 <height>484</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background: rgba(0,0,0,0);
+             </property>
+             <property name="text">
+              <string> Reset</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/icons.qrc">
+               <normaloff>:/icons/icons/iosUndoOutline.png</normaloff>:/icons/icons/iosUndoOutline.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="settings_button_openFile">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>270</width>
+               <height>484</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background: rgba(0,0,0,0);
 color: rgb(212,215,217);</string>
-               </property>
-               <property name="text">
-                <string> Export Configuration</string>
-               </property>
-               <property name="icon">
-                <iconset resource="../resources/icons.qrc">
-                 <normaloff>:/icons/icons/iosUpload.png</normaloff>:/icons/icons/iosUpload.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="settings_button_apply">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background: rgba(0,0,0,0);
+             </property>
+             <property name="text">
+              <string> Import Configuration</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/icons.qrc">
+               <normaloff>:/icons/icons/iosDownload.png</normaloff>:/icons/icons/iosDownload.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="settings_buttons_saveFile">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>270</width>
+               <height>484</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background: rgba(0,0,0,0);
 color: rgb(212,215,217);</string>
-               </property>
-               <property name="text">
-                <string> Apply</string>
-               </property>
-               <property name="icon">
-                <iconset resource="../resources/icons.qrc">
-                 <normaloff>:/icons/icons/iosRedo.png</normaloff>:/icons/icons/iosRedo.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="settings_page_view_frame">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>512</width>
-              <height>256</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background:
-
-qlineargradient(spread:pad, x1:0.527, y1:1, x2:0.516852, y2:0, stop:0 rgba(89, 84, 91, 12), stop:1 rgba(128, 128, 128, 35));
-
-
+             </property>
+             <property name="text">
+              <string> Export Configuration</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/icons.qrc">
+               <normaloff>:/icons/icons/iosUpload.png</normaloff>:/icons/icons/iosUpload.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="settings_button_apply">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background: rgba(0,0,0,0);
+color: rgb(212,215,217);</string>
+             </property>
+             <property name="text">
+              <string> Apply</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/icons.qrc">
+               <normaloff>:/icons/icons/iosRedo.png</normaloff>:/icons/icons/iosRedo.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="settings_page_view_frame">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>512</width>
+            <height>256</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background: rgb(22,22,22);
 
 border-radius: 8;
 color: rgb(212,215,217);</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_13">
-             <item>
-              <spacer name="verticalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>183</width>
-                 <height>9</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="settings_view_layout">
-               <item>
-                <spacer name="horizontalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Preferred</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>64</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QTreeView" name="settings_view">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_52">
+           <item>
+            <widget class="QTabWidget" name="tabWidget">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background:rgb(22,22,22);</string>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="port_settings_tab">
+              <attribute name="title">
+               <string>Port Settings</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_51">
+               <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+                <widget class="QFrame" name="port_settings_frame">
                  <property name="minimumSize">
                   <size>
-                   <width>512</width>
-                   <height>256</height>
+                   <width>350</width>
+                   <height>450</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>512</width>
-                   <height>16777215</height>
+                   <width>350</width>
+                   <height>450</height>
                   </size>
                  </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background: rgba(0,0,0,0);
-
-
-border-radius: 8;
-color: rgba(212,215,217,210);</string>
-                 </property>
                  <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
+                  <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="frameShadow">
-                  <enum>QFrame::Plain</enum>
+                  <enum>QFrame::Raised</enum>
                  </property>
-                 <property name="selectionBehavior">
-                  <enum>QAbstractItemView::SelectItems</enum>
-                 </property>
-                 <property name="headerHidden">
-                  <bool>true</bool>
-                 </property>
-                 <attribute name="headerVisible">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="headerCascadingSectionResizes">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="headerDefaultSectionSize">
-                  <number>250</number>
-                 </attribute>
-                 <attribute name="headerMinimumSectionSize">
-                  <number>200</number>
-                 </attribute>
-                 <attribute name="headerStretchLastSection">
-                  <bool>false</bool>
-                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_13">
+                  <item>
+                   <widget class="QFrame" name="env_port_settings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_32">
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>6</number>
+                     </property>
+                     <item alignment="Qt::AlignHCenter">
+                      <widget class="QLabel" name="env_portsettings_title">
+                       <property name="minimumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>14</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true"/>
+                       </property>
+                       <property name="text">
+                        <string>Environment Controller</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="env_portnum_layout">
+                       <item>
+                        <widget class="QLabel" name="env_portnum_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Port Number:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="env_portnum_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="env_portbaud_layout">
+                       <item>
+                        <widget class="QLabel" name="env_baud_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Baud Rate:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="env_baud_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="md_port_settings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_33">
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>6</number>
+                     </property>
+                     <item alignment="Qt::AlignHCenter">
+                      <widget class="QLabel" name="md_portsettings_title">
+                       <property name="minimumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>14</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background:none</string>
+                       </property>
+                       <property name="text">
+                        <string>Material Delivery</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="md_portnum_layout">
+                       <item>
+                        <widget class="QLabel" name="md_portnum_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Port Number:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="md_portnum_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="md_baudrate_layout">
+                       <item>
+                        <widget class="QLabel" name="md_baudrate_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Baud Rate:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="md_baudrate_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="lg_port_settings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_30">
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>6</number>
+                     </property>
+                     <item alignment="Qt::AlignHCenter">
+                      <widget class="QLabel" name="lg_portsettings_title">
+                       <property name="minimumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>14</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background:none</string>
+                       </property>
+                       <property name="text">
+                        <string>Laser &amp; Galvanometer</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="lg_portnum_layout">
+                       <item>
+                        <widget class="QLabel" name="lg_portnum_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Port Number:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lg_portnum_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="lg_portbaud_layout">
+                       <item>
+                        <widget class="QLabel" name="lg_baudrate_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Baud Rate:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lg_baudrate_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
                <item>
-                <spacer name="horizontalSpacer_8">
+                <spacer name="verticalSpacer_5">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Vertical</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>211</width>
-                   <height>20</height>
+                   <width>20</width>
+                   <height>40</height>
                   </size>
                  </property>
                 </spacer>
                </item>
               </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+             </widget>
+             <widget class="QWidget" name="laser_settings_tab">
+              <attribute name="title">
+               <string>Laser</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_50">
+               <item alignment="Qt::AlignLeft">
+                <widget class="QFrame" name="laser_settings_frame">
+                 <property name="minimumSize">
+                  <size>
+                   <width>335</width>
+                   <height>335</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>335</width>
+                   <height>335</height>
+                  </size>
+                 </property>
+                 <property name="baseSize">
+                  <size>
+                   <width>335</width>
+                   <height>335</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_42">
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_devicenum_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_devicenum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Device Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_devicenum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_axisnum_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_axisnum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Axis Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_axisnum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_powerres_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_powerres_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Power Resolution</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_powerres_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_powerdef_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_powerdef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Power Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_powerdef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_powermax_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_powermax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Power Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_powermax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_powermin_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_powermin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Power Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_powermin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="galbo_settings_tab">
+              <attribute name="title">
+               <string>Galvanometer </string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_49">
+               <item alignment="Qt::AlignHCenter">
+                <widget class="QFrame" name="galvo_settings_frame">
+                 <property name="minimumSize">
+                  <size>
+                   <width>335</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>335</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_43">
+                  <item>
+                   <layout class="QHBoxLayout" name="galvo_devicenum_layout">
+                    <item>
+                     <widget class="QLabel" name="galvo_devicenum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Device Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="galvo_devicenum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="galvo_speeddef_layout">
+                    <item>
+                     <widget class="QLabel" name="galvo_speeddef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="galvo_speeddef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="galvo_speedmax_layout">
+                    <item>
+                     <widget class="QLabel" name="galvo_speedmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="galvo_speedmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="galvo_speedmin_layout">
+                    <item>
+                     <widget class="QLabel" name="galvo_speedmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="galvo_speedmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="galvo_axis_layout">
+                 <item>
+                  <widget class="QFrame" name="galvo_x_axis_frame">
+                   <property name="minimumSize">
+                    <size>
+                     <width>335</width>
+                     <height>260</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>335</width>
+                     <height>260</height>
+                    </size>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_44">
+                    <item>
+                     <widget class="QLabel" name="x_axis_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>300</width>
+                        <height>36</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>300</width>
+                        <height>36</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>16</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="text">
+                       <string>X Axis</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_x_axisnum_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_x_axisnum_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Axis Number</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_x_axisnum_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_x_axisalias_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_x_axisalias_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>G-Code Alias</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_x_axisalias_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_x_steps_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_x_steps_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Steps per mm</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_x_steps_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_x_positionmax_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_x_positionmax_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Position Max</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_x_positionmax_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_x_positionmin_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_x_positionmin_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Position Min</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_x_positionmin_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="galvo_y_axis_frame">
+                   <property name="minimumSize">
+                    <size>
+                     <width>335</width>
+                     <height>260</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>335</width>
+                     <height>260</height>
+                    </size>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_46">
+                    <item>
+                     <widget class="QLabel" name="y_axistitle">
+                      <property name="minimumSize">
+                       <size>
+                        <width>300</width>
+                        <height>36</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>300</width>
+                        <height>36</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>16</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="text">
+                       <string>Y Axis</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_y_axisnum_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_y_axisnum_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Axis Number</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_y_axisnum_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_y_axisalias_layou">
+                      <item>
+                       <widget class="QLabel" name="galvo_y_axisalias_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>G-Code Alias</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_y_axisalias_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_y_steps_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_y_steps_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Steps per mm</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_y_steps_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_y_positionmax_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_y_positionmax_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Position Max</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_y_positionmax_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="galvo_y_positionmin_layout">
+                      <item>
+                       <widget class="QLabel" name="galvo_y_positionmin_title">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:none</string>
+                        </property>
+                        <property name="text">
+                         <string>Position Min</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="galvo_y_positionmin_field">
+                        <property name="minimumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>150</width>
+                          <height>24</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">background:rgb(42, 42, 43);</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="buildplate_settings_tab">
+              <attribute name="title">
+               <string>Build Plate</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_54">
+               <item>
+                <widget class="QFrame" name="buildplate_settings_frame">
+                 <property name="minimumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_45">
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_devicenum_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_devicenum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Device Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_devicenum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_axisnum_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_axisnum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Axis Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_axisnum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_axisalias_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_axisalias_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>G-Code Alias</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_axisalias_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_speeddef_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_speeddef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_speeddef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_speedmax_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_speedmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_speedmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_speedmin_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_speedmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_speedmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_steps_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_steps_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Steps per mm</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_steps_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_positionmax_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_positionmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_positionmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="buildplate_positionmin_layout">
+                    <item>
+                     <widget class="QLabel" name="buildplate_positionmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="buildplate_positionmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="hopper_settings_tab">
+              <attribute name="title">
+               <string>Hopper Plate</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_56">
+               <item>
+                <widget class="QFrame" name="hopper_settings_frame">
+                 <property name="minimumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_47">
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_devicenum_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_devicenum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Device Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_devicenum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_axisnum_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_axisnum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Axis Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_axisnum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_axisalias_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_axisalias_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>G-Code Alias</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_axisalias_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_speeddef_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_speeddef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_speeddef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_speedmax_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_speedmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_speedmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_speedmin_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_speedmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_speedmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_steps_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_steps_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Steps per mm</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_steps_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_positionmax_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_positionmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_positionmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="hopper_positionmin_layout">
+                    <item>
+                     <widget class="QLabel" name="hopper_positionmin_title_2">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="hopper_positionmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="spreader_settings_tab">
+              <attribute name="title">
+               <string>Spreader Blade</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_57">
+               <item>
+                <widget class="QFrame" name="spreader_settings_frame">
+                 <property name="minimumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>335</width>
+                   <height>512</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_48">
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_devicenum_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_devicenum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Device Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_devicenum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_axisnum_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_axisnum_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Axis Number</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_axisnum_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_axisalias_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_axisalias_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>G-Code Alias</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_axisalias_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_speeddef_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_speeddef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_speeddef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_speedmax_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_speedmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_speedmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_speedmin_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_speedmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Speed Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_speedmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_steps_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_steps_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Steps per mm</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_steps_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_positionmax_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_positionmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Max</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_positionmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="spreader_positionmin_layout">
+                    <item>
+                     <widget class="QLabel" name="spreader_positionmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Position Min</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spreader_positionmin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1614,14 +4715,14 @@ color: rgba(212,215,217,210);</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">background: rgba(0,0,0,0);
-color: rgb(212,215,217);</string>
+color: rgb(212,215,217,200);</string>
                </property>
                <property name="text">
-                <string>Rescan Ports</string>
+                <string>  Rescan Ports</string>
                </property>
                <property name="icon">
-                <iconset>
-                 <normaloff>:/icons/icons/icon_w_spin1.png</normaloff>:/icons/icons/icon_w_spin1.png</iconset>
+                <iconset resource="../resources/icons.qrc">
+                 <normaloff>:/icons/icons/Icon-elusive-arrows-cw.png</normaloff>:/icons/icons/Icon-elusive-arrows-cw.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -2569,21 +5670,47 @@ color:rgba(212,215,217,200)</string>
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <property name="spacing">
-                <number>4</number>
-               </property>
-               <property name="leftMargin">
-                <number>6</number>
-               </property>
-               <property name="topMargin">
-                <number>6</number>
-               </property>
-               <property name="rightMargin">
-                <number>6</number>
-               </property>
-               <property name="bottomMargin">
-                <number>6</number>
-               </property>
+               <item>
+                <widget class="QPushButton" name="printManager_reset_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>32</width>
+                   <height>32</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: rgba(0,0,0,0);
+color: rgb(212,215,217);</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/iosSkipback.png</normaloff>:/icons/icons/iosSkipback.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>23</width>
+                   <height>36</height>
+                  </size>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QPushButton" name="printManager_stop_button">
                  <property name="sizePolicy">
@@ -2658,47 +5785,6 @@ color: rgb(212,215,217);</string>
                  <property name="iconSize">
                   <size>
                    <width>21</width>
-                   <height>36</height>
-                  </size>
-                 </property>
-                 <property name="flat">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="printManager_stepThrough_button">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background: rgba(0,0,0,0);
-color: rgb(212,215,217);</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../resources/icons.qrc">
-                   <normaloff>:/icons/icons/iosSkipforward.png</normaloff>:/icons/icons/iosSkipforward.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>23</width>
                    <height>36</height>
                   </size>
                  </property>
@@ -3490,7 +6576,14 @@ color: rgba(212,215,217,150);</string>
                       <number>4</number>
                      </property>
                      <item>
-                      <widget class="QDoubleSpinBox" name="printManager_JogDistance_Input"/>
+                      <widget class="QDoubleSpinBox" name="printManager_JogDistance_Input">
+                       <property name="decimals">
+                        <number>3</number>
+                       </property>
+                       <property name="value">
+                        <double>1.000000000000000</double>
+                       </property>
+                      </widget>
                      </item>
                      <item>
                       <widget class="QLabel" name="jog_units_label">

@@ -24,14 +24,6 @@
         <file>icons/toggle-off1.png</file>
         <file>icons/iosSkipforward.png</file>
         <file>icons/stop.png</file>
-        <file>icons/pict--tag-gray-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-purple-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-blue-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-green-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-yellow-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-orange-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/pict--tag-red-glyph-icons-vector-stencils-library.png</file>
-        <file>icons/greybut.png</file>
         <file>icons/redbutton.png</file>
         <file>icons/orangebut.png</file>
         <file>icons/greenbut.png</file>
@@ -48,5 +40,11 @@
         <file>icons/iosArrowDown.png</file>
         <file>icons/iosArrowRight copy.png</file>
         <file>icons/Homing.png</file>
+        <file>icons/iosUndo.png</file>
+        <file>icons/Icon-elusive-arrows-cw.png</file>
+        <file>icons/iosUndo1.png</file>
+        <file>icons/undo-rotate-left.png</file>
+        <file>icons/iosSkipback.png</file>
+        <file>icons/save.png</file>
     </qresource>
 </RCC>

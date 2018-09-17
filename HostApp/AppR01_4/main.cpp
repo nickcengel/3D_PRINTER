@@ -14,19 +14,29 @@
 
 int main(int argc, char *argv[])
 {
+
+
     qRegisterMetaType<SettingsObject>("SettingsObject");
     qRegisterMetaType<BlockObject>("BlockObject");
     qRegisterMetaType<PartObject>("PartObject");
     qRegisterMetaType<Block3D>("Block3D");
 
-    QApplication a(argc, argv);
-    a.setWindowIcon(QIcon(":/icons/MenuIcons/cube.png"));
+
+
+
+    QApplication powder(argc, argv);
+    powder.setOrganizationName("The Colorado School of Mines");
+    powder.setOrganizationDomain("mines");
+    powder.setApplicationName("Powder");
+
+
+
+    powder.setWindowIcon(QIcon(":/icons/MenuIcons/cube.png"));
     PowderApp w;
 
 
 
-
-    w.setWindowTitle("PowderRoom");
+    w.setWindowTitle("Powder");
     w.show();
 
 
@@ -42,5 +52,6 @@ int main(int argc, char *argv[])
 
 
 
-    return a.exec();
+    return powder.exec();
 }
+

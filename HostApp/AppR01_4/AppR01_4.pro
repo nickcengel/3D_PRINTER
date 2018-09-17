@@ -10,7 +10,7 @@ QT += 3dcore 3drender 3dinput 3dextras
 QT += widgets
 QT += widgets serialport
 
-TARGET = AppR01_2
+TARGET = Powder
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -61,7 +61,6 @@ HEADERS += \
     hardware_tools/zaber_utility.h \
     hardware_tools/lasergalvo_utility.h \
     3d_framework/block3d.h \
-    hardware_tools/serialtransport.h \
     powder_app/powderdaemon.h
 
 FORMS += \
@@ -117,13 +116,6 @@ DISTFILES += \
     resources/icons/newhw.png \
     resources/icons/open_file.png \
     resources/icons/orangebut.png \
-    resources/icons/pict--tag-blue-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-gray-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-green-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-orange-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-purple-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-red-glyph-icons-vector-stencils-library.png \
-    resources/icons/pict--tag-yellow-glyph-icons-vector-stencils-library.png \
     resources/icons/print.png \
     resources/icons/redbutton.png \
     resources/icons/reload.png \
@@ -134,4 +126,5 @@ DISTFILES += \
     resources/icons/toggle-off1.png \
     resources/icons/toggle-on1.png \
     resources/icons/unlock-alt.png \
-    resources/machineset.txt
+    resources/machineset.txt \
+    resources/config.ini

@@ -27,7 +27,7 @@ QString LaserGalvo_Utility::composeCommandString(BlockObject *block, SettingsObj
             output += ",";
         else
             delim = true;
-        output += ("s=" + QString::number(block->xy_speed()));
+        output += ("s=" + QString::number(static_cast<double>(block->xy_speed())));
     }
 
     if(task & BlockObject::BlockTask::SET_X_POSITION){
@@ -35,7 +35,8 @@ QString LaserGalvo_Utility::composeCommandString(BlockObject *block, SettingsObj
             output += ",";
         else
             delim = true;
-        const int32_t pos = (config->x_position_resolution())*(block->x_position());
+        float res = config->x_position_resolution();
+        int pos = static_cast<int>(res * (block->x_position()));
         output += ("X=" + QString::number(pos));
     }
 
@@ -44,7 +45,8 @@ QString LaserGalvo_Utility::composeCommandString(BlockObject *block, SettingsObj
             output += ",";
         else
             delim = true;
-        const int32_t pos = (config->y_position_resolution())*(block->y_position());
+        float res = config->y_position_resolution();
+        int pos = static_cast<int>(res * (block->y_position()));
         output += ("Y=" + QString::number(pos));
     }
 

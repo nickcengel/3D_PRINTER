@@ -6,7 +6,7 @@ BlockObject::BlockObject(){
     m_laser_enabled = false;
 }
 
-BlockObject::BlockObject(const unsigned int block_number, const unsigned int layer_Number)
+BlockObject::BlockObject(const int block_number, const int layer_Number)
 {
     qRegisterMetaType<BlockObject>("BlockObject");
    m_blockNumber = block_number;
@@ -41,22 +41,22 @@ BlockObject::~BlockObject()
 
 }
 
-unsigned int BlockObject::blockNumber() const
+int BlockObject::blockNumber() const
 {
     return m_blockNumber;
 }
 
-void BlockObject::setBlockNumber(const unsigned int &blockNumber)
+void BlockObject::setBlockNumber(const int &blockNumber)
 {
     m_blockNumber = blockNumber;
 }
 
-unsigned int BlockObject::layerNumber() const
+int BlockObject::layerNumber() const
 {
     return m_layerNumber;
 }
 
-void BlockObject::setLayerNumber(const unsigned int &layerNumber)
+void BlockObject::setLayerNumber(const int &layerNumber)
 {
     m_layerNumber = layerNumber;
 }
@@ -97,12 +97,12 @@ void BlockObject::setLaser_armed(bool l_armed)
     setBlockTask(BlockTask::SET_LASER_ARM_STATE);
 }
 
-unsigned int BlockObject::laser_power() const
+int BlockObject::laser_power() const
 {
     return m_laser_power;
 }
 
-void BlockObject::setLaser_power(const unsigned int &l_power)
+void BlockObject::setLaser_power(const int &l_power)
 {
     m_laser_power = l_power;
     setBlockTask(BlockTask::SET_LASER_POWER);

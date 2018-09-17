@@ -819,7 +819,7 @@ void APP_Write_HCI_Packet(void) {
 //                }
 //            }
             
-            strcpy(USART0_TX_Buffer, "@ok\r\n");
+            strcpy(USART0_TX_Buffer, "@ok");
             client_replyLength = strlen(USART0_TX_Buffer);
             HCI_Set_TX_Status(HCI_TX_PENDING);
             break;

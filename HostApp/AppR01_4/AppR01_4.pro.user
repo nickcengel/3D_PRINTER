@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.0, 2018-09-14T18:19:59. -->
+<!-- Written by QtCreator 4.7.0, 2018-09-17T15:02:55. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -313,7 +313,7 @@
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">AppR01_4.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
-    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory.default">/Users/h.tosh/git_repos/3D_PRINTER/HostApp/build-AppR01_3-Desktop_Qt_5_11_1_clang_64bit-Debug/AppR01_2.app/Contents/MacOS</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory.default">/Users/h.tosh/git_repos/3D_PRINTER/HostApp/build-AppR01_3-Desktop_Qt_5_11_1_clang_64bit-Debug/Powder.app/Contents/MacOS</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

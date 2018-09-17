@@ -10,6 +10,11 @@
 
 #include "hardware_tools/lasergalvo_utility.h"
 
+#include <syslog.h>
+
+void writeMessageToSyslogd(int type, const QString &message);
+
+
 class PowderDaemon : public QObject
 {
     Q_OBJECT
@@ -83,6 +88,7 @@ signals:
 
     void laserEnableState_changed(const QString &laserState);
     void laserArmState_changed(bool armed);
+
     void currentBlockNumber_changed(int blockNum);
     void currentLayerNumber_changed(int layerNumber);
 
@@ -115,6 +121,11 @@ signals:
     void lg_commandPending();
     void md_commandPending();
 
+    void buildPlateBusy();
+    void galvoBusy();
+    void hopperBusy();
+    void spreaderBusy();
+
     void resetDaemon();
 
 public slots:
@@ -134,6 +145,7 @@ public slots:
     void on_startPrint_request();
     void on_stopPrint_request();
 
+    void on_reset_request();
 
     void on_lg_port_bytesWritten(qint64 bytes);
     void on_lg_port_bytesRead();
@@ -178,10 +190,20 @@ public slots:
     void on_increment_sPosition_request();
     void on_decrement_sPosition_request();
 
+    void on_zPosition_request();
+
+    void ping_laserGalvo();
+
+    void ping_materialDelivery();
+
+    void on_clearError_request();
+
+    void poll_mdPort();
 
 private:
     QTimer *lg_port_timer;
     QTimer *md_port_timer;
+    QTimer *md_transaction_timer;
 
     QSharedPointer<PartObject> m_part;
     QSharedPointer<SettingsObject> m_config;
@@ -209,8 +231,8 @@ private:
     bool m_hHomed;
     bool m_sHomed;
 
-    unsigned int m_currentBlockNumber;
-    unsigned int m_currentLayerNumber;
+    int m_currentBlockNumber;
+    int m_currentLayerNumber;
 
     uint16_t m_pendingTasks;
     uint16_t m_activeTask;

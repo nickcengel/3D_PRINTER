@@ -19,12 +19,14 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTreeView>
@@ -36,7 +38,7 @@ QT_BEGIN_NAMESPACE
 class Ui_PowderApp
 {
 public:
-    QHBoxLayout *horizontalLayout_14;
+    QVBoxLayout *verticalLayout_55;
     QSplitter *Menu_Page_Splitter;
     QFrame *MenuFrame;
     QVBoxLayout *verticalLayout;
@@ -93,22 +95,220 @@ public:
     QSpacerItem *verticalSpacer_7;
     QSpacerItem *horizontalSpacer_14;
     QWidget *settingsPage;
-    QHBoxLayout *horizontalLayout_3;
-    QVBoxLayout *settings_page_layout;
+    QVBoxLayout *verticalLayout_53;
     QSpacerItem *verticalSpacer_2;
     QFrame *settings_page_button_frame;
-    QHBoxLayout *horizontalLayout_4;
+    QHBoxLayout *horizontalLayout_3;
+    QPushButton *settings_button_saveAsDefault;
     QPushButton *settings_button_resetToDefault;
     QPushButton *settings_button_openFile;
     QPushButton *settings_buttons_saveFile;
     QPushButton *settings_button_apply;
     QFrame *settings_page_view_frame;
+    QVBoxLayout *verticalLayout_52;
+    QTabWidget *tabWidget;
+    QWidget *port_settings_tab;
+    QVBoxLayout *verticalLayout_51;
+    QFrame *port_settings_frame;
     QVBoxLayout *verticalLayout_13;
+    QFrame *env_port_settings_frame;
+    QVBoxLayout *verticalLayout_32;
+    QLabel *env_portsettings_title;
+    QHBoxLayout *env_portnum_layout;
+    QLabel *env_portnum_title;
+    QLineEdit *env_portnum_field;
+    QHBoxLayout *env_portbaud_layout;
+    QLabel *env_baud_title;
+    QLineEdit *env_baud_field;
+    QFrame *md_port_settings_frame;
+    QVBoxLayout *verticalLayout_33;
+    QLabel *md_portsettings_title;
+    QHBoxLayout *md_portnum_layout;
+    QLabel *md_portnum_title;
+    QLineEdit *md_portnum_field;
+    QHBoxLayout *md_baudrate_layout;
+    QLabel *md_baudrate_title;
+    QLineEdit *md_baudrate_field;
+    QFrame *lg_port_settings_frame;
+    QVBoxLayout *verticalLayout_30;
+    QLabel *lg_portsettings_title;
+    QHBoxLayout *lg_portnum_layout;
+    QLabel *lg_portnum_title;
+    QLineEdit *lg_portnum_field;
+    QHBoxLayout *lg_portbaud_layout;
+    QLabel *lg_baudrate_title;
+    QLineEdit *lg_baudrate_field;
     QSpacerItem *verticalSpacer_5;
-    QHBoxLayout *settings_view_layout;
-    QSpacerItem *horizontalSpacer_7;
-    QTreeView *settings_view;
-    QSpacerItem *horizontalSpacer_8;
+    QWidget *laser_settings_tab;
+    QVBoxLayout *verticalLayout_50;
+    QFrame *laser_settings_frame;
+    QVBoxLayout *verticalLayout_42;
+    QHBoxLayout *laser_devicenum_layout;
+    QLabel *laser_devicenum_title;
+    QLineEdit *laser_devicenum_field;
+    QHBoxLayout *laser_axisnum_layout;
+    QLabel *laser_axisnum_title;
+    QLineEdit *laser_axisnum_field;
+    QHBoxLayout *laser_powerres_layout;
+    QLabel *laser_powerres_title;
+    QLineEdit *laser_powerres_field;
+    QHBoxLayout *laser_powerdef_layout;
+    QLabel *laser_powerdef_title;
+    QLineEdit *laser_powerdef_field;
+    QHBoxLayout *laser_powermax_layout;
+    QLabel *laser_powermax_title;
+    QLineEdit *laser_powermax_field;
+    QHBoxLayout *laser_powermin_layout;
+    QLabel *laser_powermin_title;
+    QLineEdit *laser_powermin_field;
+    QSpacerItem *verticalSpacer_8;
+    QWidget *galbo_settings_tab;
+    QVBoxLayout *verticalLayout_49;
+    QFrame *galvo_settings_frame;
+    QVBoxLayout *verticalLayout_43;
+    QHBoxLayout *galvo_devicenum_layout;
+    QLabel *galvo_devicenum_title;
+    QLineEdit *galvo_devicenum_field;
+    QHBoxLayout *galvo_speeddef_layout;
+    QLabel *galvo_speeddef_title;
+    QLineEdit *galvo_speeddef_field;
+    QHBoxLayout *galvo_speedmax_layout;
+    QLabel *galvo_speedmax_title;
+    QLineEdit *galvo_speedmax_field;
+    QHBoxLayout *galvo_speedmin_layout;
+    QLabel *galvo_speedmin_title;
+    QLineEdit *galvo_speedmin_field;
+    QHBoxLayout *galvo_axis_layout;
+    QFrame *galvo_x_axis_frame;
+    QVBoxLayout *verticalLayout_44;
+    QLabel *x_axis_title;
+    QHBoxLayout *galvo_x_axisnum_layout;
+    QLabel *galvo_x_axisnum_title;
+    QLineEdit *galvo_x_axisnum_field;
+    QHBoxLayout *galvo_x_axisalias_layout;
+    QLabel *galvo_x_axisalias_title;
+    QLineEdit *galvo_x_axisalias_field;
+    QHBoxLayout *galvo_x_steps_layout;
+    QLabel *galvo_x_steps_title;
+    QLineEdit *galvo_x_steps_field;
+    QHBoxLayout *galvo_x_positionmax_layout;
+    QLabel *galvo_x_positionmax_title;
+    QLineEdit *galvo_x_positionmax_field;
+    QHBoxLayout *galvo_x_positionmin_layout;
+    QLabel *galvo_x_positionmin_title;
+    QLineEdit *galvo_x_positionmin_field;
+    QFrame *galvo_y_axis_frame;
+    QVBoxLayout *verticalLayout_46;
+    QLabel *y_axistitle;
+    QHBoxLayout *galvo_y_axisnum_layout;
+    QLabel *galvo_y_axisnum_title;
+    QLineEdit *galvo_y_axisnum_field;
+    QHBoxLayout *galvo_y_axisalias_layou;
+    QLabel *galvo_y_axisalias_title;
+    QLineEdit *galvo_y_axisalias_field;
+    QHBoxLayout *galvo_y_steps_layout;
+    QLabel *galvo_y_steps_title;
+    QLineEdit *galvo_y_steps_field;
+    QHBoxLayout *galvo_y_positionmax_layout;
+    QLabel *galvo_y_positionmax_title;
+    QLineEdit *galvo_y_positionmax_field;
+    QHBoxLayout *galvo_y_positionmin_layout;
+    QLabel *galvo_y_positionmin_title;
+    QLineEdit *galvo_y_positionmin_field;
+    QSpacerItem *verticalSpacer;
+    QWidget *buildplate_settings_tab;
+    QVBoxLayout *verticalLayout_54;
+    QFrame *buildplate_settings_frame;
+    QVBoxLayout *verticalLayout_45;
+    QHBoxLayout *buildplate_devicenum_layout;
+    QLabel *buildplate_devicenum_title;
+    QLineEdit *buildplate_devicenum_field;
+    QHBoxLayout *buildplate_axisnum_layout;
+    QLabel *buildplate_axisnum_title;
+    QLineEdit *buildplate_axisnum_field;
+    QHBoxLayout *buildplate_axisalias_layout;
+    QLabel *buildplate_axisalias_title;
+    QLineEdit *buildplate_axisalias_field;
+    QHBoxLayout *buildplate_speeddef_layout;
+    QLabel *buildplate_speeddef_title;
+    QLineEdit *buildplate_speeddef_field;
+    QHBoxLayout *buildplate_speedmax_layout;
+    QLabel *buildplate_speedmax_title;
+    QLineEdit *buildplate_speedmax_field;
+    QHBoxLayout *buildplate_speedmin_layout;
+    QLabel *buildplate_speedmin_title;
+    QLineEdit *buildplate_speedmin_field;
+    QHBoxLayout *buildplate_steps_layout;
+    QLabel *buildplate_steps_title;
+    QLineEdit *buildplate_steps_field;
+    QHBoxLayout *buildplate_positionmax_layout;
+    QLabel *buildplate_positionmax_title;
+    QLineEdit *buildplate_positionmax_field;
+    QHBoxLayout *buildplate_positionmin_layout;
+    QLabel *buildplate_positionmin_title;
+    QLineEdit *buildplate_positionmin_field;
+    QWidget *hopper_settings_tab;
+    QVBoxLayout *verticalLayout_56;
+    QFrame *hopper_settings_frame;
+    QVBoxLayout *verticalLayout_47;
+    QHBoxLayout *hopper_devicenum_layout;
+    QLabel *hopper_devicenum_title;
+    QLineEdit *hopper_devicenum_field;
+    QHBoxLayout *hopper_axisnum_layout;
+    QLabel *hopper_axisnum_title;
+    QLineEdit *hopper_axisnum_field;
+    QHBoxLayout *hopper_axisalias_layout;
+    QLabel *hopper_axisalias_title;
+    QLineEdit *hopper_axisalias_field;
+    QHBoxLayout *hopper_speeddef_layout;
+    QLabel *hopper_speeddef_title;
+    QLineEdit *hopper_speeddef_field;
+    QHBoxLayout *hopper_speedmax_layout;
+    QLabel *hopper_speedmax_title;
+    QLineEdit *hopper_speedmax_field;
+    QHBoxLayout *hopper_speedmin_layout;
+    QLabel *hopper_speedmin_title;
+    QLineEdit *hopper_speedmin_field;
+    QHBoxLayout *hopper_steps_layout;
+    QLabel *hopper_steps_title;
+    QLineEdit *hopper_steps_field;
+    QHBoxLayout *hopper_positionmax_layout;
+    QLabel *hopper_positionmax_title;
+    QLineEdit *hopper_positionmax_field;
+    QHBoxLayout *hopper_positionmin_layout;
+    QLabel *hopper_positionmin_title_2;
+    QLineEdit *hopper_positionmin_field;
+    QWidget *spreader_settings_tab;
+    QVBoxLayout *verticalLayout_57;
+    QFrame *spreader_settings_frame;
+    QVBoxLayout *verticalLayout_48;
+    QHBoxLayout *spreader_devicenum_layout;
+    QLabel *spreader_devicenum_title;
+    QLineEdit *spreader_devicenum_field;
+    QHBoxLayout *spreader_axisnum_layout;
+    QLabel *spreader_axisnum_title;
+    QLineEdit *spreader_axisnum_field;
+    QHBoxLayout *spreader_axisalias_layout;
+    QLabel *spreader_axisalias_title;
+    QLineEdit *spreader_axisalias_field;
+    QHBoxLayout *spreader_speeddef_layout;
+    QLabel *spreader_speeddef_title;
+    QLineEdit *spreader_speeddef_field;
+    QHBoxLayout *spreader_speedmax_layout;
+    QLabel *spreader_speedmax_title;
+    QLineEdit *spreader_speedmax_field;
+    QHBoxLayout *spreader_speedmin_layout;
+    QLabel *spreader_speedmin_title;
+    QLineEdit *spreader_speedmin_field;
+    QHBoxLayout *spreader_steps_layout;
+    QLabel *spreader_steps_title;
+    QLineEdit *spreader_steps_field;
+    QHBoxLayout *spreader_positionmax_layout;
+    QLabel *spreader_positionmax_title;
+    QLineEdit *spreader_positionmax_field;
+    QHBoxLayout *spreader_positionmin_layout;
+    QLabel *spreader_positionmin_title;
+    QLineEdit *spreader_positionmin_field;
     QWidget *portPage;
     QHBoxLayout *horizontalLayout_6;
     QVBoxLayout *portPage_layout;
@@ -176,9 +376,9 @@ public:
     QComboBox *printManager_options_box;
     QFrame *printManagerControls_frame;
     QHBoxLayout *horizontalLayout_10;
+    QPushButton *printManager_reset_button;
     QPushButton *printManager_stop_button;
     QPushButton *printManager_pause_button;
-    QPushButton *printManager_stepThrough_button;
     QPushButton *printManager_start_button;
     QTextBrowser *printManager_textBrowser;
     QFrame *blockProgress_frame;
@@ -377,11 +577,11 @@ public:
         PowderApp->setAutoFillBackground(false);
         PowderApp->setStyleSheet(QLatin1String("background:rgb(22, 22, 22);\n"
 ""));
-        horizontalLayout_14 = new QHBoxLayout(PowderApp);
-        horizontalLayout_14->setSpacing(6);
-        horizontalLayout_14->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
-        horizontalLayout_14->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_55 = new QVBoxLayout(PowderApp);
+        verticalLayout_55->setSpacing(6);
+        verticalLayout_55->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_55->setObjectName(QStringLiteral("verticalLayout_55"));
+        verticalLayout_55->setContentsMargins(0, 0, 0, 0);
         Menu_Page_Splitter = new QSplitter(PowderApp);
         Menu_Page_Splitter->setObjectName(QStringLiteral("Menu_Page_Splitter"));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -476,6 +676,7 @@ public:
         verticalLayout_15->addWidget(PortManagerDisplay_title);
 
         PortManager_options_box = new QComboBox(PortManagerTitle_frame);
+        PortManager_options_box->addItem(QString());
         PortManager_options_box->addItem(QString());
         PortManager_options_box->addItem(QString());
         PortManager_options_box->addItem(QString());
@@ -884,16 +1085,13 @@ public:
         settingsPage = new QWidget();
         settingsPage->setObjectName(QStringLiteral("settingsPage"));
         settingsPage->setStyleSheet(QStringLiteral(""));
-        horizontalLayout_3 = new QHBoxLayout(settingsPage);
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        settings_page_layout = new QVBoxLayout();
-        settings_page_layout->setSpacing(2);
-        settings_page_layout->setObjectName(QStringLiteral("settings_page_layout"));
-        verticalSpacer_2 = new QSpacerItem(183, 9, QSizePolicy::Minimum, QSizePolicy::Fixed);
+        verticalLayout_53 = new QVBoxLayout(settingsPage);
+        verticalLayout_53->setSpacing(6);
+        verticalLayout_53->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_53->setObjectName(QStringLiteral("verticalLayout_53"));
+        verticalSpacer_2 = new QSpacerItem(183, 13, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        settings_page_layout->addItem(verticalSpacer_2);
+        verticalLayout_53->addItem(verticalSpacer_2);
 
         settings_page_button_frame = new QFrame(settingsPage);
         settings_page_button_frame->setObjectName(QStringLiteral("settings_page_button_frame"));
@@ -908,10 +1106,26 @@ public:
 "border-radius: 8;"));
         settings_page_button_frame->setFrameShape(QFrame::StyledPanel);
         settings_page_button_frame->setFrameShadow(QFrame::Raised);
-        horizontalLayout_4 = new QHBoxLayout(settings_page_button_frame);
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalLayout_3 = new QHBoxLayout(settings_page_button_frame);
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        settings_button_saveAsDefault = new QPushButton(settings_page_button_frame);
+        settings_button_saveAsDefault->setObjectName(QStringLiteral("settings_button_saveAsDefault"));
+        sizePolicy3.setHeightForWidth(settings_button_saveAsDefault->sizePolicy().hasHeightForWidth());
+        settings_button_saveAsDefault->setSizePolicy(sizePolicy3);
+        settings_button_saveAsDefault->setMinimumSize(QSize(32, 32));
+        settings_button_saveAsDefault->setFont(font4);
+        settings_button_saveAsDefault->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
+"color: rgb(212,215,217);"));
+        QIcon icon7;
+        icon7.addFile(QStringLiteral(":/icons/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_button_saveAsDefault->setIcon(icon7);
+        settings_button_saveAsDefault->setIconSize(QSize(24, 33));
+        settings_button_saveAsDefault->setFlat(true);
+
+        horizontalLayout_3->addWidget(settings_button_saveAsDefault);
+
         settings_button_resetToDefault = new QPushButton(settings_page_button_frame);
         settings_button_resetToDefault->setObjectName(QStringLiteral("settings_button_resetToDefault"));
         sizePolicy3.setHeightForWidth(settings_button_resetToDefault->sizePolicy().hasHeightForWidth());
@@ -920,13 +1134,13 @@ public:
         settings_button_resetToDefault->setFont(font4);
         settings_button_resetToDefault->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon7;
-        icon7.addFile(QStringLiteral(":/icons/icons/iosUndoOutline.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_button_resetToDefault->setIcon(icon7);
+        QIcon icon8;
+        icon8.addFile(QStringLiteral(":/icons/icons/iosUndoOutline.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_button_resetToDefault->setIcon(icon8);
         settings_button_resetToDefault->setIconSize(QSize(30, 30));
         settings_button_resetToDefault->setFlat(true);
 
-        horizontalLayout_4->addWidget(settings_button_resetToDefault);
+        horizontalLayout_3->addWidget(settings_button_resetToDefault);
 
         settings_button_openFile = new QPushButton(settings_page_button_frame);
         settings_button_openFile->setObjectName(QStringLiteral("settings_button_openFile"));
@@ -937,13 +1151,13 @@ public:
         settings_button_openFile->setFont(font4);
         settings_button_openFile->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon8;
-        icon8.addFile(QStringLiteral(":/icons/icons/iosDownload.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_button_openFile->setIcon(icon8);
+        QIcon icon9;
+        icon9.addFile(QStringLiteral(":/icons/icons/iosDownload.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_button_openFile->setIcon(icon9);
         settings_button_openFile->setIconSize(QSize(30, 30));
         settings_button_openFile->setFlat(true);
 
-        horizontalLayout_4->addWidget(settings_button_openFile);
+        horizontalLayout_3->addWidget(settings_button_openFile);
 
         settings_buttons_saveFile = new QPushButton(settings_page_button_frame);
         settings_buttons_saveFile->setObjectName(QStringLiteral("settings_buttons_saveFile"));
@@ -954,13 +1168,13 @@ public:
         settings_buttons_saveFile->setFont(font4);
         settings_buttons_saveFile->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon9;
-        icon9.addFile(QStringLiteral(":/icons/icons/iosUpload.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_buttons_saveFile->setIcon(icon9);
+        QIcon icon10;
+        icon10.addFile(QStringLiteral(":/icons/icons/iosUpload.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_buttons_saveFile->setIcon(icon10);
         settings_buttons_saveFile->setIconSize(QSize(30, 30));
         settings_buttons_saveFile->setFlat(true);
 
-        horizontalLayout_4->addWidget(settings_buttons_saveFile);
+        horizontalLayout_3->addWidget(settings_buttons_saveFile);
 
         settings_button_apply = new QPushButton(settings_page_button_frame);
         settings_button_apply->setObjectName(QStringLiteral("settings_button_apply"));
@@ -970,16 +1184,16 @@ public:
         settings_button_apply->setFont(font4);
         settings_button_apply->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon10;
-        icon10.addFile(QStringLiteral(":/icons/icons/iosRedo.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_button_apply->setIcon(icon10);
+        QIcon icon11;
+        icon11.addFile(QStringLiteral(":/icons/icons/iosRedo.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_button_apply->setIcon(icon11);
         settings_button_apply->setIconSize(QSize(30, 30));
         settings_button_apply->setFlat(true);
 
-        horizontalLayout_4->addWidget(settings_button_apply);
+        horizontalLayout_3->addWidget(settings_button_apply);
 
 
-        settings_page_layout->addWidget(settings_page_button_frame);
+        verticalLayout_53->addWidget(settings_page_button_frame);
 
         settings_page_view_frame = new QFrame(settingsPage);
         settings_page_view_frame->setObjectName(QStringLiteral("settings_page_view_frame"));
@@ -990,67 +1204,1497 @@ public:
         settings_page_view_frame->setSizePolicy(sizePolicy4);
         settings_page_view_frame->setMinimumSize(QSize(512, 256));
         settings_page_view_frame->setMaximumSize(QSize(16777215, 16777215));
-        settings_page_view_frame->setStyleSheet(QLatin1String("background:\n"
-"\n"
-"qlineargradient(spread:pad, x1:0.527, y1:1, x2:0.516852, y2:0, stop:0 rgba(89, 84, 91, 12), stop:1 rgba(128, 128, 128, 35));\n"
-"\n"
-"\n"
+        settings_page_view_frame->setStyleSheet(QLatin1String("background: rgb(22,22,22);\n"
 "\n"
 "border-radius: 8;\n"
 "color: rgb(212,215,217);"));
         settings_page_view_frame->setFrameShape(QFrame::StyledPanel);
         settings_page_view_frame->setFrameShadow(QFrame::Raised);
-        verticalLayout_13 = new QVBoxLayout(settings_page_view_frame);
+        verticalLayout_52 = new QVBoxLayout(settings_page_view_frame);
+        verticalLayout_52->setSpacing(6);
+        verticalLayout_52->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_52->setObjectName(QStringLiteral("verticalLayout_52"));
+        tabWidget = new QTabWidget(settings_page_view_frame);
+        tabWidget->setObjectName(QStringLiteral("tabWidget"));
+        tabWidget->setFont(font4);
+        tabWidget->setStyleSheet(QStringLiteral("background:rgb(22,22,22);"));
+        port_settings_tab = new QWidget();
+        port_settings_tab->setObjectName(QStringLiteral("port_settings_tab"));
+        verticalLayout_51 = new QVBoxLayout(port_settings_tab);
+        verticalLayout_51->setSpacing(6);
+        verticalLayout_51->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_51->setObjectName(QStringLiteral("verticalLayout_51"));
+        port_settings_frame = new QFrame(port_settings_tab);
+        port_settings_frame->setObjectName(QStringLiteral("port_settings_frame"));
+        port_settings_frame->setMinimumSize(QSize(350, 450));
+        port_settings_frame->setMaximumSize(QSize(350, 450));
+        port_settings_frame->setFrameShape(QFrame::StyledPanel);
+        port_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_13 = new QVBoxLayout(port_settings_frame);
         verticalLayout_13->setSpacing(6);
         verticalLayout_13->setContentsMargins(11, 11, 11, 11);
         verticalLayout_13->setObjectName(QStringLiteral("verticalLayout_13"));
-        verticalSpacer_5 = new QSpacerItem(183, 9, QSizePolicy::Minimum, QSizePolicy::Fixed);
+        env_port_settings_frame = new QFrame(port_settings_frame);
+        env_port_settings_frame->setObjectName(QStringLiteral("env_port_settings_frame"));
+        env_port_settings_frame->setFrameShape(QFrame::StyledPanel);
+        env_port_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_32 = new QVBoxLayout(env_port_settings_frame);
+        verticalLayout_32->setSpacing(6);
+        verticalLayout_32->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_32->setObjectName(QStringLiteral("verticalLayout_32"));
+        verticalLayout_32->setContentsMargins(6, 6, 6, 6);
+        env_portsettings_title = new QLabel(env_port_settings_frame);
+        env_portsettings_title->setObjectName(QStringLiteral("env_portsettings_title"));
+        env_portsettings_title->setMinimumSize(QSize(300, 36));
+        env_portsettings_title->setMaximumSize(QSize(300, 36));
+        env_portsettings_title->setFont(font4);
+        env_portsettings_title->setStyleSheet(QStringLiteral(""));
+        env_portsettings_title->setAlignment(Qt::AlignCenter);
 
-        verticalLayout_13->addItem(verticalSpacer_5);
+        verticalLayout_32->addWidget(env_portsettings_title, 0, Qt::AlignHCenter);
 
-        settings_view_layout = new QHBoxLayout();
-        settings_view_layout->setSpacing(6);
-        settings_view_layout->setObjectName(QStringLiteral("settings_view_layout"));
-        horizontalSpacer_7 = new QSpacerItem(64, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
+        env_portnum_layout = new QHBoxLayout();
+        env_portnum_layout->setSpacing(6);
+        env_portnum_layout->setObjectName(QStringLiteral("env_portnum_layout"));
+        env_portnum_title = new QLabel(env_port_settings_frame);
+        env_portnum_title->setObjectName(QStringLiteral("env_portnum_title"));
+        env_portnum_title->setMinimumSize(QSize(150, 24));
+        env_portnum_title->setMaximumSize(QSize(150, 24));
+        env_portnum_title->setFont(font4);
+        env_portnum_title->setStyleSheet(QStringLiteral("background:none"));
 
-        settings_view_layout->addItem(horizontalSpacer_7);
+        env_portnum_layout->addWidget(env_portnum_title);
 
-        settings_view = new QTreeView(settings_page_view_frame);
-        settings_view->setObjectName(QStringLiteral("settings_view"));
-        sizePolicy4.setHeightForWidth(settings_view->sizePolicy().hasHeightForWidth());
-        settings_view->setSizePolicy(sizePolicy4);
-        settings_view->setMinimumSize(QSize(512, 256));
-        settings_view->setMaximumSize(QSize(512, 16777215));
-        settings_view->setFont(font4);
-        settings_view->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
-"\n"
-"\n"
-"border-radius: 8;\n"
-"color: rgba(212,215,217,210);"));
-        settings_view->setFrameShape(QFrame::NoFrame);
-        settings_view->setFrameShadow(QFrame::Plain);
-        settings_view->setSelectionBehavior(QAbstractItemView::SelectItems);
-        settings_view->setHeaderHidden(true);
-        settings_view->header()->setVisible(false);
-        settings_view->header()->setCascadingSectionResizes(false);
-        settings_view->header()->setDefaultSectionSize(250);
-        settings_view->header()->setMinimumSectionSize(200);
-        settings_view->header()->setStretchLastSection(false);
+        env_portnum_field = new QLineEdit(env_port_settings_frame);
+        env_portnum_field->setObjectName(QStringLiteral("env_portnum_field"));
+        env_portnum_field->setMinimumSize(QSize(150, 24));
+        env_portnum_field->setMaximumSize(QSize(150, 24));
+        env_portnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
 
-        settings_view_layout->addWidget(settings_view);
-
-        horizontalSpacer_8 = new QSpacerItem(211, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        settings_view_layout->addItem(horizontalSpacer_8);
-
-
-        verticalLayout_13->addLayout(settings_view_layout);
+        env_portnum_layout->addWidget(env_portnum_field);
 
 
-        settings_page_layout->addWidget(settings_page_view_frame);
+        verticalLayout_32->addLayout(env_portnum_layout);
+
+        env_portbaud_layout = new QHBoxLayout();
+        env_portbaud_layout->setSpacing(6);
+        env_portbaud_layout->setObjectName(QStringLiteral("env_portbaud_layout"));
+        env_baud_title = new QLabel(env_port_settings_frame);
+        env_baud_title->setObjectName(QStringLiteral("env_baud_title"));
+        env_baud_title->setMinimumSize(QSize(150, 24));
+        env_baud_title->setMaximumSize(QSize(150, 24));
+        env_baud_title->setFont(font4);
+        env_baud_title->setStyleSheet(QStringLiteral("background:none"));
+
+        env_portbaud_layout->addWidget(env_baud_title);
+
+        env_baud_field = new QLineEdit(env_port_settings_frame);
+        env_baud_field->setObjectName(QStringLiteral("env_baud_field"));
+        env_baud_field->setMinimumSize(QSize(150, 24));
+        env_baud_field->setMaximumSize(QSize(150, 24));
+        env_baud_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        env_portbaud_layout->addWidget(env_baud_field);
 
 
-        horizontalLayout_3->addLayout(settings_page_layout);
+        verticalLayout_32->addLayout(env_portbaud_layout);
+
+
+        verticalLayout_13->addWidget(env_port_settings_frame);
+
+        md_port_settings_frame = new QFrame(port_settings_frame);
+        md_port_settings_frame->setObjectName(QStringLiteral("md_port_settings_frame"));
+        md_port_settings_frame->setFrameShape(QFrame::StyledPanel);
+        md_port_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_33 = new QVBoxLayout(md_port_settings_frame);
+        verticalLayout_33->setSpacing(6);
+        verticalLayout_33->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_33->setObjectName(QStringLiteral("verticalLayout_33"));
+        verticalLayout_33->setContentsMargins(6, 6, 6, 6);
+        md_portsettings_title = new QLabel(md_port_settings_frame);
+        md_portsettings_title->setObjectName(QStringLiteral("md_portsettings_title"));
+        md_portsettings_title->setMinimumSize(QSize(300, 36));
+        md_portsettings_title->setMaximumSize(QSize(300, 36));
+        md_portsettings_title->setFont(font4);
+        md_portsettings_title->setStyleSheet(QStringLiteral("background:none"));
+        md_portsettings_title->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_33->addWidget(md_portsettings_title, 0, Qt::AlignHCenter);
+
+        md_portnum_layout = new QHBoxLayout();
+        md_portnum_layout->setSpacing(6);
+        md_portnum_layout->setObjectName(QStringLiteral("md_portnum_layout"));
+        md_portnum_title = new QLabel(md_port_settings_frame);
+        md_portnum_title->setObjectName(QStringLiteral("md_portnum_title"));
+        md_portnum_title->setMinimumSize(QSize(150, 24));
+        md_portnum_title->setMaximumSize(QSize(150, 24));
+        md_portnum_title->setFont(font4);
+        md_portnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        md_portnum_layout->addWidget(md_portnum_title);
+
+        md_portnum_field = new QLineEdit(md_port_settings_frame);
+        md_portnum_field->setObjectName(QStringLiteral("md_portnum_field"));
+        md_portnum_field->setMinimumSize(QSize(150, 24));
+        md_portnum_field->setMaximumSize(QSize(150, 24));
+        md_portnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        md_portnum_layout->addWidget(md_portnum_field);
+
+
+        verticalLayout_33->addLayout(md_portnum_layout);
+
+        md_baudrate_layout = new QHBoxLayout();
+        md_baudrate_layout->setSpacing(6);
+        md_baudrate_layout->setObjectName(QStringLiteral("md_baudrate_layout"));
+        md_baudrate_title = new QLabel(md_port_settings_frame);
+        md_baudrate_title->setObjectName(QStringLiteral("md_baudrate_title"));
+        md_baudrate_title->setMinimumSize(QSize(150, 24));
+        md_baudrate_title->setMaximumSize(QSize(150, 24));
+        md_baudrate_title->setFont(font4);
+        md_baudrate_title->setStyleSheet(QStringLiteral("background:none"));
+
+        md_baudrate_layout->addWidget(md_baudrate_title);
+
+        md_baudrate_field = new QLineEdit(md_port_settings_frame);
+        md_baudrate_field->setObjectName(QStringLiteral("md_baudrate_field"));
+        md_baudrate_field->setMinimumSize(QSize(150, 24));
+        md_baudrate_field->setMaximumSize(QSize(150, 24));
+        md_baudrate_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        md_baudrate_layout->addWidget(md_baudrate_field);
+
+
+        verticalLayout_33->addLayout(md_baudrate_layout);
+
+
+        verticalLayout_13->addWidget(md_port_settings_frame);
+
+        lg_port_settings_frame = new QFrame(port_settings_frame);
+        lg_port_settings_frame->setObjectName(QStringLiteral("lg_port_settings_frame"));
+        lg_port_settings_frame->setFrameShape(QFrame::StyledPanel);
+        lg_port_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_30 = new QVBoxLayout(lg_port_settings_frame);
+        verticalLayout_30->setSpacing(6);
+        verticalLayout_30->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_30->setObjectName(QStringLiteral("verticalLayout_30"));
+        verticalLayout_30->setContentsMargins(6, 6, 6, 6);
+        lg_portsettings_title = new QLabel(lg_port_settings_frame);
+        lg_portsettings_title->setObjectName(QStringLiteral("lg_portsettings_title"));
+        lg_portsettings_title->setMinimumSize(QSize(300, 36));
+        lg_portsettings_title->setMaximumSize(QSize(300, 36));
+        lg_portsettings_title->setFont(font4);
+        lg_portsettings_title->setStyleSheet(QStringLiteral("background:none"));
+        lg_portsettings_title->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_30->addWidget(lg_portsettings_title, 0, Qt::AlignHCenter);
+
+        lg_portnum_layout = new QHBoxLayout();
+        lg_portnum_layout->setSpacing(6);
+        lg_portnum_layout->setObjectName(QStringLiteral("lg_portnum_layout"));
+        lg_portnum_title = new QLabel(lg_port_settings_frame);
+        lg_portnum_title->setObjectName(QStringLiteral("lg_portnum_title"));
+        lg_portnum_title->setMinimumSize(QSize(150, 24));
+        lg_portnum_title->setMaximumSize(QSize(150, 24));
+        lg_portnum_title->setFont(font4);
+        lg_portnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        lg_portnum_layout->addWidget(lg_portnum_title);
+
+        lg_portnum_field = new QLineEdit(lg_port_settings_frame);
+        lg_portnum_field->setObjectName(QStringLiteral("lg_portnum_field"));
+        lg_portnum_field->setMinimumSize(QSize(150, 24));
+        lg_portnum_field->setMaximumSize(QSize(150, 24));
+        lg_portnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        lg_portnum_layout->addWidget(lg_portnum_field);
+
+
+        verticalLayout_30->addLayout(lg_portnum_layout);
+
+        lg_portbaud_layout = new QHBoxLayout();
+        lg_portbaud_layout->setSpacing(6);
+        lg_portbaud_layout->setObjectName(QStringLiteral("lg_portbaud_layout"));
+        lg_baudrate_title = new QLabel(lg_port_settings_frame);
+        lg_baudrate_title->setObjectName(QStringLiteral("lg_baudrate_title"));
+        lg_baudrate_title->setMinimumSize(QSize(150, 24));
+        lg_baudrate_title->setMaximumSize(QSize(150, 24));
+        lg_baudrate_title->setFont(font4);
+        lg_baudrate_title->setStyleSheet(QStringLiteral("background:none"));
+
+        lg_portbaud_layout->addWidget(lg_baudrate_title);
+
+        lg_baudrate_field = new QLineEdit(lg_port_settings_frame);
+        lg_baudrate_field->setObjectName(QStringLiteral("lg_baudrate_field"));
+        lg_baudrate_field->setMinimumSize(QSize(150, 24));
+        lg_baudrate_field->setMaximumSize(QSize(150, 24));
+        lg_baudrate_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        lg_portbaud_layout->addWidget(lg_baudrate_field);
+
+
+        verticalLayout_30->addLayout(lg_portbaud_layout);
+
+
+        verticalLayout_13->addWidget(lg_port_settings_frame);
+
+
+        verticalLayout_51->addWidget(port_settings_frame, 0, Qt::AlignHCenter|Qt::AlignVCenter);
+
+        verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_51->addItem(verticalSpacer_5);
+
+        tabWidget->addTab(port_settings_tab, QString());
+        laser_settings_tab = new QWidget();
+        laser_settings_tab->setObjectName(QStringLiteral("laser_settings_tab"));
+        verticalLayout_50 = new QVBoxLayout(laser_settings_tab);
+        verticalLayout_50->setSpacing(6);
+        verticalLayout_50->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_50->setObjectName(QStringLiteral("verticalLayout_50"));
+        laser_settings_frame = new QFrame(laser_settings_tab);
+        laser_settings_frame->setObjectName(QStringLiteral("laser_settings_frame"));
+        laser_settings_frame->setMinimumSize(QSize(335, 335));
+        laser_settings_frame->setMaximumSize(QSize(335, 335));
+        laser_settings_frame->setBaseSize(QSize(335, 335));
+        laser_settings_frame->setFrameShape(QFrame::StyledPanel);
+        laser_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_42 = new QVBoxLayout(laser_settings_frame);
+        verticalLayout_42->setSpacing(6);
+        verticalLayout_42->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_42->setObjectName(QStringLiteral("verticalLayout_42"));
+        laser_devicenum_layout = new QHBoxLayout();
+        laser_devicenum_layout->setSpacing(6);
+        laser_devicenum_layout->setObjectName(QStringLiteral("laser_devicenum_layout"));
+        laser_devicenum_title = new QLabel(laser_settings_frame);
+        laser_devicenum_title->setObjectName(QStringLiteral("laser_devicenum_title"));
+        laser_devicenum_title->setMinimumSize(QSize(150, 24));
+        laser_devicenum_title->setMaximumSize(QSize(150, 24));
+        laser_devicenum_title->setFont(font4);
+        laser_devicenum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_devicenum_layout->addWidget(laser_devicenum_title);
+
+        laser_devicenum_field = new QLineEdit(laser_settings_frame);
+        laser_devicenum_field->setObjectName(QStringLiteral("laser_devicenum_field"));
+        laser_devicenum_field->setMinimumSize(QSize(150, 24));
+        laser_devicenum_field->setMaximumSize(QSize(150, 24));
+        laser_devicenum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_devicenum_layout->addWidget(laser_devicenum_field);
+
+
+        verticalLayout_42->addLayout(laser_devicenum_layout);
+
+        laser_axisnum_layout = new QHBoxLayout();
+        laser_axisnum_layout->setSpacing(6);
+        laser_axisnum_layout->setObjectName(QStringLiteral("laser_axisnum_layout"));
+        laser_axisnum_title = new QLabel(laser_settings_frame);
+        laser_axisnum_title->setObjectName(QStringLiteral("laser_axisnum_title"));
+        laser_axisnum_title->setMinimumSize(QSize(150, 24));
+        laser_axisnum_title->setMaximumSize(QSize(150, 24));
+        laser_axisnum_title->setFont(font4);
+        laser_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_axisnum_layout->addWidget(laser_axisnum_title);
+
+        laser_axisnum_field = new QLineEdit(laser_settings_frame);
+        laser_axisnum_field->setObjectName(QStringLiteral("laser_axisnum_field"));
+        laser_axisnum_field->setMinimumSize(QSize(150, 24));
+        laser_axisnum_field->setMaximumSize(QSize(150, 24));
+        laser_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_axisnum_layout->addWidget(laser_axisnum_field);
+
+
+        verticalLayout_42->addLayout(laser_axisnum_layout);
+
+        laser_powerres_layout = new QHBoxLayout();
+        laser_powerres_layout->setSpacing(6);
+        laser_powerres_layout->setObjectName(QStringLiteral("laser_powerres_layout"));
+        laser_powerres_title = new QLabel(laser_settings_frame);
+        laser_powerres_title->setObjectName(QStringLiteral("laser_powerres_title"));
+        laser_powerres_title->setMinimumSize(QSize(150, 24));
+        laser_powerres_title->setMaximumSize(QSize(150, 24));
+        laser_powerres_title->setFont(font4);
+        laser_powerres_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_powerres_layout->addWidget(laser_powerres_title);
+
+        laser_powerres_field = new QLineEdit(laser_settings_frame);
+        laser_powerres_field->setObjectName(QStringLiteral("laser_powerres_field"));
+        laser_powerres_field->setMinimumSize(QSize(150, 24));
+        laser_powerres_field->setMaximumSize(QSize(150, 24));
+        laser_powerres_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_powerres_layout->addWidget(laser_powerres_field);
+
+
+        verticalLayout_42->addLayout(laser_powerres_layout);
+
+        laser_powerdef_layout = new QHBoxLayout();
+        laser_powerdef_layout->setSpacing(6);
+        laser_powerdef_layout->setObjectName(QStringLiteral("laser_powerdef_layout"));
+        laser_powerdef_title = new QLabel(laser_settings_frame);
+        laser_powerdef_title->setObjectName(QStringLiteral("laser_powerdef_title"));
+        laser_powerdef_title->setMinimumSize(QSize(150, 24));
+        laser_powerdef_title->setMaximumSize(QSize(150, 24));
+        laser_powerdef_title->setFont(font4);
+        laser_powerdef_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_powerdef_layout->addWidget(laser_powerdef_title);
+
+        laser_powerdef_field = new QLineEdit(laser_settings_frame);
+        laser_powerdef_field->setObjectName(QStringLiteral("laser_powerdef_field"));
+        laser_powerdef_field->setMinimumSize(QSize(150, 24));
+        laser_powerdef_field->setMaximumSize(QSize(150, 24));
+        laser_powerdef_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_powerdef_layout->addWidget(laser_powerdef_field);
+
+
+        verticalLayout_42->addLayout(laser_powerdef_layout);
+
+        laser_powermax_layout = new QHBoxLayout();
+        laser_powermax_layout->setSpacing(6);
+        laser_powermax_layout->setObjectName(QStringLiteral("laser_powermax_layout"));
+        laser_powermax_title = new QLabel(laser_settings_frame);
+        laser_powermax_title->setObjectName(QStringLiteral("laser_powermax_title"));
+        laser_powermax_title->setMinimumSize(QSize(150, 24));
+        laser_powermax_title->setMaximumSize(QSize(150, 24));
+        laser_powermax_title->setFont(font4);
+        laser_powermax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_powermax_layout->addWidget(laser_powermax_title);
+
+        laser_powermax_field = new QLineEdit(laser_settings_frame);
+        laser_powermax_field->setObjectName(QStringLiteral("laser_powermax_field"));
+        laser_powermax_field->setMinimumSize(QSize(150, 24));
+        laser_powermax_field->setMaximumSize(QSize(150, 24));
+        laser_powermax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_powermax_layout->addWidget(laser_powermax_field);
+
+
+        verticalLayout_42->addLayout(laser_powermax_layout);
+
+        laser_powermin_layout = new QHBoxLayout();
+        laser_powermin_layout->setSpacing(6);
+        laser_powermin_layout->setObjectName(QStringLiteral("laser_powermin_layout"));
+        laser_powermin_title = new QLabel(laser_settings_frame);
+        laser_powermin_title->setObjectName(QStringLiteral("laser_powermin_title"));
+        laser_powermin_title->setMinimumSize(QSize(150, 24));
+        laser_powermin_title->setMaximumSize(QSize(150, 24));
+        laser_powermin_title->setFont(font4);
+        laser_powermin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        laser_powermin_layout->addWidget(laser_powermin_title);
+
+        laser_powermin_field = new QLineEdit(laser_settings_frame);
+        laser_powermin_field->setObjectName(QStringLiteral("laser_powermin_field"));
+        laser_powermin_field->setMinimumSize(QSize(150, 24));
+        laser_powermin_field->setMaximumSize(QSize(150, 24));
+        laser_powermin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        laser_powermin_layout->addWidget(laser_powermin_field);
+
+
+        verticalLayout_42->addLayout(laser_powermin_layout);
+
+
+        verticalLayout_50->addWidget(laser_settings_frame, 0, Qt::AlignLeft);
+
+        verticalSpacer_8 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_50->addItem(verticalSpacer_8);
+
+        tabWidget->addTab(laser_settings_tab, QString());
+        galbo_settings_tab = new QWidget();
+        galbo_settings_tab->setObjectName(QStringLiteral("galbo_settings_tab"));
+        verticalLayout_49 = new QVBoxLayout(galbo_settings_tab);
+        verticalLayout_49->setSpacing(6);
+        verticalLayout_49->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_49->setObjectName(QStringLiteral("verticalLayout_49"));
+        galvo_settings_frame = new QFrame(galbo_settings_tab);
+        galvo_settings_frame->setObjectName(QStringLiteral("galvo_settings_frame"));
+        galvo_settings_frame->setMinimumSize(QSize(335, 180));
+        galvo_settings_frame->setMaximumSize(QSize(335, 180));
+        galvo_settings_frame->setFrameShape(QFrame::StyledPanel);
+        galvo_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_43 = new QVBoxLayout(galvo_settings_frame);
+        verticalLayout_43->setSpacing(6);
+        verticalLayout_43->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_43->setObjectName(QStringLiteral("verticalLayout_43"));
+        galvo_devicenum_layout = new QHBoxLayout();
+        galvo_devicenum_layout->setSpacing(6);
+        galvo_devicenum_layout->setObjectName(QStringLiteral("galvo_devicenum_layout"));
+        galvo_devicenum_title = new QLabel(galvo_settings_frame);
+        galvo_devicenum_title->setObjectName(QStringLiteral("galvo_devicenum_title"));
+        galvo_devicenum_title->setMinimumSize(QSize(150, 24));
+        galvo_devicenum_title->setMaximumSize(QSize(150, 24));
+        galvo_devicenum_title->setFont(font4);
+        galvo_devicenum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_devicenum_layout->addWidget(galvo_devicenum_title);
+
+        galvo_devicenum_field = new QLineEdit(galvo_settings_frame);
+        galvo_devicenum_field->setObjectName(QStringLiteral("galvo_devicenum_field"));
+        galvo_devicenum_field->setMinimumSize(QSize(150, 24));
+        galvo_devicenum_field->setMaximumSize(QSize(150, 24));
+        galvo_devicenum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_devicenum_layout->addWidget(galvo_devicenum_field);
+
+
+        verticalLayout_43->addLayout(galvo_devicenum_layout);
+
+        galvo_speeddef_layout = new QHBoxLayout();
+        galvo_speeddef_layout->setSpacing(6);
+        galvo_speeddef_layout->setObjectName(QStringLiteral("galvo_speeddef_layout"));
+        galvo_speeddef_title = new QLabel(galvo_settings_frame);
+        galvo_speeddef_title->setObjectName(QStringLiteral("galvo_speeddef_title"));
+        galvo_speeddef_title->setMinimumSize(QSize(150, 24));
+        galvo_speeddef_title->setMaximumSize(QSize(150, 24));
+        galvo_speeddef_title->setFont(font4);
+        galvo_speeddef_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_speeddef_layout->addWidget(galvo_speeddef_title);
+
+        galvo_speeddef_field = new QLineEdit(galvo_settings_frame);
+        galvo_speeddef_field->setObjectName(QStringLiteral("galvo_speeddef_field"));
+        galvo_speeddef_field->setMinimumSize(QSize(150, 24));
+        galvo_speeddef_field->setMaximumSize(QSize(150, 24));
+        galvo_speeddef_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_speeddef_layout->addWidget(galvo_speeddef_field);
+
+
+        verticalLayout_43->addLayout(galvo_speeddef_layout);
+
+        galvo_speedmax_layout = new QHBoxLayout();
+        galvo_speedmax_layout->setSpacing(6);
+        galvo_speedmax_layout->setObjectName(QStringLiteral("galvo_speedmax_layout"));
+        galvo_speedmax_title = new QLabel(galvo_settings_frame);
+        galvo_speedmax_title->setObjectName(QStringLiteral("galvo_speedmax_title"));
+        galvo_speedmax_title->setMinimumSize(QSize(150, 24));
+        galvo_speedmax_title->setMaximumSize(QSize(150, 24));
+        galvo_speedmax_title->setFont(font4);
+        galvo_speedmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_speedmax_layout->addWidget(galvo_speedmax_title);
+
+        galvo_speedmax_field = new QLineEdit(galvo_settings_frame);
+        galvo_speedmax_field->setObjectName(QStringLiteral("galvo_speedmax_field"));
+        galvo_speedmax_field->setMinimumSize(QSize(150, 24));
+        galvo_speedmax_field->setMaximumSize(QSize(150, 24));
+        galvo_speedmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_speedmax_layout->addWidget(galvo_speedmax_field);
+
+
+        verticalLayout_43->addLayout(galvo_speedmax_layout);
+
+        galvo_speedmin_layout = new QHBoxLayout();
+        galvo_speedmin_layout->setSpacing(6);
+        galvo_speedmin_layout->setObjectName(QStringLiteral("galvo_speedmin_layout"));
+        galvo_speedmin_title = new QLabel(galvo_settings_frame);
+        galvo_speedmin_title->setObjectName(QStringLiteral("galvo_speedmin_title"));
+        galvo_speedmin_title->setMinimumSize(QSize(150, 24));
+        galvo_speedmin_title->setMaximumSize(QSize(150, 24));
+        galvo_speedmin_title->setFont(font4);
+        galvo_speedmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_speedmin_layout->addWidget(galvo_speedmin_title);
+
+        galvo_speedmin_field = new QLineEdit(galvo_settings_frame);
+        galvo_speedmin_field->setObjectName(QStringLiteral("galvo_speedmin_field"));
+        galvo_speedmin_field->setMinimumSize(QSize(150, 24));
+        galvo_speedmin_field->setMaximumSize(QSize(150, 24));
+        galvo_speedmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_speedmin_layout->addWidget(galvo_speedmin_field);
+
+
+        verticalLayout_43->addLayout(galvo_speedmin_layout);
+
+
+        verticalLayout_49->addWidget(galvo_settings_frame, 0, Qt::AlignHCenter);
+
+        galvo_axis_layout = new QHBoxLayout();
+        galvo_axis_layout->setSpacing(6);
+        galvo_axis_layout->setObjectName(QStringLiteral("galvo_axis_layout"));
+        galvo_x_axis_frame = new QFrame(galbo_settings_tab);
+        galvo_x_axis_frame->setObjectName(QStringLiteral("galvo_x_axis_frame"));
+        galvo_x_axis_frame->setMinimumSize(QSize(335, 260));
+        galvo_x_axis_frame->setMaximumSize(QSize(335, 260));
+        galvo_x_axis_frame->setFrameShape(QFrame::StyledPanel);
+        galvo_x_axis_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_44 = new QVBoxLayout(galvo_x_axis_frame);
+        verticalLayout_44->setSpacing(6);
+        verticalLayout_44->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_44->setObjectName(QStringLiteral("verticalLayout_44"));
+        x_axis_title = new QLabel(galvo_x_axis_frame);
+        x_axis_title->setObjectName(QStringLiteral("x_axis_title"));
+        x_axis_title->setMinimumSize(QSize(300, 36));
+        x_axis_title->setMaximumSize(QSize(300, 36));
+        QFont font5;
+        font5.setPointSize(16);
+        x_axis_title->setFont(font5);
+        x_axis_title->setStyleSheet(QStringLiteral(""));
+        x_axis_title->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_44->addWidget(x_axis_title);
+
+        galvo_x_axisnum_layout = new QHBoxLayout();
+        galvo_x_axisnum_layout->setSpacing(6);
+        galvo_x_axisnum_layout->setObjectName(QStringLiteral("galvo_x_axisnum_layout"));
+        galvo_x_axisnum_title = new QLabel(galvo_x_axis_frame);
+        galvo_x_axisnum_title->setObjectName(QStringLiteral("galvo_x_axisnum_title"));
+        galvo_x_axisnum_title->setMinimumSize(QSize(150, 24));
+        galvo_x_axisnum_title->setMaximumSize(QSize(150, 24));
+        galvo_x_axisnum_title->setFont(font4);
+        galvo_x_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_x_axisnum_layout->addWidget(galvo_x_axisnum_title);
+
+        galvo_x_axisnum_field = new QLineEdit(galvo_x_axis_frame);
+        galvo_x_axisnum_field->setObjectName(QStringLiteral("galvo_x_axisnum_field"));
+        galvo_x_axisnum_field->setMinimumSize(QSize(150, 24));
+        galvo_x_axisnum_field->setMaximumSize(QSize(150, 24));
+        galvo_x_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_x_axisnum_layout->addWidget(galvo_x_axisnum_field);
+
+
+        verticalLayout_44->addLayout(galvo_x_axisnum_layout);
+
+        galvo_x_axisalias_layout = new QHBoxLayout();
+        galvo_x_axisalias_layout->setSpacing(6);
+        galvo_x_axisalias_layout->setObjectName(QStringLiteral("galvo_x_axisalias_layout"));
+        galvo_x_axisalias_title = new QLabel(galvo_x_axis_frame);
+        galvo_x_axisalias_title->setObjectName(QStringLiteral("galvo_x_axisalias_title"));
+        galvo_x_axisalias_title->setMinimumSize(QSize(150, 24));
+        galvo_x_axisalias_title->setMaximumSize(QSize(150, 24));
+        galvo_x_axisalias_title->setFont(font4);
+        galvo_x_axisalias_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_x_axisalias_layout->addWidget(galvo_x_axisalias_title);
+
+        galvo_x_axisalias_field = new QLineEdit(galvo_x_axis_frame);
+        galvo_x_axisalias_field->setObjectName(QStringLiteral("galvo_x_axisalias_field"));
+        galvo_x_axisalias_field->setMinimumSize(QSize(150, 24));
+        galvo_x_axisalias_field->setMaximumSize(QSize(150, 24));
+        galvo_x_axisalias_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_x_axisalias_layout->addWidget(galvo_x_axisalias_field);
+
+
+        verticalLayout_44->addLayout(galvo_x_axisalias_layout);
+
+        galvo_x_steps_layout = new QHBoxLayout();
+        galvo_x_steps_layout->setSpacing(6);
+        galvo_x_steps_layout->setObjectName(QStringLiteral("galvo_x_steps_layout"));
+        galvo_x_steps_title = new QLabel(galvo_x_axis_frame);
+        galvo_x_steps_title->setObjectName(QStringLiteral("galvo_x_steps_title"));
+        galvo_x_steps_title->setMinimumSize(QSize(150, 24));
+        galvo_x_steps_title->setMaximumSize(QSize(150, 24));
+        galvo_x_steps_title->setFont(font4);
+        galvo_x_steps_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_x_steps_layout->addWidget(galvo_x_steps_title);
+
+        galvo_x_steps_field = new QLineEdit(galvo_x_axis_frame);
+        galvo_x_steps_field->setObjectName(QStringLiteral("galvo_x_steps_field"));
+        galvo_x_steps_field->setMinimumSize(QSize(150, 24));
+        galvo_x_steps_field->setMaximumSize(QSize(150, 24));
+        galvo_x_steps_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_x_steps_layout->addWidget(galvo_x_steps_field);
+
+
+        verticalLayout_44->addLayout(galvo_x_steps_layout);
+
+        galvo_x_positionmax_layout = new QHBoxLayout();
+        galvo_x_positionmax_layout->setSpacing(6);
+        galvo_x_positionmax_layout->setObjectName(QStringLiteral("galvo_x_positionmax_layout"));
+        galvo_x_positionmax_title = new QLabel(galvo_x_axis_frame);
+        galvo_x_positionmax_title->setObjectName(QStringLiteral("galvo_x_positionmax_title"));
+        galvo_x_positionmax_title->setMinimumSize(QSize(150, 24));
+        galvo_x_positionmax_title->setMaximumSize(QSize(150, 24));
+        galvo_x_positionmax_title->setFont(font4);
+        galvo_x_positionmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_x_positionmax_layout->addWidget(galvo_x_positionmax_title);
+
+        galvo_x_positionmax_field = new QLineEdit(galvo_x_axis_frame);
+        galvo_x_positionmax_field->setObjectName(QStringLiteral("galvo_x_positionmax_field"));
+        galvo_x_positionmax_field->setMinimumSize(QSize(150, 24));
+        galvo_x_positionmax_field->setMaximumSize(QSize(150, 24));
+        galvo_x_positionmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_x_positionmax_layout->addWidget(galvo_x_positionmax_field);
+
+
+        verticalLayout_44->addLayout(galvo_x_positionmax_layout);
+
+        galvo_x_positionmin_layout = new QHBoxLayout();
+        galvo_x_positionmin_layout->setSpacing(6);
+        galvo_x_positionmin_layout->setObjectName(QStringLiteral("galvo_x_positionmin_layout"));
+        galvo_x_positionmin_title = new QLabel(galvo_x_axis_frame);
+        galvo_x_positionmin_title->setObjectName(QStringLiteral("galvo_x_positionmin_title"));
+        galvo_x_positionmin_title->setMinimumSize(QSize(150, 24));
+        galvo_x_positionmin_title->setMaximumSize(QSize(150, 24));
+        galvo_x_positionmin_title->setFont(font4);
+        galvo_x_positionmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_x_positionmin_layout->addWidget(galvo_x_positionmin_title);
+
+        galvo_x_positionmin_field = new QLineEdit(galvo_x_axis_frame);
+        galvo_x_positionmin_field->setObjectName(QStringLiteral("galvo_x_positionmin_field"));
+        galvo_x_positionmin_field->setMinimumSize(QSize(150, 24));
+        galvo_x_positionmin_field->setMaximumSize(QSize(150, 24));
+        galvo_x_positionmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_x_positionmin_layout->addWidget(galvo_x_positionmin_field);
+
+
+        verticalLayout_44->addLayout(galvo_x_positionmin_layout);
+
+
+        galvo_axis_layout->addWidget(galvo_x_axis_frame);
+
+        galvo_y_axis_frame = new QFrame(galbo_settings_tab);
+        galvo_y_axis_frame->setObjectName(QStringLiteral("galvo_y_axis_frame"));
+        galvo_y_axis_frame->setMinimumSize(QSize(335, 260));
+        galvo_y_axis_frame->setMaximumSize(QSize(335, 260));
+        galvo_y_axis_frame->setFrameShape(QFrame::StyledPanel);
+        galvo_y_axis_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_46 = new QVBoxLayout(galvo_y_axis_frame);
+        verticalLayout_46->setSpacing(6);
+        verticalLayout_46->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_46->setObjectName(QStringLiteral("verticalLayout_46"));
+        y_axistitle = new QLabel(galvo_y_axis_frame);
+        y_axistitle->setObjectName(QStringLiteral("y_axistitle"));
+        y_axistitle->setMinimumSize(QSize(300, 36));
+        y_axistitle->setMaximumSize(QSize(300, 36));
+        y_axistitle->setFont(font5);
+        y_axistitle->setStyleSheet(QStringLiteral(""));
+        y_axistitle->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_46->addWidget(y_axistitle);
+
+        galvo_y_axisnum_layout = new QHBoxLayout();
+        galvo_y_axisnum_layout->setSpacing(6);
+        galvo_y_axisnum_layout->setObjectName(QStringLiteral("galvo_y_axisnum_layout"));
+        galvo_y_axisnum_title = new QLabel(galvo_y_axis_frame);
+        galvo_y_axisnum_title->setObjectName(QStringLiteral("galvo_y_axisnum_title"));
+        galvo_y_axisnum_title->setMinimumSize(QSize(150, 24));
+        galvo_y_axisnum_title->setMaximumSize(QSize(150, 24));
+        galvo_y_axisnum_title->setFont(font4);
+        galvo_y_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_y_axisnum_layout->addWidget(galvo_y_axisnum_title);
+
+        galvo_y_axisnum_field = new QLineEdit(galvo_y_axis_frame);
+        galvo_y_axisnum_field->setObjectName(QStringLiteral("galvo_y_axisnum_field"));
+        galvo_y_axisnum_field->setMinimumSize(QSize(150, 24));
+        galvo_y_axisnum_field->setMaximumSize(QSize(150, 24));
+        galvo_y_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_y_axisnum_layout->addWidget(galvo_y_axisnum_field);
+
+
+        verticalLayout_46->addLayout(galvo_y_axisnum_layout);
+
+        galvo_y_axisalias_layou = new QHBoxLayout();
+        galvo_y_axisalias_layou->setSpacing(6);
+        galvo_y_axisalias_layou->setObjectName(QStringLiteral("galvo_y_axisalias_layou"));
+        galvo_y_axisalias_title = new QLabel(galvo_y_axis_frame);
+        galvo_y_axisalias_title->setObjectName(QStringLiteral("galvo_y_axisalias_title"));
+        galvo_y_axisalias_title->setMinimumSize(QSize(150, 24));
+        galvo_y_axisalias_title->setMaximumSize(QSize(150, 24));
+        galvo_y_axisalias_title->setFont(font4);
+        galvo_y_axisalias_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_y_axisalias_layou->addWidget(galvo_y_axisalias_title);
+
+        galvo_y_axisalias_field = new QLineEdit(galvo_y_axis_frame);
+        galvo_y_axisalias_field->setObjectName(QStringLiteral("galvo_y_axisalias_field"));
+        galvo_y_axisalias_field->setMinimumSize(QSize(150, 24));
+        galvo_y_axisalias_field->setMaximumSize(QSize(150, 24));
+        galvo_y_axisalias_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_y_axisalias_layou->addWidget(galvo_y_axisalias_field);
+
+
+        verticalLayout_46->addLayout(galvo_y_axisalias_layou);
+
+        galvo_y_steps_layout = new QHBoxLayout();
+        galvo_y_steps_layout->setSpacing(6);
+        galvo_y_steps_layout->setObjectName(QStringLiteral("galvo_y_steps_layout"));
+        galvo_y_steps_title = new QLabel(galvo_y_axis_frame);
+        galvo_y_steps_title->setObjectName(QStringLiteral("galvo_y_steps_title"));
+        galvo_y_steps_title->setMinimumSize(QSize(150, 24));
+        galvo_y_steps_title->setMaximumSize(QSize(150, 24));
+        galvo_y_steps_title->setFont(font4);
+        galvo_y_steps_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_y_steps_layout->addWidget(galvo_y_steps_title);
+
+        galvo_y_steps_field = new QLineEdit(galvo_y_axis_frame);
+        galvo_y_steps_field->setObjectName(QStringLiteral("galvo_y_steps_field"));
+        galvo_y_steps_field->setMinimumSize(QSize(150, 24));
+        galvo_y_steps_field->setMaximumSize(QSize(150, 24));
+        galvo_y_steps_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_y_steps_layout->addWidget(galvo_y_steps_field);
+
+
+        verticalLayout_46->addLayout(galvo_y_steps_layout);
+
+        galvo_y_positionmax_layout = new QHBoxLayout();
+        galvo_y_positionmax_layout->setSpacing(6);
+        galvo_y_positionmax_layout->setObjectName(QStringLiteral("galvo_y_positionmax_layout"));
+        galvo_y_positionmax_title = new QLabel(galvo_y_axis_frame);
+        galvo_y_positionmax_title->setObjectName(QStringLiteral("galvo_y_positionmax_title"));
+        galvo_y_positionmax_title->setMinimumSize(QSize(150, 24));
+        galvo_y_positionmax_title->setMaximumSize(QSize(150, 24));
+        galvo_y_positionmax_title->setFont(font4);
+        galvo_y_positionmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_y_positionmax_layout->addWidget(galvo_y_positionmax_title);
+
+        galvo_y_positionmax_field = new QLineEdit(galvo_y_axis_frame);
+        galvo_y_positionmax_field->setObjectName(QStringLiteral("galvo_y_positionmax_field"));
+        galvo_y_positionmax_field->setMinimumSize(QSize(150, 24));
+        galvo_y_positionmax_field->setMaximumSize(QSize(150, 24));
+        galvo_y_positionmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_y_positionmax_layout->addWidget(galvo_y_positionmax_field);
+
+
+        verticalLayout_46->addLayout(galvo_y_positionmax_layout);
+
+        galvo_y_positionmin_layout = new QHBoxLayout();
+        galvo_y_positionmin_layout->setSpacing(6);
+        galvo_y_positionmin_layout->setObjectName(QStringLiteral("galvo_y_positionmin_layout"));
+        galvo_y_positionmin_title = new QLabel(galvo_y_axis_frame);
+        galvo_y_positionmin_title->setObjectName(QStringLiteral("galvo_y_positionmin_title"));
+        galvo_y_positionmin_title->setMinimumSize(QSize(150, 24));
+        galvo_y_positionmin_title->setMaximumSize(QSize(150, 24));
+        galvo_y_positionmin_title->setFont(font4);
+        galvo_y_positionmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        galvo_y_positionmin_layout->addWidget(galvo_y_positionmin_title);
+
+        galvo_y_positionmin_field = new QLineEdit(galvo_y_axis_frame);
+        galvo_y_positionmin_field->setObjectName(QStringLiteral("galvo_y_positionmin_field"));
+        galvo_y_positionmin_field->setMinimumSize(QSize(150, 24));
+        galvo_y_positionmin_field->setMaximumSize(QSize(150, 24));
+        galvo_y_positionmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        galvo_y_positionmin_layout->addWidget(galvo_y_positionmin_field);
+
+
+        verticalLayout_46->addLayout(galvo_y_positionmin_layout);
+
+
+        galvo_axis_layout->addWidget(galvo_y_axis_frame);
+
+
+        verticalLayout_49->addLayout(galvo_axis_layout);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_49->addItem(verticalSpacer);
+
+        tabWidget->addTab(galbo_settings_tab, QString());
+        buildplate_settings_tab = new QWidget();
+        buildplate_settings_tab->setObjectName(QStringLiteral("buildplate_settings_tab"));
+        verticalLayout_54 = new QVBoxLayout(buildplate_settings_tab);
+        verticalLayout_54->setSpacing(6);
+        verticalLayout_54->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_54->setObjectName(QStringLiteral("verticalLayout_54"));
+        buildplate_settings_frame = new QFrame(buildplate_settings_tab);
+        buildplate_settings_frame->setObjectName(QStringLiteral("buildplate_settings_frame"));
+        buildplate_settings_frame->setMinimumSize(QSize(335, 512));
+        buildplate_settings_frame->setMaximumSize(QSize(335, 512));
+        buildplate_settings_frame->setFrameShape(QFrame::StyledPanel);
+        buildplate_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_45 = new QVBoxLayout(buildplate_settings_frame);
+        verticalLayout_45->setSpacing(6);
+        verticalLayout_45->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_45->setObjectName(QStringLiteral("verticalLayout_45"));
+        buildplate_devicenum_layout = new QHBoxLayout();
+        buildplate_devicenum_layout->setSpacing(6);
+        buildplate_devicenum_layout->setObjectName(QStringLiteral("buildplate_devicenum_layout"));
+        buildplate_devicenum_title = new QLabel(buildplate_settings_frame);
+        buildplate_devicenum_title->setObjectName(QStringLiteral("buildplate_devicenum_title"));
+        buildplate_devicenum_title->setMinimumSize(QSize(150, 24));
+        buildplate_devicenum_title->setMaximumSize(QSize(150, 24));
+        buildplate_devicenum_title->setFont(font4);
+        buildplate_devicenum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_devicenum_layout->addWidget(buildplate_devicenum_title);
+
+        buildplate_devicenum_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_devicenum_field->setObjectName(QStringLiteral("buildplate_devicenum_field"));
+        buildplate_devicenum_field->setMinimumSize(QSize(150, 24));
+        buildplate_devicenum_field->setMaximumSize(QSize(150, 24));
+        buildplate_devicenum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_devicenum_layout->addWidget(buildplate_devicenum_field);
+
+
+        verticalLayout_45->addLayout(buildplate_devicenum_layout);
+
+        buildplate_axisnum_layout = new QHBoxLayout();
+        buildplate_axisnum_layout->setSpacing(6);
+        buildplate_axisnum_layout->setObjectName(QStringLiteral("buildplate_axisnum_layout"));
+        buildplate_axisnum_title = new QLabel(buildplate_settings_frame);
+        buildplate_axisnum_title->setObjectName(QStringLiteral("buildplate_axisnum_title"));
+        buildplate_axisnum_title->setMinimumSize(QSize(150, 24));
+        buildplate_axisnum_title->setMaximumSize(QSize(150, 24));
+        buildplate_axisnum_title->setFont(font4);
+        buildplate_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_axisnum_layout->addWidget(buildplate_axisnum_title);
+
+        buildplate_axisnum_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_axisnum_field->setObjectName(QStringLiteral("buildplate_axisnum_field"));
+        buildplate_axisnum_field->setMinimumSize(QSize(150, 24));
+        buildplate_axisnum_field->setMaximumSize(QSize(150, 24));
+        buildplate_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_axisnum_layout->addWidget(buildplate_axisnum_field);
+
+
+        verticalLayout_45->addLayout(buildplate_axisnum_layout);
+
+        buildplate_axisalias_layout = new QHBoxLayout();
+        buildplate_axisalias_layout->setSpacing(6);
+        buildplate_axisalias_layout->setObjectName(QStringLiteral("buildplate_axisalias_layout"));
+        buildplate_axisalias_title = new QLabel(buildplate_settings_frame);
+        buildplate_axisalias_title->setObjectName(QStringLiteral("buildplate_axisalias_title"));
+        buildplate_axisalias_title->setMinimumSize(QSize(150, 24));
+        buildplate_axisalias_title->setMaximumSize(QSize(150, 24));
+        buildplate_axisalias_title->setFont(font4);
+        buildplate_axisalias_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_axisalias_layout->addWidget(buildplate_axisalias_title);
+
+        buildplate_axisalias_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_axisalias_field->setObjectName(QStringLiteral("buildplate_axisalias_field"));
+        buildplate_axisalias_field->setMinimumSize(QSize(150, 24));
+        buildplate_axisalias_field->setMaximumSize(QSize(150, 24));
+        buildplate_axisalias_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_axisalias_layout->addWidget(buildplate_axisalias_field);
+
+
+        verticalLayout_45->addLayout(buildplate_axisalias_layout);
+
+        buildplate_speeddef_layout = new QHBoxLayout();
+        buildplate_speeddef_layout->setSpacing(6);
+        buildplate_speeddef_layout->setObjectName(QStringLiteral("buildplate_speeddef_layout"));
+        buildplate_speeddef_title = new QLabel(buildplate_settings_frame);
+        buildplate_speeddef_title->setObjectName(QStringLiteral("buildplate_speeddef_title"));
+        buildplate_speeddef_title->setMinimumSize(QSize(150, 24));
+        buildplate_speeddef_title->setMaximumSize(QSize(150, 24));
+        buildplate_speeddef_title->setFont(font4);
+        buildplate_speeddef_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_speeddef_layout->addWidget(buildplate_speeddef_title);
+
+        buildplate_speeddef_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_speeddef_field->setObjectName(QStringLiteral("buildplate_speeddef_field"));
+        buildplate_speeddef_field->setMinimumSize(QSize(150, 24));
+        buildplate_speeddef_field->setMaximumSize(QSize(150, 24));
+        buildplate_speeddef_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_speeddef_layout->addWidget(buildplate_speeddef_field);
+
+
+        verticalLayout_45->addLayout(buildplate_speeddef_layout);
+
+        buildplate_speedmax_layout = new QHBoxLayout();
+        buildplate_speedmax_layout->setSpacing(6);
+        buildplate_speedmax_layout->setObjectName(QStringLiteral("buildplate_speedmax_layout"));
+        buildplate_speedmax_title = new QLabel(buildplate_settings_frame);
+        buildplate_speedmax_title->setObjectName(QStringLiteral("buildplate_speedmax_title"));
+        buildplate_speedmax_title->setMinimumSize(QSize(150, 24));
+        buildplate_speedmax_title->setMaximumSize(QSize(150, 24));
+        buildplate_speedmax_title->setFont(font4);
+        buildplate_speedmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_speedmax_layout->addWidget(buildplate_speedmax_title);
+
+        buildplate_speedmax_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_speedmax_field->setObjectName(QStringLiteral("buildplate_speedmax_field"));
+        buildplate_speedmax_field->setMinimumSize(QSize(150, 24));
+        buildplate_speedmax_field->setMaximumSize(QSize(150, 24));
+        buildplate_speedmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_speedmax_layout->addWidget(buildplate_speedmax_field);
+
+
+        verticalLayout_45->addLayout(buildplate_speedmax_layout);
+
+        buildplate_speedmin_layout = new QHBoxLayout();
+        buildplate_speedmin_layout->setSpacing(6);
+        buildplate_speedmin_layout->setObjectName(QStringLiteral("buildplate_speedmin_layout"));
+        buildplate_speedmin_title = new QLabel(buildplate_settings_frame);
+        buildplate_speedmin_title->setObjectName(QStringLiteral("buildplate_speedmin_title"));
+        buildplate_speedmin_title->setMinimumSize(QSize(150, 24));
+        buildplate_speedmin_title->setMaximumSize(QSize(150, 24));
+        buildplate_speedmin_title->setFont(font4);
+        buildplate_speedmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_speedmin_layout->addWidget(buildplate_speedmin_title);
+
+        buildplate_speedmin_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_speedmin_field->setObjectName(QStringLiteral("buildplate_speedmin_field"));
+        buildplate_speedmin_field->setMinimumSize(QSize(150, 24));
+        buildplate_speedmin_field->setMaximumSize(QSize(150, 24));
+        buildplate_speedmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_speedmin_layout->addWidget(buildplate_speedmin_field);
+
+
+        verticalLayout_45->addLayout(buildplate_speedmin_layout);
+
+        buildplate_steps_layout = new QHBoxLayout();
+        buildplate_steps_layout->setSpacing(6);
+        buildplate_steps_layout->setObjectName(QStringLiteral("buildplate_steps_layout"));
+        buildplate_steps_title = new QLabel(buildplate_settings_frame);
+        buildplate_steps_title->setObjectName(QStringLiteral("buildplate_steps_title"));
+        buildplate_steps_title->setMinimumSize(QSize(150, 24));
+        buildplate_steps_title->setMaximumSize(QSize(150, 24));
+        buildplate_steps_title->setFont(font4);
+        buildplate_steps_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_steps_layout->addWidget(buildplate_steps_title);
+
+        buildplate_steps_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_steps_field->setObjectName(QStringLiteral("buildplate_steps_field"));
+        buildplate_steps_field->setMinimumSize(QSize(150, 24));
+        buildplate_steps_field->setMaximumSize(QSize(150, 24));
+        buildplate_steps_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_steps_layout->addWidget(buildplate_steps_field);
+
+
+        verticalLayout_45->addLayout(buildplate_steps_layout);
+
+        buildplate_positionmax_layout = new QHBoxLayout();
+        buildplate_positionmax_layout->setSpacing(6);
+        buildplate_positionmax_layout->setObjectName(QStringLiteral("buildplate_positionmax_layout"));
+        buildplate_positionmax_title = new QLabel(buildplate_settings_frame);
+        buildplate_positionmax_title->setObjectName(QStringLiteral("buildplate_positionmax_title"));
+        buildplate_positionmax_title->setMinimumSize(QSize(150, 24));
+        buildplate_positionmax_title->setMaximumSize(QSize(150, 24));
+        buildplate_positionmax_title->setFont(font4);
+        buildplate_positionmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_positionmax_layout->addWidget(buildplate_positionmax_title);
+
+        buildplate_positionmax_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_positionmax_field->setObjectName(QStringLiteral("buildplate_positionmax_field"));
+        buildplate_positionmax_field->setMinimumSize(QSize(150, 24));
+        buildplate_positionmax_field->setMaximumSize(QSize(150, 24));
+        buildplate_positionmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_positionmax_layout->addWidget(buildplate_positionmax_field);
+
+
+        verticalLayout_45->addLayout(buildplate_positionmax_layout);
+
+        buildplate_positionmin_layout = new QHBoxLayout();
+        buildplate_positionmin_layout->setSpacing(6);
+        buildplate_positionmin_layout->setObjectName(QStringLiteral("buildplate_positionmin_layout"));
+        buildplate_positionmin_title = new QLabel(buildplate_settings_frame);
+        buildplate_positionmin_title->setObjectName(QStringLiteral("buildplate_positionmin_title"));
+        buildplate_positionmin_title->setMinimumSize(QSize(150, 24));
+        buildplate_positionmin_title->setMaximumSize(QSize(150, 24));
+        buildplate_positionmin_title->setFont(font4);
+        buildplate_positionmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        buildplate_positionmin_layout->addWidget(buildplate_positionmin_title);
+
+        buildplate_positionmin_field = new QLineEdit(buildplate_settings_frame);
+        buildplate_positionmin_field->setObjectName(QStringLiteral("buildplate_positionmin_field"));
+        buildplate_positionmin_field->setMinimumSize(QSize(150, 24));
+        buildplate_positionmin_field->setMaximumSize(QSize(150, 24));
+        buildplate_positionmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        buildplate_positionmin_layout->addWidget(buildplate_positionmin_field);
+
+
+        verticalLayout_45->addLayout(buildplate_positionmin_layout);
+
+
+        verticalLayout_54->addWidget(buildplate_settings_frame);
+
+        tabWidget->addTab(buildplate_settings_tab, QString());
+        hopper_settings_tab = new QWidget();
+        hopper_settings_tab->setObjectName(QStringLiteral("hopper_settings_tab"));
+        verticalLayout_56 = new QVBoxLayout(hopper_settings_tab);
+        verticalLayout_56->setSpacing(6);
+        verticalLayout_56->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_56->setObjectName(QStringLiteral("verticalLayout_56"));
+        hopper_settings_frame = new QFrame(hopper_settings_tab);
+        hopper_settings_frame->setObjectName(QStringLiteral("hopper_settings_frame"));
+        hopper_settings_frame->setMinimumSize(QSize(335, 512));
+        hopper_settings_frame->setMaximumSize(QSize(335, 512));
+        hopper_settings_frame->setFrameShape(QFrame::StyledPanel);
+        hopper_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_47 = new QVBoxLayout(hopper_settings_frame);
+        verticalLayout_47->setSpacing(6);
+        verticalLayout_47->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_47->setObjectName(QStringLiteral("verticalLayout_47"));
+        hopper_devicenum_layout = new QHBoxLayout();
+        hopper_devicenum_layout->setSpacing(6);
+        hopper_devicenum_layout->setObjectName(QStringLiteral("hopper_devicenum_layout"));
+        hopper_devicenum_title = new QLabel(hopper_settings_frame);
+        hopper_devicenum_title->setObjectName(QStringLiteral("hopper_devicenum_title"));
+        hopper_devicenum_title->setMinimumSize(QSize(150, 24));
+        hopper_devicenum_title->setMaximumSize(QSize(150, 24));
+        hopper_devicenum_title->setFont(font4);
+        hopper_devicenum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_devicenum_layout->addWidget(hopper_devicenum_title);
+
+        hopper_devicenum_field = new QLineEdit(hopper_settings_frame);
+        hopper_devicenum_field->setObjectName(QStringLiteral("hopper_devicenum_field"));
+        hopper_devicenum_field->setMinimumSize(QSize(150, 24));
+        hopper_devicenum_field->setMaximumSize(QSize(150, 24));
+        hopper_devicenum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_devicenum_layout->addWidget(hopper_devicenum_field);
+
+
+        verticalLayout_47->addLayout(hopper_devicenum_layout);
+
+        hopper_axisnum_layout = new QHBoxLayout();
+        hopper_axisnum_layout->setSpacing(6);
+        hopper_axisnum_layout->setObjectName(QStringLiteral("hopper_axisnum_layout"));
+        hopper_axisnum_title = new QLabel(hopper_settings_frame);
+        hopper_axisnum_title->setObjectName(QStringLiteral("hopper_axisnum_title"));
+        hopper_axisnum_title->setMinimumSize(QSize(150, 24));
+        hopper_axisnum_title->setMaximumSize(QSize(150, 24));
+        hopper_axisnum_title->setFont(font4);
+        hopper_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_axisnum_layout->addWidget(hopper_axisnum_title);
+
+        hopper_axisnum_field = new QLineEdit(hopper_settings_frame);
+        hopper_axisnum_field->setObjectName(QStringLiteral("hopper_axisnum_field"));
+        hopper_axisnum_field->setMinimumSize(QSize(150, 24));
+        hopper_axisnum_field->setMaximumSize(QSize(150, 24));
+        hopper_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_axisnum_layout->addWidget(hopper_axisnum_field);
+
+
+        verticalLayout_47->addLayout(hopper_axisnum_layout);
+
+        hopper_axisalias_layout = new QHBoxLayout();
+        hopper_axisalias_layout->setSpacing(6);
+        hopper_axisalias_layout->setObjectName(QStringLiteral("hopper_axisalias_layout"));
+        hopper_axisalias_title = new QLabel(hopper_settings_frame);
+        hopper_axisalias_title->setObjectName(QStringLiteral("hopper_axisalias_title"));
+        hopper_axisalias_title->setMinimumSize(QSize(150, 24));
+        hopper_axisalias_title->setMaximumSize(QSize(150, 24));
+        hopper_axisalias_title->setFont(font4);
+        hopper_axisalias_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_axisalias_layout->addWidget(hopper_axisalias_title);
+
+        hopper_axisalias_field = new QLineEdit(hopper_settings_frame);
+        hopper_axisalias_field->setObjectName(QStringLiteral("hopper_axisalias_field"));
+        hopper_axisalias_field->setMinimumSize(QSize(150, 24));
+        hopper_axisalias_field->setMaximumSize(QSize(150, 24));
+        hopper_axisalias_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_axisalias_layout->addWidget(hopper_axisalias_field);
+
+
+        verticalLayout_47->addLayout(hopper_axisalias_layout);
+
+        hopper_speeddef_layout = new QHBoxLayout();
+        hopper_speeddef_layout->setSpacing(6);
+        hopper_speeddef_layout->setObjectName(QStringLiteral("hopper_speeddef_layout"));
+        hopper_speeddef_title = new QLabel(hopper_settings_frame);
+        hopper_speeddef_title->setObjectName(QStringLiteral("hopper_speeddef_title"));
+        hopper_speeddef_title->setMinimumSize(QSize(150, 24));
+        hopper_speeddef_title->setMaximumSize(QSize(150, 24));
+        hopper_speeddef_title->setFont(font4);
+        hopper_speeddef_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_speeddef_layout->addWidget(hopper_speeddef_title);
+
+        hopper_speeddef_field = new QLineEdit(hopper_settings_frame);
+        hopper_speeddef_field->setObjectName(QStringLiteral("hopper_speeddef_field"));
+        hopper_speeddef_field->setMinimumSize(QSize(150, 24));
+        hopper_speeddef_field->setMaximumSize(QSize(150, 24));
+        hopper_speeddef_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_speeddef_layout->addWidget(hopper_speeddef_field);
+
+
+        verticalLayout_47->addLayout(hopper_speeddef_layout);
+
+        hopper_speedmax_layout = new QHBoxLayout();
+        hopper_speedmax_layout->setSpacing(6);
+        hopper_speedmax_layout->setObjectName(QStringLiteral("hopper_speedmax_layout"));
+        hopper_speedmax_title = new QLabel(hopper_settings_frame);
+        hopper_speedmax_title->setObjectName(QStringLiteral("hopper_speedmax_title"));
+        hopper_speedmax_title->setMinimumSize(QSize(150, 24));
+        hopper_speedmax_title->setMaximumSize(QSize(150, 24));
+        hopper_speedmax_title->setFont(font4);
+        hopper_speedmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_speedmax_layout->addWidget(hopper_speedmax_title);
+
+        hopper_speedmax_field = new QLineEdit(hopper_settings_frame);
+        hopper_speedmax_field->setObjectName(QStringLiteral("hopper_speedmax_field"));
+        hopper_speedmax_field->setMinimumSize(QSize(150, 24));
+        hopper_speedmax_field->setMaximumSize(QSize(150, 24));
+        hopper_speedmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_speedmax_layout->addWidget(hopper_speedmax_field);
+
+
+        verticalLayout_47->addLayout(hopper_speedmax_layout);
+
+        hopper_speedmin_layout = new QHBoxLayout();
+        hopper_speedmin_layout->setSpacing(6);
+        hopper_speedmin_layout->setObjectName(QStringLiteral("hopper_speedmin_layout"));
+        hopper_speedmin_title = new QLabel(hopper_settings_frame);
+        hopper_speedmin_title->setObjectName(QStringLiteral("hopper_speedmin_title"));
+        hopper_speedmin_title->setMinimumSize(QSize(150, 24));
+        hopper_speedmin_title->setMaximumSize(QSize(150, 24));
+        hopper_speedmin_title->setFont(font4);
+        hopper_speedmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_speedmin_layout->addWidget(hopper_speedmin_title);
+
+        hopper_speedmin_field = new QLineEdit(hopper_settings_frame);
+        hopper_speedmin_field->setObjectName(QStringLiteral("hopper_speedmin_field"));
+        hopper_speedmin_field->setMinimumSize(QSize(150, 24));
+        hopper_speedmin_field->setMaximumSize(QSize(150, 24));
+        hopper_speedmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_speedmin_layout->addWidget(hopper_speedmin_field);
+
+
+        verticalLayout_47->addLayout(hopper_speedmin_layout);
+
+        hopper_steps_layout = new QHBoxLayout();
+        hopper_steps_layout->setSpacing(6);
+        hopper_steps_layout->setObjectName(QStringLiteral("hopper_steps_layout"));
+        hopper_steps_title = new QLabel(hopper_settings_frame);
+        hopper_steps_title->setObjectName(QStringLiteral("hopper_steps_title"));
+        hopper_steps_title->setMinimumSize(QSize(150, 24));
+        hopper_steps_title->setMaximumSize(QSize(150, 24));
+        hopper_steps_title->setFont(font4);
+        hopper_steps_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_steps_layout->addWidget(hopper_steps_title);
+
+        hopper_steps_field = new QLineEdit(hopper_settings_frame);
+        hopper_steps_field->setObjectName(QStringLiteral("hopper_steps_field"));
+        hopper_steps_field->setMinimumSize(QSize(150, 24));
+        hopper_steps_field->setMaximumSize(QSize(150, 24));
+        hopper_steps_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_steps_layout->addWidget(hopper_steps_field);
+
+
+        verticalLayout_47->addLayout(hopper_steps_layout);
+
+        hopper_positionmax_layout = new QHBoxLayout();
+        hopper_positionmax_layout->setSpacing(6);
+        hopper_positionmax_layout->setObjectName(QStringLiteral("hopper_positionmax_layout"));
+        hopper_positionmax_title = new QLabel(hopper_settings_frame);
+        hopper_positionmax_title->setObjectName(QStringLiteral("hopper_positionmax_title"));
+        hopper_positionmax_title->setMinimumSize(QSize(150, 24));
+        hopper_positionmax_title->setMaximumSize(QSize(150, 24));
+        hopper_positionmax_title->setFont(font4);
+        hopper_positionmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_positionmax_layout->addWidget(hopper_positionmax_title);
+
+        hopper_positionmax_field = new QLineEdit(hopper_settings_frame);
+        hopper_positionmax_field->setObjectName(QStringLiteral("hopper_positionmax_field"));
+        hopper_positionmax_field->setMinimumSize(QSize(150, 24));
+        hopper_positionmax_field->setMaximumSize(QSize(150, 24));
+        hopper_positionmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_positionmax_layout->addWidget(hopper_positionmax_field);
+
+
+        verticalLayout_47->addLayout(hopper_positionmax_layout);
+
+        hopper_positionmin_layout = new QHBoxLayout();
+        hopper_positionmin_layout->setSpacing(6);
+        hopper_positionmin_layout->setObjectName(QStringLiteral("hopper_positionmin_layout"));
+        hopper_positionmin_title_2 = new QLabel(hopper_settings_frame);
+        hopper_positionmin_title_2->setObjectName(QStringLiteral("hopper_positionmin_title_2"));
+        hopper_positionmin_title_2->setMinimumSize(QSize(150, 24));
+        hopper_positionmin_title_2->setMaximumSize(QSize(150, 24));
+        hopper_positionmin_title_2->setFont(font4);
+        hopper_positionmin_title_2->setStyleSheet(QStringLiteral("background:none"));
+
+        hopper_positionmin_layout->addWidget(hopper_positionmin_title_2);
+
+        hopper_positionmin_field = new QLineEdit(hopper_settings_frame);
+        hopper_positionmin_field->setObjectName(QStringLiteral("hopper_positionmin_field"));
+        hopper_positionmin_field->setMinimumSize(QSize(150, 24));
+        hopper_positionmin_field->setMaximumSize(QSize(150, 24));
+        hopper_positionmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        hopper_positionmin_layout->addWidget(hopper_positionmin_field);
+
+
+        verticalLayout_47->addLayout(hopper_positionmin_layout);
+
+
+        verticalLayout_56->addWidget(hopper_settings_frame);
+
+        tabWidget->addTab(hopper_settings_tab, QString());
+        spreader_settings_tab = new QWidget();
+        spreader_settings_tab->setObjectName(QStringLiteral("spreader_settings_tab"));
+        verticalLayout_57 = new QVBoxLayout(spreader_settings_tab);
+        verticalLayout_57->setSpacing(6);
+        verticalLayout_57->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_57->setObjectName(QStringLiteral("verticalLayout_57"));
+        spreader_settings_frame = new QFrame(spreader_settings_tab);
+        spreader_settings_frame->setObjectName(QStringLiteral("spreader_settings_frame"));
+        spreader_settings_frame->setMinimumSize(QSize(335, 512));
+        spreader_settings_frame->setMaximumSize(QSize(335, 512));
+        spreader_settings_frame->setFrameShape(QFrame::StyledPanel);
+        spreader_settings_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_48 = new QVBoxLayout(spreader_settings_frame);
+        verticalLayout_48->setSpacing(6);
+        verticalLayout_48->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_48->setObjectName(QStringLiteral("verticalLayout_48"));
+        spreader_devicenum_layout = new QHBoxLayout();
+        spreader_devicenum_layout->setSpacing(6);
+        spreader_devicenum_layout->setObjectName(QStringLiteral("spreader_devicenum_layout"));
+        spreader_devicenum_title = new QLabel(spreader_settings_frame);
+        spreader_devicenum_title->setObjectName(QStringLiteral("spreader_devicenum_title"));
+        spreader_devicenum_title->setMinimumSize(QSize(150, 24));
+        spreader_devicenum_title->setMaximumSize(QSize(150, 24));
+        spreader_devicenum_title->setFont(font4);
+        spreader_devicenum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_devicenum_layout->addWidget(spreader_devicenum_title);
+
+        spreader_devicenum_field = new QLineEdit(spreader_settings_frame);
+        spreader_devicenum_field->setObjectName(QStringLiteral("spreader_devicenum_field"));
+        spreader_devicenum_field->setMinimumSize(QSize(150, 24));
+        spreader_devicenum_field->setMaximumSize(QSize(150, 24));
+        spreader_devicenum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_devicenum_layout->addWidget(spreader_devicenum_field);
+
+
+        verticalLayout_48->addLayout(spreader_devicenum_layout);
+
+        spreader_axisnum_layout = new QHBoxLayout();
+        spreader_axisnum_layout->setSpacing(6);
+        spreader_axisnum_layout->setObjectName(QStringLiteral("spreader_axisnum_layout"));
+        spreader_axisnum_title = new QLabel(spreader_settings_frame);
+        spreader_axisnum_title->setObjectName(QStringLiteral("spreader_axisnum_title"));
+        spreader_axisnum_title->setMinimumSize(QSize(150, 24));
+        spreader_axisnum_title->setMaximumSize(QSize(150, 24));
+        spreader_axisnum_title->setFont(font4);
+        spreader_axisnum_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_axisnum_layout->addWidget(spreader_axisnum_title);
+
+        spreader_axisnum_field = new QLineEdit(spreader_settings_frame);
+        spreader_axisnum_field->setObjectName(QStringLiteral("spreader_axisnum_field"));
+        spreader_axisnum_field->setMinimumSize(QSize(150, 24));
+        spreader_axisnum_field->setMaximumSize(QSize(150, 24));
+        spreader_axisnum_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_axisnum_layout->addWidget(spreader_axisnum_field);
+
+
+        verticalLayout_48->addLayout(spreader_axisnum_layout);
+
+        spreader_axisalias_layout = new QHBoxLayout();
+        spreader_axisalias_layout->setSpacing(6);
+        spreader_axisalias_layout->setObjectName(QStringLiteral("spreader_axisalias_layout"));
+        spreader_axisalias_title = new QLabel(spreader_settings_frame);
+        spreader_axisalias_title->setObjectName(QStringLiteral("spreader_axisalias_title"));
+        spreader_axisalias_title->setMinimumSize(QSize(150, 24));
+        spreader_axisalias_title->setMaximumSize(QSize(150, 24));
+        spreader_axisalias_title->setFont(font4);
+        spreader_axisalias_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_axisalias_layout->addWidget(spreader_axisalias_title);
+
+        spreader_axisalias_field = new QLineEdit(spreader_settings_frame);
+        spreader_axisalias_field->setObjectName(QStringLiteral("spreader_axisalias_field"));
+        spreader_axisalias_field->setMinimumSize(QSize(150, 24));
+        spreader_axisalias_field->setMaximumSize(QSize(150, 24));
+        spreader_axisalias_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_axisalias_layout->addWidget(spreader_axisalias_field);
+
+
+        verticalLayout_48->addLayout(spreader_axisalias_layout);
+
+        spreader_speeddef_layout = new QHBoxLayout();
+        spreader_speeddef_layout->setSpacing(6);
+        spreader_speeddef_layout->setObjectName(QStringLiteral("spreader_speeddef_layout"));
+        spreader_speeddef_title = new QLabel(spreader_settings_frame);
+        spreader_speeddef_title->setObjectName(QStringLiteral("spreader_speeddef_title"));
+        spreader_speeddef_title->setMinimumSize(QSize(150, 24));
+        spreader_speeddef_title->setMaximumSize(QSize(150, 24));
+        spreader_speeddef_title->setFont(font4);
+        spreader_speeddef_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_speeddef_layout->addWidget(spreader_speeddef_title);
+
+        spreader_speeddef_field = new QLineEdit(spreader_settings_frame);
+        spreader_speeddef_field->setObjectName(QStringLiteral("spreader_speeddef_field"));
+        spreader_speeddef_field->setMinimumSize(QSize(150, 24));
+        spreader_speeddef_field->setMaximumSize(QSize(150, 24));
+        spreader_speeddef_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_speeddef_layout->addWidget(spreader_speeddef_field);
+
+
+        verticalLayout_48->addLayout(spreader_speeddef_layout);
+
+        spreader_speedmax_layout = new QHBoxLayout();
+        spreader_speedmax_layout->setSpacing(6);
+        spreader_speedmax_layout->setObjectName(QStringLiteral("spreader_speedmax_layout"));
+        spreader_speedmax_title = new QLabel(spreader_settings_frame);
+        spreader_speedmax_title->setObjectName(QStringLiteral("spreader_speedmax_title"));
+        spreader_speedmax_title->setMinimumSize(QSize(150, 24));
+        spreader_speedmax_title->setMaximumSize(QSize(150, 24));
+        spreader_speedmax_title->setFont(font4);
+        spreader_speedmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_speedmax_layout->addWidget(spreader_speedmax_title);
+
+        spreader_speedmax_field = new QLineEdit(spreader_settings_frame);
+        spreader_speedmax_field->setObjectName(QStringLiteral("spreader_speedmax_field"));
+        spreader_speedmax_field->setMinimumSize(QSize(150, 24));
+        spreader_speedmax_field->setMaximumSize(QSize(150, 24));
+        spreader_speedmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_speedmax_layout->addWidget(spreader_speedmax_field);
+
+
+        verticalLayout_48->addLayout(spreader_speedmax_layout);
+
+        spreader_speedmin_layout = new QHBoxLayout();
+        spreader_speedmin_layout->setSpacing(6);
+        spreader_speedmin_layout->setObjectName(QStringLiteral("spreader_speedmin_layout"));
+        spreader_speedmin_title = new QLabel(spreader_settings_frame);
+        spreader_speedmin_title->setObjectName(QStringLiteral("spreader_speedmin_title"));
+        spreader_speedmin_title->setMinimumSize(QSize(150, 24));
+        spreader_speedmin_title->setMaximumSize(QSize(150, 24));
+        spreader_speedmin_title->setFont(font4);
+        spreader_speedmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_speedmin_layout->addWidget(spreader_speedmin_title);
+
+        spreader_speedmin_field = new QLineEdit(spreader_settings_frame);
+        spreader_speedmin_field->setObjectName(QStringLiteral("spreader_speedmin_field"));
+        spreader_speedmin_field->setMinimumSize(QSize(150, 24));
+        spreader_speedmin_field->setMaximumSize(QSize(150, 24));
+        spreader_speedmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_speedmin_layout->addWidget(spreader_speedmin_field);
+
+
+        verticalLayout_48->addLayout(spreader_speedmin_layout);
+
+        spreader_steps_layout = new QHBoxLayout();
+        spreader_steps_layout->setSpacing(6);
+        spreader_steps_layout->setObjectName(QStringLiteral("spreader_steps_layout"));
+        spreader_steps_title = new QLabel(spreader_settings_frame);
+        spreader_steps_title->setObjectName(QStringLiteral("spreader_steps_title"));
+        spreader_steps_title->setMinimumSize(QSize(150, 24));
+        spreader_steps_title->setMaximumSize(QSize(150, 24));
+        spreader_steps_title->setFont(font4);
+        spreader_steps_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_steps_layout->addWidget(spreader_steps_title);
+
+        spreader_steps_field = new QLineEdit(spreader_settings_frame);
+        spreader_steps_field->setObjectName(QStringLiteral("spreader_steps_field"));
+        spreader_steps_field->setMinimumSize(QSize(150, 24));
+        spreader_steps_field->setMaximumSize(QSize(150, 24));
+        spreader_steps_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_steps_layout->addWidget(spreader_steps_field);
+
+
+        verticalLayout_48->addLayout(spreader_steps_layout);
+
+        spreader_positionmax_layout = new QHBoxLayout();
+        spreader_positionmax_layout->setSpacing(6);
+        spreader_positionmax_layout->setObjectName(QStringLiteral("spreader_positionmax_layout"));
+        spreader_positionmax_title = new QLabel(spreader_settings_frame);
+        spreader_positionmax_title->setObjectName(QStringLiteral("spreader_positionmax_title"));
+        spreader_positionmax_title->setMinimumSize(QSize(150, 24));
+        spreader_positionmax_title->setMaximumSize(QSize(150, 24));
+        spreader_positionmax_title->setFont(font4);
+        spreader_positionmax_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_positionmax_layout->addWidget(spreader_positionmax_title);
+
+        spreader_positionmax_field = new QLineEdit(spreader_settings_frame);
+        spreader_positionmax_field->setObjectName(QStringLiteral("spreader_positionmax_field"));
+        spreader_positionmax_field->setMinimumSize(QSize(150, 24));
+        spreader_positionmax_field->setMaximumSize(QSize(150, 24));
+        spreader_positionmax_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_positionmax_layout->addWidget(spreader_positionmax_field);
+
+
+        verticalLayout_48->addLayout(spreader_positionmax_layout);
+
+        spreader_positionmin_layout = new QHBoxLayout();
+        spreader_positionmin_layout->setSpacing(6);
+        spreader_positionmin_layout->setObjectName(QStringLiteral("spreader_positionmin_layout"));
+        spreader_positionmin_title = new QLabel(spreader_settings_frame);
+        spreader_positionmin_title->setObjectName(QStringLiteral("spreader_positionmin_title"));
+        spreader_positionmin_title->setMinimumSize(QSize(150, 24));
+        spreader_positionmin_title->setMaximumSize(QSize(150, 24));
+        spreader_positionmin_title->setFont(font4);
+        spreader_positionmin_title->setStyleSheet(QStringLiteral("background:none"));
+
+        spreader_positionmin_layout->addWidget(spreader_positionmin_title);
+
+        spreader_positionmin_field = new QLineEdit(spreader_settings_frame);
+        spreader_positionmin_field->setObjectName(QStringLiteral("spreader_positionmin_field"));
+        spreader_positionmin_field->setMinimumSize(QSize(150, 24));
+        spreader_positionmin_field->setMaximumSize(QSize(150, 24));
+        spreader_positionmin_field->setStyleSheet(QStringLiteral("background:rgb(42, 42, 43);"));
+
+        spreader_positionmin_layout->addWidget(spreader_positionmin_field);
+
+
+        verticalLayout_48->addLayout(spreader_positionmin_layout);
+
+
+        verticalLayout_57->addWidget(spreader_settings_frame);
+
+        tabWidget->addTab(spreader_settings_tab, QString());
+
+        verticalLayout_52->addWidget(tabWidget);
+
+
+        verticalLayout_53->addWidget(settings_page_view_frame);
 
         AppPages->addWidget(settingsPage);
         portPage = new QWidget();
@@ -1086,10 +2730,10 @@ public:
         settings_button_refreshPorts->setBaseSize(QSize(270, 484));
         settings_button_refreshPorts->setFont(font4);
         settings_button_refreshPorts->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
-"color: rgb(212,215,217);"));
-        QIcon icon11;
-        icon11.addFile(QStringLiteral(":/icons/icons/icon_w_spin1.png"), QSize(), QIcon::Normal, QIcon::Off);
-        settings_button_refreshPorts->setIcon(icon11);
+"color: rgb(212,215,217,200);"));
+        QIcon icon12;
+        icon12.addFile(QStringLiteral(":/icons/icons/Icon-elusive-arrows-cw.png"), QSize(), QIcon::Normal, QIcon::Off);
+        settings_button_refreshPorts->setIcon(icon12);
         settings_button_refreshPorts->setIconSize(QSize(30, 30));
         settings_button_refreshPorts->setFlat(true);
 
@@ -1174,7 +2818,7 @@ public:
         gcode_tool_button_openFile->setFont(font4);
         gcode_tool_button_openFile->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        gcode_tool_button_openFile->setIcon(icon8);
+        gcode_tool_button_openFile->setIcon(icon9);
         gcode_tool_button_openFile->setIconSize(QSize(30, 30));
         gcode_tool_button_openFile->setFlat(true);
 
@@ -1226,9 +2870,9 @@ public:
         gcode_tool_button_clearPart->setFont(font4);
         gcode_tool_button_clearPart->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon12;
-        icon12.addFile(QStringLiteral(":/icons/icons/iosTrash.png"), QSize(), QIcon::Normal, QIcon::Off);
-        gcode_tool_button_clearPart->setIcon(icon12);
+        QIcon icon13;
+        icon13.addFile(QStringLiteral(":/icons/icons/iosTrash.png"), QSize(), QIcon::Normal, QIcon::Off);
+        gcode_tool_button_clearPart->setIcon(icon13);
         gcode_tool_button_clearPart->setIconSize(QSize(30, 30));
         gcode_tool_button_clearPart->setFlat(true);
 
@@ -1294,8 +2938,6 @@ public:
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         printTools_outputBrowser_title = new QLabel(printToolsPage_Frame);
         printTools_outputBrowser_title->setObjectName(QStringLiteral("printTools_outputBrowser_title"));
-        QFont font5;
-        font5.setPointSize(16);
         printTools_outputBrowser_title->setFont(font5);
         printTools_outputBrowser_title->setStyleSheet(QStringLiteral("background: rgba(0,0,0,0)"));
         printTools_outputBrowser_title->setAlignment(Qt::AlignCenter);
@@ -1383,9 +3025,9 @@ public:
         printTools_page_acceptPart_button->setFont(font4);
         printTools_page_acceptPart_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon13;
-        icon13.addFile(QStringLiteral(":/icons/icons/iosPlus.png"), QSize(), QIcon::Normal, QIcon::Off);
-        printTools_page_acceptPart_button->setIcon(icon13);
+        QIcon icon14;
+        icon14.addFile(QStringLiteral(":/icons/icons/iosPlus.png"), QSize(), QIcon::Normal, QIcon::Off);
+        printTools_page_acceptPart_button->setIcon(icon14);
         printTools_page_acceptPart_button->setIconSize(QSize(30, 30));
         printTools_page_acceptPart_button->setFlat(true);
 
@@ -1449,10 +3091,10 @@ public:
         PrintManagerEnable_button->setBaseSize(QSize(32, 32));
         PrintManagerEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        QIcon icon14;
-        icon14.addFile(QStringLiteral(":/icons/icons/toggle-off1.png"), QSize(), QIcon::Normal, QIcon::Off);
-        icon14.addFile(QStringLiteral(":/icons/icons/toggle-on1.png"), QSize(), QIcon::Normal, QIcon::On);
-        PrintManagerEnable_button->setIcon(icon14);
+        QIcon icon15;
+        icon15.addFile(QStringLiteral(":/icons/icons/toggle-off1.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon15.addFile(QStringLiteral(":/icons/icons/toggle-on1.png"), QSize(), QIcon::Normal, QIcon::On);
+        PrintManagerEnable_button->setIcon(icon15);
         PrintManagerEnable_button->setIconSize(QSize(34, 22));
         PrintManagerEnable_button->setCheckable(true);
         PrintManagerEnable_button->setFlat(true);
@@ -1565,10 +3207,25 @@ public:
         printManagerControls_frame->setFrameShape(QFrame::StyledPanel);
         printManagerControls_frame->setFrameShadow(QFrame::Raised);
         horizontalLayout_10 = new QHBoxLayout(printManagerControls_frame);
-        horizontalLayout_10->setSpacing(4);
+        horizontalLayout_10->setSpacing(6);
         horizontalLayout_10->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
-        horizontalLayout_10->setContentsMargins(6, 6, 6, 6);
+        printManager_reset_button = new QPushButton(printManagerControls_frame);
+        printManager_reset_button->setObjectName(QStringLiteral("printManager_reset_button"));
+        sizePolicy3.setHeightForWidth(printManager_reset_button->sizePolicy().hasHeightForWidth());
+        printManager_reset_button->setSizePolicy(sizePolicy3);
+        printManager_reset_button->setMinimumSize(QSize(32, 32));
+        printManager_reset_button->setFont(font4);
+        printManager_reset_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
+"color: rgb(212,215,217);"));
+        QIcon icon16;
+        icon16.addFile(QStringLiteral(":/icons/icons/iosSkipback.png"), QSize(), QIcon::Normal, QIcon::Off);
+        printManager_reset_button->setIcon(icon16);
+        printManager_reset_button->setIconSize(QSize(23, 36));
+        printManager_reset_button->setFlat(true);
+
+        horizontalLayout_10->addWidget(printManager_reset_button);
+
         printManager_stop_button = new QPushButton(printManagerControls_frame);
         printManager_stop_button->setObjectName(QStringLiteral("printManager_stop_button"));
         sizePolicy3.setHeightForWidth(printManager_stop_button->sizePolicy().hasHeightForWidth());
@@ -1577,9 +3234,9 @@ public:
         printManager_stop_button->setFont(font4);
         printManager_stop_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon15;
-        icon15.addFile(QStringLiteral(":/icons/icons/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
-        printManager_stop_button->setIcon(icon15);
+        QIcon icon17;
+        icon17.addFile(QStringLiteral(":/icons/icons/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        printManager_stop_button->setIcon(icon17);
         printManager_stop_button->setIconSize(QSize(21, 36));
         printManager_stop_button->setFlat(true);
 
@@ -1593,29 +3250,13 @@ public:
         printManager_pause_button->setFont(font4);
         printManager_pause_button->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgb(212,215,217);"));
-        QIcon icon16;
-        icon16.addFile(QStringLiteral(":/icons/icons/iosPause.png"), QSize(), QIcon::Normal, QIcon::Off);
-        printManager_pause_button->setIcon(icon16);
+        QIcon icon18;
+        icon18.addFile(QStringLiteral(":/icons/icons/iosPause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        printManager_pause_button->setIcon(icon18);
         printManager_pause_button->setIconSize(QSize(21, 36));
         printManager_pause_button->setFlat(true);
 
         horizontalLayout_10->addWidget(printManager_pause_button);
-
-        printManager_stepThrough_button = new QPushButton(printManagerControls_frame);
-        printManager_stepThrough_button->setObjectName(QStringLiteral("printManager_stepThrough_button"));
-        sizePolicy3.setHeightForWidth(printManager_stepThrough_button->sizePolicy().hasHeightForWidth());
-        printManager_stepThrough_button->setSizePolicy(sizePolicy3);
-        printManager_stepThrough_button->setMinimumSize(QSize(32, 32));
-        printManager_stepThrough_button->setFont(font4);
-        printManager_stepThrough_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
-"color: rgb(212,215,217);"));
-        QIcon icon17;
-        icon17.addFile(QStringLiteral(":/icons/icons/iosSkipforward.png"), QSize(), QIcon::Normal, QIcon::Off);
-        printManager_stepThrough_button->setIcon(icon17);
-        printManager_stepThrough_button->setIconSize(QSize(23, 36));
-        printManager_stepThrough_button->setFlat(true);
-
-        horizontalLayout_10->addWidget(printManager_stepThrough_button);
 
         printManager_start_button = new QPushButton(printManagerControls_frame);
         printManager_start_button->setObjectName(QStringLiteral("printManager_start_button"));
@@ -1625,9 +3266,9 @@ public:
         printManager_start_button->setFont(font4);
         printManager_start_button->setStyleSheet(QLatin1String("background: rgba(0,0,0,0);\n"
 "color: rgb(212,215,217);"));
-        QIcon icon18;
-        icon18.addFile(QStringLiteral(":/icons/icons/iosPlay.png"), QSize(), QIcon::Normal, QIcon::Off);
-        printManager_start_button->setIcon(icon18);
+        QIcon icon19;
+        icon19.addFile(QStringLiteral(":/icons/icons/iosPlay.png"), QSize(), QIcon::Normal, QIcon::Off);
+        printManager_start_button->setIcon(icon19);
         printManager_start_button->setIconSize(QSize(18, 36));
         printManager_start_button->setFlat(true);
 
@@ -1817,7 +3458,7 @@ public:
         ManualControlEnable_button->setBaseSize(QSize(32, 32));
         ManualControlEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        ManualControlEnable_button->setIcon(icon14);
+        ManualControlEnable_button->setIcon(icon15);
         ManualControlEnable_button->setIconSize(QSize(34, 22));
         ManualControlEnable_button->setCheckable(true);
         ManualControlEnable_button->setFlat(true);
@@ -1861,9 +3502,9 @@ public:
         ManualControlHome_button->setLayoutDirection(Qt::LeftToRight);
         ManualControlHome_button->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgb(143, 143, 143);"));
-        QIcon icon19;
-        icon19.addFile(QStringLiteral(":/icons/icons/Homing.png"), QSize(), QIcon::Normal, QIcon::Off);
-        ManualControlHome_button->setIcon(icon19);
+        QIcon icon20;
+        icon20.addFile(QStringLiteral(":/icons/icons/Homing.png"), QSize(), QIcon::Normal, QIcon::Off);
+        ManualControlHome_button->setIcon(icon20);
         ManualControlHome_button->setIconSize(QSize(27, 36));
         ManualControlHome_button->setFlat(true);
 
@@ -1934,6 +3575,8 @@ public:
         horizontalLayout_45->setContentsMargins(4, 4, 4, 4);
         printManager_JogDistance_Input = new QDoubleSpinBox(jogDistanceSubFrame);
         printManager_JogDistance_Input->setObjectName(QStringLiteral("printManager_JogDistance_Input"));
+        printManager_JogDistance_Input->setDecimals(3);
+        printManager_JogDistance_Input->setValue(1);
 
         horizontalLayout_45->addWidget(printManager_JogDistance_Input);
 
@@ -1995,9 +3638,9 @@ public:
         jogXminus_button->setFont(font10);
         jogXminus_button->setLayoutDirection(Qt::LeftToRight);
         jogXminus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        QIcon icon20;
-        icon20.addFile(QStringLiteral(":/icons/icons/iosArrowLeft.png"), QSize(), QIcon::Normal, QIcon::Off);
-        jogXminus_button->setIcon(icon20);
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/icons/icons/iosArrowLeft.png"), QSize(), QIcon::Normal, QIcon::Off);
+        jogXminus_button->setIcon(icon21);
         jogXminus_button->setIconSize(QSize(14, 24));
         jogXminus_button->setAutoDefault(false);
 
@@ -2012,9 +3655,9 @@ public:
         jogYplus_button->setFont(font10);
         jogYplus_button->setLayoutDirection(Qt::RightToLeft);
         jogYplus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        QIcon icon21;
-        icon21.addFile(QStringLiteral(":/icons/icons/iosArrowForward.png"), QSize(), QIcon::Normal, QIcon::Off);
-        jogYplus_button->setIcon(icon21);
+        QIcon icon22;
+        icon22.addFile(QStringLiteral(":/icons/icons/iosArrowForward.png"), QSize(), QIcon::Normal, QIcon::Off);
+        jogYplus_button->setIcon(icon22);
         jogYplus_button->setIconSize(QSize(24, 14));
         jogYplus_button->setAutoDefault(false);
 
@@ -2026,9 +3669,9 @@ public:
         jogYminus_button->setFont(font10);
         jogYminus_button->setLayoutDirection(Qt::RightToLeft);
         jogYminus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        QIcon icon22;
-        icon22.addFile(QStringLiteral(":/icons/icons/iosArrowDown.png"), QSize(), QIcon::Normal, QIcon::Off);
-        jogYminus_button->setIcon(icon22);
+        QIcon icon23;
+        icon23.addFile(QStringLiteral(":/icons/icons/iosArrowDown.png"), QSize(), QIcon::Normal, QIcon::Off);
+        jogYminus_button->setIcon(icon23);
         jogYminus_button->setIconSize(QSize(24, 14));
         jogYminus_button->setAutoDefault(false);
 
@@ -2043,9 +3686,9 @@ public:
         jogXplus_button->setFont(font10);
         jogXplus_button->setLayoutDirection(Qt::RightToLeft);
         jogXplus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        QIcon icon23;
-        icon23.addFile(QStringLiteral(":/icons/icons/iosArrowRight copy.png"), QSize(), QIcon::Normal, QIcon::Off);
-        jogXplus_button->setIcon(icon23);
+        QIcon icon24;
+        icon24.addFile(QStringLiteral(":/icons/icons/iosArrowRight copy.png"), QSize(), QIcon::Normal, QIcon::Off);
+        jogXplus_button->setIcon(icon24);
         jogXplus_button->setIconSize(QSize(14, 24));
         jogXplus_button->setAutoDefault(false);
 
@@ -2126,7 +3769,7 @@ public:
         jogZplus_button->setFont(font10);
         jogZplus_button->setLayoutDirection(Qt::RightToLeft);
         jogZplus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogZplus_button->setIcon(icon21);
+        jogZplus_button->setIcon(icon22);
         jogZplus_button->setIconSize(QSize(24, 14));
         jogZplus_button->setAutoDefault(false);
 
@@ -2139,7 +3782,7 @@ public:
         jogZminus_button->setFont(font10);
         jogZminus_button->setLayoutDirection(Qt::RightToLeft);
         jogZminus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogZminus_button->setIcon(icon22);
+        jogZminus_button->setIcon(icon23);
         jogZminus_button->setIconSize(QSize(24, 14));
         jogZminus_button->setAutoDefault(false);
 
@@ -2158,7 +3801,7 @@ public:
         jogHplus_button->setFont(font10);
         jogHplus_button->setLayoutDirection(Qt::RightToLeft);
         jogHplus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogHplus_button->setIcon(icon21);
+        jogHplus_button->setIcon(icon22);
         jogHplus_button->setIconSize(QSize(24, 14));
         jogHplus_button->setAutoDefault(false);
 
@@ -2171,7 +3814,7 @@ public:
         jogHminus_button->setFont(font10);
         jogHminus_button->setLayoutDirection(Qt::RightToLeft);
         jogHminus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogHminus_button->setIcon(icon22);
+        jogHminus_button->setIcon(icon23);
         jogHminus_button->setIconSize(QSize(24, 14));
         jogHminus_button->setAutoDefault(false);
 
@@ -2195,7 +3838,7 @@ public:
         jogSminus_button->setFont(font10);
         jogSminus_button->setLayoutDirection(Qt::LeftToRight);
         jogSminus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogSminus_button->setIcon(icon20);
+        jogSminus_button->setIcon(icon21);
         jogSminus_button->setIconSize(QSize(14, 24));
         jogSminus_button->setAutoDefault(false);
 
@@ -2210,7 +3853,7 @@ public:
         jogSplus_button->setFont(font10);
         jogSplus_button->setLayoutDirection(Qt::RightToLeft);
         jogSplus_button->setStyleSheet(QStringLiteral("color: rgb(143, 143, 143);"));
-        jogSplus_button->setIcon(icon23);
+        jogSplus_button->setIcon(icon24);
         jogSplus_button->setIconSize(QSize(14, 24));
         jogSplus_button->setAutoDefault(false);
 
@@ -2275,7 +3918,7 @@ public:
         laserDisplayEnable_button->setBaseSize(QSize(32, 32));
         laserDisplayEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        laserDisplayEnable_button->setIcon(icon14);
+        laserDisplayEnable_button->setIcon(icon15);
         laserDisplayEnable_button->setIconSize(QSize(34, 22));
         laserDisplayEnable_button->setCheckable(true);
         laserDisplayEnable_button->setFlat(true);
@@ -2459,7 +4102,7 @@ public:
         galvoDisplayEnable_button->setBaseSize(QSize(32, 32));
         galvoDisplayEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        galvoDisplayEnable_button->setIcon(icon14);
+        galvoDisplayEnable_button->setIcon(icon15);
         galvoDisplayEnable_button->setIconSize(QSize(34, 22));
         galvoDisplayEnable_button->setCheckable(true);
         galvoDisplayEnable_button->setFlat(true);
@@ -2690,7 +4333,7 @@ public:
         buildPlateEnable_button->setBaseSize(QSize(32, 32));
         buildPlateEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        buildPlateEnable_button->setIcon(icon14);
+        buildPlateEnable_button->setIcon(icon15);
         buildPlateEnable_button->setIconSize(QSize(34, 22));
         buildPlateEnable_button->setCheckable(true);
         buildPlateEnable_button->setFlat(true);
@@ -2840,7 +4483,7 @@ public:
         materialDeliveryDisplayEnable_button->setBaseSize(QSize(32, 32));
         materialDeliveryDisplayEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        materialDeliveryDisplayEnable_button->setIcon(icon14);
+        materialDeliveryDisplayEnable_button->setIcon(icon15);
         materialDeliveryDisplayEnable_button->setIconSize(QSize(34, 22));
         materialDeliveryDisplayEnable_button->setCheckable(true);
         materialDeliveryDisplayEnable_button->setFlat(true);
@@ -3036,7 +4679,7 @@ public:
         enviroDisplayEnable_button->setBaseSize(QSize(32, 32));
         enviroDisplayEnable_button->setStyleSheet(QLatin1String("background:none;\n"
 "color: rgba(212,215,217,100)"));
-        enviroDisplayEnable_button->setIcon(icon14);
+        enviroDisplayEnable_button->setIcon(icon15);
         enviroDisplayEnable_button->setIconSize(QSize(34, 22));
         enviroDisplayEnable_button->setCheckable(true);
         enviroDisplayEnable_button->setFlat(true);
@@ -3100,9 +4743,9 @@ public:
         enviroDisplayDoorState_icon->setObjectName(QStringLiteral("enviroDisplayDoorState_icon"));
         enviroDisplayDoorState_icon->setMinimumSize(QSize(0, 33));
         enviroDisplayDoorState_icon->setStyleSheet(QStringLiteral("background:none"));
-        QIcon icon24;
-        icon24.addFile(QStringLiteral(":/icons/icons/unlock-alt.png"), QSize(), QIcon::Normal, QIcon::Off);
-        enviroDisplayDoorState_icon->setIcon(icon24);
+        QIcon icon25;
+        icon25.addFile(QStringLiteral(":/icons/icons/unlock-alt.png"), QSize(), QIcon::Normal, QIcon::Off);
+        enviroDisplayDoorState_icon->setIcon(icon25);
         enviroDisplayDoorState_icon->setIconSize(QSize(27, 50));
 
         enviroDisplayInfo_layout->addWidget(enviroDisplayDoorState_icon);
@@ -3321,11 +4964,12 @@ public:
         AppPages->addWidget(HelpPage);
         Menu_Page_Splitter->addWidget(AppPages);
 
-        horizontalLayout_14->addWidget(Menu_Page_Splitter);
+        verticalLayout_55->addWidget(Menu_Page_Splitter);
 
 
         retranslateUi(PowderApp);
 
+        tabWidget->setCurrentIndex(1);
         jogXminus_button->setDefault(false);
         jogYplus_button->setDefault(false);
         jogYminus_button->setDefault(false);
@@ -3348,6 +4992,7 @@ public:
         PortManager_options_box->setItemText(0, QApplication::translate("PowderApp", "Manage Connections", nullptr));
         PortManager_options_box->setItemText(1, QApplication::translate("PowderApp", "Open Laser & Galvanometer Port", nullptr));
         PortManager_options_box->setItemText(2, QApplication::translate("PowderApp", "Open Build Plate & Material Delivery Port", nullptr));
+        PortManager_options_box->setItemText(3, QApplication::translate("PowderApp", "Clear Errors", nullptr));
 
         LaserGalvoPort_title->setText(QApplication::translate("PowderApp", "Laser & Galvanometer", nullptr));
         LaserGalvoPortStatus_indicator->setText(QString());
@@ -3365,6 +5010,13 @@ public:
         Main_Button_ControllerPage->setText(QApplication::translate("PowderApp", "  Open System Controller", nullptr));
         Main_Button_HelpPage->setText(QApplication::translate("PowderApp", "  View Documentation", nullptr));
 #ifndef QT_NO_TOOLTIP
+        settings_button_saveAsDefault->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_STATUSTIP
+        settings_button_saveAsDefault->setStatusTip(QString());
+#endif // QT_NO_STATUSTIP
+        settings_button_saveAsDefault->setText(QApplication::translate("PowderApp", " Save", nullptr));
+#ifndef QT_NO_TOOLTIP
         settings_button_resetToDefault->setToolTip(QString());
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
@@ -3374,7 +5026,71 @@ public:
         settings_button_openFile->setText(QApplication::translate("PowderApp", " Import Configuration", nullptr));
         settings_buttons_saveFile->setText(QApplication::translate("PowderApp", " Export Configuration", nullptr));
         settings_button_apply->setText(QApplication::translate("PowderApp", " Apply", nullptr));
-        settings_button_refreshPorts->setText(QApplication::translate("PowderApp", "Rescan Ports", nullptr));
+        env_portsettings_title->setText(QApplication::translate("PowderApp", "Environment Controller", nullptr));
+        env_portnum_title->setText(QApplication::translate("PowderApp", "Port Number:", nullptr));
+        env_baud_title->setText(QApplication::translate("PowderApp", "Baud Rate:", nullptr));
+        md_portsettings_title->setText(QApplication::translate("PowderApp", "Material Delivery", nullptr));
+        md_portnum_title->setText(QApplication::translate("PowderApp", "Port Number:", nullptr));
+        md_baudrate_title->setText(QApplication::translate("PowderApp", "Baud Rate:", nullptr));
+        lg_portsettings_title->setText(QApplication::translate("PowderApp", "Laser & Galvanometer", nullptr));
+        lg_portnum_title->setText(QApplication::translate("PowderApp", "Port Number:", nullptr));
+        lg_baudrate_title->setText(QApplication::translate("PowderApp", "Baud Rate:", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(port_settings_tab), QApplication::translate("PowderApp", "Port Settings", nullptr));
+        laser_devicenum_title->setText(QApplication::translate("PowderApp", "Device Number", nullptr));
+        laser_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        laser_powerres_title->setText(QApplication::translate("PowderApp", "Power Resolution", nullptr));
+        laser_powerdef_title->setText(QApplication::translate("PowderApp", "Power Default", nullptr));
+        laser_powermax_title->setText(QApplication::translate("PowderApp", "Power Max", nullptr));
+        laser_powermin_title->setText(QApplication::translate("PowderApp", "Power Min", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(laser_settings_tab), QApplication::translate("PowderApp", "Laser", nullptr));
+        galvo_devicenum_title->setText(QApplication::translate("PowderApp", "Device Number", nullptr));
+        galvo_speeddef_title->setText(QApplication::translate("PowderApp", "Speed Default", nullptr));
+        galvo_speedmax_title->setText(QApplication::translate("PowderApp", "Speed Max", nullptr));
+        galvo_speedmin_title->setText(QApplication::translate("PowderApp", "Speed Min", nullptr));
+        x_axis_title->setText(QApplication::translate("PowderApp", "X Axis", nullptr));
+        galvo_x_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        galvo_x_axisalias_title->setText(QApplication::translate("PowderApp", "G-Code Alias", nullptr));
+        galvo_x_steps_title->setText(QApplication::translate("PowderApp", "Steps per mm", nullptr));
+        galvo_x_positionmax_title->setText(QApplication::translate("PowderApp", "Position Max", nullptr));
+        galvo_x_positionmin_title->setText(QApplication::translate("PowderApp", "Position Min", nullptr));
+        y_axistitle->setText(QApplication::translate("PowderApp", "Y Axis", nullptr));
+        galvo_y_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        galvo_y_axisalias_title->setText(QApplication::translate("PowderApp", "G-Code Alias", nullptr));
+        galvo_y_steps_title->setText(QApplication::translate("PowderApp", "Steps per mm", nullptr));
+        galvo_y_positionmax_title->setText(QApplication::translate("PowderApp", "Position Max", nullptr));
+        galvo_y_positionmin_title->setText(QApplication::translate("PowderApp", "Position Min", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(galbo_settings_tab), QApplication::translate("PowderApp", "Galvanometer ", nullptr));
+        buildplate_devicenum_title->setText(QApplication::translate("PowderApp", "Device Number", nullptr));
+        buildplate_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        buildplate_axisalias_title->setText(QApplication::translate("PowderApp", "G-Code Alias", nullptr));
+        buildplate_speeddef_title->setText(QApplication::translate("PowderApp", "Speed Default", nullptr));
+        buildplate_speedmax_title->setText(QApplication::translate("PowderApp", "Speed Max", nullptr));
+        buildplate_speedmin_title->setText(QApplication::translate("PowderApp", "Speed Min", nullptr));
+        buildplate_steps_title->setText(QApplication::translate("PowderApp", "Steps per mm", nullptr));
+        buildplate_positionmax_title->setText(QApplication::translate("PowderApp", "Position Max", nullptr));
+        buildplate_positionmin_title->setText(QApplication::translate("PowderApp", "Position Min", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(buildplate_settings_tab), QApplication::translate("PowderApp", "Build Plate", nullptr));
+        hopper_devicenum_title->setText(QApplication::translate("PowderApp", "Device Number", nullptr));
+        hopper_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        hopper_axisalias_title->setText(QApplication::translate("PowderApp", "G-Code Alias", nullptr));
+        hopper_speeddef_title->setText(QApplication::translate("PowderApp", "Speed Default", nullptr));
+        hopper_speedmax_title->setText(QApplication::translate("PowderApp", "Speed Max", nullptr));
+        hopper_speedmin_title->setText(QApplication::translate("PowderApp", "Speed Min", nullptr));
+        hopper_steps_title->setText(QApplication::translate("PowderApp", "Steps per mm", nullptr));
+        hopper_positionmax_title->setText(QApplication::translate("PowderApp", "Position Max", nullptr));
+        hopper_positionmin_title_2->setText(QApplication::translate("PowderApp", "Position Min", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(hopper_settings_tab), QApplication::translate("PowderApp", "Hopper Plate", nullptr));
+        spreader_devicenum_title->setText(QApplication::translate("PowderApp", "Device Number", nullptr));
+        spreader_axisnum_title->setText(QApplication::translate("PowderApp", "Axis Number", nullptr));
+        spreader_axisalias_title->setText(QApplication::translate("PowderApp", "G-Code Alias", nullptr));
+        spreader_speeddef_title->setText(QApplication::translate("PowderApp", "Speed Default", nullptr));
+        spreader_speedmax_title->setText(QApplication::translate("PowderApp", "Speed Max", nullptr));
+        spreader_speedmin_title->setText(QApplication::translate("PowderApp", "Speed Min", nullptr));
+        spreader_steps_title->setText(QApplication::translate("PowderApp", "Steps per mm", nullptr));
+        spreader_positionmax_title->setText(QApplication::translate("PowderApp", "Position Max", nullptr));
+        spreader_positionmin_title->setText(QApplication::translate("PowderApp", "Position Min", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(spreader_settings_tab), QApplication::translate("PowderApp", "Spreader Blade", nullptr));
+        settings_button_refreshPorts->setText(QApplication::translate("PowderApp", "  Rescan Ports", nullptr));
         gcode_tool_button_openFile->setText(QApplication::translate("PowderApp", "Open G-Code File", nullptr));
         printTools_display_commands_button->setText(QApplication::translate("PowderApp", "Display Command Strings", nullptr));
         printTools_displayComments_button->setText(QApplication::translate("PowderApp", "Display Comments", nullptr));
@@ -3393,9 +5109,9 @@ public:
         printManager_file_field->setText(QString());
         printManager_options_box->setItemText(0, QApplication::translate("PowderApp", "Options", nullptr));
 
+        printManager_reset_button->setText(QString());
         printManager_stop_button->setText(QString());
         printManager_pause_button->setText(QString());
-        printManager_stepThrough_button->setText(QString());
         printManager_start_button->setText(QString());
         blockTitle_label->setText(QApplication::translate("PowderApp", "Block", nullptr));
         currentBlock_field->setText(QApplication::translate("PowderApp", "0", nullptr));

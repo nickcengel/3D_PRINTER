@@ -10,14 +10,14 @@ class BlockObject
 
 public:
     BlockObject();
-    BlockObject(const unsigned int block_number, const unsigned int layer_Number); // constructor
+    BlockObject(const int block_number, const int layer_Number); // constructor
     BlockObject(const BlockObject &otherBlock); // copy constructor
     ~BlockObject(); // destructor
 
-    unsigned int blockNumber() const;
-    void setBlockNumber(const unsigned int &blockNumber);
-    unsigned int layerNumber() const;
-    void setLayerNumber(const unsigned int &layerNumber);
+    int blockNumber() const;
+    void setBlockNumber(const int &blockNumber);
+    int layerNumber() const;
+    void setLayerNumber(const int &layerNumber);
 
     enum BlockTask : uint16_t {
         BLOCK_EMPTY = 0x0,
@@ -47,8 +47,8 @@ public:
     bool laser_armed() const;
     void setLaser_armed(bool laser_armed);
 
-    unsigned int laser_power() const;
-    void setLaser_power(const unsigned int &laser_power);
+    int laser_power() const;
+    void setLaser_power(const int &laser_power);
 
     enum PositionMode {
         Position_Absolute,
@@ -93,14 +93,14 @@ public:
     void setMd_string(const QStringList &md_string);
 
 private:
-    unsigned int m_blockNumber;
-    unsigned int m_layerNumber;
+    int m_blockNumber;
+    int m_layerNumber;
 
     uint16_t m_blockTask;
 
     bool m_laser_enabled;
     bool m_laser_armed;
-    unsigned int m_laser_power;
+    int m_laser_power;
 
     PositionMode m_positionMode;
 

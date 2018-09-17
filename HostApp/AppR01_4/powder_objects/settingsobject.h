@@ -12,7 +12,7 @@ public:
     SettingsObject(const SettingsObject &otherSettings);
     ~SettingsObject();
 
-    enum SettingsStatus : uint8_t
+    enum SettingsStatus :  int
     {
         NO_SETTINGS,
         SETTINGS_INVALID,
@@ -20,49 +20,49 @@ public:
         SETTINGS_VALID
     };
 
-    uint8_t laserGalvo_portNumber() const;
-    void setLaser_galvo_portNumber(const uint8_t &laserGalvo_portNumber);
+     int laserGalvo_portNumber() const;
+    void setLaser_galvo_portNumber(const  int &laserGalvo_portNumber);
 
-    uint8_t materialDelivery_portNumber() const;
-    void setMaterialDelivery_portNumber(const uint8_t &materialDelivery_portNumber);
+     int materialDelivery_portNumber() const;
+    void setMaterialDelivery_portNumber(const  int &materialDelivery_portNumber);
 
-    uint8_t laser_deviceNumber() const;
-    void setLaser_deviceNumber(const uint8_t &laser_deviceNumber);
-
-
-    uint8_t galvo_deviceNumber() const;
-    void setGalvo_deviceNumber(const uint8_t &galvo_deviceNumber);
+     int laser_deviceNumber() const;
+    void setLaser_deviceNumber(const  int &laser_deviceNumber);
 
 
-    uint8_t z_deviceNumber() const;
-    void setZ_deviceNumber(const uint8_t &z_deviceNumber);
+     int galvo_deviceNumber() const;
+    void setGalvo_deviceNumber(const  int &galvo_deviceNumber);
 
 
-    uint8_t hopper_deviceNumber() const;
-    void setHopper_deviceNumber(const uint8_t &hopper_deviceNumber);
+     int z_deviceNumber() const;
+    void setZ_deviceNumber(const  int &z_deviceNumber);
 
 
-    uint8_t spreader_deviceNumber() const;
-    void setSpreader_deviceNumber(const uint8_t &spreader_deviceNumber);
+     int hopper_deviceNumber() const;
+    void setHopper_deviceNumber(const  int &hopper_deviceNumber);
 
 
-    uint8_t laser_axisNumber() const;
-    void setLaser_axisNumber(const uint8_t &laser_axisNumber);
+     int spreader_deviceNumber() const;
+    void setSpreader_deviceNumber(const  int &spreader_deviceNumber);
 
-    uint8_t x_axisNumber() const;
-    void setX_axisNumber(const uint8_t &x_axisNumber);
 
-    uint8_t y_axisNumber() const;
-    void setY_axisNumber(const uint8_t &y_axisNumber);
+     int laser_axisNumber() const;
+    void setLaser_axisNumber(const  int &laser_axisNumber);
 
-    uint8_t z_axisNumber() const;
-    void setZ_axisNumber(const uint8_t &z_axisNumber);
+     int x_axisNumber() const;
+    void setX_axisNumber(const  int &x_axisNumber);
 
-    uint8_t hopper_axisNumber() const;
-    void setHopper_axisNumber(const uint8_t &hopper_axisNumber);
+     int y_axisNumber() const;
+    void setY_axisNumber(const  int &y_axisNumber);
 
-    uint8_t spreader_axisNumber() const;
-    void setSpreader_axisNumber(const uint8_t &spreader_axisNumber);
+     int z_axisNumber() const;
+    void setZ_axisNumber(const  int &z_axisNumber);
+
+     int hopper_axisNumber() const;
+    void setHopper_axisNumber(const  int &hopper_axisNumber);
+
+     int spreader_axisNumber() const;
+    void setSpreader_axisNumber(const  int &spreader_axisNumber);
 
     float laser_power_resolution() const;
     void setLaser_power_resolution(float laser_power_resolution);
@@ -82,14 +82,14 @@ public:
     float spreader_position_resolution() const;
     void setSpreader_position_resolution(float spreader_position_resolution);
 
-    uint8_t laser_power_default() const;
-    void setLaser_power_default(const uint8_t &laser_power_default);
+     int laser_power_default() const;
+    void setLaser_power_default(const  int &laser_power_default);
 
-    uint8_t laser_power_max() const;
-    void setLaser_power_max(const uint8_t &laser_power_max);
+     int laser_power_max() const;
+    void setLaser_power_max(const  int &laser_power_max);
 
-    uint8_t laser_power_min() const;
-    void setLaser_power_min(const uint8_t &laser_power_min);
+     int laser_power_min() const;
+    void setLaser_power_min(const  int &laser_power_min);
 
     float x_position_max() const;
     void setX_position_max(float x_position_max);
@@ -175,21 +175,21 @@ private:
 
     SettingsStatus m_status;
 
-    uint8_t m_laser_galvo_portNumber;
-    uint8_t m_materialDelivery_portNumber;
+     int m_laser_galvo_portNumber;
+     int m_materialDelivery_portNumber;
 
-    uint8_t m_laser_deviceNumber;
-    uint8_t m_galvo_deviceNumber;
-    uint8_t m_z_deviceNumber;
-    uint8_t m_hopper_deviceNumber;
-    uint8_t m_spreader_deviceNumber;
+     int m_laser_deviceNumber;
+     int m_galvo_deviceNumber;
+     int m_z_deviceNumber;
+     int m_hopper_deviceNumber;
+     int m_spreader_deviceNumber;
 
-    uint8_t m_laser_axisNumber;
-    uint8_t m_x_axisNumber;
-    uint8_t m_y_axisNumber;
-    uint8_t m_z_axisNumber;
-    uint8_t m_hopper_axisNumber;
-    uint8_t m_spreader_axisNumber;
+     int m_laser_axisNumber;
+     int m_x_axisNumber;
+     int m_y_axisNumber;
+     int m_z_axisNumber;
+     int m_hopper_axisNumber;
+     int m_spreader_axisNumber;
 
     float m_laser_power_resolution;
     float m_x_position_resolution;
@@ -198,9 +198,9 @@ private:
     float m_hopper_position_resolution;
     float m_spreader_position_resolution;
 
-    uint8_t m_laser_power_default;
-    uint8_t m_laser_power_max;
-    uint8_t m_laser_power_min;
+     int m_laser_power_default;
+     int m_laser_power_max;
+     int m_laser_power_min;
 
     float m_x_position_max;
     float m_x_position_min;

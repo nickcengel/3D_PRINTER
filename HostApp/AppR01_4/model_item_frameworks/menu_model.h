@@ -13,8 +13,8 @@ class TreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    explicit TreeModel(const QString &data, QObject *parent = 0);
-    ~TreeModel();
+    explicit TreeModel(const QString &data, QObject *parent = nullptr);
+     ~TreeModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;

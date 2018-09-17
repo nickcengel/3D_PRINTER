@@ -125,132 +125,132 @@ SettingsObject::~SettingsObject()
 
 }
 
-uint8_t SettingsObject::laserGalvo_portNumber() const
+int SettingsObject::laserGalvo_portNumber() const
 {
     return m_laser_galvo_portNumber;
 }
 
-void SettingsObject::setLaser_galvo_portNumber(const uint8_t &laser_galvo_portNumber)
+void SettingsObject::setLaser_galvo_portNumber(const int &laser_galvo_portNumber)
 {
     m_laser_galvo_portNumber = laser_galvo_portNumber;
 }
 
-uint8_t SettingsObject::materialDelivery_portNumber() const
+int SettingsObject::materialDelivery_portNumber() const
 {
     return m_materialDelivery_portNumber;
 }
 
-void SettingsObject::setMaterialDelivery_portNumber(const uint8_t &materialDelivery_portNumber)
+void SettingsObject::setMaterialDelivery_portNumber(const int &materialDelivery_portNumber)
 {
     m_materialDelivery_portNumber = materialDelivery_portNumber;
 }
 
-uint8_t SettingsObject::laser_deviceNumber() const
+int SettingsObject::laser_deviceNumber() const
 {
     return m_laser_deviceNumber;
 }
 
-void SettingsObject::setLaser_deviceNumber(const uint8_t &laser_deviceNumber)
+void SettingsObject::setLaser_deviceNumber(const int &laser_deviceNumber)
 {
     m_laser_deviceNumber = laser_deviceNumber;
 }
 
-uint8_t SettingsObject::galvo_deviceNumber() const
+int SettingsObject::galvo_deviceNumber() const
 {
     return m_galvo_deviceNumber;
 }
 
-void SettingsObject::setGalvo_deviceNumber(const uint8_t &galvo_deviceNumber)
+void SettingsObject::setGalvo_deviceNumber(const int &galvo_deviceNumber)
 {
     m_galvo_deviceNumber = galvo_deviceNumber;
 }
 
-uint8_t SettingsObject::z_deviceNumber() const
+int SettingsObject::z_deviceNumber() const
 {
     return m_z_deviceNumber;
 }
 
-void SettingsObject::setZ_deviceNumber(const uint8_t &z_deviceNumber)
+void SettingsObject::setZ_deviceNumber(const int &z_deviceNumber)
 {
     m_z_deviceNumber = z_deviceNumber;
 }
 
-uint8_t SettingsObject::hopper_deviceNumber() const
+int SettingsObject::hopper_deviceNumber() const
 {
     return m_hopper_deviceNumber;
 }
 
-void SettingsObject::setHopper_deviceNumber(const uint8_t &hopper_deviceNumber)
+void SettingsObject::setHopper_deviceNumber(const int &hopper_deviceNumber)
 {
     m_hopper_deviceNumber = hopper_deviceNumber;
 }
 
-uint8_t SettingsObject::spreader_deviceNumber() const
+int SettingsObject::spreader_deviceNumber() const
 {
     return m_spreader_deviceNumber;
 }
 
-void SettingsObject::setSpreader_deviceNumber(const uint8_t &spreader_deviceNumber)
+void SettingsObject::setSpreader_deviceNumber(const int &spreader_deviceNumber)
 {
     m_spreader_deviceNumber = spreader_deviceNumber;
 }
 
-uint8_t SettingsObject::laser_axisNumber() const
+int SettingsObject::laser_axisNumber() const
 {
     return m_laser_axisNumber;
 }
 
-void SettingsObject::setLaser_axisNumber(const uint8_t &laser_axisNumber)
+void SettingsObject::setLaser_axisNumber(const int &laser_axisNumber)
 {
     m_laser_axisNumber = laser_axisNumber;
 }
 
-uint8_t SettingsObject::x_axisNumber() const
+int SettingsObject::x_axisNumber() const
 {
     return m_x_axisNumber;
 }
 
-void SettingsObject::setX_axisNumber(const uint8_t &x_axisNumber)
+void SettingsObject::setX_axisNumber(const int &x_axisNumber)
 {
     m_x_axisNumber = x_axisNumber;
 }
 
-uint8_t SettingsObject::y_axisNumber() const
+int SettingsObject::y_axisNumber() const
 {
     return m_y_axisNumber;
 }
 
-void SettingsObject::setY_axisNumber(const uint8_t &y_axisNumber)
+void SettingsObject::setY_axisNumber(const int &y_axisNumber)
 {
     m_y_axisNumber = y_axisNumber;
 }
 
-uint8_t SettingsObject::z_axisNumber() const
+int SettingsObject::z_axisNumber() const
 {
     return m_z_axisNumber;
 }
 
-void SettingsObject::setZ_axisNumber(const uint8_t &z_axisNumber)
+void SettingsObject::setZ_axisNumber(const int &z_axisNumber)
 {
     m_z_axisNumber = z_axisNumber;
 }
 
-uint8_t SettingsObject::hopper_axisNumber() const
+int SettingsObject::hopper_axisNumber() const
 {
     return m_hopper_axisNumber;
 }
 
-void SettingsObject::setHopper_axisNumber(const uint8_t &hopper_axisNumber)
+void SettingsObject::setHopper_axisNumber(const int &hopper_axisNumber)
 {
     m_hopper_axisNumber = hopper_axisNumber;
 }
 
-uint8_t SettingsObject::spreader_axisNumber() const
+int SettingsObject::spreader_axisNumber() const
 {
     return m_spreader_axisNumber;
 }
 
-void SettingsObject::setSpreader_axisNumber(const uint8_t &spreader_axisNumber)
+void SettingsObject::setSpreader_axisNumber(const int &spreader_axisNumber)
 {
     m_spreader_axisNumber = spreader_axisNumber;
 }
@@ -315,32 +315,32 @@ void SettingsObject::setSpreader_position_resolution(float spreader_position_res
     m_spreader_position_resolution = spreader_position_resolution;
 }
 
-uint8_t SettingsObject::laser_power_default() const
+int SettingsObject::laser_power_default() const
 {
     return m_laser_power_default;
 }
 
-void SettingsObject::setLaser_power_default(const uint8_t &laser_power_default)
+void SettingsObject::setLaser_power_default(const int &laser_power_default)
 {
     m_laser_power_default = laser_power_default;
 }
 
-uint8_t SettingsObject::laser_power_max() const
+int SettingsObject::laser_power_max() const
 {
     return m_laser_power_max;
 }
 
-void SettingsObject::setLaser_power_max(const uint8_t &laser_power_max)
+void SettingsObject::setLaser_power_max(const int &laser_power_max)
 {
     m_laser_power_max = laser_power_max;
 }
 
-uint8_t SettingsObject::laser_power_min() const
+int SettingsObject::laser_power_min() const
 {
     return m_laser_power_min;
 }
 
-void SettingsObject::setLaser_power_min(const uint8_t &laser_power_min)
+void SettingsObject::setLaser_power_min(const int &laser_power_min)
 {
     m_laser_power_min = laser_power_min;
 }
