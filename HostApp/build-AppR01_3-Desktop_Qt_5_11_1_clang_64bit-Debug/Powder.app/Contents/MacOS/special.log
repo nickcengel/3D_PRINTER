@@ -1,0 +1,4 @@
+2018-09-17 17-32-16.969 [Info] (guten tag) SLOG(INFO)
+2018-09-17 17-32-16.970 [Info] (guten tag) LOG(INFO) << AixLog::Type::special
+2018-09-17 17-32-16.970 [Info] (guten tag) LOG(INFO) << SPECIAL
+2018-09-17 17-32-16.970 [Info] (guten tag) LOG(INFO) << SPECIAL << TAG("guten tag")

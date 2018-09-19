@@ -12,7 +12,7 @@ MAKEFILE      = Makefile
 
 CC            = /Library/Developer/CommandLineTools/usr/bin/clang
 CXX           = /Library/Developer/CommandLineTools/usr/bin/clang++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_3DEXTRAS_LIB -DQT_3DRENDER_LIB -DQT_3DINPUT_LIB -DQT_3DLOGIC_LIB -DQT_3DCORE_LIB -DQT_GAMEPAD_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_MESSAGELOGCONTEXT -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_3DEXTRAS_LIB -DQT_3DRENDER_LIB -DQT_3DINPUT_LIB -DQT_3DLOGIC_LIB -DQT_3DCORE_LIB -DQT_GAMEPAD_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.11 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.11 -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I../AppR01_4 -I. -I/Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DExtras.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DRender.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DInput.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DLogic.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/Qt3DCore.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGamepad.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtNetwork.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtSerialPort.framework/Headers -I/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I/Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang -F/Applications/Qt/5.11.1/clang_64/lib
@@ -354,7 +354,8 @@ DIST          = ../AppR01_4/resources/icons/angle-double-right.png \
 		../AppR01_4/hardware_tools/zaber_utility.h \
 		../AppR01_4/hardware_tools/lasergalvo_utility.h \
 		../AppR01_4/3d_framework/block3d.h \
-		../AppR01_4/powder_app/powderdaemon.h ../AppR01_4/3d_framework/line3d.cpp \
+		../AppR01_4/powder_app/powderdaemon.h \
+		../AppR01_4/aixlog.hpp ../AppR01_4/3d_framework/line3d.cpp \
 		../AppR01_4/3d_framework/scenemodifier.cpp \
 		../AppR01_4/3d_framework/segment3d.cpp \
 		../AppR01_4/3d_framework/view3dapp.cpp \
@@ -824,7 +825,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR01_4/resources/icons.qrc ../AppR01_4/resources/settings.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Applications/Qt/5.11.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.h ../AppR01_4/3d_framework/scenemodifier.h ../AppR01_4/3d_framework/segment3d.h ../AppR01_4/3d_framework/view3dapp.h ../AppR01_4/model_item_frameworks/menu_item.h ../AppR01_4/model_item_frameworks/menu_model.h ../AppR01_4/model_item_frameworks/settings_item.h ../AppR01_4/model_item_frameworks/settings_model.h ../AppR01_4/powder_app/powderapp.h ../AppR01_4/powder_objects/blockobject.h ../AppR01_4/powder_objects/partobject.h ../AppR01_4/powder_objects/settingsobject.h ../AppR01_4/hardware_tools/zaber_utility.h ../AppR01_4/hardware_tools/lasergalvo_utility.h ../AppR01_4/3d_framework/block3d.h ../AppR01_4/powder_app/powderdaemon.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.h ../AppR01_4/3d_framework/scenemodifier.h ../AppR01_4/3d_framework/segment3d.h ../AppR01_4/3d_framework/view3dapp.h ../AppR01_4/model_item_frameworks/menu_item.h ../AppR01_4/model_item_frameworks/menu_model.h ../AppR01_4/model_item_frameworks/settings_item.h ../AppR01_4/model_item_frameworks/settings_model.h ../AppR01_4/powder_app/powderapp.h ../AppR01_4/powder_objects/blockobject.h ../AppR01_4/powder_objects/partobject.h ../AppR01_4/powder_objects/settingsobject.h ../AppR01_4/hardware_tools/zaber_utility.h ../AppR01_4/hardware_tools/lasergalvo_utility.h ../AppR01_4/3d_framework/block3d.h ../AppR01_4/powder_app/powderdaemon.h ../AppR01_4/aixlog.hpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR01_4/3d_framework/line3d.cpp ../AppR01_4/3d_framework/scenemodifier.cpp ../AppR01_4/3d_framework/segment3d.cpp ../AppR01_4/3d_framework/view3dapp.cpp ../AppR01_4/model_item_frameworks/menu_item.cpp ../AppR01_4/model_item_frameworks/menu_model.cpp ../AppR01_4/model_item_frameworks/settings_item.cpp ../AppR01_4/model_item_frameworks/settings_model.cpp ../AppR01_4/powder_app/powderapp.cpp ../AppR01_4/powder_objects/blockobject.cpp ../AppR01_4/powder_objects/partobject.cpp ../AppR01_4/powder_objects/settingsobject.cpp ../AppR01_4/main.cpp ../AppR01_4/hardware_tools/zaber_utility.cpp ../AppR01_4/hardware_tools/lasergalvo_utility.cpp ../AppR01_4/3d_framework/block3d.cpp ../AppR01_4/powder_app/powderdaemon.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../AppR01_4/powder_app/powderapp.ui $(DISTDIR)/
 

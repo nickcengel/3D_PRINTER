@@ -166,10 +166,6 @@ public:
     void setStatus(const SettingsStatus &status);
 
 
-signals:
-
-public slots:
-
 private:
     QString m_settingsFilePath;
 

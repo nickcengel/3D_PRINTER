@@ -18,6 +18,7 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_MESSAGELOGCONTEXT
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -61,7 +62,8 @@ HEADERS += \
     hardware_tools/zaber_utility.h \
     hardware_tools/lasergalvo_utility.h \
     3d_framework/block3d.h \
-    powder_app/powderdaemon.h
+    powder_app/powderdaemon.h \
+    aixlog.hpp
 
 FORMS += \
     powder_app/powderapp.ui

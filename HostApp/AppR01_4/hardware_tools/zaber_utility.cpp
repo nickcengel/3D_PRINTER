@@ -16,10 +16,10 @@ QStringList ZaberUtility::composeCommandString(BlockObject *block, SettingsObjec
         modeString = " home\r";
     }
     else if(block->positionMode() == BlockObject::PositionMode::Position_Absolute){
-        modeString = " abs ";
+        modeString = " move abs ";
     }
     else if(block->positionMode() == BlockObject::PositionMode::Position_Relative){
-        modeString = " rel ";
+        modeString = " move rel ";
     }
 
     if(task & (BlockObject::BlockTask::SET_Z_POSITION)){

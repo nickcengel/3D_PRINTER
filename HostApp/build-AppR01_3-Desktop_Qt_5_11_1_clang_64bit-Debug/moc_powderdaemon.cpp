@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PowderDaemon_t {
-    QByteArrayData data[108];
-    char stringdata0[2034];
+    QByteArrayData data[109];
+    char stringdata0[2028];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -135,11 +135,12 @@ QT_MOC_LITERAL(99, 1817, 30), // "on_increment_hPosition_request"
 QT_MOC_LITERAL(100, 1848, 30), // "on_decrement_hPosition_request"
 QT_MOC_LITERAL(101, 1879, 30), // "on_increment_sPosition_request"
 QT_MOC_LITERAL(102, 1910, 30), // "on_decrement_sPosition_request"
-QT_MOC_LITERAL(103, 1941, 20), // "on_zPosition_request"
-QT_MOC_LITERAL(104, 1962, 15), // "ping_laserGalvo"
-QT_MOC_LITERAL(105, 1978, 21), // "ping_materialDelivery"
-QT_MOC_LITERAL(106, 2000, 21), // "on_clearError_request"
-QT_MOC_LITERAL(107, 2022, 11) // "poll_mdPort"
+QT_MOC_LITERAL(103, 1941, 15), // "ping_laserGalvo"
+QT_MOC_LITERAL(104, 1957, 21), // "ping_materialDelivery"
+QT_MOC_LITERAL(105, 1979, 6), // "devNum"
+QT_MOC_LITERAL(106, 1986, 7), // "axisNum"
+QT_MOC_LITERAL(107, 1994, 21), // "on_clearError_request"
+QT_MOC_LITERAL(108, 2016, 11) // "poll_mdPort"
 
     },
     "PowderDaemon\0xPosition_changed\0\0"
@@ -197,8 +198,8 @@ QT_MOC_LITERAL(107, 2022, 11) // "poll_mdPort"
     "on_decrement_hPosition_request\0"
     "on_increment_sPosition_request\0"
     "on_decrement_sPosition_request\0"
-    "on_zPosition_request\0ping_laserGalvo\0"
-    "ping_materialDelivery\0on_clearError_request\0"
+    "ping_laserGalvo\0ping_materialDelivery\0"
+    "devNum\0axisNum\0on_clearError_request\0"
     "poll_mdPort"
 };
 #undef QT_MOC_LITERAL
@@ -209,7 +210,7 @@ static const uint qt_meta_data_PowderDaemon[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      85,   14, // methods
+      84,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -217,93 +218,92 @@ static const uint qt_meta_data_PowderDaemon[] = {
       36,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  439,    2, 0x06 /* Public */,
-       4,    1,  442,    2, 0x06 /* Public */,
-       5,    1,  445,    2, 0x06 /* Public */,
-       7,    1,  448,    2, 0x06 /* Public */,
-       8,    1,  451,    2, 0x06 /* Public */,
-       9,    1,  454,    2, 0x06 /* Public */,
-      10,    1,  457,    2, 0x06 /* Public */,
-      12,    1,  460,    2, 0x06 /* Public */,
-      14,    1,  463,    2, 0x06 /* Public */,
-      16,    1,  466,    2, 0x06 /* Public */,
-      18,    1,  469,    2, 0x06 /* Public */,
-      20,    0,  472,    2, 0x06 /* Public */,
-      21,    0,  473,    2, 0x06 /* Public */,
-      22,    1,  474,    2, 0x06 /* Public */,
-      24,    0,  477,    2, 0x06 /* Public */,
-      25,    0,  478,    2, 0x06 /* Public */,
-      26,    1,  479,    2, 0x06 /* Public */,
-      27,    1,  482,    2, 0x06 /* Public */,
-      29,    1,  485,    2, 0x06 /* Public */,
-      30,    1,  488,    2, 0x06 /* Public */,
-      31,    1,  491,    2, 0x06 /* Public */,
-      33,    1,  494,    2, 0x06 /* Public */,
-      34,    0,  497,    2, 0x06 /* Public */,
-      35,    0,  498,    2, 0x06 /* Public */,
-      36,    0,  499,    2, 0x06 /* Public */,
-      37,    0,  500,    2, 0x06 /* Public */,
-      38,    0,  501,    2, 0x06 /* Public */,
-      39,    0,  502,    2, 0x06 /* Public */,
-      40,    0,  503,    2, 0x06 /* Public */,
-      41,    0,  504,    2, 0x06 /* Public */,
-      42,    0,  505,    2, 0x06 /* Public */,
-      43,    0,  506,    2, 0x06 /* Public */,
-      44,    0,  507,    2, 0x06 /* Public */,
-      45,    0,  508,    2, 0x06 /* Public */,
-      46,    0,  509,    2, 0x06 /* Public */,
-      47,    0,  510,    2, 0x06 /* Public */,
+       1,    1,  434,    2, 0x06 /* Public */,
+       4,    1,  437,    2, 0x06 /* Public */,
+       5,    1,  440,    2, 0x06 /* Public */,
+       7,    1,  443,    2, 0x06 /* Public */,
+       8,    1,  446,    2, 0x06 /* Public */,
+       9,    1,  449,    2, 0x06 /* Public */,
+      10,    1,  452,    2, 0x06 /* Public */,
+      12,    1,  455,    2, 0x06 /* Public */,
+      14,    1,  458,    2, 0x06 /* Public */,
+      16,    1,  461,    2, 0x06 /* Public */,
+      18,    1,  464,    2, 0x06 /* Public */,
+      20,    0,  467,    2, 0x06 /* Public */,
+      21,    0,  468,    2, 0x06 /* Public */,
+      22,    1,  469,    2, 0x06 /* Public */,
+      24,    0,  472,    2, 0x06 /* Public */,
+      25,    0,  473,    2, 0x06 /* Public */,
+      26,    1,  474,    2, 0x06 /* Public */,
+      27,    1,  477,    2, 0x06 /* Public */,
+      29,    1,  480,    2, 0x06 /* Public */,
+      30,    1,  483,    2, 0x06 /* Public */,
+      31,    1,  486,    2, 0x06 /* Public */,
+      33,    1,  489,    2, 0x06 /* Public */,
+      34,    0,  492,    2, 0x06 /* Public */,
+      35,    0,  493,    2, 0x06 /* Public */,
+      36,    0,  494,    2, 0x06 /* Public */,
+      37,    0,  495,    2, 0x06 /* Public */,
+      38,    0,  496,    2, 0x06 /* Public */,
+      39,    0,  497,    2, 0x06 /* Public */,
+      40,    0,  498,    2, 0x06 /* Public */,
+      41,    0,  499,    2, 0x06 /* Public */,
+      42,    0,  500,    2, 0x06 /* Public */,
+      43,    0,  501,    2, 0x06 /* Public */,
+      44,    0,  502,    2, 0x06 /* Public */,
+      45,    0,  503,    2, 0x06 /* Public */,
+      46,    0,  504,    2, 0x06 /* Public */,
+      47,    0,  505,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      48,    1,  511,    2, 0x0a /* Public */,
-      50,    1,  514,    2, 0x0a /* Public */,
-      51,    1,  517,    2, 0x0a /* Public */,
-      53,    1,  520,    2, 0x0a /* Public */,
-      54,    1,  523,    2, 0x0a /* Public */,
-      55,    1,  526,    2, 0x0a /* Public */,
-      56,    1,  529,    2, 0x0a /* Public */,
-      59,    1,  532,    2, 0x0a /* Public */,
-      62,    0,  535,    2, 0x0a /* Public */,
-      63,    0,  536,    2, 0x0a /* Public */,
-      64,    0,  537,    2, 0x0a /* Public */,
-      65,    1,  538,    2, 0x0a /* Public */,
-      67,    0,  541,    2, 0x0a /* Public */,
-      68,    1,  542,    2, 0x0a /* Public */,
-      69,    0,  545,    2, 0x0a /* Public */,
-      70,    0,  546,    2, 0x0a /* Public */,
-      71,    0,  547,    2, 0x0a /* Public */,
-      72,    1,  548,    2, 0x0a /* Public */,
-      75,    1,  551,    2, 0x0a /* Public */,
-      76,    0,  554,    2, 0x0a /* Public */,
-      77,    0,  555,    2, 0x0a /* Public */,
-      78,    0,  556,    2, 0x0a /* Public */,
-      79,    0,  557,    2, 0x0a /* Public */,
-      80,    0,  558,    2, 0x0a /* Public */,
-      81,    0,  559,    2, 0x0a /* Public */,
-      82,    0,  560,    2, 0x0a /* Public */,
-      83,    0,  561,    2, 0x0a /* Public */,
-      84,    0,  562,    2, 0x0a /* Public */,
-      85,    0,  563,    2, 0x0a /* Public */,
-      86,    0,  564,    2, 0x0a /* Public */,
-      87,    0,  565,    2, 0x0a /* Public */,
-      88,    1,  566,    2, 0x0a /* Public */,
-      90,    1,  569,    2, 0x0a /* Public */,
-      92,    0,  572,    2, 0x0a /* Public */,
-      93,    0,  573,    2, 0x0a /* Public */,
-      94,    0,  574,    2, 0x0a /* Public */,
-      95,    0,  575,    2, 0x0a /* Public */,
-      96,    0,  576,    2, 0x0a /* Public */,
-      97,    0,  577,    2, 0x0a /* Public */,
-      98,    0,  578,    2, 0x0a /* Public */,
-      99,    0,  579,    2, 0x0a /* Public */,
-     100,    0,  580,    2, 0x0a /* Public */,
-     101,    0,  581,    2, 0x0a /* Public */,
-     102,    0,  582,    2, 0x0a /* Public */,
-     103,    0,  583,    2, 0x0a /* Public */,
-     104,    0,  584,    2, 0x0a /* Public */,
-     105,    0,  585,    2, 0x0a /* Public */,
-     106,    0,  586,    2, 0x0a /* Public */,
-     107,    0,  587,    2, 0x0a /* Public */,
+      48,    1,  506,    2, 0x0a /* Public */,
+      50,    1,  509,    2, 0x0a /* Public */,
+      51,    1,  512,    2, 0x0a /* Public */,
+      53,    1,  515,    2, 0x0a /* Public */,
+      54,    1,  518,    2, 0x0a /* Public */,
+      55,    1,  521,    2, 0x0a /* Public */,
+      56,    1,  524,    2, 0x0a /* Public */,
+      59,    1,  527,    2, 0x0a /* Public */,
+      62,    0,  530,    2, 0x0a /* Public */,
+      63,    0,  531,    2, 0x0a /* Public */,
+      64,    0,  532,    2, 0x0a /* Public */,
+      65,    1,  533,    2, 0x0a /* Public */,
+      67,    0,  536,    2, 0x0a /* Public */,
+      68,    1,  537,    2, 0x0a /* Public */,
+      69,    0,  540,    2, 0x0a /* Public */,
+      70,    0,  541,    2, 0x0a /* Public */,
+      71,    0,  542,    2, 0x0a /* Public */,
+      72,    1,  543,    2, 0x0a /* Public */,
+      75,    1,  546,    2, 0x0a /* Public */,
+      76,    0,  549,    2, 0x0a /* Public */,
+      77,    0,  550,    2, 0x0a /* Public */,
+      78,    0,  551,    2, 0x0a /* Public */,
+      79,    0,  552,    2, 0x0a /* Public */,
+      80,    0,  553,    2, 0x0a /* Public */,
+      81,    0,  554,    2, 0x0a /* Public */,
+      82,    0,  555,    2, 0x0a /* Public */,
+      83,    0,  556,    2, 0x0a /* Public */,
+      84,    0,  557,    2, 0x0a /* Public */,
+      85,    0,  558,    2, 0x0a /* Public */,
+      86,    0,  559,    2, 0x0a /* Public */,
+      87,    0,  560,    2, 0x0a /* Public */,
+      88,    1,  561,    2, 0x0a /* Public */,
+      90,    1,  564,    2, 0x0a /* Public */,
+      92,    0,  567,    2, 0x0a /* Public */,
+      93,    0,  568,    2, 0x0a /* Public */,
+      94,    0,  569,    2, 0x0a /* Public */,
+      95,    0,  570,    2, 0x0a /* Public */,
+      96,    0,  571,    2, 0x0a /* Public */,
+      97,    0,  572,    2, 0x0a /* Public */,
+      98,    0,  573,    2, 0x0a /* Public */,
+      99,    0,  574,    2, 0x0a /* Public */,
+     100,    0,  575,    2, 0x0a /* Public */,
+     101,    0,  576,    2, 0x0a /* Public */,
+     102,    0,  577,    2, 0x0a /* Public */,
+     103,    0,  578,    2, 0x0a /* Public */,
+     104,    2,  579,    2, 0x0a /* Public */,
+     107,    0,  584,    2, 0x0a /* Public */,
+     108,    0,  585,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Double,    3,
@@ -389,8 +389,7 @@ static const uint qt_meta_data_PowderDaemon[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,  105,  106,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -483,11 +482,10 @@ void PowderDaemon::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 77: _t->on_decrement_hPosition_request(); break;
         case 78: _t->on_increment_sPosition_request(); break;
         case 79: _t->on_decrement_sPosition_request(); break;
-        case 80: _t->on_zPosition_request(); break;
-        case 81: _t->ping_laserGalvo(); break;
-        case 82: _t->ping_materialDelivery(); break;
-        case 83: _t->on_clearError_request(); break;
-        case 84: _t->poll_mdPort(); break;
+        case 80: _t->ping_laserGalvo(); break;
+        case 81: _t->ping_materialDelivery((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 82: _t->on_clearError_request(); break;
+        case 83: _t->poll_mdPort(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -772,13 +770,13 @@ int PowderDaemon::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 85)
+        if (_id < 84)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 85;
+        _id -= 84;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 85)
+        if (_id < 84)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 85;
+        _id -= 84;
     }
     return _id;
 }

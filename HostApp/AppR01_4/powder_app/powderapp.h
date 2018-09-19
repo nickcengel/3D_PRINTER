@@ -1,3 +1,6 @@
+
+
+
 #ifndef POWDERAPP_H
 #define POWDERAPP_H
 
@@ -18,7 +21,7 @@
 #include "3d_framework/block3d.h"
 #include "powderdaemon.h"
 
-
+Q_DECLARE_LOGGING_CATEGORY(powder_app)
 
 
 namespace Ui {

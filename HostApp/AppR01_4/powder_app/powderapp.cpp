@@ -9,15 +9,14 @@
 #include <QList>
 #include <QVector3D>
 
+Q_LOGGING_CATEGORY(powder_app, "powder.app")
 
 PowderApp::PowderApp(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PowderApp)
 {
     ui->setupUi(this);
-
     viewDefaultSettings();
-
     deviceTransport = new PowderDaemon(this);
 
     this->QWidget::setMaximumWidth(335);
@@ -243,6 +242,7 @@ PowderApp::PowderApp(QWidget *parent) :
 
     QObject::connect(deviceTransport, SIGNAL(hopperBusy()),
                      this, SLOT(on_hop_spread_busy()));
+
     QObject::connect(deviceTransport, SIGNAL(spreaderBusy()),
                      this, SLOT(on_hop_spread_busy()));
 
@@ -250,6 +250,7 @@ PowderApp::PowderApp(QWidget *parent) :
                      deviceTransport, SLOT(on_clearError_request()));
 
     this->applySettings();
+    qCWarning(powder_app, "entered powder app");
 
 }
 
@@ -260,6 +261,8 @@ PowderApp::~PowderApp()
     m_myPart.clear();
 
     deviceTransport->deleteLater();
+    qCWarning(powder_app, "exited powder app");
+
 }
 
 void PowderApp::applySettings()
@@ -349,14 +352,21 @@ void PowderApp::applySettings()
             emit lgPort_name_changed(serialPortNames.at(i));
             ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->LaserGalvoPortStatus_field->setText("Closed");
+            const QString log = "laser and galvanometer port assigned to " + serialPortNames.at(i);
+            qCWarning(powder_app, log.toLocal8Bit());
         }
         else if (i == myConfiguration.get()->materialDelivery_portNumber()){
             emit mdPort_name_changed(serialPortNames.at(i));
             ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->MaterialDeliveryPortStatus_field->setText("Closed");
+            ui->LaserGalvoPortStatus_field->setText("Closed");
+            const QString log = "material delivery port assigned to " + serialPortNames.at(i);
+            qCWarning(powder_app, log.toLocal8Bit());
         }
     }
     emit newConfigAvailable(myConfiguration);
+    qCWarning(powder_app, "settings applied");
+
 }
 
 void PowderApp::refreshSerialPorts()
@@ -579,6 +589,7 @@ void PowderApp::on_settings_button_resetToDefault_clicked()
 {
     m_userSettingsPath.clear();
     viewDefaultSettings();
+
 }
 
 void PowderApp::on_settings_button_openFile_clicked()
@@ -606,6 +617,7 @@ void PowderApp::on_settings_buttons_saveFile_clicked()
         m_userSettingsPath += "/powderUserConfig.ini";
     }
 
+    qWarning(powder_app, "Settings Exported");
     saveUserSettings();
 
 }
@@ -710,7 +722,9 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
         ui->printManagerStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
         ui->printManager_status_field->setText("Part File Loaded");
         QString pf = partFileName;
-        ui->printManager_file_field->setText(partFileName);
+        int namestart = pf.lastIndexOf("/")+1;
+        pf = pf.right(pf.length()-namestart);
+        ui->printManager_file_field->setText(pf);
         ui->printManager_block_bar->setValue(0);
         ui->printManager_block_bar->setMaximum(m_myPart.get()->blockCount()-1);
         ui->printManager_layer_bar->setValue(0);
@@ -1016,7 +1030,6 @@ void PowderApp::saveDefaultSettings()
     defaultConfig.endGroup();
     defaultConfig.endGroup();
 
-
 }
 
 void PowderApp::saveUserSettings()
@@ -1235,8 +1248,10 @@ void PowderApp::on_buildPlateEnable_button_toggled(bool checked)
     if(checked){
         ui->jogZminus_button->setEnabled(true);
         ui->jogZplus_button->setEnabled(true);
-        deviceTransport->on_homeOption_change(2);
-        deviceTransport->on_home_request();
+//        deviceTransport->on_homeOption_change(2);
+//        deviceTransport->on_home_request();
+        deviceTransport->ping_materialDelivery(1,1);
+
     }
     else
     {
@@ -1254,7 +1269,7 @@ void PowderApp::on_materialDeliveryDisplayEnable_button_toggled(bool checked)
         ui->jogHplus_button->setEnabled(true);
         ui->jogSminus_button->setEnabled(true);
         ui->jogSplus_button->setEnabled(true);
-        deviceTransport->ping_materialDelivery();
+        deviceTransport->ping_materialDelivery(2,0);
     }
     else
     {
@@ -1352,7 +1367,7 @@ void PowderApp::on_lg_portReply(const QString &reply)
 
 void PowderApp::on_md_portError(const QString &Error)
 {
-    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(1255,37,33)");
+    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(255,37,33)");
     ui->PortManagerInfo_browser->setText(Error);
 
     const QString z = "0"+QString::number(myConfiguration.get()->z_deviceNumber())
@@ -1407,6 +1422,7 @@ void PowderApp::on_transportError(const QString &Error)
 {
     ui->PortManagerInfo_browser->setStyleSheet("color:rgb(255,37,33)");
     ui->PortManagerInfo_browser->setText(Error);
+
 }
 
 void PowderApp::on_printManager_reset_button_clicked()
@@ -1434,6 +1450,7 @@ void PowderApp::on_hop_spread_busy()
 void PowderApp::on_settings_button_saveAsDefault_released()
 {
     saveDefaultSettings();
+    qWarning(powder_app, "Default Settings Modified");
 }
 
 

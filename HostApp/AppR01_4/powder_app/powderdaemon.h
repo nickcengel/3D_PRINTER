@@ -10,9 +10,16 @@
 
 #include "hardware_tools/lasergalvo_utility.h"
 
-#include <syslog.h>
 
-void writeMessageToSyslogd(int type, const QString &message);
+Q_DECLARE_LOGGING_CATEGORY(powder_daemon_log)
+Q_DECLARE_LOGGING_CATEGORY(port_laser_galvo_log)
+Q_DECLARE_LOGGING_CATEGORY(port_material_delivery_log)
+
+Q_DECLARE_LOGGING_CATEGORY(device_laser_log)
+Q_DECLARE_LOGGING_CATEGORY(device_galvanometer_log)
+Q_DECLARE_LOGGING_CATEGORY(device_buildPlate_log)
+Q_DECLARE_LOGGING_CATEGORY(device_hopperPlate_log)
+Q_DECLARE_LOGGING_CATEGORY(device_spreaderBlade_log)
 
 
 class PowderDaemon : public QObject
@@ -190,11 +197,11 @@ public slots:
     void on_increment_sPosition_request();
     void on_decrement_sPosition_request();
 
-    void on_zPosition_request();
+//    void on_zPosition_request();
 
     void ping_laserGalvo();
 
-    void ping_materialDelivery();
+    void ping_materialDelivery(int devNum, int axisNum);
 
     void on_clearError_request();
 

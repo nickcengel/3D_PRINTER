@@ -1,32 +1,15 @@
 #include "powderdaemon.h"
 
-void writeMessageToSyslogd(int type, const QString &message){
-    openlog("Powder", LOG_PID, LOG_USER);
-    const char *c_str = message.toLatin1();
-    switch (type) {
-    case LOG_INFO:
-    {
-        syslog(LOG_INFO, "%s", c_str);
-        break;
-    }
 
-    case LOG_ERR:
-    {
-        syslog(LOG_ERR, "%s", c_str);
+Q_LOGGING_CATEGORY(powder_daemon_log, "powder.daemon")
+Q_LOGGING_CATEGORY(port_laser_galvo_log, "daemon.port.laser_and_galvo")
+Q_LOGGING_CATEGORY(port_material_delivery_log, "daemon.port.material_delivery")
 
-        break;
-    }
-    case LOG_DEBUG:
-    {
-        syslog(LOG_DEBUG, "%s", c_str);
-
-        break;
-    }
-    default:
-        break;
-    }
-    closelog();
-}
+Q_LOGGING_CATEGORY(device_laser_log, "daemon.device.laser")
+Q_LOGGING_CATEGORY(device_galvanometer_log, "daemon.device.galvanometer")
+Q_LOGGING_CATEGORY(device_buildPlate_log, "daemon.device.build_plate")
+Q_LOGGING_CATEGORY(device_hopperPlate_log, "daemon.device.hopper_plate")
+Q_LOGGING_CATEGORY(device_spreaderBlade_log, "daemon.device.spreader_blade")
 
 
 
@@ -196,7 +179,7 @@ PowderDaemon::PowderDaemon(QObject *parent) : QObject(parent)
     md_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), printRoutine_init_state);
 
     printRoutine->start();
-    qDebug("yofsdafasdfdsafas");
+    qWarning(powder_daemon_log, "daemon started");
 }
 
 
@@ -477,15 +460,51 @@ void PowderDaemon::on_md_port_bytesRead()
     if(md_port_rxBytes.length() > 2){
         md_port_timer->stop();
         QString reply = QString::fromUtf8(md_port_rxBytes);
-        if(reply.contains("ok", Qt::CaseInsensitive)){
-            emit md_port_deviceReply(reply);
+
+        if(reply.contains("OK", Qt::CaseInsensitive)){
+            float distanceCounts = 0;
+            int posIndex = reply.lastIndexOf(" ");
+            if(posIndex != -1){
+                posIndex += 1;
+                distanceCounts = reply.mid(posIndex, reply.indexOf("\r") - posIndex).toFloat();
+            }
+            const QString Z_id = "0"+QString::number(m_config.get()->z_deviceNumber())
+                    +" " + QString::number(m_config.get()->z_axisNumber());
+            const QString H_id = "0"+QString::number(m_config.get()->hopper_deviceNumber())
+                    +" " + QString::number(m_config.get()->hopper_axisNumber());
+            const QString S_id = "0"+QString::number(m_config.get()->hopper_deviceNumber())
+                    +" " + QString::number(m_config.get()->hopper_axisNumber());
+
             if(reply.contains("IDLE")){
+                if(reply.contains(Z_id)){
+                    setZPosition(distanceCounts/m_config.get()->z_position_resolution());
+                }
+                else if(reply.contains(H_id)){
+                    setHPosition(distanceCounts/m_config.get()->hopper_position_resolution());
+                }
+                else if(reply.contains(S_id)){
+                    setSPosition(distanceCounts/m_config.get()->spreader_position_resolution());
+                }
+                md_transaction_timer->stop();
+                emit md_port_deviceReply(reply);
                 emit md_port_rxFinished();
             }
             else if(reply.contains("BUSY")){
-                md_transaction_timer->start(500);
+                if(static_cast<int>(distanceCounts)){
+                    if(reply.contains(Z_id)){
+                        setZPosition(distanceCounts/m_config.get()->z_position_resolution());
+                    }
+                    else if(reply.contains(H_id)){
+                        setHPosition(distanceCounts/m_config.get()->hopper_position_resolution());
+                    }
+                    else if(reply.contains(S_id)){
+                        setSPosition(distanceCounts/m_config.get()->spreader_position_resolution());
+                    }
+                }
+                 md_transaction_timer->start(500);
             }
         }
+
         else{
             emit md_port_error(reply);
         }
@@ -677,18 +696,16 @@ void PowderDaemon::on_lg_transactionFinished()
 void PowderDaemon::on_send_mdCommand()
 {
     qDebug()<<"entered send_mdCommand_state";
-    qDebug()<<m_md_commandStr.at(0);
-
     if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
         emit buildPlateBusy();
         write_to_md_port(m_md_commandStr.at(0));
     }
-    else if(m_pendingTasks & BlockObject::BlockTask::SET_HOPPER_POSITION){
+    else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
         emit hopperBusy();
         write_to_md_port(m_md_commandStr.at(1));
     }
-    else if(m_pendingTasks & BlockObject::BlockTask::SET_SPREADER_POSITION){
-         emit spreaderBusy();
+    else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
+        emit spreaderBusy();
         write_to_md_port(m_md_commandStr.at(2));
     }
 }
@@ -705,17 +722,17 @@ void PowderDaemon::on_md_transactionFinished()
 
     if(m_printModeEnabled){
         if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
-            setZPosition(m_part.get()->getBlock(m_currentBlockNumber).z_position());
+            //            setZPosition(m_part.get()->getBlock(m_currentBlockNumber).z_position());
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
                 setZHomed(true);
         }
         else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
-            setHPosition(m_part.get()->getBlock(m_currentBlockNumber).hopper_position());
+            //            setHPosition(m_part.get()->getBlock(m_currentBlockNumber).hopper_position());
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
                 setHHomed(true);
         }
         else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
-            setSPosition(m_part.get()->getBlock(m_currentBlockNumber).spreader_position());
+            //            setSPosition(m_part.get()->getBlock(m_currentBlockNumber).spreader_position());
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS)
                 setSHomed(true);
         }
@@ -732,30 +749,30 @@ void PowderDaemon::on_md_transactionFinished()
         if(m_activeTask & BlockObject::BlockTask::SET_Z_POSITION){
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
                 setZHomed(true);
-                setZPosition(0);
+                //                setZPosition(0);
             }
-            else
-                setZPosition(zPosition() + m_jogSign*m_jogIncrement);
+            //            else
+            //                setZPosition(zPosition() + m_jogSign*m_jogIncrement);
             m_activeTask = 0;
             emit jogComplete();
         }
         else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
                 setHHomed(true);
-                setHPosition(0);
+                //                setHPosition(0);
             }
-            else
-                setHPosition(hPosition() + m_jogSign*m_jogIncrement);
+            //            else
+            //                setHPosition(hPosition() + m_jogSign*m_jogIncrement);
             m_activeTask = 0;
             emit jogComplete();
         }
         else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
             if(m_activeTask & BlockObject::BlockTask::SET_HOME_AXIS){
                 setSHomed(true);
-                setSPosition(0);
+                //                setSPosition(0);
             }
-            else
-                setSPosition(sPosition() + m_jogSign*m_jogIncrement);
+            //            else
+            //                setSPosition(sPosition() + m_jogSign*m_jogIncrement);
             m_activeTask = 0;
             emit jogComplete();
         }
@@ -1069,13 +1086,13 @@ void PowderDaemon::on_decrement_sPosition_request()
     }
 }
 
-void PowderDaemon::on_zPosition_request()
-{
-    QString posReqStr ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
-    m_md_commandStr.insert(0, posReqStr);
-    m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
-    emit md_commandPending();
-}
+//void PowderDaemon::on_zPosition_request()
+//{
+//    QString posReqStr ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
+//    m_md_commandStr.insert(0, posReqStr);
+//    m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
+//    emit md_commandPending();
+//}
 
 void PowderDaemon::ping_laserGalvo()
 {
@@ -1084,12 +1101,32 @@ void PowderDaemon::ping_laserGalvo()
     emit lg_commandPending();
 }
 
-void PowderDaemon::ping_materialDelivery()
+void PowderDaemon::ping_materialDelivery(int devNum, int axisNum)
 {
-    QString pingStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " 0\r";
-    m_md_commandStr.insert(1, pingStr);
-    m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
-    emit md_commandPending();
+    if(devNum == m_config.get()->z_deviceNumber()){
+        const QString pingStr ="/" + QString::number(devNum) + " " + QString::number(axisNum) + "\r";
+        m_md_commandStr.insert(0, pingStr);
+        m_activeTask = BlockObject::BlockTask::SET_Z_POSITION;
+        emit md_commandPending();
+    }
+    else if((devNum == m_config.get()->hopper_deviceNumber())&&(axisNum == m_config.get()->hopper_axisNumber())){
+        const QString pingStr ="/" + QString::number(devNum) + " " + QString::number(axisNum) + "\r";
+        m_md_commandStr.insert(1, pingStr);
+        m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
+        emit md_commandPending();
+    }
+    else if((devNum == m_config.get()->spreader_deviceNumber())&&(axisNum == m_config.get()->spreader_axisNumber())){
+        const QString pingStr ="/" + QString::number(devNum) + " " + QString::number(axisNum) + "\r";
+        m_md_commandStr.insert(2, pingStr);
+        m_activeTask = BlockObject::BlockTask::SET_SPREADER_POSITION;
+        emit md_commandPending();
+    }
+    else if((devNum == m_config.get()->hopper_deviceNumber())||(devNum == m_config.get()->spreader_deviceNumber())){
+        const QString pingStr ="/" + QString::number(devNum) +"\r";
+        m_md_commandStr.insert(1, pingStr);
+        m_activeTask = BlockObject::BlockTask::SET_HOPPER_POSITION;
+        emit md_commandPending();
+    }
 }
 
 void PowderDaemon::on_clearError_request()
@@ -1105,10 +1142,12 @@ void PowderDaemon::poll_mdPort()
                 + " get pos" + "\r";
     }
     else if(m_activeTask & BlockObject::BlockTask::SET_HOPPER_POSITION){
-        requestStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber()) + "\r";
+        requestStr ="/" + QString::number(m_config.get()->hopper_deviceNumber()) + " " + QString::number(m_config.get()->hopper_axisNumber())
+                + " get pos" + "\r";
     }
     else if(m_activeTask & BlockObject::BlockTask::SET_SPREADER_POSITION){
-        requestStr ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber()) + "\r";
+        requestStr ="/" + QString::number(m_config.get()->spreader_deviceNumber()) + " " + QString::number(m_config.get()->spreader_axisNumber())
+                + " get pos" + "\r";
     }
 
     if(!requestStr.isEmpty()){
