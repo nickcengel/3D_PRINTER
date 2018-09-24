@@ -15,12 +15,12 @@
  * In addition to holding the data from a line of G-Code, PowderBlock also contains
  * additional information that is useful for "playing back" the blocks during a print.
  *  - This includes the "blockTask" variable, in which setting a or clearing a bit controls
- *    which data fields will be used to update the machine's state.
+ *    which data fields will be used to update the machine's state parameters.
  *  - The blockNumber and layerNumber variables are used during generation and playback to
- *    keep track of the place of the block inside the parts different layers.
- *  - lg_string contains the generated command string destined for the laser-galvo controller
- *  - md_string contains a list of command strings for the various material-delivery controllers.
- *      index0 = build plate, index1 = hopper, index2 = spreader
+ *    keep track of the place of the block inside a part's different layers.
+ *  - galvo_string contains the generated command string destined for the galvo controller
+ *  - materialDelivery_string contains a list of command strings for the various material-delivery devices.
+ *      index0 = build plate, index1 = hopper, index2 = spreader, index3 = md speed
  */
 class PowderBlock
 {
@@ -40,30 +40,32 @@ public:
 
     // BlockTask enumerates the possible actions that a block may contain.
     // Each task is cannonical, so multiple tasks can be OR'd together.
-    enum BlockTask : uint16_t {
+    enum BlockTask : uint32_t {
         BLOCK_EMPTY = 0x0,
-        SET_LASER_ARM_STATE = 0x1,
-        SET_LASER_ENABLE_STATE = 0x2,
-        SET_LASER_POWER = 0x4,
-        SET_POSITION_MODE = 0x8,
-        SET_X_POSITION = 0x10,
-        SET_Y_POSITION = 0x20,
-        SET_XY_SPEED = 0x40,
-        SET_Z_POSITION = 0x80,
-        SET_Z_SPEED = 0x100,
-        SET_HOPPER_POSITION = 0x200,
-        SET_HOPPER_SPEED = 0x400,
-        SET_SPREADER_POSITION = 0x800,
-        SET_SPREADER_SPEED = 0x1000,
-        SET_HOME_AXIS = 0x2000,
-        SET_DWELL_TIME  = 0x4000,
-        BLOCK_ERROR  = 0x8000
+        SET_LASER_ARM_STATE = (1<<1),
+        SET_LASER_ENABLE_STATE = (1<<2),
+        SET_LASER_INTENSITY = (1<<3),
+        SET_LASER_MODE = (1<<4),
+        SET_LASER_PULSE_FREQ = (1<<5),
+        SET_POSITION_MODE = (1<<6),
+        SET_X_POSITION = (1<<7),
+        SET_Y_POSITION = (1<<8),
+        SET_XY_SPEED = (1<<9),
+        SET_Z_POSITION = (1<<10),
+        SET_Z_SPEED = (1<<11),
+        SET_HOPPER_POSITION = (1<<12),
+        SET_HOPPER_SPEED = (1<<13),
+        SET_SPREADER_POSITION = (1<<14),
+        SET_SPREADER_SPEED = (1<<15),
+        SET_HOME_AXIS = (1<<16),
+        SET_DWELL_TIME  = (1<<17),
+        BLOCK_ERROR  =(1<<18)
     };
 
 
     // setBlockTask sets the bit of block's task variable corresponding to the input argument task
-    void setBlockTask(uint16_t task);
-    uint16_t blockTask() const;
+    void setBlockTask(uint32_t task);
+    uint32_t blockTask() const;
 
 
     bool laser_enabled() const; //  The on/off state of the laser
@@ -74,12 +76,25 @@ public:
     bool laser_armed() const;
     void setLaser_armed(bool laser_armed);
 
-    int laser_power() const;
-    void setLaser_power(const int &laser_power);
+    float laser_intensity() const;
+    void setLaser_intensity(const float &laser_intensity);
 
     enum PositionMode {
         Position_Absolute,
         Position_Relative,
+    };
+
+    enum CommandType {
+        NO_COMMAND_TYPE,
+        G0_RAPID_MOVE,
+        G1_LINEAR_MOVE,
+        G4_DWELL,
+        M649_MODIFY_LASER
+    };
+
+    enum LaserMode {
+        LASER_PULSED = 0,
+        LASER_CONTINUOUS = 1,
     };
 
     PositionMode positionMode() const;
@@ -116,23 +131,41 @@ public:
 
     void clearTask();
 
-    QString lg_string() const;
-    void setLg_string(const QString &lg_string);
+    QString galvo_string() const;
+    void setGalvo_string(const QString &galvo_string);
 
-    QStringList md_string() const;
-    void setMd_string(const QStringList &md_string);
+    QStringList materialDelivery_string() const;
+    void setMaterialDelivery_string(const QStringList &materialDelivery_string);
+
+    CommandType commandType() const;
+    void setCommandType(const CommandType &commandType);
+
+
+    int laser_pulseFreq() const;
+    void setLaser_pulseFreq(int laser_pulseFreq);
+
+    LaserMode laserMode() const;
+    void setLaserMode(const LaserMode &laserMode);
+
+    QStringList laser_string() const;
+    void setLaser_string(const QStringList &laser_string);
 
 private:
     int m_blockNumber;
     int m_layerNumber;
 
-    uint16_t m_blockTask;
+    uint32_t m_blockTask;
 
+    LaserMode m_laserMode;
     bool m_laser_enabled;
     bool m_laser_armed;
-    int m_laser_power;
+    float m_laser_intensity;
+    int m_laser_pulseFreq;
+
 
     PositionMode m_positionMode;
+
+    CommandType m_commandType;
 
     float m_x_position;
     float m_y_position;
@@ -149,8 +182,9 @@ private:
 
     float m_dwellTime;
 
-    QString m_lg_string;
-    QStringList m_md_string;
+    QStringList m_laser_string;
+    QString m_galvo_string;
+    QStringList m_materialDelivery_string;
 
 };
 

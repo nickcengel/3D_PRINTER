@@ -1,7 +1,4 @@
 <RCC>
-    <qresource prefix="/default">
-        <file>machineset.txt</file>
-    </qresource>
     <qresource prefix="/">
         <file>config.ini</file>
     </qresource>

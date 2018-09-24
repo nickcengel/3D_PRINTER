@@ -7,10 +7,13 @@ ZaberUtility::ZaberUtility()
 
 QStringList ZaberUtility::composeCommandString(PowderBlock *block, PowderSettings *config)
 {
-    uint16_t task = block->blockTask();
+    uint32_t task = block->blockTask();
+
     QStringList outputList;
 
     QString modeString;
+
+
 
     if(task & PowderBlock::BlockTask::SET_HOME_AXIS){
         modeString = " home\r";
@@ -76,5 +79,36 @@ QStringList ZaberUtility::composeCommandString(PowderBlock *block, PowderSetting
     }
     else
         outputList.append("EMPTY");
+
+    if(task == (PowderBlock::BlockTask::SET_Z_SPEED)){
+        int devNum = config->z_deviceNumber();
+        int axisNum = config->z_axisNumber();
+        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        speedString += " set maxspeed ";
+        double res = 1.6384*static_cast<double>(config->z_position_resolution()*block->z_speed());
+        speedString += (QString::number(res) + "\r");
+        outputList.append(speedString);
+    }
+    else if(task == (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
+        int devNum = config->hopper_deviceNumber();
+        int axisNum = config->hopper_axisNumber();
+        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        speedString += " set maxspeed ";
+        double res = 1.6384*static_cast<double>(config->hopper_position_resolution()*block->hopper_speed());
+        speedString += (QString::number(res) + "\r");
+        outputList.append(speedString);
+    }
+    else if(task == (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+        int devNum = config->spreader_deviceNumber();
+        int axisNum = config->spreader_axisNumber();
+        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+        speedString += " set maxspeed ";
+        double res = 1.6384*static_cast<double>(config->spreader_position_resolution()*block->spreader_speed());
+        speedString += (QString::number(res) + "\r");
+        outputList.append(speedString);
+    }
+    else
+        outputList.append("EMPTY");
+
     return outputList;
 }

@@ -14,7 +14,7 @@
  * This constructor than creates a vector of PowderBlocks from the file at the given path
  * using the specified PowderSettings.
  *
- * PowderPart thus includes the G-Code parser used to translate the incomming files into
+ * PowderPart therefore includes the G-Code parser used to translate the incomming files into
  * PowderBlocks.
  */
 
@@ -23,8 +23,8 @@ class PowderPart
 public:
     explicit PowderPart();
     PowderPart(const QString &filePath,  QSharedPointer<PowderSettings> config);
-    PowderPart(const PowderPart &otherPart); // copy constructor
-    ~PowderPart(); // destructor
+    PowderPart(const PowderPart &otherPart);
+    ~PowderPart();
 
     enum PartStatus : uint8_t
     {
@@ -47,14 +47,17 @@ public:
     void setBlockCount(const int &blockCount);
 
 
-    // PowderObjects may, but need not be divided into layers
+    // PowderParts may, but need not be divided into layers
     // using the keyword "NEW_LAYER"
     int layerCount() const;
     void setLayerCount(const int &layerCount);
 
+    // Parsed files that violate one or more configuration paramaters
+    // are flagged as invalid and cannot be used to control the machine.
     PartStatus partStatus() const;
     void setPartStatus(const PartStatus &partStatus);
 
+    // the location of the input file selected by the user
     QString partFilePath() const;
     void setPartFilePath(const QString &partFilePath);
 
@@ -63,7 +66,7 @@ public:
     QVector<int> layerFlags() const;
     void setLayerFlags(const QVector<int> &layerFlags);
 
-    // append block to the classes PowderBlock vector.
+    // append block to the local PowderBlock vector.
     void addBlock(const PowderBlock &block);
 
     // Indicates whether the file was succesfully parsed.
@@ -79,10 +82,13 @@ public:
     QStringList gcode() const;
     void setGcode(const QStringList &gcode);
 
+    // returns the PowderBlock at blockNum
     PowderBlock getBlock(const int blockNum) const;
 
+    // resets all private variables
     void clearPart();
 
+    // provides a pointer to a ordered collection of PowderBlocks
     QSharedPointer<QVector<PowderBlock> > getBlocks() const;
     void setBlocks(const QSharedPointer<QVector<PowderBlock> > &blocks);
 

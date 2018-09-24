@@ -37,14 +37,15 @@ SOURCES += \
     model_item_frameworks/settings_model.cpp \
     main.cpp \
     hardware_tools/zaber_utility.cpp \
-    hardware_tools/lasergalvo_utility.cpp \
     powder_objects/powder_part.cpp \
     powder_objects/powder_block.cpp \
     powder_objects/powder_settings.cpp \
     3d_framework/powder_block3d.cpp \
     3d_framework/powder_view3d.cpp \
     powder_app/powder_app.cpp \
-    powder_app/powder_transport.cpp
+    powder_app/powder_transport.cpp \
+    hardware_tools/galvo_utility.cpp \
+    hardware_tools/laser_utility.cpp
 
 HEADERS += \
     3d_framework/line3d.h \
@@ -55,14 +56,15 @@ HEADERS += \
     model_item_frameworks/settings_item.h \
     model_item_frameworks/settings_model.h \
     hardware_tools/zaber_utility.h \
-    hardware_tools/lasergalvo_utility.h \
     powder_objects/powder_block.h \
     powder_objects/powder_part.h \
     powder_objects/powder_settings.h \
     3d_framework/powder_block3d.h \
     3d_framework/powder_view3d.h \
     powder_app/powder_app.h \
-    powder_app/powder_transport.h
+    powder_app/powder_transport.h \
+    hardware_tools/galvo_utility.h \
+    hardware_tools/laser_utility.h
 
 FORMS += \
     powder_app/powderapp.ui
@@ -127,5 +129,4 @@ DISTFILES += \
     resources/icons/toggle-off1.png \
     resources/icons/toggle-on1.png \
     resources/icons/unlock-alt.png \
-    resources/machineset.txt \
     resources/config.ini

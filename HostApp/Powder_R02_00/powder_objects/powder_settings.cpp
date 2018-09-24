@@ -6,118 +6,121 @@ PowderSettings::PowderSettings()
 
     m_status = NO_SETTINGS;
 
-     m_laser_galvo_portNumber = 0;
-     m_materialDelivery_portNumber = 0;
+    m_galvo_portNumber = 0;
+    m_materialDelivery_portNumber = 0;
 
-     m_laser_deviceNumber = 0;
-     m_galvo_deviceNumber = 0;
-     m_z_deviceNumber = 0;
-     m_hopper_deviceNumber = 0;
-     m_spreader_deviceNumber = 0;
+    m_laser_deviceNumber = 0;
+    m_galvo_deviceNumber = 0;
+    m_z_deviceNumber = 0;
+    m_hopper_deviceNumber = 0;
+    m_spreader_deviceNumber = 0;
 
-     m_laser_axisNumber = 0;
-     m_x_axisNumber = 0;
-     m_y_axisNumber = 0;
-     m_z_axisNumber = 0;
-     m_hopper_axisNumber = 0;
-     m_spreader_axisNumber = 0;
+    m_laser_axisNumber = 0;
+    m_x_axisNumber = 0;
+    m_y_axisNumber = 0;
+    m_z_axisNumber = 0;
+    m_hopper_axisNumber = 0;
+    m_spreader_axisNumber = 0;
 
-     m_laser_power_resolution = 0;
-     m_x_position_resolution = 0;
-     m_y_position_resolution = 0;
-     m_z_position_resolution = 0;
-     m_hopper_position_resolution = 0;
-     m_spreader_position_resolution = 0;
+    m_x_position_resolution = 0;
+    m_y_position_resolution = 0;
+    m_z_position_resolution = 0;
+    m_hopper_position_resolution = 0;
+    m_spreader_position_resolution = 0;
 
-     m_laser_power_default = 0;
-     m_laser_power_max = 0;
-     m_laser_power_min = 0;
+    m_laserPower_max = 0;
+    m_laser_intensity_default = 0;
+    m_laser_intensity_max = 0;
+    m_laser_intensity_min = 0;
+    m_laser_pulseFreq_default = 0;
+    m_laser_pulseFreq_max = 0;
+    m_laser_pulseFreq_min = 0;
 
-     m_x_position_max = 0;
-     m_x_position_min = 0;
-     m_y_position_max = 0;
-     m_y_position_min = 0;
-     m_xy_speed_default = 0;
-     m_xy_speed_max = 0;
-     m_xy_speed_min = 0;
+    m_x_position_max = 0;
+    m_x_position_min = 0;
+    m_y_position_max = 0;
+    m_y_position_min = 0;
+    m_xy_speed_default = 0;
+    m_xy_speed_max = 0;
+    m_xy_speed_min = 0;
 
-     m_z_position_max = 0;
-     m_z_position_min = 0;
-     m_z_speed_default = 0;
-     m_z_speed_max = 0;
-     m_z_speed_min = 0;
+    m_z_position_max = 0;
+    m_z_position_min = 0;
+    m_z_speed_default = 0;
+    m_z_speed_max = 0;
+    m_z_speed_min = 0;
 
-     m_hopper_position_max = 0;
-     m_hopper_position_min = 0;
-     m_hopper_speed_default = 0;
-     m_hopper_speed_max = 0;
-     m_hopper_speed_min = 0;
+    m_hopper_position_max = 0;
+    m_hopper_position_min = 0;
+    m_hopper_speed_default = 0;
+    m_hopper_speed_max = 0;
+    m_hopper_speed_min = 0;
 
-     m_spreader_position_max = 0;
-     m_spreader_position_min = 0;
-     m_spreader_speed_default = 0;
-     m_spreader_speed_max = 0;
-     m_spreader_speed_min = 0;
+    m_spreader_position_max = 0;
+    m_spreader_position_min = 0;
+    m_spreader_speed_default = 0;
+    m_spreader_speed_max = 0;
+    m_spreader_speed_min = 0;
 }
 
 PowderSettings::PowderSettings(const PowderSettings &otherSettings)
 {
-     m_settingsFilePath = otherSettings.settingsFilePath();
+    m_settingsFilePath = otherSettings.settingsFilePath();
 
-     m_status = otherSettings.status();
+    m_status = otherSettings.status();
 
-     m_laser_galvo_portNumber = otherSettings.laserGalvo_portNumber();
-     m_materialDelivery_portNumber = otherSettings.materialDelivery_portNumber();
+    m_galvo_portNumber = otherSettings.galvo_portNumber();
+    m_materialDelivery_portNumber = otherSettings.materialDelivery_portNumber();
 
-     m_laser_deviceNumber = otherSettings.laser_deviceNumber();
-     m_galvo_deviceNumber = otherSettings.galvo_deviceNumber();
-     m_z_deviceNumber = otherSettings.z_deviceNumber();
-     m_hopper_deviceNumber = otherSettings.hopper_deviceNumber();
-     m_spreader_deviceNumber = otherSettings.spreader_deviceNumber();
+    m_laser_deviceNumber = otherSettings.laser_deviceNumber();
+    m_galvo_deviceNumber = otherSettings.galvo_deviceNumber();
+    m_z_deviceNumber = otherSettings.z_deviceNumber();
+    m_hopper_deviceNumber = otherSettings.hopper_deviceNumber();
+    m_spreader_deviceNumber = otherSettings.spreader_deviceNumber();
 
-     m_laser_axisNumber = otherSettings.laser_axisNumber();
-     m_x_axisNumber = otherSettings.x_axisNumber();
-     m_y_axisNumber = otherSettings.y_axisNumber();
-     m_z_axisNumber = otherSettings.z_axisNumber();
-     m_hopper_axisNumber = otherSettings.hopper_axisNumber();
-     m_spreader_axisNumber = otherSettings.spreader_axisNumber();
+    m_laser_axisNumber = otherSettings.laser_axisNumber();
+    m_x_axisNumber = otherSettings.x_axisNumber();
+    m_y_axisNumber = otherSettings.y_axisNumber();
+    m_z_axisNumber = otherSettings.z_axisNumber();
+    m_hopper_axisNumber = otherSettings.hopper_axisNumber();
+    m_spreader_axisNumber = otherSettings.spreader_axisNumber();
 
-     m_laser_power_resolution = otherSettings.laser_power_resolution();
-     m_x_position_resolution = otherSettings.x_position_resolution();
-     m_y_position_resolution = otherSettings.y_position_resolution();
-     m_z_position_resolution = otherSettings.z_position_resolution();
-     m_hopper_position_resolution = otherSettings.hopper_position_resolution();
-     m_spreader_position_resolution = otherSettings.spreader_position_resolution();
+    m_laserPower_max = otherSettings.laserPower_max();
+    m_x_position_resolution = otherSettings.x_position_resolution();
+    m_y_position_resolution = otherSettings.y_position_resolution();
+    m_z_position_resolution = otherSettings.z_position_resolution();
+    m_hopper_position_resolution = otherSettings.hopper_position_resolution();
+    m_spreader_position_resolution = otherSettings.spreader_position_resolution();
 
-     m_laser_power_default = otherSettings.laser_power_default();
-     m_laser_power_max = otherSettings.laser_power_max();
-     m_laser_power_min = otherSettings.laser_power_min();
+    m_laser_intensity_default = otherSettings.laser_intensity_default();
+    m_laser_intensity_max = otherSettings.laser_intensity_max();
+    m_laser_intensity_min = otherSettings.laser_intensity_min();
 
-     m_x_position_max = otherSettings.x_position_max();
-     m_x_position_min = otherSettings.x_position_min();
-     m_y_position_max = otherSettings.y_position_max();
-     m_y_position_min = otherSettings.y_position_min();
-     m_xy_speed_default = otherSettings.xy_speed_default();
-     m_xy_speed_max = otherSettings.xy_speed_max();
-     m_xy_speed_min = otherSettings.xy_speed_min();
+    m_x_position_max = otherSettings.x_position_max();
+    m_x_position_min = otherSettings.x_position_min();
+    m_y_position_max = otherSettings.y_position_max();
+    m_y_position_min = otherSettings.y_position_min();
+    m_xy_speed_default = otherSettings.xy_speed_default();
+    m_xy_speed_max = otherSettings.xy_speed_max();
+    m_xy_speed_min = otherSettings.xy_speed_min();
 
-     m_z_position_max = otherSettings.z_position_max();
-     m_z_position_min = otherSettings.z_position_min();
-     m_z_speed_default = otherSettings.z_speed_default();
-     m_z_speed_max = otherSettings.z_speed_max();
-     m_z_speed_min = otherSettings.z_speed_min();
+    m_z_position_max = otherSettings.z_position_max();
+    m_z_position_min = otherSettings.z_position_min();
+    m_z_speed_default = otherSettings.z_speed_default();
+    m_z_speed_max = otherSettings.z_speed_max();
+    m_z_speed_min = otherSettings.z_speed_min();
 
-     m_hopper_position_max = otherSettings.hopper_position_max();
-     m_hopper_position_min = otherSettings.hopper_position_min();
-     m_hopper_speed_default = otherSettings.hopper_speed_default();
-     m_hopper_speed_max = otherSettings.hopper_speed_max();
-     m_hopper_speed_min = otherSettings.hopper_speed_min();
+    m_hopper_position_max = otherSettings.hopper_position_max();
+    m_hopper_position_min = otherSettings.hopper_position_min();
+    m_hopper_speed_default = otherSettings.hopper_speed_default();
+    m_hopper_speed_max = otherSettings.hopper_speed_max();
+    m_hopper_speed_min = otherSettings.hopper_speed_min();
 
-     m_spreader_position_max = otherSettings.spreader_position_max();
-     m_spreader_position_min = otherSettings.spreader_position_min();
-     m_spreader_speed_default = otherSettings.spreader_speed_default();
-     m_spreader_speed_max = otherSettings.spreader_speed_max();
-     m_spreader_speed_min = otherSettings.spreader_speed_min();
+    m_spreader_position_max = otherSettings.spreader_position_max();
+    m_spreader_position_min = otherSettings.spreader_position_min();
+    m_spreader_speed_default = otherSettings.spreader_speed_default();
+    m_spreader_speed_max = otherSettings.spreader_speed_max();
+    m_spreader_speed_min = otherSettings.spreader_speed_min();
 }
 
 PowderSettings::~PowderSettings()
@@ -125,14 +128,14 @@ PowderSettings::~PowderSettings()
 
 }
 
-int PowderSettings::laserGalvo_portNumber() const
+int PowderSettings::galvo_portNumber() const
 {
-    return m_laser_galvo_portNumber;
+    return m_galvo_portNumber;
 }
 
-void PowderSettings::setLaser_galvo_portNumber(const int &laser_galvo_portNumber)
+void PowderSettings::setGalvo_portNumber(const int &galvo_portNumber)
 {
-    m_laser_galvo_portNumber = laser_galvo_portNumber;
+    m_galvo_portNumber = galvo_portNumber;
 }
 
 int PowderSettings::materialDelivery_portNumber() const
@@ -255,14 +258,14 @@ void PowderSettings::setSpreader_axisNumber(const int &spreader_axisNumber)
     m_spreader_axisNumber = spreader_axisNumber;
 }
 
-float PowderSettings::laser_power_resolution() const
+float PowderSettings::laserPower_max() const
 {
-    return m_laser_power_resolution;
+    return m_laserPower_max;
 }
 
-void PowderSettings::setLaser_power_resolution(float laser_power_resolution)
+void PowderSettings::setLaserPower_max(float laser_power_resolution)
 {
-    m_laser_power_resolution = laser_power_resolution;
+    m_laserPower_max = laser_power_resolution;
 }
 
 float PowderSettings::x_position_resolution() const
@@ -315,34 +318,34 @@ void PowderSettings::setSpreader_position_resolution(float spreader_position_res
     m_spreader_position_resolution = spreader_position_resolution;
 }
 
-int PowderSettings::laser_power_default() const
+float PowderSettings::laser_intensity_default() const
 {
-    return m_laser_power_default;
+    return m_laser_intensity_default;
 }
 
-void PowderSettings::setLaser_power_default(const int &laser_power_default)
+void PowderSettings::setLaser_intensity_default(const float &laser_intensity_default)
 {
-    m_laser_power_default = laser_power_default;
+    m_laser_intensity_default = laser_intensity_default;
 }
 
-int PowderSettings::laser_power_max() const
+float PowderSettings::laser_intensity_max() const
 {
-    return m_laser_power_max;
+    return m_laser_intensity_max;
 }
 
-void PowderSettings::setLaser_power_max(const int &laser_power_max)
+void PowderSettings::setLaser_intensity_max(const float &laser_intensity_max)
 {
-    m_laser_power_max = laser_power_max;
+    m_laser_intensity_max = laser_intensity_max;
 }
 
-int PowderSettings::laser_power_min() const
+float PowderSettings::laser_intensity_min() const
 {
-    return m_laser_power_min;
+    return m_laser_intensity_min;
 }
 
-void PowderSettings::setLaser_power_min(const int &laser_power_min)
+void PowderSettings::setLaser_intensity_min(const float &laser_intensity_min)
 {
-    m_laser_power_min = laser_power_min;
+    m_laser_intensity_min = laser_intensity_min;
 }
 
 float PowderSettings::x_position_max() const
@@ -578,6 +581,46 @@ PowderSettings::SettingsStatus PowderSettings::status() const
 void PowderSettings::setStatus(const SettingsStatus &status)
 {
     m_status = status;
+}
+
+int PowderSettings::laser_pulseFreq_default() const
+{
+    return m_laser_pulseFreq_default;
+}
+
+void PowderSettings::setLaser_pulseFreq_default(int laser_pulseFreq_default)
+{
+    m_laser_pulseFreq_default = laser_pulseFreq_default;
+}
+
+int PowderSettings::laser_pulseFreq_max() const
+{
+    return m_laser_pulseFreq_max;
+}
+
+void PowderSettings::setLaser_pulseFreq_max(int laser_pulseFreq_max)
+{
+    m_laser_pulseFreq_max = laser_pulseFreq_max;
+}
+
+int PowderSettings::laser_pulseFreq_min() const
+{
+    return m_laser_pulseFreq_min;
+}
+
+void PowderSettings::setLaser_pulseFreq_min(int laser_pulseFreq_min)
+{
+    m_laser_pulseFreq_min = laser_pulseFreq_min;
+}
+
+int PowderSettings::laser_portNumber() const
+{
+    return m_laser_portNumber;
+}
+
+void PowderSettings::setLaser_portNumber(int laser_portNumber)
+{
+    m_laser_portNumber = laser_portNumber;
 }
 
 QString PowderSettings::settingsFilePath() const

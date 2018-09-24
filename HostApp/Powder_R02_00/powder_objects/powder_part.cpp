@@ -3,8 +3,175 @@
 #include <QRegExp>
 #include <QtDebug>
 #include <QTextStream>
-#include "hardware_tools/lasergalvo_utility.h"
+#include "hardware_tools/galvo_utility.h"
 #include "hardware_tools/zaber_utility.h"
+#include "hardware_tools/laser_utility.h"
+
+
+
+/* GCODE PARSING & INTERPRETATION
+ * ---------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------
+ * The parser and intrepreter implemented in PowderPart and implied throughout PowderApp
+ * recognizes a subset of the RepRap Firmware's G-code command language.
+ * For an overview, consult: https://reprap.org/wiki/G-code .
+ *
+ * A. Axis Overview:
+ ** --------------------------------------------------------------------------------------------------
+ *  "Axis" | "Description"                    | "Notes"
+ * ---------------------------------------------------------------------------------------------------
+ *  "X"     | "Galvanometer X Axis"           | " Range: Xmin to Xmax, Home: 0 "
+ *  "Y"     | "Galvanometer Y Axis"           | " Range: Ymin to Ymax, Home: 0 "
+ *  "Z"     | "Build Plate Axis"              | " Range: Zmin to Zmax, Home: 0 "
+ *  "A"     | "Hopper Axis"                   | " Range: Amin to Amax, Home: 0 "
+ *  "B"     | "Spreader Axis"                 | " Range: Bmin to Bmax, Home: 0 "
+ *
+ * B. Supported Commands:
+ * --------------------------------------------------------------------------------------------------
+ *  "G-code" | "Function"                    | "Usage"
+ * ---------------------------------------------------------------------------------------------------
+ *  "G1"     | "Linear Move"                 | " G1 Xnnn Ynnn Znnn Annn Bnnn Ennn Fnnn Snnn "
+ *  "G0"     | "Rapid linear Move"           | " G0 Xnnn Ynnn Znnn Annn Bnnn Ennn Fnnn Snnn "
+ * ---------------------------------------------------------------------------------------------------
+ *  "G4"**   | "Dwell"                       | " G4 Pnnn " (where nnn is wait time in milliseconds)
+ * ---------------------------------------------------------------------------------------------------
+ *  "G28"    | "Move to Origin (Home)"       | " G28 " (Home all) or " G28 [Axis] " (Home 1 or more)
+ * ---------------------------------------------------------------------------------------------------
+ *  "G90"    | "Set to Absolute Positioning" | " G90 " (following commands are absolute coordinate)
+ * ---------------------------------------------------------------------------------------------------
+ *  "G91"    | "Set to Relative Positioning" | " G91 " (following commands are relative translations)
+ * ---------------------------------------------------------------------------------------------------
+ *  "F"      | "Set feedrate (speed)"        | " G1 [Axis]mmm... Fnnn " ([Axis] speed set to nnn mm/s)
+ * ---------------------------------------------------------------------------------------------------
+ *
+ * //// TO DO: **Implement dwell timer
+ *
+ * C. Extensions:
+ * ---------------------------------------------------------------------------------------------------
+ * 1. Control of the laser is implemented using the OpenSLS extension to RepRap
+ *  as summarized in Table A of the appendix to "Open-source Selective Laser
+ *  Sintering (OpenSLS) of Nylon and Biocompatible Polycaprolactone."
+ *      Ian S. Kinstlinger, Andreas Bastian, Samantha J. Paulsen, Daniel H. Hwang,
+ *      Anderson Ta, David R. Yalacki, Tim Schmidt, and Jordan S. Miller.
+ *      Department of Bioengineering, Rice University, Houston, Texas, USA.
+ *
+ *  Table A appears as follows:
+ * ---------------------------------------------------------------------------------------------------
+ *  "G-code" | "Function"                | "Notes"
+ * ---------------------------------------------------------------------------------------------------
+ *  "G1"     | "Move while laser firing" | "In unmodified Marlin, G0 and G1 refer
+ *  "G0"     | "Move while laer off"     |  to the same action."
+ * ---------------------------------------------------------------------------------------------------
+ *  "M3"     | "Laser On"                | "A G1 command will fire the laser on its own
+ *  "M5"     | "Laser Off"               | and doesnot need to be preceded by an M3 command."
+ * ---------------------------------------------------------------------------------------------------
+ *  "M649"** | "Modify laser settings"   | "This command takes the format “M649 S# L# P# D# B#”
+ *           |                           | S: Intensity of laser firing (0-100.0%)
+ *           |                           | L: Duration of firing (in microseconds)
+ *           |                           | P: Pulse per mm (in pulse mode)
+ *           |                           | D: Diagnostic mode (0 = off; 1 = on)
+ *           |                           | B: Laser firing mode (0 = continuous, 1 = pulsed, 2 =raster)
+ *           |                           |    "This command can be used to set laser settings before
+ *           |                           |    starting to sinter, or to adjust settings during sintering."
+ * ---------------------------------------------------------------------------------------------------
+ *
+ *  ///// TO DO: **-Implement laser controls
+ *
+ * 2. The Parser can represent a division of the part file into layers by responding to comments
+ *    containing a 'new_layer' keyword. Currently this keyword is hard coded to: "NEW_LAYER"
+ *
+ *  ///// TO DO: -Custom keyword. -Insert custom material delivery routine?
+ *
+ * D. Options & Configuration
+ * ---------------------------------------------------------------------------------------------------
+ * The application wide configuration file stored as a PowderSettings object is used by the parser
+ * to flag inputs that are out of range. The helper functions used to compose the motion control
+ * command strings are also passed a PowderSettings object in order to correctly convert units
+ * and route signals using a root/port/deviece/axis hierarchy where each port and device can have
+ * multiple devices and ports respectively.
+ *
+ * E. File Comments
+ * ---------------------------------------------------------------------------------------------------
+ * The parser recognizes the following comment syntax for the string myComments:
+ *  - "(myComments)", "(myComments) Gnn .... ", "Gnn .... (myComments) "
+ *  - " ;myComments ", " Gnn ... ; myComments "
+ *
+ *  Comments are stored along with the full line they occured in a string list m_gcode. They can be
+ *  accessed from a PowderPart object using the same index used to access the corresponding block
+ *  in the part.
+ *
+ * F. Rules:
+ * ---------------------------------------------------------------------------------------------------
+ *  1. LASER CAN BE ENABLED IFF (X OR Y IS MOVING) AND (Z AND A AND B ARE NOT MOVING).**
+ *
+ *  2. ALL AXIS MOVES MUST FALL WITHIN THE ABSOLUTE COORDINATE SET IN THE CONFIGURATION FILE.
+ *
+ *  3. ALL SPEEDS MUST FALL WITHIN THE RANGE SET IN THE CONFIGURATION FILE.
+ *
+ *  Soft Rules and General Limitations:
+ *      i. Units:
+ *
+ *          - Metric units only.
+ *
+ *      ii. Coordinate Systems
+ *
+ *          - Single coordinate system.
+ *
+ *      iii. Axis Groups and Coordinated Motion:
+ *
+ *        - Easiest illustrated by examples:
+ *          " G0 Xnnn Ynnn Znnn Annn Bnnn "
+ *          // This is fine.
+ *          // XY move executes first, followed by Z, A, and B.
+ *          // XY movement is coordinated, and executes together,
+ *          // while Z, A, and B are executed sequentially.
+ *
+ *          " G0 Xnnn Ynnn Fnnn "
+ *          // Also fine.
+ *          // same as before, but X and Y move at at nnn.
+ *
+ *          " G0 [Z|A|B]nnn Fnnn "
+ *          // Setting a position and speed for SINGLE axis Z OR A OR B is valid.
+ *
+ *          // However... any combination like this
+ *          " G0 Znnn Annn Bnnn Fnnn
+ *          // is NO GOOD.
+ *
+ *        - To generalize:
+ *          * The X and Y axis form a "coordinated axis group". When a coordinated axis group
+ *            executes a move at a specified speed it is the motion controller, rather than
+ *            the application itself that decomposes the speed for each axis in
+ *            the group such that the motion between the given coordinates is executed as expected.
+ *
+ *          * The Z, A, and B axis form a "non-coordinated axis group," and any command addressing
+ *            more than one in a single line will be broken up into sequential moves.
+ *            (You can also think of the XY group defined above as a single member of this second group)
+ *
+ *        - The result:
+ *          * Commands that specify a single speed for multiple axis in a non-coordinated
+ *           group are considered INVALID.
+ *
+ *        - To justify:
+ *          * This greatly simplifies integration with the zaber command syntax.
+ *
+ *          * For the current implementation, commands that attempt this are not particularly
+ *            meaningful, useful, or common. The routines that control the material axis A and B
+ *            are expected to be hand written... So break them up into multiple lines please!
+ *
+ *
+ * G. Part Validity and Error Handling:
+ * ---------------------------------------------------------------------------------------------------
+ *  If the parser encounters any line that breaks any of the above rules, the constructor for
+ *  PowderPart will set a flag indicating the issue and continue. A error string can be
+ *  accessed after the parser finished. Invalid parts cannot be used to execute a print.
+ *
+ * E. Example Usage:
+ * ---------------------------------------------------------------------------------------------------
+ * //// TO DO: Everything!
+ *
+ * ---------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------
+ */
 
 PowderPart::PowderPart()
 {
@@ -25,9 +192,10 @@ PowderPart::PowderPart(const PowderPart &otherPart)
 }
 
 
-// This is the only constructor for PowderPart that is explicitly used.
+// This is the only constructor for PowderPart that is explicitly called.
 // Calling PowderPart with a file path and configuration will generate a new PowderPart
 // containing PowderBlocks.
+
 
 PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> config){
 
@@ -37,7 +205,6 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
     m_parserStatus = PARSER_INIT;
     // used to track changes between absolute and relative modes between blocks
     static PowderBlock::PositionMode prevailPosMode = PowderBlock::PositionMode::Position_Absolute;
-
     // Open file and read each line into the gcode variable.
     QFile partFile(this->partFilePath());
     if(partFile.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -66,6 +233,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
 
         // Loop through the list of g-code lines
         while(line_iterator != m_gcode.end()){
+
+            // feedrate set by current line
 
             // Create a new block for this line
             PowderBlock *block = new PowderBlock(blockNum, layerNum);
@@ -97,7 +266,7 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                 g_subLine = g_subLine.left(g_subLine.indexOf(";"));
                 g_subLine.append("Q"); // used as a junk char to aid further string splitting
             }
-            // remove commented out lines
+            // ignore commented out lines
             else if (g_subLine.contains("/"))
             {
                 g_subLine.clear();
@@ -119,13 +288,29 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                 // iterate through the list command strings
                 while(data_iterator != gData.end()){
 
-                    // Find G- commands
+                    // Find G commands
                     if(QRegExp("[Gg]"+regEx_uInt).exactMatch(*data_iterator)){
                         block->clearTask();
                         (*data_iterator).remove(0,1);
                         const int val = (*data_iterator).toInt();
 
-                        switch (val) {
+                        switch (val)
+                        {
+                        case 0:
+                        {
+                            block->setCommandType(PowderBlock::CommandType::G0_RAPID_MOVE);
+                            break;
+                        }
+                        case 1:
+                        {
+                            block->setCommandType(PowderBlock::CommandType::G1_LINEAR_MOVE);
+                            break;
+                        }
+                        case 4:
+                        {
+                            block->setCommandType(PowderBlock::CommandType::G4_DWELL);
+                            break;
+                        }
                         case 28: // G28 = Home
                         {
                             block->setBlockTask(PowderBlock::BlockTask::SET_HOME_AXIS);
@@ -147,7 +332,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
 
                     }
 
-                    // Find M- commands
+
+                    // Find M commands
                     else if(QRegExp("[Mm]"+regEx_uInt).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
                         const int val = (*data_iterator).toInt();
@@ -162,33 +348,98 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                             block->setLaser_enabled(false);
                             break;
                         }
+                        case 649: // M649 = MODIFY LASER SETTINGS
+                        {
+                            block->setCommandType(PowderBlock::CommandType::M649_MODIFY_LASER);
+                            break;
+                        }
                         default:
                             break;
                         }
                     }
 
-                    // Find S- commands (set laser power)
-                    else if(QRegExp("[Ss]"+regEx_uInt).exactMatch(*data_iterator)){
+
+                    // Find S commands (set laser intensity)
+                    else if((block->commandType() == PowderBlock::CommandType::M649_MODIFY_LASER)
+                            && QRegExp("[S]"+regEx_uInt).exactMatch(*data_iterator)){
+
                         (*data_iterator).remove(0,1);
                         bool valid;
                         const int value = (*data_iterator).toInt(&valid);
 
-                        if(valid && (value < config->laser_power_max()) && (value > config->laser_power_min())){
-                            block->setLaser_power(value);
+                        if(valid && (value < config->laser_intensity_max()) && (value > config->laser_intensity_min())){
+                            block->setLaser_intensity(value);
                         }
                         else
                         {
                             m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
                                            + ", Layer: " + QString::number(layerNum,10)
-                                           + " Error: Invalid Laser Power!");                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                           + " Error: Invalid Laser intensity!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                             block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                             m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
-
                     }
 
-                    // Find P- commands (set a dwell time)
-                    else if(QRegExp("[Pp]"+regEx_float).exactMatch(*data_iterator)){
+
+                    // Set Laser Pulse frequency
+                    else if((block->commandType() == PowderBlock::CommandType::M649_MODIFY_LASER)
+                            && QRegExp("[P]"+regEx_uInt).exactMatch(*data_iterator)){
+
+                        (*data_iterator).remove(0,1);
+                        bool valid;
+                        const int value = (*data_iterator).toInt(&valid);
+
+                        if(valid && (value < config->laser_pulseFreq_max()) && (value > config->laser_pulseFreq_min())){
+                            block->setLaser_pulseFreq(value);
+                        }
+                        else
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
+                                           + ", Layer: " + QString::number(layerNum,10)
+                                           + " Error: Invalid Laser Pulse Frequency!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
+                        }
+                    }
+                    // Set Laser  Mode
+                    else if((block->commandType() == PowderBlock::CommandType::M649_MODIFY_LASER)
+                            && QRegExp("[B]"+regEx_uInt).exactMatch(*data_iterator)){
+
+                        (*data_iterator).remove(0,1);
+                        bool valid;
+                        const int value = (*data_iterator).toInt(&valid);
+
+                        if(valid){
+                            switch (value) {
+                            case 0:
+                            {
+                                block->setLaserMode(PowderBlock::LaserMode::LASER_PULSED);
+                                break;
+                            }
+                            case 1:
+                            {
+                                block->setLaserMode(PowderBlock::LaserMode::LASER_CONTINUOUS);
+                                break;
+                            }
+                            default:
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
+                                           + ", Layer: " + QString::number(layerNum,10)
+                                           + " Error: Invalid Laser Mode!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
+                        }
+                    }
+                    // Find P commands (set a dwell time)
+                    else if(block->commandType() == PowderBlock::CommandType::G4_DWELL
+                            && QRegExp("[Pp]"+regEx_float).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
                         bool valid;
                         const float value = (*data_iterator).toFloat(&valid);
@@ -206,13 +457,16 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         }
                     }
 
-                    // Find F- commands (for feed rates)
+
+                    // Find F commands (for feed rates)
                     else if(QRegExp("[Ff]"+regEx_float).exactMatch(*data_iterator)){
                         (*data_iterator).remove(0,1);
 
-                        // Set XY Speed if x or y move was found
-                        if(((block->blockTask())&(PowderBlock::BlockTask::SET_X_POSITION))
-                                ||((block->blockTask())&(PowderBlock::BlockTask::SET_Y_POSITION))){
+                        // Set XY Speed iff x and y
+                        if((block->blockTask() == PowderBlock::BlockTask::SET_X_POSITION)
+                                ||(block->blockTask() == PowderBlock::BlockTask::SET_Y_POSITION)
+                                ||(block->blockTask() == (PowderBlock::BlockTask::SET_X_POSITION
+                                                          |PowderBlock::BlockTask::SET_Y_POSITION))){
                             bool valid;
                             const float value = (*data_iterator).toFloat(&valid);
                             if(valid && (value < config->xy_speed_max()) && (value > config->xy_speed_min())){
@@ -222,14 +476,14 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                             {
                                 m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
                                                + ", Layer: " + QString::number(layerNum,10)
-                                               + " Error: Invalid Galvanometer Speed!");                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                               + " Error: Invalid Galvanometer Speed!");
+                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-
-                        // Set Z Speed if Z move was found
-                        if((block->blockTask())&(PowderBlock::BlockTask::SET_Z_POSITION)){
+                        // Set Z Speed iff h&s&x&y are NOT moving
+                        else if(block->blockTask() == PowderBlock::BlockTask::SET_Z_POSITION){
                             bool valid;
                             const float value = (*data_iterator).toFloat(&valid);
                             if(valid && (value < config->z_speed_max()) && (value > config->z_speed_min())){
@@ -243,14 +497,10 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
-                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-                                m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-
-                        // Set Hopper Speed if Hopper move was found
-                        if((block->blockTask())&(PowderBlock::BlockTask::SET_HOPPER_POSITION)){
+                        // Set H Speed iff Z&S&X&Y are NOT moving
+                        else if(block->blockTask() == PowderBlock::BlockTask::SET_HOPPER_POSITION){
                             bool valid;
                             const float value = (*data_iterator).toFloat(&valid);
                             if(valid && (value < config->hopper_speed_max()) && (value > config->hopper_speed_min())){
@@ -266,9 +516,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-
-                        // Set Spreader Speed if Spreader move was found
-                        if((block->blockTask())&(PowderBlock::BlockTask::SET_SPREADER_POSITION)){
+                        // Set S Speed iff H&S&X&Y are NOT moving
+                        else if(block->blockTask() == PowderBlock::BlockTask::SET_SPREADER_POSITION){
                             bool valid;
                             const float value = (*data_iterator).toFloat(&valid);
                             if(valid && (value < config->spreader_speed_max()) && (value > config->spreader_speed_min())){
@@ -283,6 +532,14 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
+                        }
+                        else {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
+                                           + ", Layer: " + QString::number(layerNum,10)
+                                           + " Error: Cannot set speed for active axis group");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
@@ -357,7 +614,6 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         else{ // home
                             block->setZ_position(0);
                         }
-
                     }
 
                     // Find A Moves. (The A axis maps to the hopper)
@@ -410,17 +666,28 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
 
                     // Use the extrusion data to signal moves where the laser is to be enabled
                     else if(QRegExp("[Ee]" + regEx_float).exactMatch(*data_iterator)){
-                        block->setLaser_enabled(true);
+                        // only allows the laser to be enabled when the x or y move
+                        if(!(block->blockTask()&PowderBlock::BlockTask::SET_Z_POSITION)
+                                &&!(block->blockTask()&PowderBlock::BlockTask::SET_HOPPER_POSITION)
+                                &&!(block->blockTask()&PowderBlock::BlockTask::SET_SPREADER_POSITION)){
+                            QString extruderStr = *data_iterator;
+                            // ignore (negative) filament retraction and rapid moves
+                            if(!extruderStr.contains("-")
+                                    && (block->commandType() == PowderBlock::CommandType::G1_LINEAR_MOVE))
+                                block->setLaser_enabled(true);
+                        }
                     }
-
                     ++data_iterator;
                 }
             } // end parsing line.
 
             // generate command strings
-            block->setLg_string(LaserGalvo_Utility::composeCommandString(block, config.get()));
-            const QStringList md = ZaberUtility::composeCommandString(block, config.get());
-            block->setMd_string(md);
+            const QStringList laser_strings = LaserUtility::composeCommandString(block);
+            block->setLaser_string(laser_strings);
+            block->setGalvo_string(GalvoUtility::composeCommandString(block, config.get()));
+            const QStringList materialDelivery_strings = ZaberUtility::composeCommandString(block, config.get());
+            block->setMaterialDelivery_string(materialDelivery_strings);
+
             // add block to the part
             m_blocks->append(*block);
 

@@ -1,13 +1,13 @@
-#include "lasergalvo_utility.h"
+#include "galvo_utility.h"
 
-LaserGalvo_Utility::LaserGalvo_Utility()
+GalvoUtility::GalvoUtility()
 {
 
 }
 
-QString LaserGalvo_Utility::composeCommandString(PowderBlock *block, PowderSettings *config)
+QString GalvoUtility::composeCommandString(PowderBlock *block, PowderSettings *config)
 {
-    uint16_t task = block->blockTask();
+    uint32_t task = block->blockTask();
 
     bool delim = false;
     QString output = "$(";
@@ -64,14 +64,6 @@ QString LaserGalvo_Utility::composeCommandString(PowderBlock *block, PowderSetti
         }
     }
 
-    if(task & PowderBlock::BlockTask::SET_LASER_POWER){
-        if(delim)
-            output += ",";
-        else
-            delim = true;
-        output += ("p=" + QString::number(block->laser_power()));
-    }
-
     output += ")";
     if(output == "$()"){
         output = "EMPTY";
@@ -80,7 +72,7 @@ QString LaserGalvo_Utility::composeCommandString(PowderBlock *block, PowderSetti
     return output;
 }
 
-QString LaserGalvo_Utility::composeJogCommandString(PowderBlock::BlockTask axisTask, int32_t steps)
+QString GalvoUtility::composeJogCommandString(PowderBlock::BlockTask axisTask, int32_t steps)
 {
     QString output = "$(g=3,";
     if(axisTask & PowderBlock::BlockTask::SET_X_POSITION){

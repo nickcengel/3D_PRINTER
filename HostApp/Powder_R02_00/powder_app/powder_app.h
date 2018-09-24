@@ -96,12 +96,15 @@ private slots:
 
     // Handle user port selections/connections
     void on_PortManager_options_box_activated(const QString &arg1);
-    void on_lg_port_connectionChanged(bool open);
+    void on_laser_port_connectionChanged(bool open);
+    void on_galvo_port_connectionChanged(bool open);
     void on_md_port_connectionChanged(bool open);
 
     // Handle device replies and port/transport errors
-    void on_lg_portError(const QString &Error);
-    void on_lg_portReply(const QString &reply);
+    void on_laser_portError(const QString &Error);
+    void on_laser_portReply(const QString &reply);
+    void on_galvo_portError(const QString &Error);
+    void on_galvo_portReply(const QString &reply);
     void on_md_portError(const QString &Error);
     void on_md_portReply(const QString &reply);
     void on_transportError(const QString &Error);
@@ -114,24 +117,31 @@ private slots:
     void on_ManualControlEnable_button_toggled(bool checked);
 
     // Handle user enable/disable devices
+    void on_laserDisplayEnable_button_toggled(bool checked);
     void on_galvoDisplayEnable_button_toggled(bool checked);
     void on_buildPlateEnable_button_toggled(bool checked);
     void on_materialDeliveryDisplayEnable_button_toggled(bool checked);
 
     // Update device display interfaces
+    void on_laserBusy();
     void on_buildPlateBusy();
     void on_galvoBusy();
     void on_hop_spread_busy();
+
+
+    void on_emergency_stop_button_clicked();
 
 signals:
     void newPartAvailable(QSharedPointer<PowderPart> part);
 
     void newConfigAvailable(QSharedPointer<PowderSettings> config);
 
-    void lgPort_name_changed(const QString &name);
+    void laserPort_name_changed(const QString &name);
+    void galvoPort_name_changed(const QString &name);
     void mdPort_name_changed(const QString &name);
 
-    void lgPort_connectionRequested(bool open);
+    void laserPort_connectionRequested(bool open);
+    void galvoPort_connectionRequested(bool open);
     void mdPort_connectionRequested(bool open);
 
     void reset_printManger();

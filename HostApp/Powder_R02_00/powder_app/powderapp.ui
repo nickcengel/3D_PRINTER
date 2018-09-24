@@ -183,12 +183,12 @@ color:white;
           <property name="bottomMargin">
            <number>4</number>
           </property>
-          <item>
+          <item alignment="Qt::AlignTop">
            <widget class="QFrame" name="PortManagerTitle_frame">
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>70</height>
+              <height>100</height>
              </size>
             </property>
             <property name="maximumSize">
@@ -222,6 +222,28 @@ color:white;
              <property name="bottomMargin">
               <number>4</number>
              </property>
+             <item>
+              <widget class="QPushButton" name="emergency_stop_button">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>17</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background:rgba(252, 33, 37,75);
+color:rgba(252, 33, 37,50);</string>
+               </property>
+               <property name="text">
+                <string>EMERGENCY STOP</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QLabel" name="PortManagerDisplay_title">
                <property name="minimumSize">
@@ -283,7 +305,12 @@ color:rgba(212,215,217,200)</string>
                </item>
                <item>
                 <property name="text">
-                 <string>Open Laser &amp; Galvanometer Port</string>
+                 <string>Open Laser Port</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Open Galvanometer Port</string>
                 </property>
                </item>
                <item>
@@ -302,7 +329,102 @@ color:rgba(212,215,217,200)</string>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="LaserGalvoPort_frame">
+           <widget class="QFrame" name="laserPort_frame">
+            <property name="styleSheet">
+             <string notr="true">background: rgba(212,215,217,12)</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_28">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="EnvironmentPortStatus_title">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+               </property>
+               <property name="text">
+                <string>Laser Controller</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="laserPort_layout">
+               <item>
+                <widget class="QPushButton" name="laserPortStatus_indicator">
+                 <property name="maximumSize">
+                  <size>
+                   <width>20</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../resources/icons.qrc">
+                   <normaloff>:/icons/icons/redbutton.png</normaloff>:/icons/icons/redbutton.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="laserPortStatus_field">
+                 <property name="font">
+                  <font>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: none;
+color: rgba(212,215,217,200)</string>
+                 </property>
+                 <property name="text">
+                  <string>Not Assigned</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="galvoPort_frame">
             <property name="styleSheet">
              <string notr="true">background: rgba(212,215,217,12)</string>
             </property>
@@ -329,7 +451,7 @@ color:rgba(212,215,217,200)</string>
               <number>4</number>
              </property>
              <item>
-              <widget class="QLabel" name="LaserGalvoPort_title">
+              <widget class="QLabel" name="galvoPort_title">
                <property name="font">
                 <font>
                  <weight>75</weight>
@@ -342,7 +464,7 @@ color:rgba(212,215,217,200)</string>
 color: rgba(212,215,217,200)</string>
                </property>
                <property name="text">
-                <string>Laser &amp; Galvanometer</string>
+                <string>Galvanometer</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -350,9 +472,9 @@ color: rgba(212,215,217,200)</string>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="LaserGalvoPort_layout">
+              <layout class="QHBoxLayout" name="galvoPort_layout">
                <item>
-                <widget class="QPushButton" name="LaserGalvoPortStatus_indicator">
+                <widget class="QPushButton" name="galvoPortStatus_indicator">
                  <property name="maximumSize">
                   <size>
                    <width>20</width>
@@ -375,7 +497,7 @@ color: rgba(212,215,217,200)</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="LaserGalvoPortStatus_field">
+                <widget class="QLabel" name="galvoPortStatus_field">
                  <property name="font">
                   <font>
                    <weight>50</weight>
@@ -471,101 +593,6 @@ color: rgba(212,215,217,200)</string>
                </item>
                <item>
                 <widget class="QLabel" name="MaterialDeliveryPortStatus_field">
-                 <property name="font">
-                  <font>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background: none;
-color: rgba(212,215,217,200)</string>
-                 </property>
-                 <property name="text">
-                  <string>Not Assigned</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="EnvironmentPort_frame">
-            <property name="styleSheet">
-             <string notr="true">background: rgba(212,215,217,12)</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_28">
-             <property name="spacing">
-              <number>4</number>
-             </property>
-             <property name="leftMargin">
-              <number>4</number>
-             </property>
-             <property name="topMargin">
-              <number>4</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>4</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="EnvironmentPortStatus_title">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <underline>true</underline>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background: none;
-color: rgba(212,215,217,200)</string>
-               </property>
-               <property name="text">
-                <string>Environment Control</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="EnvironmentPort_layout">
-               <item>
-                <widget class="QPushButton" name="EnvironmentPortStatus_indicator">
-                 <property name="maximumSize">
-                  <size>
-                   <width>20</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background:none;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../resources/icons.qrc">
-                   <normaloff>:/icons/icons/redbutton.png</normaloff>:/icons/icons/redbutton.png</iconset>
-                 </property>
-                 <property name="flat">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="EnvironmentPortStatus_field">
                  <property name="font">
                   <font>
                    <weight>50</weight>
@@ -1482,19 +1509,19 @@ color: rgb(212,215,217);</string>
               <string notr="true">background:rgb(22,22,22);</string>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="port_settings_tab">
               <attribute name="title">
                <string>Port Settings</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_51">
-               <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+               <item alignment="Qt::AlignHCenter|Qt::AlignTop">
                 <widget class="QFrame" name="port_settings_frame">
                  <property name="minimumSize">
                   <size>
                    <width>350</width>
-                   <height>450</height>
+                   <height>512</height>
                   </size>
                  </property>
                  <property name="maximumSize">
@@ -1511,14 +1538,14 @@ color: rgb(212,215,217);</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_13">
                   <item>
-                   <widget class="QFrame" name="env_port_settings_frame">
+                   <widget class="QFrame" name="laser_port_settings_frame">
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
                     <property name="frameShadow">
                      <enum>QFrame::Raised</enum>
                     </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_32">
+                    <layout class="QVBoxLayout" name="verticalLayout_58">
                      <property name="leftMargin">
                       <number>6</number>
                      </property>
@@ -1532,7 +1559,7 @@ color: rgb(212,215,217);</string>
                       <number>6</number>
                      </property>
                      <item alignment="Qt::AlignHCenter">
-                      <widget class="QLabel" name="env_portsettings_title">
+                      <widget class="QLabel" name="laser_portsettings_title">
                        <property name="minimumSize">
                         <size>
                          <width>300</width>
@@ -1551,10 +1578,10 @@ color: rgb(212,215,217);</string>
                         </font>
                        </property>
                        <property name="styleSheet">
-                        <string notr="true"/>
+                        <string notr="true">background:none</string>
                        </property>
                        <property name="text">
-                        <string>Environment Controller</string>
+                        <string>Laser</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -1562,9 +1589,9 @@ color: rgb(212,215,217);</string>
                       </widget>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="env_portnum_layout">
+                      <layout class="QHBoxLayout" name="laser_portnum_layout">
                        <item>
-                        <widget class="QLabel" name="env_portnum_title">
+                        <widget class="QLabel" name="laser_portnum_title">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1591,7 +1618,7 @@ color: rgb(212,215,217);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="env_portnum_field">
+                        <widget class="QLineEdit" name="laser_portnum_field">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1612,9 +1639,9 @@ color: rgb(212,215,217);</string>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="env_portbaud_layout">
+                      <layout class="QHBoxLayout" name="laser_portbaud_layout">
                        <item>
-                        <widget class="QLabel" name="env_baud_title">
+                        <widget class="QLabel" name="laser_baudrate_title">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1641,7 +1668,161 @@ color: rgb(212,215,217);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="env_baud_field">
+                        <widget class="QLineEdit" name="laser_baudrate_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="galvo_port_settings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_30">
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>6</number>
+                     </property>
+                     <item alignment="Qt::AlignHCenter">
+                      <widget class="QLabel" name="galvo_portsettings_title">
+                       <property name="minimumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
+                         <height>36</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>14</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background:none</string>
+                       </property>
+                       <property name="text">
+                        <string>Galvanometer</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="galvo_portnum_layout">
+                       <item>
+                        <widget class="QLabel" name="galvo_portnum_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Port Number:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="galvo_portnum_field">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:rgb(42, 42, 43);</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="galvo_portbaud_layout">
+                       <item>
+                        <widget class="QLabel" name="galvo_baudrate_title">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background:none</string>
+                         </property>
+                         <property name="text">
+                          <string>Baud Rate:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="galvo_baudrate_field">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1819,14 +2000,14 @@ color: rgb(212,215,217);</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QFrame" name="lg_port_settings_frame">
+                   <widget class="QFrame" name="env_port_settings_frame">
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
                     <property name="frameShadow">
                      <enum>QFrame::Raised</enum>
                     </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_30">
+                    <layout class="QVBoxLayout" name="verticalLayout_32">
                      <property name="leftMargin">
                       <number>6</number>
                      </property>
@@ -1840,7 +2021,7 @@ color: rgb(212,215,217);</string>
                       <number>6</number>
                      </property>
                      <item alignment="Qt::AlignHCenter">
-                      <widget class="QLabel" name="lg_portsettings_title">
+                      <widget class="QLabel" name="env_portsettings_title">
                        <property name="minimumSize">
                         <size>
                          <width>300</width>
@@ -1859,10 +2040,10 @@ color: rgb(212,215,217);</string>
                         </font>
                        </property>
                        <property name="styleSheet">
-                        <string notr="true">background:none</string>
+                        <string notr="true"/>
                        </property>
                        <property name="text">
-                        <string>Laser &amp; Galvanometer</string>
+                        <string>Environment Controller</string>
                        </property>
                        <property name="alignment">
                         <set>Qt::AlignCenter</set>
@@ -1870,9 +2051,9 @@ color: rgb(212,215,217);</string>
                       </widget>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="lg_portnum_layout">
+                      <layout class="QHBoxLayout" name="env_portnum_layout">
                        <item>
-                        <widget class="QLabel" name="lg_portnum_title">
+                        <widget class="QLabel" name="env_portnum_title">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1899,7 +2080,7 @@ color: rgb(212,215,217);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="lg_portnum_field">
+                        <widget class="QLineEdit" name="env_portnum_field">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1920,9 +2101,9 @@ color: rgb(212,215,217);</string>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="lg_portbaud_layout">
+                      <layout class="QHBoxLayout" name="env_portbaud_layout">
                        <item>
-                        <widget class="QLabel" name="lg_baudrate_title">
+                        <widget class="QLabel" name="env_baud_title">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1949,7 +2130,7 @@ color: rgb(212,215,217);</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="lg_baudrate_field">
+                        <widget class="QLineEdit" name="env_baud_field">
                          <property name="minimumSize">
                           <size>
                            <width>150</width>
@@ -1995,18 +2176,18 @@ color: rgb(212,215,217);</string>
                <string>Laser</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_50">
-               <item alignment="Qt::AlignLeft">
+               <item>
                 <widget class="QFrame" name="laser_settings_frame">
                  <property name="minimumSize">
                   <size>
                    <width>335</width>
-                   <height>335</height>
+                   <height>400</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>335</width>
-                   <height>335</height>
+                   <height>400</height>
                   </size>
                  </property>
                  <property name="baseSize">
@@ -2147,12 +2328,12 @@ color: rgb(212,215,217);</string>
                        <string notr="true">background:none</string>
                       </property>
                       <property name="text">
-                       <string>Power Resolution</string>
+                       <string>Max Power [W]</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="laser_powerres_field">
+                     <widget class="QLineEdit" name="laser_power_max_field">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2173,9 +2354,9 @@ color: rgb(212,215,217);</string>
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="laser_powerdef_layout">
+                   <layout class="QHBoxLayout" name="laser_intensitydef_layout">
                     <item>
-                     <widget class="QLabel" name="laser_powerdef_title">
+                     <widget class="QLabel" name="laser_intensitydef_title">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2197,12 +2378,12 @@ color: rgb(212,215,217);</string>
                        <string notr="true">background:none</string>
                       </property>
                       <property name="text">
-                       <string>Power Default</string>
+                       <string>Default Intensity</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="laser_powerdef_field">
+                     <widget class="QLineEdit" name="laser_intensitydef_field">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2223,9 +2404,9 @@ color: rgb(212,215,217);</string>
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="laser_powermax_layout">
+                   <layout class="QHBoxLayout" name="laser_intensitymax_layout">
                     <item>
-                     <widget class="QLabel" name="laser_powermax_title">
+                     <widget class="QLabel" name="laser_intensitymax_title">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2247,12 +2428,12 @@ color: rgb(212,215,217);</string>
                        <string notr="true">background:none</string>
                       </property>
                       <property name="text">
-                       <string>Power Max</string>
+                       <string>Max Intensity</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="laser_powermax_field">
+                     <widget class="QLineEdit" name="laser_intensitymax_field">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2273,9 +2454,9 @@ color: rgb(212,215,217);</string>
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="laser_powermin_layout">
+                   <layout class="QHBoxLayout" name="laser_intensitymin_layout">
                     <item>
-                     <widget class="QLabel" name="laser_powermin_title">
+                     <widget class="QLabel" name="laser_intensitymin_title">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2297,12 +2478,162 @@ color: rgb(212,215,217);</string>
                        <string notr="true">background:none</string>
                       </property>
                       <property name="text">
-                       <string>Power Min</string>
+                       <string>Min Intensity</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="laser_powermin_field">
+                     <widget class="QLineEdit" name="laser_intensitymin_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_pulsefreqdef_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_pulsefreqdef_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Default Pulse Freq.</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_pulsefreqdef_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_pulsefreqmax_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_pulsefreqmax_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Max Pulse Freq.</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_pulsefreqmax_field">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:rgb(42, 42, 43);</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="laser_pulsefreqmin_layout">
+                    <item>
+                     <widget class="QLabel" name="laser_pulsefreqmin_title">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background:none</string>
+                      </property>
+                      <property name="text">
+                       <string>Min Pulse Freq.</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="laser_pulsefreqmin_field">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -2340,7 +2671,7 @@ color: rgb(212,215,217);</string>
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="galbo_settings_tab">
+             <widget class="QWidget" name="galvo_settings_tab">
               <attribute name="title">
                <string>Galvanometer </string>
               </attribute>

@@ -11,8 +11,6 @@
 
 class PowderSettings
 {
-
-
 public:
     PowderSettings();
     PowderSettings(const PowderSettings &otherSettings);
@@ -26,8 +24,8 @@ public:
         SETTINGS_VALID
     };
 
-    int laserGalvo_portNumber() const;
-    void setLaser_galvo_portNumber(const  int &laserGalvo_portNumber);
+    int galvo_portNumber() const;
+    void setGalvo_portNumber(const  int &galvo_portNumber);
 
     int materialDelivery_portNumber() const;
     void setMaterialDelivery_portNumber(const  int &materialDelivery_portNumber);
@@ -47,10 +45,8 @@ public:
     int hopper_deviceNumber() const;
     void setHopper_deviceNumber(const  int &hopper_deviceNumber);
 
-
     int spreader_deviceNumber() const;
     void setSpreader_deviceNumber(const  int &spreader_deviceNumber);
-
 
     int laser_axisNumber() const;
     void setLaser_axisNumber(const  int &laser_axisNumber);
@@ -70,8 +66,8 @@ public:
     int spreader_axisNumber() const;
     void setSpreader_axisNumber(const  int &spreader_axisNumber);
 
-    float laser_power_resolution() const;
-    void setLaser_power_resolution(float laser_power_resolution);
+    float laserPower_max() const;
+    void setLaserPower_max(float laserPower_max);
 
     float x_position_resolution() const;
     void setX_position_resolution(float x_position_resolution);
@@ -88,14 +84,14 @@ public:
     float spreader_position_resolution() const;
     void setSpreader_position_resolution(float spreader_position_resolution);
 
-    int laser_power_default() const;
-    void setLaser_power_default(const  int &laser_power_default);
+    float laser_intensity_default() const;
+    void setLaser_intensity_default(const  float &laser_intensity_default);
 
-    int laser_power_max() const;
-    void setLaser_power_max(const  int &laser_power_max);
+    float laser_intensity_max() const;
+    void setLaser_intensity_max(const  float &laser_intensity_max);
 
-    int laser_power_min() const;
-    void setLaser_power_min(const  int &laser_power_min);
+    float laser_intensity_min() const;
+    void setLaser_intensity_min(const  float &laser_intensity_min);
 
     float x_position_max() const;
     void setX_position_max(float x_position_max);
@@ -166,18 +162,29 @@ public:
     QString settingsFilePath() const;
     void setSettingsFilePath(const QString &settingsFilePath);
 
-
-
     SettingsStatus status() const;
     void setStatus(const SettingsStatus &status);
 
+
+    int laser_pulseFreq_default() const;
+    void setLaser_pulseFreq_default(int laser_pulseFreq_default);
+
+    int laser_pulseFreq_max() const;
+    void setLaser_pulseFreq_max(int laser_pulseFreq_max);
+
+    int laser_pulseFreq_min() const;
+    void setLaser_pulseFreq_min(int laser_pulseFreq_min);
+
+    int laser_portNumber() const;
+    void setLaser_portNumber(int laser_portNumber);
 
 private:
     QString m_settingsFilePath;
 
     SettingsStatus m_status;
 
-    int m_laser_galvo_portNumber;
+    int m_laser_portNumber;
+    int m_galvo_portNumber;
     int m_materialDelivery_portNumber;
 
     int m_laser_deviceNumber;
@@ -193,16 +200,20 @@ private:
     int m_hopper_axisNumber;
     int m_spreader_axisNumber;
 
-    float m_laser_power_resolution;
+    float m_laserPower_max;
     float m_x_position_resolution;
     float m_y_position_resolution;
     float m_z_position_resolution;
     float m_hopper_position_resolution;
     float m_spreader_position_resolution;
 
-    int m_laser_power_default;
-    int m_laser_power_max;
-    int m_laser_power_min;
+    float m_laser_intensity_default;
+    float m_laser_intensity_max;
+    float m_laser_intensity_min;
+
+    int m_laser_pulseFreq_default;
+    int m_laser_pulseFreq_max;
+    int m_laser_pulseFreq_min;
 
     float m_x_position_max;
     float m_x_position_min;

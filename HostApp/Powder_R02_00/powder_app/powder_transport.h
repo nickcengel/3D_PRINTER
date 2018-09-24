@@ -8,19 +8,18 @@
 
 #include "powder_objects/powder_part.h"
 #include "powder_objects/powder_settings.h"
-#include "hardware_tools/lasergalvo_utility.h"
+#include "hardware_tools/galvo_utility.h"
 
 Q_DECLARE_LOGGING_CATEGORY(powder_transport_log)
-Q_DECLARE_LOGGING_CATEGORY(laser_galvo_port_log)
+Q_DECLARE_LOGGING_CATEGORY(laser_port_log)
+Q_DECLARE_LOGGING_CATEGORY(galvo_port_log)
 Q_DECLARE_LOGGING_CATEGORY(material_delivery_port_log)
-Q_DECLARE_LOGGING_CATEGORY(environment_port_log)
 
 Q_DECLARE_LOGGING_CATEGORY(laser_device_log)
 Q_DECLARE_LOGGING_CATEGORY(galvanometer_device_log)
 Q_DECLARE_LOGGING_CATEGORY(buildPlate_device_log)
 Q_DECLARE_LOGGING_CATEGORY(hopperPlate_device_log)
 Q_DECLARE_LOGGING_CATEGORY(spreaderBlade_device_log)
-Q_DECLARE_LOGGING_CATEGORY(environment_device_log)
 
 
 /* The PowderTransport class provides an interface between the
@@ -46,8 +45,10 @@ public:
 
     ~PowderTransport();
 
-    QSerialPort *m_lg_port;
+    QSerialPort *m_laser_port;
+    QSerialPort *m_galvo_port;
     QSerialPort *m_md_port;
+
     QStateMachine *powderDaemon;
 
     // set__ functions emit a __changed signal to UI
@@ -66,8 +67,9 @@ public:
     float hPosition() const;
     void setHPosition(float hPosition);
 
-    int laserPower() const;
-    void setLaserPower(int laserPower);
+
+    float laserIntensity() const;
+    void setLaserIntensity(float laserIntensity);
 
     bool laserEnableState() const;
     void setLaserEnableState(bool laserEnableState);
@@ -93,11 +95,30 @@ public:
     bool sHomed() const;
     void setSHomed(bool sHomed);
 
-    void write_to_lg_port(const QString &txString);
+    void write_to_laser_port(const QString &txString);
+    void write_to_galvo_port(const QString &txString);
     void write_to_md_port(const QString &txString);
 
     float xySpeed() const;
     void setXYSpeed(float xySpeed);
+
+
+
+
+    float zSpeed() const;
+    void setZSpeed(float zSpeed);
+
+    float hSpeed() const;
+    void setHSpeed(float hSpeed);
+
+    float sSpeed() const;
+    void setSSpeed(float sSpeed);
+
+    int laserPulseFreq() const;
+    void setLaserPulseFreq(int laserPulseFreq);
+
+    PowderBlock::LaserMode laserMode() const;
+    void setLaserMode(const PowderBlock::LaserMode &laserMode);
 
 signals:
     // received by UI to update displays
@@ -105,23 +126,35 @@ signals:
     void yPosition_changed(double position);
     void xySpeed_changed(double speed);
     void zPosition_changed(double position);
+    void zSpeed_changed(double speed);
     void hPosition_changed(double position);
+    void hSpeed_changed(double speed);
     void sPosition_changed(double position);
-    void laserPower_changed(int power);
+    void sSpeed_changed(double speed);
+
+
+    void laserIntensity_changed(double intensity);
     void laserEnableState_changed(const QString &laserState);
     void laserArmState_changed(bool armed);
+//    void laserPulseFreq_changed(int pulseFreq);
+//    void laserMode_changed(const PowderBlock::LaserMode &laserMode);
+
     void currentBlockNumber_changed(int blockNum);
     void currentLayerNumber_changed(int layerNumber);
+
+    void laserBusy();
     void buildPlateBusy();
     void galvoBusy();
     void hopperBusy();
     void spreaderBusy();
 
     // internal control signals
+    void laser_port_txFinished();
+    void laser_port_rxFinished();
     void md_port_txFinished();
     void md_port_rxFinished();
-    void lg_port_txFinished();
-    void lg_port_rxFinished();
+    void galvo_port_txFinished();
+    void galvo_port_rxFinished();
 
     void startPrint();
     void stopPrint();
@@ -132,19 +165,27 @@ signals:
     void blockComplete();
     void jogComplete();
 
-    void lg_commandPending();
+    void laser_commandPending();
+    void galvo_commandPending();
     void md_commandPending();
 
-    void lg_port_connectionChanged(bool open);
+    void laser_port_connectionChanged(bool open);
+    void galvo_port_connectionChanged(bool open);
     void md_port_connectionChanged(bool open);
 
     void resetDaemon();
 
     // messaging signals
+    void laser_port_deviceReply(const QString &reply);
+    void laser_port_error(const QString &error);
+
     void md_port_deviceReply(const QString &reply);
-    void lg_port_deviceReply(const QString &reply);
-    void lg_port_error(const QString &error);
     void md_port_error(const QString &error);
+
+    void galvo_port_deviceReply(const QString &reply);
+    void galvo_port_error(const QString &error);
+
+
     void printRoutine_error(const QString &error);
 
 
@@ -153,10 +194,12 @@ public slots:
     void on_printManager_enabled( bool enabled);
     void on_manualControl_enabled( bool enabled);
 
-    void on_lgPortName_changed(const QString &name);
+    void on_laserPortName_changed(const QString &name);
+    void on_galvoPortName_changed(const QString &name);
     void on_mdPortName_changed(const QString &name);
 
-    void on_lg_port_connectionRequested(bool open);
+    void on_laser_port_connectionRequested(bool open);
+    void on_galvo_port_connectionRequested(bool open);
     void on_md_port_connectionRequested(bool open);
 
     void on_config_available(QSharedPointer<PowderSettings> config);
@@ -165,6 +208,7 @@ public slots:
     void on_startPrint_request();
     void on_stopPrint_request();
     void on_reset_request();
+    void on_emergency_stop_request();
 
     void on_jogIncrement_changed(double jogIncrement);
     void on_homeOption_change(int homeOption);
@@ -182,15 +226,21 @@ public slots:
     void on_clearError_request();
 
     // on enabled device from UI
-    void ping_laserGalvo();
+    void ping_galvo();
     void ping_materialDelivery(int devNum, int axisNum);
 
 private slots:
     // port event callbacks
-    void on_lg_port_bytesWritten(qint64 bytes);
-    void on_lg_port_bytesRead();
-    void on_lg_portTimeout();
-    void on_lg_port_error(QSerialPort::SerialPortError portError);
+    void on_laser_port_bytesWritten(qint64 bytes);
+    void on_laser_port_bytesRead();
+    void on_laser_portTimeout();
+    void on_laser_port_error(QSerialPort::SerialPortError portError);
+
+    void on_galvo_port_bytesWritten(qint64 bytes);
+    void on_galvo_port_bytesRead();
+    void on_galvo_portTimeout();
+    void on_galvo_port_error(QSerialPort::SerialPortError portError);
+
     void on_md_port_bytesWritten(qint64 bytes);
     void on_md_port_bytesRead();
     void on_md_portTimeout();
@@ -201,9 +251,14 @@ private slots:
     void on_printRoutine_init();
     void on_generateProcessQueueFromBlock();
     void on_selectProcessFromQueue();
-    void on_send_lgCommand();
-    void on_receive_lgReply();
-    void on_lg_transactionFinished();
+
+    void on_send_laserCommand();
+    void on_receive_laserReply();
+    void on_laser_transactionFinished();
+
+    void on_send_galvoCommand();
+    void on_receive_galvoReply();
+    void on_galvo_transactionFinished();
     void on_send_mdCommand();
     void on_receive_mdReply();
     void on_md_transactionFinished();
@@ -213,9 +268,10 @@ private slots:
 
 
 private:
-    QTimer *lg_port_timer;
-    QTimer *md_port_timer;
-    QTimer *md_transaction_timer;
+    QTimer *laserPort_timer;
+    QTimer *galvoPort_timer;
+    QTimer *materialDeliveryPort_timer;
+    QTimer *materialDeliveryPoll_timer;
 
     QSharedPointer<PowderPart> m_part;
     QSharedPointer<PowderSettings> m_config;
@@ -229,7 +285,12 @@ private:
     float m_sPosition;
     float m_hPosition;
     float m_xySpeed;
-    int m_laserPower;
+    float m_zSpeed;
+    float m_hSpeed;
+    float m_sSpeed;
+    float m_laserIntensity;
+    int m_laserPulseFreq;
+    PowderBlock::LaserMode m_laserMode;
     bool m_laserEnableState;
     bool m_laserArmState;
 
@@ -246,17 +307,19 @@ private:
     int m_currentBlockNumber;
     int m_currentLayerNumber;
 
-    uint16_t m_pendingTasks;
-    uint16_t m_activeTask;
+    uint32_t m_pendingTasks;
+    uint32_t m_activeTask;
 
-    QString m_lg_commandStr;
+    QStringList m_laser_commandStr;
+    QString m_galvo_commandStr;
     QStringList m_md_commandStr;
 
-
-    QByteArray lg_port_rxBytes;
+    QByteArray laser_port_rxBytes;
+    QByteArray galvo_port_rxBytes;
     QByteArray md_port_rxBytes;
 
-    qint64 lg_port_TxBytesRemaining;
+    qint64 laser_port_TxBytesRemaining;
+    qint64 galvo_port_TxBytesRemaining;
     qint64 md_port_TxBytesRemaining;
 
 };

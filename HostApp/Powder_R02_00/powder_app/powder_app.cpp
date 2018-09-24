@@ -107,14 +107,23 @@ PowderApp::PowderApp(QWidget *parent) :
     deviceTransport = new PowderTransport(this);
 
     // connect app UI with deviceTransport
-    QObject::connect(this, SIGNAL(lgPort_name_changed(const QString&)),
-                     deviceTransport, SLOT(on_lgPortName_changed(const QString&)));
+    QObject::connect(this, SIGNAL(laserPort_name_changed(const QString&)),
+                     deviceTransport, SLOT(on_laserPortName_changed(const QString&)));
 
-    QObject::connect(this, SIGNAL(lgPort_connectionRequested(bool)),
-                     deviceTransport, SLOT(on_lg_port_connectionRequested(bool)));
+    QObject::connect(this, SIGNAL(laserPort_connectionRequested(bool)),
+                     deviceTransport, SLOT(on_laser_port_connectionRequested(bool)));
 
-    QObject::connect(deviceTransport, SIGNAL(lg_port_connectionChanged(bool)),
-                     this, SLOT(on_lg_port_connectionChanged(bool)));
+    QObject::connect(deviceTransport, SIGNAL(laser_port_connectionChanged(bool)),
+                     this, SLOT(on_laser_port_connectionChanged(bool)));
+
+    QObject::connect(this, SIGNAL(galvoPort_name_changed(const QString&)),
+                     deviceTransport, SLOT(on_galvoPortName_changed(const QString&)));
+
+    QObject::connect(this, SIGNAL(galvoPort_connectionRequested(bool)),
+                     deviceTransport, SLOT(on_galvo_port_connectionRequested(bool)));
+
+    QObject::connect(deviceTransport, SIGNAL(galvo_port_connectionChanged(bool)),
+                     this, SLOT(on_galvo_port_connectionChanged(bool)));
 
     QObject::connect(this, SIGNAL(mdPort_name_changed(const QString&)),
                      deviceTransport, SLOT(on_mdPortName_changed(const QString&)));
@@ -128,14 +137,20 @@ PowderApp::PowderApp(QWidget *parent) :
     QObject::connect(deviceTransport, SIGNAL(printRoutine_error(const QString&)),
                      this, SLOT(on_transportError(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(lg_port_error(const QString&)),
-                     this, SLOT(on_lg_portError(const QString&)));
+    QObject::connect(deviceTransport, SIGNAL(laser_port_error(const QString&)),
+                     this, SLOT(on_laser_portError(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(galvo_port_error(const QString&)),
+                     this, SLOT(on_galvo_portError(const QString&)));
 
     QObject::connect(deviceTransport, SIGNAL(md_port_error(const QString&)),
                      this, SLOT(on_md_portError(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(lg_port_deviceReply(const QString&)),
-                     this, SLOT(on_lg_portReply(const QString&)));
+    QObject::connect(deviceTransport, SIGNAL(laser_port_deviceReply(const QString&)),
+                     this, SLOT(on_laser_portReply(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(galvo_port_deviceReply(const QString&)),
+                     this, SLOT(on_galvo_portReply(const QString&)));
 
     QObject::connect(deviceTransport, SIGNAL(md_port_deviceReply(const QString&)),
                      this, SLOT(on_md_portReply(const QString&)));
@@ -230,11 +245,14 @@ PowderApp::PowderApp(QWidget *parent) :
     QObject::connect(deviceTransport, SIGNAL(sPosition_changed(double)),
                      ui->sPositionDisplay_field, SLOT(setNum(double)));
 
-    QObject::connect(deviceTransport, SIGNAL(laserPower_changed(int)),
-                     ui->LaserDisplayPower_field, SLOT(setNum(int)));
+    QObject::connect(deviceTransport, SIGNAL(laserIntensity_changed(double)),
+                     ui->LaserDisplayPower_field, SLOT(setNum(double)));
 
     QObject::connect(deviceTransport, SIGNAL(xySpeed_changed(double)),
                      ui->galvoSpeed_field, SLOT(setNum(double)));
+
+    QObject::connect(deviceTransport, SIGNAL(laserBusy()),
+                     this, SLOT(on_laserBusy()));
 
     QObject::connect(deviceTransport, SIGNAL(buildPlateBusy()),
                      this, SLOT(on_buildPlateBusy()));
@@ -273,16 +291,16 @@ void PowderApp::applySettings()
     m_myConfiguration.clear();
 
     m_myConfiguration = QSharedPointer<PowderSettings>(new PowderSettings);
-
-    m_myConfiguration->setLaser_galvo_portNumber(ui->lg_portnum_field->text().toInt());
+    m_myConfiguration->setLaser_portNumber(ui->laser_portnum_field->text().toInt());
+    m_myConfiguration->setGalvo_portNumber(ui->galvo_portnum_field->text().toInt());
     m_myConfiguration->setMaterialDelivery_portNumber(ui->md_portnum_field->text().toInt());
 
     m_myConfiguration->setLaser_deviceNumber(ui->laser_devicenum_field->text().toInt());
     m_myConfiguration->setLaser_axisNumber(ui->laser_axisnum_field->text().toInt());
-    m_myConfiguration->setLaser_power_resolution(ui->laser_powerres_field->text().toInt());
-    m_myConfiguration->setLaser_power_default(ui->laser_powerdef_field->text().toInt());
-    m_myConfiguration->setLaser_power_max(ui->laser_powermax_field->text().toInt());
-    m_myConfiguration->setLaser_power_min(ui->laser_powermin_field->text().toInt());
+    m_myConfiguration->setLaserPower_max(ui->laser_power_max_field->text().toInt());
+    m_myConfiguration->setLaser_intensity_default(ui->laser_intensitydef_field->text().toFloat());
+    m_myConfiguration->setLaser_intensity_max(ui->laser_intensitymax_field->text().toFloat());
+    m_myConfiguration->setLaser_intensity_min(ui->laser_intensitymin_field->text().toFloat());
 
 
     m_myConfiguration->setGalvo_deviceNumber(ui->galvo_devicenum_field->text().toInt());
@@ -351,19 +369,26 @@ void PowderApp::applySettings()
     }
 
     for( int i = 0; i < m_serialPortNames.length(); i++){
-        if(i == m_myConfiguration.get()->laserGalvo_portNumber()){
-            emit lgPort_name_changed(m_serialPortNames.at(i));
-            ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-            ui->LaserGalvoPortStatus_field->setText("Closed");
-            const QString log = "laser and galvanometer port assigned to " + m_serialPortNames.at(i);
+        if(i == m_myConfiguration.get()->galvo_portNumber()){
+            emit galvoPort_name_changed(m_serialPortNames.at(i));
+            ui->galvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+            ui->galvoPortStatus_field->setText("Closed");
+            const QString log = "galvanometer port assigned to " + m_serialPortNames.at(i);
             qCWarning(powder_app, log.toLocal8Bit());
         }
         else if (i == m_myConfiguration.get()->materialDelivery_portNumber()){
             emit mdPort_name_changed(m_serialPortNames.at(i));
             ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->MaterialDeliveryPortStatus_field->setText("Closed");
-            ui->LaserGalvoPortStatus_field->setText("Closed");
+            ui->galvoPortStatus_field->setText("Closed");
             const QString log = "material delivery port assigned to " + m_serialPortNames.at(i);
+            qCWarning(powder_app, log.toLocal8Bit());
+        }
+        else if (i == m_myConfiguration.get()->laser_portNumber()){
+            emit laserPort_name_changed(m_serialPortNames.at(i));
+            ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+            ui->laserPortStatus_field->setText("Closed");
+            const QString log = "laser port assigned to " + m_serialPortNames.at(i);
             qCWarning(powder_app, log.toLocal8Bit());
         }
     }
@@ -438,9 +463,14 @@ void PowderApp::saveDefaultSettings()
 
     defaultConfig.beginGroup("port_settings");
 
-    defaultConfig.beginGroup("laser_and_galvanometer");
-    defaultConfig.setValue("port_number", ui->lg_portnum_field->text());
-    defaultConfig.setValue("baud_rate", ui->lg_baudrate_field->text());
+    defaultConfig.beginGroup("laser");
+    defaultConfig.setValue("port_number", ui->laser_portnum_field->text());
+    defaultConfig.setValue("baud_rate", ui->laser_baudrate_field->text());
+    defaultConfig.endGroup();
+
+    defaultConfig.beginGroup("galvanometer");
+    defaultConfig.setValue("port_number", ui->galvo_portnum_field->text());
+    defaultConfig.setValue("baud_rate", ui->galvo_baudrate_field->text());
     defaultConfig.endGroup();
 
     defaultConfig.beginGroup("material_delivery");
@@ -455,16 +485,19 @@ void PowderApp::saveDefaultSettings()
 
     defaultConfig.endGroup();
 
-
     defaultConfig.beginGroup("laser_settings");
     defaultConfig.setValue("device_number", ui->laser_devicenum_field->text());
     defaultConfig.setValue("axis_number", ui->laser_axisnum_field->text());
-
-    defaultConfig.beginGroup("power");
-    defaultConfig.setValue("resolution", ui->laser_powerres_field->text());
-    defaultConfig.setValue("default",ui->laser_powerdef_field->text());
-    defaultConfig.setValue("max",ui->laser_powermax_field->text());
-    defaultConfig.setValue("min",ui->laser_powermin_field->text());
+    defaultConfig.setValue("power_max", ui->laser_power_max_field->text());
+    defaultConfig.beginGroup("intensity");
+    defaultConfig.setValue("default",ui->laser_intensitydef_field->text());
+    defaultConfig.setValue("max",ui->laser_intensitymax_field->text());
+    defaultConfig.setValue("min",ui->laser_intensitymin_field->text());
+    defaultConfig.endGroup();
+    defaultConfig.beginGroup("pulse_frequency");
+    defaultConfig.setValue("default",ui->laser_pulsefreqdef_field->text());
+    defaultConfig.setValue("max",ui->laser_pulsefreqmax_field->text());
+    defaultConfig.setValue("min",ui->laser_pulsefreqmin_field->text());
     defaultConfig.endGroup();
     defaultConfig.endGroup();
 
@@ -557,9 +590,14 @@ void PowderApp::saveUserSettings()
 
     userConfig.beginGroup("port_settings");
 
-    userConfig.beginGroup("laser_and_galvanometer");
-    userConfig.setValue("port_number", ui->lg_portnum_field->text());
-    userConfig.setValue("baud_rate", ui->lg_baudrate_field->text());
+    userConfig.beginGroup("laser");
+    userConfig.setValue("port_number", ui->laser_portnum_field->text());
+    userConfig.setValue("baud_rate", ui->laser_baudrate_field->text());
+    userConfig.endGroup();
+
+    userConfig.beginGroup("galvanometer");
+    userConfig.setValue("port_number", ui->galvo_portnum_field->text());
+    userConfig.setValue("baud_rate", ui->galvo_baudrate_field->text());
     userConfig.endGroup();
 
     userConfig.beginGroup("material_delivery");
@@ -578,12 +616,16 @@ void PowderApp::saveUserSettings()
     userConfig.beginGroup("laser_settings");
     userConfig.setValue("device_number", ui->laser_devicenum_field->text());
     userConfig.setValue("axis_number", ui->laser_axisnum_field->text());
-
-    userConfig.beginGroup("power");
-    userConfig.setValue("resolution", ui->laser_powerres_field->text());
-    userConfig.setValue("default",ui->laser_powerdef_field->text());
-    userConfig.setValue("max",ui->laser_powermax_field->text());
-    userConfig.setValue("min",ui->laser_powermin_field->text());
+    userConfig.setValue("power_max", ui->laser_power_max_field->text());
+    userConfig.beginGroup("intensity");
+    userConfig.setValue("default",ui->laser_intensitydef_field->text());
+    userConfig.setValue("max",ui->laser_intensitymax_field->text());
+    userConfig.setValue("min",ui->laser_intensitymin_field->text());
+    userConfig.endGroup();
+    userConfig.beginGroup("pulse_frequency");
+    userConfig.setValue("default",ui->laser_pulsefreqdef_field->text());
+    userConfig.setValue("max",ui->laser_pulsefreqmax_field->text());
+    userConfig.setValue("min",ui->laser_pulsefreqmin_field->text());
     userConfig.endGroup();
     userConfig.endGroup();
 
@@ -676,18 +718,25 @@ void PowderApp::viewDefaultSettings()
     ui->env_baud_field->setText(defaultConfig.value("port_settings/environment_controller/baud_rate").toString());
     ui->env_portnum_field->setText(defaultConfig.value("port_settings/environment_controller/port_number").toString());
 
-    ui->lg_baudrate_field->setText(defaultConfig.value("port_settings/laser_and_galvanometer/baud_rate").toString());
-    ui->lg_portnum_field->setText(defaultConfig.value("port_settings/laser_and_galvanometer/port_number").toString());
+    ui->laser_baudrate_field->setText(defaultConfig.value("port_settings/laser/port_number").toString());
+    ui->laser_portnum_field->setText(defaultConfig.value("port_settings/laser/port_number").toString());
+
+    ui->galvo_baudrate_field->setText(defaultConfig.value("port_settings/galvanometer/baud_rate").toString());
+    ui->galvo_portnum_field->setText(defaultConfig.value("port_settings/galvanometer/port_number").toString());
 
     ui->md_baudrate_field->setText(defaultConfig.value("port_settings/material_delivery/baud_rate").toString());
     ui->md_portnum_field->setText(defaultConfig.value("port_settings/material_delivery/port_number").toString());
 
     ui->laser_axisnum_field->setText(defaultConfig.value("laser_settings/axis_number").toString());
     ui->laser_devicenum_field->setText(defaultConfig.value("laser_settings/device_number").toString());
-    ui->laser_powerres_field->setText(defaultConfig.value("laser_settings/power/resolution").toString());
-    ui->laser_powerdef_field->setText(defaultConfig.value("laser_settings/power/default").toString());
-    ui->laser_powermax_field->setText(defaultConfig.value("laser_settings/power/max").toString());
-    ui->laser_powermin_field->setText(defaultConfig.value("laser_settings/power/min").toString());
+    ui->laser_power_max_field->setText(defaultConfig.value("laser_settings/power_max").toString());
+    ui->laser_intensitydef_field->setText(defaultConfig.value("laser_settings/intensity/default").toString());
+    ui->laser_intensitymax_field->setText(defaultConfig.value("laser_settings/intensity/max").toString());
+    ui->laser_intensitymin_field->setText(defaultConfig.value("laser_settings/intensity/min").toString());
+    ui->laser_pulsefreqdef_field->setText(defaultConfig.value("laser_settings/pulse_frequency/default").toString());
+    ui->laser_pulsefreqmax_field->setText(defaultConfig.value("laser_settings/pulse_frequency/max").toString());
+    ui->laser_pulsefreqmin_field->setText(defaultConfig.value("laser_settings/pulse_frequency/min").toString());
+
 
     ui->galvo_devicenum_field->setText(defaultConfig.value("galvanometer_settings/device_number").toString());
     ui->galvo_speeddef_field->setText(defaultConfig.value("galvanometer_settings/speed/default").toString());
@@ -746,18 +795,24 @@ void PowderApp::viewUserSettings()
     ui->env_baud_field->setText(userConfig.value("port_settings/environment_controller/baud_rate").toString());
     ui->env_portnum_field->setText(userConfig.value("port_settings/environment_controller/port_number").toString());
 
-    ui->lg_baudrate_field->setText(userConfig.value("port_settings/laser_and_galvanometer/baud_rate").toString());
-    ui->lg_portnum_field->setText(userConfig.value("port_settings/laser_and_galvanometer/port_number").toString());
+    ui->laser_baudrate_field->setText(userConfig.value("port_settings/laser/port_number").toString());
+    ui->laser_portnum_field->setText(userConfig.value("port_settings/laser/port_number").toString());
+
+    ui->galvo_baudrate_field->setText(userConfig.value("port_settings/galvanometer/baud_rate").toString());
+    ui->galvo_portnum_field->setText(userConfig.value("port_settings/galvanometer/port_number").toString());
 
     ui->md_baudrate_field->setText(userConfig.value("port_settings/material_delivery/baud_rate").toString());
     ui->md_portnum_field->setText(userConfig.value("port_settings/material_delivery/port_number").toString());
 
     ui->laser_axisnum_field->setText(userConfig.value("laser_settings/axis_number").toString());
     ui->laser_devicenum_field->setText(userConfig.value("laser_settings/device_number").toString());
-    ui->laser_powerres_field->setText(userConfig.value("laser_settings/power/resolution").toString());
-    ui->laser_powerdef_field->setText(userConfig.value("laser_settings/power/default").toString());
-    ui->laser_powermax_field->setText(userConfig.value("laser_settings/power/max").toString());
-    ui->laser_powermin_field->setText(userConfig.value("laser_settings/power/min").toString());
+    ui->laser_power_max_field->setText(userConfig.value("laser_settings/power_max").toString());
+    ui->laser_intensitydef_field->setText(userConfig.value("laser_settings/intensity/default").toString());
+    ui->laser_intensitymax_field->setText(userConfig.value("laser_settings/intensity/max").toString());
+    ui->laser_intensitymin_field->setText(userConfig.value("laser_settings/intensity/min").toString());
+    ui->laser_pulsefreqdef_field->setText(userConfig.value("laser_settings/pulse_frequency/default").toString());
+    ui->laser_pulsefreqmax_field->setText(userConfig.value("laser_settings/pulse_frequency/max").toString());
+    ui->laser_pulsefreqmin_field->setText(userConfig.value("laser_settings/pulse_frequency/min").toString());
 
     ui->galvo_devicenum_field->setText(userConfig.value("galvanometer_settings/device_number").toString());
     ui->galvo_speeddef_field->setText(userConfig.value("galvanometer_settings/speed/default").toString());
@@ -1082,11 +1137,11 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
 
         QString commandOut = ("[Block " + QString::number(blockCount) + ", Layer " + QString::number(layerCount) + "]\n");
         commandOut += " Laser/Galvo:\n";
-        commandOut += "   " + m_myPart.get()->getBlock(blockCount).lg_string();
+        commandOut += "   " + m_myPart.get()->getBlock(blockCount).galvo_string();
         commandOut += "\n Material Delivery:";
-        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(blockCount).md_string().at(0);
-        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(blockCount).md_string().at(1);
-        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(blockCount).md_string().at(2);
+        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(0);
+        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(1);
+        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(2);
         commandOut += "\n";
         ui->printTools_outputBrowser->append(commandOut);
 
@@ -1153,18 +1208,24 @@ void PowderApp::on_gcode_tool_button_clearPart_clicked()
 
 void PowderApp::on_PortManager_options_box_activated(const QString &arg1)
 {
-    if(arg1 == "Close Laser & Galvanometer Port"){
-        emit lgPort_connectionRequested(false);
+    if(arg1 == "Close Galvanometer Port"){
+        emit galvoPort_connectionRequested(false);
     }
-    else if(arg1 == "Open Laser & Galvanometer Port")
+    else if(arg1 == "Open Galvanometer Port")
     {
-        emit lgPort_connectionRequested(true);
+        emit galvoPort_connectionRequested(true);
     }
     else if(arg1 == "Close Build Plate & Material Delivery Port"){
         emit mdPort_connectionRequested(false);
     }
     else if(arg1 == "Open Build Plate & Material Delivery Port"){
         emit mdPort_connectionRequested(true);
+    }
+    else if(arg1 == "Close Laser Port"){
+        emit laserPort_connectionRequested(false);
+    }
+    else if(arg1 == "Open Laser Port"){
+        emit laserPort_connectionRequested(true);
     }
     else if (arg1 == "Clear Errors"){
         ui->laserDisplayEnable_button->setChecked(false);
@@ -1183,6 +1244,30 @@ void PowderApp::on_PortManager_options_box_activated(const QString &arg1)
         emit cleaDeviceErrors();
     }
     ui->PortManager_options_box->setCurrentIndex(0);
+}
+
+void PowderApp::on_laser_port_connectionChanged(bool open)
+{
+    if(open){
+        ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->laserPortStatus_field->setText("Open");
+        ui->laserDisplay_frame->setEnabled(true);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Opened For Laser!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->laser_portNumber()));
+        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->laser_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Close Laser Port");
+    }
+    else{
+        ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->laserPortStatus_field->setText("Closed");
+        ui->laserDisplay_frame->setEnabled(false);
+        ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
+        ui->PortManagerInfo_browser->setText("Port Closed For Laser!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->laser_portNumber()));
+        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->laser_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Open Laser Port");
+    }
 }
 
 void PowderApp::on_ManualControlEnable_button_toggled(bool checked)
@@ -1217,7 +1302,8 @@ void PowderApp::on_galvoDisplayEnable_button_toggled(bool checked)
         ui->jogXplus_button->setEnabled(true);
         ui->jogYminus_button->setEnabled(true);
         ui->jogYplus_button->setEnabled(true);
-        deviceTransport->ping_laserGalvo();
+        deviceTransport->ping_galvo();
+        ui->emergency_stop_button->setStyleSheet("background:rgba(252, 33, 37,200); color:rgba(255,255,255,200);");
     }
     else
     {
@@ -1235,10 +1321,8 @@ void PowderApp::on_buildPlateEnable_button_toggled(bool checked)
     if(checked){
         ui->jogZminus_button->setEnabled(true);
         ui->jogZplus_button->setEnabled(true);
-//        deviceTransport->on_homeOption_change(2);
-//        deviceTransport->on_home_request();
         deviceTransport->ping_materialDelivery(1,1);
-
+        ui->emergency_stop_button->setStyleSheet("background:rgba(252, 33, 37,200); color:rgba(255,255,255,200);");
     }
     else
     {
@@ -1257,6 +1341,7 @@ void PowderApp::on_materialDeliveryDisplayEnable_button_toggled(bool checked)
         ui->jogSminus_button->setEnabled(true);
         ui->jogSplus_button->setEnabled(true);
         deviceTransport->ping_materialDelivery(2,0);
+        ui->emergency_stop_button->setStyleSheet("background:rgba(252, 33, 37,200); color:rgba(255,255,255,200);");
     }
     else
     {
@@ -1269,6 +1354,12 @@ void PowderApp::on_materialDeliveryDisplayEnable_button_toggled(bool checked)
     }
 }
 
+void PowderApp::on_laserBusy()
+{
+    ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+    ui->laserPortStatus_field->setText("Busy");
+}
+
 void PowderApp::on_PrintManagerEnable_button_toggled(bool checked)
 {
     if(checked && ui->printManager_status_field->text() == "Part File Loaded"){
@@ -1276,31 +1367,28 @@ void PowderApp::on_PrintManagerEnable_button_toggled(bool checked)
     }
 }
 
-void PowderApp::on_lg_port_connectionChanged(bool open)
+void PowderApp::on_galvo_port_connectionChanged(bool open)
 {
     if(open){
-        ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
-        ui->LaserGalvoPortStatus_field->setText("Open");
-        ui->laserDisplay_frame->setEnabled(true);
+        ui->galvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->galvoPortStatus_field->setText("Open");
         ui->galvoDisplay_frame->setEnabled(true);
         ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-        ui->PortManagerInfo_browser->setText("Port Opened For Laser & Galvanometer!");
-        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->laserGalvo_portNumber()));
-        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->laserGalvo_portNumber()));
-        ui->PortManager_options_box->setItemText(1,"Close Laser & Galvanometer Port");
+        ui->PortManagerInfo_browser->setText("Port Opened For Galvanometer!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->galvo_portNumber()));
+        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->galvo_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Close Galvanometer Port");
     }
     else{
-        ui->laserDisplayEnable_button->setChecked(false);
         ui->galvoDisplayEnable_button->setChecked(false);
-        ui->LaserGalvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-        ui->LaserGalvoPortStatus_field->setText("Closed");
-        ui->laserDisplay_frame->setEnabled(false);
+        ui->galvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->galvoPortStatus_field->setText("Closed");
         ui->galvoDisplay_frame->setEnabled(false);
         ui->PortManagerInfo_browser->setStyleSheet("color:rgb(191,87,218)");
-        ui->PortManagerInfo_browser->setText("Port Closed For Laser & Galvanometer!");
-        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->laserGalvo_portNumber()));
-        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->laserGalvo_portNumber()));
-        ui->PortManager_options_box->setItemText(1,"Open Laser & Galvanometer Port");
+        ui->PortManagerInfo_browser->setText("Port Closed For Galvanometer!");
+        ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->galvo_portNumber()));
+        ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->galvo_portNumber()));
+        ui->PortManager_options_box->setItemText(1,"Open Galvanometer Port");
     }
 }
 
@@ -1332,7 +1420,25 @@ void PowderApp::on_md_port_connectionChanged(bool open)
     }
 }
 
-void PowderApp::on_lg_portError(const QString &Error)
+void PowderApp::on_laser_portError(const QString &Error)
+{
+    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(125,37,33)");
+    ui->PortManagerInfo_browser->setText(Error);
+
+    ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/redbutton.png"));
+    ui->laserPortStatus_field->setText("Error!");
+}
+
+void PowderApp::on_laser_portReply(const QString &reply)
+{
+    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(29,155,246)");
+    ui->PortManagerInfo_browser->append(reply);
+
+    ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+    ui->laserPortStatus_field->setText(reply);
+}
+
+void PowderApp::on_galvo_portError(const QString &Error)
 {
     ui->PortManagerInfo_browser->setStyleSheet("color:rgb(125,37,33)");
     ui->PortManagerInfo_browser->setText(Error);
@@ -1341,7 +1447,7 @@ void PowderApp::on_lg_portError(const QString &Error)
     ui->galvoStatus_field->setText("Error!");
 }
 
-void PowderApp::on_lg_portReply(const QString &reply)
+void PowderApp::on_galvo_portReply(const QString &reply)
 {
     ui->PortManagerInfo_browser->setStyleSheet("color:rgb(29,155,246)");
     ui->PortManagerInfo_browser->append(reply);
@@ -1439,3 +1545,21 @@ void PowderApp::on_settings_button_saveAsDefault_released()
 }
 
 
+
+void PowderApp::on_laserDisplayEnable_button_toggled(bool checked)
+{
+    if(checked){
+        ui->LaserDisplayStatus_field->setText("Enabled");
+        ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+    }
+    else
+    {
+        ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/redbutton.png"));
+        ui->LaserDisplayStatus_field->setText("Disabled");
+    }
+}
+
+void PowderApp::on_emergency_stop_button_clicked()
+{
+    deviceTransport->on_emergency_stop_request();
+}

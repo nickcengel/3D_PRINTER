@@ -4,6 +4,8 @@
 PowderBlock::PowderBlock(){
     qRegisterMetaType<PowderBlock>("PowderBlock");
     m_laser_enabled = false;
+    m_commandType = NO_COMMAND_TYPE;
+
 }
 
 PowderBlock::PowderBlock(const int block_number, const int layer_Number)
@@ -12,16 +14,20 @@ PowderBlock::PowderBlock(const int block_number, const int layer_Number)
    m_blockNumber = block_number;
    m_layerNumber = layer_Number;
    m_laser_enabled = false;
+   m_commandType = NO_COMMAND_TYPE;
 
 }
 
 PowderBlock::PowderBlock(const PowderBlock &otherBlock){
+    m_commandType = otherBlock.commandType();
+    m_laserMode = otherBlock.laserMode();
+    m_laser_pulseFreq = otherBlock.laser_pulseFreq();
     m_blockNumber = otherBlock.blockNumber();
     m_layerNumber = otherBlock.layerNumber();
     m_blockTask = otherBlock.blockTask();
     m_laser_enabled = otherBlock.laser_enabled();
     m_laser_armed = otherBlock.laser_armed();
-    m_laser_power = otherBlock.laser_power();
+    m_laser_intensity = otherBlock.laser_intensity();
     m_positionMode = otherBlock.positionMode();
     m_x_position = otherBlock.x_position();
     m_y_position = otherBlock.y_position();
@@ -32,8 +38,9 @@ PowderBlock::PowderBlock(const PowderBlock &otherBlock){
     m_hopper_speed = otherBlock.hopper_speed();
     m_spreader_position = otherBlock.spreader_position();
     m_spreader_speed = otherBlock.spreader_speed();
-    m_lg_string = otherBlock.lg_string();
-    m_md_string = otherBlock.md_string();
+    m_laser_string = otherBlock.laser_string();
+    m_galvo_string = otherBlock.galvo_string();
+    m_materialDelivery_string = otherBlock.materialDelivery_string();
 }
 
 PowderBlock::~PowderBlock()
@@ -62,12 +69,12 @@ void PowderBlock::setLayerNumber(const int &layerNumber)
 }
 
 // modify m_blockTask by setting the blockTask bit
-void PowderBlock::setBlockTask(uint16_t task){
+void PowderBlock::setBlockTask(uint32_t task){
     m_blockTask |= task;
 }
 
 
-uint16_t PowderBlock::blockTask() const {
+uint32_t PowderBlock::blockTask() const {
     return m_blockTask;
 }
 
@@ -97,15 +104,15 @@ void PowderBlock::setLaser_armed(bool l_armed)
     setBlockTask(BlockTask::SET_LASER_ARM_STATE);
 }
 
-int PowderBlock::laser_power() const
+float PowderBlock::laser_intensity() const
 {
-    return m_laser_power;
+    return m_laser_intensity;
 }
 
-void PowderBlock::setLaser_power(const int &l_power)
+void PowderBlock::setLaser_intensity(const float &laser_intensity)
 {
-    m_laser_power = l_power;
-    setBlockTask(BlockTask::SET_LASER_POWER);
+    m_laser_intensity = laser_intensity;
+    setBlockTask(BlockTask::SET_LASER_INTENSITY);
 
 }
 
@@ -192,7 +199,6 @@ void PowderBlock::setXY_speed(float xy_speed)
 {
     m_xy_speed = xy_speed;
     setBlockTask(BlockTask::SET_XY_SPEED);
-
 }
 
 float PowderBlock::z_speed() const
@@ -249,26 +255,69 @@ void PowderBlock::clearTask()
     m_blockTask = 0;
 }
 
-QString PowderBlock::lg_string() const
+QString PowderBlock::galvo_string() const
 {
-    return m_lg_string;
+    return m_galvo_string;
 }
 
-void PowderBlock::setLg_string(const QString &lg_string)
+void PowderBlock::setGalvo_string(const QString &lg_string)
 {
-    m_lg_string = lg_string;
+    m_galvo_string = lg_string;
 }
 
-QStringList PowderBlock::md_string() const
+QStringList PowderBlock::materialDelivery_string() const
 {
-    return m_md_string;
+    return m_materialDelivery_string;
 }
 
-void PowderBlock::setMd_string(const QStringList &md_string)
+void PowderBlock::setMaterialDelivery_string(const QStringList &md_string)
 {
-    m_md_string.append(md_string.at(0));
-    m_md_string.append(md_string.at(1));
-    m_md_string.append(md_string.at(2));
+    m_materialDelivery_string.append(md_string.at(0));
+    m_materialDelivery_string.append(md_string.at(1));
+    m_materialDelivery_string.append(md_string.at(2));
+}
+
+PowderBlock::CommandType PowderBlock::commandType() const
+{
+    return m_commandType;
+}
+
+void PowderBlock::setCommandType(const CommandType &moveType)
+{
+    m_commandType = moveType;
+}
+
+int PowderBlock::laser_pulseFreq() const
+{
+    return m_laser_pulseFreq;
+}
+
+void PowderBlock::setLaser_pulseFreq(int laser_pulseFreq)
+{
+    m_laser_pulseFreq = laser_pulseFreq;
+    setBlockTask(BlockTask::SET_LASER_PULSE_FREQ);
+}
+
+PowderBlock::LaserMode PowderBlock::laserMode() const
+{
+    return m_laserMode;
+}
+
+void PowderBlock::setLaserMode(const LaserMode &laserMode)
+{
+    m_laserMode = laserMode;
+    setBlockTask(BlockTask::SET_LASER_MODE);
+
+}
+
+QStringList PowderBlock::laser_string() const
+{
+    return m_laser_string;
+}
+
+void PowderBlock::setLaser_string(const QStringList &laser_string)
+{
+    m_laser_string = laser_string;
 }
 
 

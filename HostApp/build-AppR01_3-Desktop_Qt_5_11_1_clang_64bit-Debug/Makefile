@@ -59,14 +59,15 @@ SOURCES       = ../Powder_R02_00/3d_framework/line3d.cpp \
 		../Powder_R02_00/model_item_frameworks/settings_model.cpp \
 		../Powder_R02_00/main.cpp \
 		../Powder_R02_00/hardware_tools/zaber_utility.cpp \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.cpp \
 		../Powder_R02_00/powder_objects/powder_part.cpp \
 		../Powder_R02_00/powder_objects/powder_block.cpp \
 		../Powder_R02_00/powder_objects/powder_settings.cpp \
 		../Powder_R02_00/3d_framework/powder_block3d.cpp \
 		../Powder_R02_00/3d_framework/powder_view3d.cpp \
 		../Powder_R02_00/powder_app/powder_app.cpp \
-		../Powder_R02_00/powder_app/powder_transport.cpp qrc_icons.cpp \
+		../Powder_R02_00/powder_app/powder_transport.cpp \
+		../Powder_R02_00/hardware_tools/galvo_utility.cpp \
+		../Powder_R02_00/hardware_tools/laser_utility.cpp qrc_icons.cpp \
 		qrc_settings.cpp \
 		moc_scenemodifier.cpp \
 		moc_menu_model.cpp \
@@ -83,7 +84,6 @@ OBJECTS       = line3d.o \
 		settings_model.o \
 		main.o \
 		zaber_utility.o \
-		lasergalvo_utility.o \
 		powder_part.o \
 		powder_block.o \
 		powder_settings.o \
@@ -91,6 +91,8 @@ OBJECTS       = line3d.o \
 		powder_view3d.o \
 		powder_app.o \
 		powder_transport.o \
+		galvo_utility.o \
+		laser_utility.o \
 		qrc_icons.o \
 		qrc_settings.o \
 		moc_scenemodifier.o \
@@ -149,7 +151,6 @@ DIST          = ../Powder_R02_00/resources/icons/angle-double-right.png \
 		../Powder_R02_00/resources/icons/toggle-off1.png \
 		../Powder_R02_00/resources/icons/toggle-on1.png \
 		../Powder_R02_00/resources/icons/unlock-alt.png \
-		../Powder_R02_00/resources/machineset.txt \
 		../Powder_R02_00/resources/config.ini \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/spec_pre.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/qdevice.pri \
@@ -311,6 +312,7 @@ DIST          = ../Powder_R02_00/resources/icons/angle-double-right.png \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/qt_config.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/spec_post.prf \
+		../Powder_R02_00/.qmake.stash \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/mac/sdk.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/toolchain.prf \
@@ -346,14 +348,15 @@ DIST          = ../Powder_R02_00/resources/icons/angle-double-right.png \
 		../Powder_R02_00/model_item_frameworks/settings_item.h \
 		../Powder_R02_00/model_item_frameworks/settings_model.h \
 		../Powder_R02_00/hardware_tools/zaber_utility.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
 		../Powder_R02_00/powder_objects/powder_block.h \
 		../Powder_R02_00/powder_objects/powder_part.h \
 		../Powder_R02_00/powder_objects/powder_settings.h \
 		../Powder_R02_00/3d_framework/powder_block3d.h \
 		../Powder_R02_00/3d_framework/powder_view3d.h \
 		../Powder_R02_00/powder_app/powder_app.h \
-		../Powder_R02_00/powder_app/powder_transport.h ../Powder_R02_00/3d_framework/line3d.cpp \
+		../Powder_R02_00/powder_app/powder_transport.h \
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
+		../Powder_R02_00/hardware_tools/laser_utility.h ../Powder_R02_00/3d_framework/line3d.cpp \
 		../Powder_R02_00/3d_framework/scenemodifier.cpp \
 		../Powder_R02_00/3d_framework/segment3d.cpp \
 		../Powder_R02_00/model_item_frameworks/menu_item.cpp \
@@ -362,14 +365,15 @@ DIST          = ../Powder_R02_00/resources/icons/angle-double-right.png \
 		../Powder_R02_00/model_item_frameworks/settings_model.cpp \
 		../Powder_R02_00/main.cpp \
 		../Powder_R02_00/hardware_tools/zaber_utility.cpp \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.cpp \
 		../Powder_R02_00/powder_objects/powder_part.cpp \
 		../Powder_R02_00/powder_objects/powder_block.cpp \
 		../Powder_R02_00/powder_objects/powder_settings.cpp \
 		../Powder_R02_00/3d_framework/powder_block3d.cpp \
 		../Powder_R02_00/3d_framework/powder_view3d.cpp \
 		../Powder_R02_00/powder_app/powder_app.cpp \
-		../Powder_R02_00/powder_app/powder_transport.cpp
+		../Powder_R02_00/powder_app/powder_transport.cpp \
+		../Powder_R02_00/hardware_tools/galvo_utility.cpp \
+		../Powder_R02_00/hardware_tools/laser_utility.cpp
 QMAKE_TARGET  = Powder
 DESTDIR       = 
 TARGET        = Powder.app/Contents/MacOS/Powder
@@ -547,6 +551,7 @@ Makefile: ../Powder_R02_00/Powder_R02_00.pro /Applications/Qt/5.11.1/clang_64/mk
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/qt_config.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/mac/sdk.prf \
 		/Applications/Qt/5.11.1/clang_64/mkspecs/features/toolchain.prf \
@@ -749,6 +754,7 @@ Makefile: ../Powder_R02_00/Powder_R02_00.pro /Applications/Qt/5.11.1/clang_64/mk
 /Applications/Qt/5.11.1/clang_64/mkspecs/features/qt_config.prf:
 /Applications/Qt/5.11.1/clang_64/mkspecs/macx-clang/qmake.conf:
 /Applications/Qt/5.11.1/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Applications/Qt/5.11.1/clang_64/mkspecs/features/exclusive_builds.prf:
 /Applications/Qt/5.11.1/clang_64/mkspecs/features/mac/sdk.prf:
 /Applications/Qt/5.11.1/clang_64/mkspecs/features/toolchain.prf:
@@ -821,8 +827,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../Powder_R02_00/resources/icons.qrc ../Powder_R02_00/resources/settings.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Applications/Qt/5.11.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Powder_R02_00/3d_framework/line3d.h ../Powder_R02_00/3d_framework/scenemodifier.h ../Powder_R02_00/3d_framework/segment3d.h ../Powder_R02_00/model_item_frameworks/menu_item.h ../Powder_R02_00/model_item_frameworks/menu_model.h ../Powder_R02_00/model_item_frameworks/settings_item.h ../Powder_R02_00/model_item_frameworks/settings_model.h ../Powder_R02_00/hardware_tools/zaber_utility.h ../Powder_R02_00/hardware_tools/lasergalvo_utility.h ../Powder_R02_00/powder_objects/powder_block.h ../Powder_R02_00/powder_objects/powder_part.h ../Powder_R02_00/powder_objects/powder_settings.h ../Powder_R02_00/3d_framework/powder_block3d.h ../Powder_R02_00/3d_framework/powder_view3d.h ../Powder_R02_00/powder_app/powder_app.h ../Powder_R02_00/powder_app/powder_transport.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Powder_R02_00/3d_framework/line3d.cpp ../Powder_R02_00/3d_framework/scenemodifier.cpp ../Powder_R02_00/3d_framework/segment3d.cpp ../Powder_R02_00/model_item_frameworks/menu_item.cpp ../Powder_R02_00/model_item_frameworks/menu_model.cpp ../Powder_R02_00/model_item_frameworks/settings_item.cpp ../Powder_R02_00/model_item_frameworks/settings_model.cpp ../Powder_R02_00/main.cpp ../Powder_R02_00/hardware_tools/zaber_utility.cpp ../Powder_R02_00/hardware_tools/lasergalvo_utility.cpp ../Powder_R02_00/powder_objects/powder_part.cpp ../Powder_R02_00/powder_objects/powder_block.cpp ../Powder_R02_00/powder_objects/powder_settings.cpp ../Powder_R02_00/3d_framework/powder_block3d.cpp ../Powder_R02_00/3d_framework/powder_view3d.cpp ../Powder_R02_00/powder_app/powder_app.cpp ../Powder_R02_00/powder_app/powder_transport.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Powder_R02_00/3d_framework/line3d.h ../Powder_R02_00/3d_framework/scenemodifier.h ../Powder_R02_00/3d_framework/segment3d.h ../Powder_R02_00/model_item_frameworks/menu_item.h ../Powder_R02_00/model_item_frameworks/menu_model.h ../Powder_R02_00/model_item_frameworks/settings_item.h ../Powder_R02_00/model_item_frameworks/settings_model.h ../Powder_R02_00/hardware_tools/zaber_utility.h ../Powder_R02_00/powder_objects/powder_block.h ../Powder_R02_00/powder_objects/powder_part.h ../Powder_R02_00/powder_objects/powder_settings.h ../Powder_R02_00/3d_framework/powder_block3d.h ../Powder_R02_00/3d_framework/powder_view3d.h ../Powder_R02_00/powder_app/powder_app.h ../Powder_R02_00/powder_app/powder_transport.h ../Powder_R02_00/hardware_tools/galvo_utility.h ../Powder_R02_00/hardware_tools/laser_utility.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Powder_R02_00/3d_framework/line3d.cpp ../Powder_R02_00/3d_framework/scenemodifier.cpp ../Powder_R02_00/3d_framework/segment3d.cpp ../Powder_R02_00/model_item_frameworks/menu_item.cpp ../Powder_R02_00/model_item_frameworks/menu_model.cpp ../Powder_R02_00/model_item_frameworks/settings_item.cpp ../Powder_R02_00/model_item_frameworks/settings_model.cpp ../Powder_R02_00/main.cpp ../Powder_R02_00/hardware_tools/zaber_utility.cpp ../Powder_R02_00/powder_objects/powder_part.cpp ../Powder_R02_00/powder_objects/powder_block.cpp ../Powder_R02_00/powder_objects/powder_settings.cpp ../Powder_R02_00/3d_framework/powder_block3d.cpp ../Powder_R02_00/3d_framework/powder_view3d.cpp ../Powder_R02_00/powder_app/powder_app.cpp ../Powder_R02_00/powder_app/powder_transport.cpp ../Powder_R02_00/hardware_tools/galvo_utility.cpp ../Powder_R02_00/hardware_tools/laser_utility.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../Powder_R02_00/powder_app/powderapp.ui $(DISTDIR)/
 
 
@@ -833,6 +839,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r Powder.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -900,8 +907,7 @@ qrc_icons.cpp: ../Powder_R02_00/resources/icons.qrc \
 
 qrc_settings.cpp: ../Powder_R02_00/resources/settings.qrc \
 		/Applications/Qt/5.11.1/clang_64/bin/rcc \
-		../Powder_R02_00/resources/config.ini \
-		../Powder_R02_00/resources/machineset.txt
+		../Powder_R02_00/resources/config.ini
 	/Applications/Qt/5.11.1/clang_64/bin/rcc -name settings ../Powder_R02_00/resources/settings.qrc -o qrc_settings.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h
@@ -1027,7 +1033,7 @@ moc_powder_app.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtWidgets.framework/Hea
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
 		../Powder_R02_00/powder_app/powder_app.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.1/clang_64/bin/moc
@@ -1055,7 +1061,7 @@ moc_powder_transport.cpp: /Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../Powder_R02_00/powder_objects/powder_settings.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
 		../Powder_R02_00/powder_app/powder_transport.h \
 		moc_predefs.h \
 		/Applications/Qt/5.11.1/clang_64/bin/moc
@@ -1429,7 +1435,7 @@ main.o: ../Powder_R02_00/main.cpp /Applications/Qt/5.11.1/clang_64/lib/QtWidgets
 		../Powder_R02_00/powder_app/powder_transport.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
 		../Powder_R02_00/3d_framework/powder_view3d.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
 		/Applications/Qt/5.11.1/clang_64/lib/QtGui.framework/Headers/qevent.h \
@@ -1450,19 +1456,6 @@ zaber_utility.o: ../Powder_R02_00/hardware_tools/zaber_utility.cpp ../Powder_R02
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QtDebug \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o zaber_utility.o ../Powder_R02_00/hardware_tools/zaber_utility.cpp
-
-lasergalvo_utility.o: ../Powder_R02_00/hardware_tools/lasergalvo_utility.cpp ../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
-		../Powder_R02_00/powder_objects/powder_block.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
-		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
-		../Powder_R02_00/powder_objects/powder_settings.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lasergalvo_utility.o ../Powder_R02_00/hardware_tools/lasergalvo_utility.cpp
 
 powder_part.o: ../Powder_R02_00/powder_objects/powder_part.cpp ../Powder_R02_00/powder_objects/powder_part.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QVector \
@@ -1485,8 +1478,9 @@ powder_part.o: ../Powder_R02_00/powder_objects/powder_part.cpp ../Powder_R02_00/
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTextStream \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtextstream.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
-		../Powder_R02_00/hardware_tools/zaber_utility.h
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
+		../Powder_R02_00/hardware_tools/zaber_utility.h \
+		../Powder_R02_00/hardware_tools/laser_utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o powder_part.o ../Powder_R02_00/powder_objects/powder_part.cpp
 
 powder_block.o: ../Powder_R02_00/powder_objects/powder_block.cpp ../Powder_R02_00/powder_objects/powder_block.h \
@@ -1597,7 +1591,7 @@ powder_app.o: ../Powder_R02_00/powder_app/powder_app.cpp ../Powder_R02_00/powder
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h \
+		../Powder_R02_00/hardware_tools/galvo_utility.h \
 		ui_powderapp.h \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QFile \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qfile.h \
@@ -1638,8 +1632,34 @@ powder_transport.o: ../Powder_R02_00/powder_app/powder_transport.cpp ../Powder_R
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
 		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
 		../Powder_R02_00/powder_objects/powder_settings.h \
-		../Powder_R02_00/hardware_tools/lasergalvo_utility.h
+		../Powder_R02_00/hardware_tools/galvo_utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o powder_transport.o ../Powder_R02_00/powder_app/powder_transport.cpp
+
+galvo_utility.o: ../Powder_R02_00/hardware_tools/galvo_utility.cpp ../Powder_R02_00/hardware_tools/galvo_utility.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
+		../Powder_R02_00/powder_objects/powder_block.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		../Powder_R02_00/powder_objects/powder_settings.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o galvo_utility.o ../Powder_R02_00/hardware_tools/galvo_utility.cpp
+
+laser_utility.o: ../Powder_R02_00/hardware_tools/laser_utility.cpp ../Powder_R02_00/hardware_tools/laser_utility.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QString \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
+		../Powder_R02_00/powder_objects/powder_block.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QMetaType \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qmetatype.h \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/QStringList \
+		/Applications/Qt/5.11.1/clang_64/lib/QtCore.framework/Headers/qstringlist.h \
+		../Powder_R02_00/powder_objects/powder_settings.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o laser_utility.o ../Powder_R02_00/hardware_tools/laser_utility.cpp
 
 qrc_icons.o: qrc_icons.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_icons.o qrc_icons.cpp

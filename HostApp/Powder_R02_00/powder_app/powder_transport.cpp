@@ -1,16 +1,15 @@
 #include "powder_transport.h"
 
 Q_LOGGING_CATEGORY(powder_transport_log, "powder.transport")
-Q_LOGGING_CATEGORY(laser_galvo_port_log, "powder.transport.laser_and_galvo.port")
+Q_LOGGING_CATEGORY(laser_port_log, "powder.transport.laser.port")
+Q_LOGGING_CATEGORY(galvo_port_log, "powder.transport.galvo.port")
 Q_LOGGING_CATEGORY(material_delivery_port_log, "powder.transport.material_delivery.port")
-Q_LOGGING_CATEGORY(environment_port_log, "powder.transport.environment.port")
 
 Q_LOGGING_CATEGORY(laser_device_log, "powder.transport.laser")
 Q_LOGGING_CATEGORY(galvanometer_device_log, "powder.transport.galvanometer")
 Q_LOGGING_CATEGORY(buildPlate_device_log, "powder.transport.build_plate")
 Q_LOGGING_CATEGORY(hopperPlate_device_log, "powder.transport.hopper_plate")
 Q_LOGGING_CATEGORY(spreaderBlade_device_log, "powder.transport.spreader_blade")
-Q_LOGGING_CATEGORY(environment_device_log, "powder.transport.environment")
 
 
 /*
@@ -20,12 +19,13 @@ Q_LOGGING_CATEGORY(environment_device_log, "powder.transport.environment")
 
 PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
 {
-
-    m_lg_port = new QSerialPort(this);
+    m_laser_port = new QSerialPort(this);
+    m_galvo_port = new QSerialPort(this);
     m_md_port = new QSerialPort(this);
 
-    m_lg_port->setBaudRate(115200);
+    m_galvo_port->setBaudRate(115200);
     m_md_port->setBaudRate(115200);
+    m_laser_port->setBaudRate(9600);
 
     m_manualModeEnabled = false;
     m_printModeEnabled = false;
@@ -36,7 +36,7 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     m_sPosition = 0;
     m_hPosition = 0;
     m_xySpeed = 0;
-    m_laserPower = 0;
+    m_laserIntensity = 0;
     m_laserEnableState = false;
     m_laserArmState = false;
 
@@ -56,40 +56,57 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     m_pendingTasks = 0;
     m_activeTask = 0;
 
-    lg_port_TxBytesRemaining = 0;
+    laser_port_TxBytesRemaining = 0;
+    galvo_port_TxBytesRemaining = 0;
     md_port_TxBytesRemaining = 0;
 
     // handle TX bytes
-    connect(m_lg_port, SIGNAL(bytesWritten(qint64)),
-            this, SLOT(on_lg_port_bytesWritten(qint64)));
+    connect(m_laser_port, SIGNAL(bytesWritten(qint64)),
+            this, SLOT(on_laser_port_bytesWritten(qint64)));
+
+    connect(m_galvo_port, SIGNAL(bytesWritten(qint64)),
+            this, SLOT(on_galvo_port_bytesWritten(qint64)));
 
     connect(m_md_port, SIGNAL(bytesWritten(qint64)),
             this, SLOT(on_md_port_bytesWritten(qint64)));
 
     // handle RX bytes
-    connect(m_lg_port, SIGNAL(readyRead()),
-            this, SLOT(on_lg_port_bytesRead()));
+    connect(m_laser_port, SIGNAL(readyRead()),
+            this, SLOT(on_laser_port_bytesRead()));
+
+    connect(m_galvo_port, SIGNAL(readyRead()),
+            this, SLOT(on_galvo_port_bytesRead()));
 
     connect(m_md_port, SIGNAL(readyRead()),
             this, SLOT(on_md_port_bytesRead()));
 
     // handle port errors
-    connect(m_lg_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
-            this, SLOT(on_lg_port_error(QSerialPort::SerialPortError)));
+    connect(m_laser_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
+            this, SLOT(on_laser_port_error(QSerialPort::SerialPortError)));
+
+    connect(m_galvo_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
+            this, SLOT(on_galvo_port_error(QSerialPort::SerialPortError)));
 
     connect(m_md_port, SIGNAL(errorOccurred(QSerialPort::SerialPortError)),
             this, SLOT(on_md_port_error(QSerialPort::SerialPortError)));
 
-    lg_port_timer = new QTimer(this); // used for port timeouts
-    lg_port_timer->setSingleShot(true);
-    md_port_timer = new QTimer(this); // used for port timeouts
-    md_port_timer->setSingleShot(true);
-    md_transaction_timer = new QTimer(this); // used to poll device until Idle
-    md_transaction_timer->setSingleShot(true);
 
-    QObject::connect(lg_port_timer, SIGNAL(timeout()), this, SLOT(on_lg_portTimeout()));
-    QObject::connect(md_port_timer, SIGNAL(timeout()), this, SLOT(on_md_portTimeout()));
-    QObject::connect(md_transaction_timer, SIGNAL(timeout()), this, SLOT(poll_mdPort()));
+    laserPort_timer = new QTimer(this); // used for port timeouts
+    laserPort_timer->setSingleShot(true);
+    QObject::connect(laserPort_timer, SIGNAL(timeout()), this, SLOT(on_laser_portTimeout()));
+
+    galvoPort_timer = new QTimer(this); // used for port timeouts
+    galvoPort_timer->setSingleShot(true);
+    QObject::connect(galvoPort_timer, SIGNAL(timeout()), this, SLOT(on_galvo_portTimeout()));
+
+    materialDeliveryPort_timer = new QTimer(this); // used for port timeouts
+    materialDeliveryPort_timer->setSingleShot(true);
+    QObject::connect(materialDeliveryPort_timer, SIGNAL(timeout()), this, SLOT(on_md_portTimeout()));
+
+    materialDeliveryPoll_timer = new QTimer(this); // used to poll device until Idle
+    materialDeliveryPoll_timer->setSingleShot(true);
+    QObject::connect(materialDeliveryPoll_timer, SIGNAL(timeout()), this, SLOT(poll_mdPort()));
+
 
     powderDaemon = new QStateMachine(this);
 
@@ -104,14 +121,24 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     // A single task is selected from the pending tasks and designated as the active_task
     QState *selectNextProcessFromQueue_state = new QState(powderDaemon);
 
-    // send_lgCommand_state writes the command string to the lg_port buffer.
-    QState *send_lgCommand_state = new QState(powderDaemon);
+    // send_galvoCommand_state writes the command string to the galvo_port buffer.
+    QState *send_laserCommand_state = new QState(powderDaemon);
 
-    // receive_lgReply_state is entered when the transmit buffer has finished being written to the device.
-    QState *receive_lgReply_state = new QState(powderDaemon);
+    // receive_galvoReply_state is entered when the transmit buffer has finished being written to the device.
+    QState *receive_laserReply_state = new QState(powderDaemon);
 
-    // If the a valid reply is received the statemachine proceeds to the lg_transactionFinished_state
-    QState *lg_transactionFinished_state = new QState(powderDaemon);
+    // If the a valid reply is received the statemachine proceeds to the galvo_transactionFinished_state
+    QState *laser_transactionFinished_state = new QState(powderDaemon);
+
+
+    // send_galvoCommand_state writes the command string to the galvo_port buffer.
+    QState *send_galvoCommand_state = new QState(powderDaemon);
+
+    // receive_galvoReply_state is entered when the transmit buffer has finished being written to the device.
+    QState *receive_galvoReply_state = new QState(powderDaemon);
+
+    // If the a valid reply is received the statemachine proceeds to the galvo_transactionFinished_state
+    QState *galvo_transactionFinished_state = new QState(powderDaemon);
 
     // send_mdCommand_state writes the command string to the md_port buffer.
     QState *send_mdCommand_state = new QState(powderDaemon);
@@ -139,12 +166,19 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     connect(daemonInit_state, SIGNAL(entered()), SLOT(on_printRoutine_init()));
     connect(generateProcessQueueFromBlock_state, SIGNAL(entered()), SLOT(on_generateProcessQueueFromBlock()));
     connect(selectNextProcessFromQueue_state, SIGNAL(entered()), SLOT(on_selectProcessFromQueue()));
-    connect(send_lgCommand_state, SIGNAL(entered()), SLOT(on_send_lgCommand()));
-    connect(receive_lgReply_state, SIGNAL(entered()), SLOT(on_receive_lgReply()));
-    connect(lg_transactionFinished_state, SIGNAL(entered()), SLOT(on_lg_transactionFinished()));
+
+    connect(send_laserCommand_state, SIGNAL(entered()), SLOT(on_send_laserCommand()));
+    connect(receive_laserReply_state, SIGNAL(entered()), SLOT(on_receive_laserReply()));
+    connect(laser_transactionFinished_state, SIGNAL(entered()), SLOT(on_laser_transactionFinished()));
+
+    connect(send_galvoCommand_state, SIGNAL(entered()), SLOT(on_send_galvoCommand()));
+    connect(receive_galvoReply_state, SIGNAL(entered()), SLOT(on_receive_galvoReply()));
+    connect(galvo_transactionFinished_state, SIGNAL(entered()), SLOT(on_galvo_transactionFinished()));
+
     connect(send_mdCommand_state, SIGNAL(entered()), SLOT(on_send_mdCommand()));
     connect(receive_mdReply_state, SIGNAL(entered()), SLOT(on_receive_mdReply()));
     connect(md_transactionFinished_state, SIGNAL(entered()), SLOT(on_md_transactionFinished()));
+
     connect(selectNextBlockToProcess_state, SIGNAL(entered()), SLOT(on_selectNextBlockToProcess()));
     connect(printFinished_state, SIGNAL(entered()), SLOT(on_printRoutine_finished()));
     connect(daemonError_state, SIGNAL(entered()), SLOT(on_printRoutine_error()));
@@ -153,27 +187,38 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
 
     daemonInit_state->addTransition(this, SIGNAL(startPrint()), generateProcessQueueFromBlock_state);
     daemonInit_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
-    daemonInit_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), daemonError_state);
+
+    daemonInit_state->addTransition(this, SIGNAL(laser_port_error(const QString&)), daemonError_state);
+    daemonInit_state->addTransition(this, SIGNAL(laser_commandPending()), send_laserCommand_state);
+    daemonInit_state->addTransition(this, SIGNAL(galvo_port_error(const QString&)), daemonError_state);
+    daemonInit_state->addTransition(this, SIGNAL(galvo_commandPending()), send_galvoCommand_state);
     daemonInit_state->addTransition(this, SIGNAL(md_port_error(const QString&)), daemonError_state);
-    daemonInit_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
-    daemonInit_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
     daemonInit_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
+    daemonInit_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
 
     generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
     generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
     generateProcessQueueFromBlock_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
 
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(lg_commandPending()), send_lgCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(laser_commandPending()), send_laserCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(laser_port_error(const QString&)), daemonError_state);
+
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(galvo_commandPending()), send_galvoCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(galvo_port_error(const QString&)), daemonError_state);
+
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_commandPending()), send_mdCommand_state);
+    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_port_error(const QString&)), daemonError_state);
+
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), daemonError_state);
-    selectNextProcessFromQueue_state->addTransition(this, SIGNAL(md_port_error(const QString&)), daemonError_state);
     selectNextProcessFromQueue_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
 
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(blocksRemaining()), generateProcessQueueFromBlock_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(printFinished()), printFinished_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
+
+    selectNextBlockToProcess_state->addTransition(this, SIGNAL(laser_port_error(const QString&)), daemonError_state);
+    selectNextBlockToProcess_state->addTransition(this, SIGNAL(galvo_port_error(const QString&)), daemonError_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(md_port_error(const QString&)), daemonError_state);
     selectNextBlockToProcess_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
 
@@ -183,20 +228,35 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     printFinished_state->addTransition(this, SIGNAL(startPrint()), daemonInit_state);
     printFinished_state->addTransition(this, SIGNAL(resetDaemon()), daemonInit_state);
 
-    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_txFinished()), receive_lgReply_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), daemonError_state);
-    send_lgCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
 
-    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_rxFinished()), lg_transactionFinished_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(lg_port_error(const QString&)), daemonError_state);
-    receive_lgReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+    send_laserCommand_state->addTransition(this, SIGNAL(laser_port_txFinished()), receive_laserReply_state);
+    send_laserCommand_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
+    send_laserCommand_state->addTransition(this, SIGNAL(laser_port_error(const QString&)), daemonError_state);
+    send_laserCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
 
-    lg_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
-    lg_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), daemonInit_state);
+    receive_laserReply_state->addTransition(this, SIGNAL(laser_port_rxFinished()), laser_transactionFinished_state);
+    receive_laserReply_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
+    receive_laserReply_state->addTransition(this, SIGNAL(laser_port_error(const QString&)), daemonError_state);
+    receive_laserReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+
+    laser_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
+    laser_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    laser_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+
+    send_galvoCommand_state->addTransition(this, SIGNAL(galvo_port_txFinished()), receive_galvoReply_state);
+    send_galvoCommand_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
+    send_galvoCommand_state->addTransition(this, SIGNAL(galvo_port_error(const QString&)), daemonError_state);
+    send_galvoCommand_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+
+    receive_galvoReply_state->addTransition(this, SIGNAL(galvo_port_rxFinished()), galvo_transactionFinished_state);
+    receive_galvoReply_state->addTransition(this, SIGNAL(stopPrint()), printFinished_state);
+    receive_galvoReply_state->addTransition(this, SIGNAL(galvo_port_error(const QString&)), daemonError_state);
+    receive_galvoReply_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+
+    galvo_transactionFinished_state->addTransition(this, SIGNAL(tasksRemaining()), selectNextProcessFromQueue_state);
+    galvo_transactionFinished_state->addTransition(this, SIGNAL(blockComplete()), selectNextBlockToProcess_state);
+    galvo_transactionFinished_state->addTransition(this, SIGNAL(printRoutine_error(const QString&)), daemonError_state);
+    galvo_transactionFinished_state->addTransition(this, SIGNAL(jogComplete()), daemonInit_state);
 
     send_mdCommand_state->addTransition(this, SIGNAL(md_port_txFinished()), receive_mdReply_state);
     send_mdCommand_state->addTransition(this, SIGNAL(md_port_error(const QString&)), daemonError_state);
@@ -215,17 +275,26 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
 
     powderDaemon->start();
     qWarning(powder_transport_log, "daemon started");
+    m_md_commandStr.append("EMPTY");
+    m_md_commandStr.append("EMPTY");
+    m_md_commandStr.append("EMPTY");
+    m_md_commandStr.append("EMPTY");
 }
 
 
 PowderTransport::~PowderTransport(){
-    if(m_lg_port->isOpen()){
-        m_lg_port->clear();
-        m_lg_port->close();
+    if(m_galvo_port->isOpen()){
+        m_galvo_port->clear();
+        m_galvo_port->close();
     }
     if(m_md_port->isOpen()){
         m_md_port->clear();
         m_md_port->close();
+    }
+
+    if(m_laser_port->isOpen()){
+        m_laser_port->clear();
+        m_laser_port->close();
     }
 }
 
@@ -297,15 +366,15 @@ void PowderTransport::setHPosition(float hPosition)
     emit hPosition_changed(static_cast<double>(m_hPosition));
 }
 
-int PowderTransport::laserPower() const
+float PowderTransport::laserIntensity() const
 {
-    return m_laserPower;
+    return m_laserIntensity;
 }
 
-void PowderTransport::setLaserPower(int laserPower)
+void PowderTransport::setLaserIntensity(float laserIntensity)
 {
-    m_laserPower = laserPower;
-    emit laserPower_changed(m_laserPower);
+    m_laserIntensity = laserIntensity;
+    emit laserIntensity_changed(static_cast<double>(m_laserIntensity));
 }
 
 bool PowderTransport::laserEnableState() const
@@ -396,18 +465,30 @@ void PowderTransport::setSHomed(bool sHomed)
     m_sHomed = sHomed;
 }
 
-
-void PowderTransport::write_to_lg_port(const QString &txString)
+void PowderTransport::write_to_laser_port(const QString &txString)
 {
-    if(m_lg_port->isOpen()){
-        lg_port_rxBytes.clear();
+    if(m_laser_port->isOpen()){
+        laser_port_rxBytes.clear();
         const QByteArray txBytes = txString.toUtf8();
-        lg_port_TxBytesRemaining = txBytes.length();
-        lg_port_timer->start(1000); // timeout in 1000ms
-        m_lg_port->write(txBytes);
+        laser_port_TxBytesRemaining = txBytes.length();
+        laserPort_timer->start(1000); // timeout in 1000ms
+        m_laser_port->write(txBytes);
     }
     else
-        emit lg_port_error("Cannot write to closed port");
+        emit laser_port_error("Cannot write to closed port");}
+
+
+void PowderTransport::write_to_galvo_port(const QString &txString)
+{
+    if(m_galvo_port->isOpen()){
+        galvo_port_rxBytes.clear();
+        const QByteArray txBytes = txString.toUtf8();
+        galvo_port_TxBytesRemaining = txBytes.length();
+        galvoPort_timer->start(1000); // timeout in 1000ms
+        m_galvo_port->write(txBytes);
+    }
+    else
+        emit galvo_port_error("Cannot write to closed port");
 }
 
 void PowderTransport::write_to_md_port(const QString &txString)
@@ -416,7 +497,7 @@ void PowderTransport::write_to_md_port(const QString &txString)
         md_port_rxBytes.clear();
         const QByteArray txBytes = txString.toUtf8();
         md_port_TxBytesRemaining = txBytes.length();
-        md_port_timer->start(1000); // timeout in 1000ms
+        materialDeliveryPort_timer->start(1000); // timeout in 1000ms
         m_md_port->write(txBytes);
     }
     else
@@ -424,28 +505,28 @@ void PowderTransport::write_to_md_port(const QString &txString)
 }
 
 
-void PowderTransport::on_lg_port_bytesWritten(qint64 bytes)
+void PowderTransport::on_galvo_port_bytesWritten(qint64 bytes)
 {
-    lg_port_TxBytesRemaining -= bytes;
-    if(lg_port_TxBytesRemaining <= 0)
-        emit lg_port_txFinished();
+    galvo_port_TxBytesRemaining -= bytes;
+    if(galvo_port_TxBytesRemaining <= 0)
+        emit galvo_port_txFinished();
 }
 
-void PowderTransport::on_lg_port_bytesRead()
+void PowderTransport::on_galvo_port_bytesRead()
 {
-    lg_port_rxBytes +=  m_lg_port->readAll();
+    galvo_port_rxBytes +=  m_galvo_port->readAll();
 
-    if(lg_port_rxBytes.length() > 2){
-        lg_port_timer->stop();
-        QString reply = QString::fromUtf8(lg_port_rxBytes);
+    if(galvo_port_rxBytes.length() > 2){
+        galvoPort_timer->stop();
+        QString reply = QString::fromUtf8(galvo_port_rxBytes);
         if(reply.contains("ok", Qt::CaseInsensitive)){
-            emit lg_port_deviceReply(reply);
-            emit lg_port_rxFinished();
+            emit galvo_port_deviceReply(reply);
+            emit galvo_port_rxFinished();
         }
         else{
-            emit lg_port_error(reply);
+            emit galvo_port_error(reply);
         }
-        lg_port_rxBytes.clear();
+        galvo_port_rxBytes.clear();
     }
 }
 
@@ -462,19 +543,19 @@ void PowderTransport::on_md_port_bytesRead()
     md_port_rxBytes +=  m_md_port->readAll();
 
     if(md_port_rxBytes.length() > 2){ // message contains data
-        md_port_timer->stop();
+        materialDeliveryPort_timer->stop();
         QString reply = QString::fromUtf8(md_port_rxBytes);
 
-        if(reply.contains("OK", Qt::CaseInsensitive)){ // OK indicates no errors
-            float distanceCounts = 0; // holds value of the received distance
+        // OK indicates no errors - Accept the reply and process it
+        if(reply.contains("OK", Qt::CaseInsensitive)){
+            float replyData = 0; // holds value of the received data
 
-            // find the distance data in the reply
+            // find the data in the reply
             int posIndex = reply.lastIndexOf(" ");
             if(posIndex != -1){
                 posIndex += 1;
-                distanceCounts = reply.mid(posIndex, reply.indexOf("\r") - posIndex).toFloat();
+                replyData = reply.mid(posIndex, reply.indexOf("\r") - posIndex).toFloat();
             }
-
             // regexs used to determine active device.
             const QString Z_id = "0"+QString::number(m_config.get()->z_deviceNumber())
                     +" " + QString::number(m_config.get()->z_axisNumber());
@@ -484,42 +565,64 @@ void PowderTransport::on_md_port_bytesRead()
                     +" " + QString::number(m_config.get()->hopper_axisNumber());
 
             if(reply.contains("IDLE")){ // Idle indicates task was completed
-                // update the axis that was modified.
+                // update the axis that was modified during a position change
+
                 if(reply.contains(Z_id)){
-                    setZPosition(distanceCounts/m_config.get()->z_position_resolution());
+                    if(m_activeTask & (PowderBlock::BlockTask::SET_Z_POSITION))
+                    {
+                        setZPosition(replyData/m_config.get()->z_position_resolution());
+                    }
+                    else if(m_activeTask & (PowderBlock::BlockTask::SET_Z_SPEED))
+                    {
+                        setZSpeed(replyData/(1.6384f*m_config.get()->z_position_resolution()));
+                    }
                 }
                 else if(reply.contains(H_id)){
-                    setHPosition(distanceCounts/m_config.get()->hopper_position_resolution());
+                    if(m_activeTask & (PowderBlock::BlockTask::SET_HOPPER_POSITION))
+                    {
+                        setHPosition(replyData/m_config.get()->hopper_position_resolution());
+                    }
+                    else if(m_activeTask & (PowderBlock::BlockTask::SET_HOPPER_SPEED))
+                    {
+                        setHSpeed(replyData/(1.6384f*m_config.get()->hopper_position_resolution()));
+                    }
                 }
                 else if(reply.contains(S_id)){
-                    setSPosition(distanceCounts/m_config.get()->spreader_position_resolution());
+                    if(m_activeTask & (PowderBlock::BlockTask::SET_SPREADER_POSITION))
+                    {
+                        setSPosition(replyData/m_config.get()->spreader_position_resolution());
+                    }
+                    else if(m_activeTask & (PowderBlock::BlockTask::SET_SPREADER_SPEED))
+                    {
+                        setSSpeed(replyData/(1.6384f*m_config.get()->spreader_position_resolution()));
+                    }
                 }
 
                 emit md_port_deviceReply(reply);
                 emit md_port_rxFinished();  // alerts statemachine to continue to next state.
             }
             else if(reply.contains("BUSY")){ // Device is currently executing task
-                if(static_cast<int>(distanceCounts)){
+                if(static_cast<int>(replyData)){
                     // update positions if available.
                     if(reply.contains(Z_id)){
-                        setZPosition(distanceCounts/m_config.get()->z_position_resolution());
+                        setZPosition(replyData/m_config.get()->z_position_resolution());
                     }
                     else if(reply.contains(H_id)){
-                        setHPosition(distanceCounts/m_config.get()->hopper_position_resolution());
+                        setHPosition(replyData/m_config.get()->hopper_position_resolution());
                     }
                     else if(reply.contains(S_id)){
-                        setSPosition(distanceCounts/m_config.get()->spreader_position_resolution());
+                        setSPosition(replyData/m_config.get()->spreader_position_resolution());
                     }
                 }
                 // enable polling timer to send a status check in 500ms
-                md_transaction_timer->start(500);
+                materialDeliveryPoll_timer->start(500);
             }
         }
 
         else{ // Did not receive OK
             emit md_port_error(reply); // post error
         }
-        md_port_rxBytes.clear();    // clear junk bytes
+        md_port_rxBytes.clear();    // clear junk bytes in local buffer
     }
 }
 
@@ -550,17 +653,22 @@ void PowderTransport::on_reset_request()
     m_currentLayerNumber = 0;
     m_pendingTasks = 0;
     m_activeTask = 0;
-    m_lg_commandStr.clear();
+    m_galvo_commandStr.clear();
     m_md_commandStr.clear();
     currentBlockNumber_changed(0);
     currentLayerNumber_changed(0);
     emit resetDaemon();
 }
 
-
-void PowderTransport::on_lg_portTimeout()
+void PowderTransport::on_emergency_stop_request()
 {
-    emit lg_port_error("Error: Time out");
+    write_to_md_port("/0 stop\r");
+}
+
+
+void PowderTransport::on_galvo_portTimeout()
+{
+    emit galvo_port_error("Error: Time out");
 }
 
 void PowderTransport::on_md_portTimeout()
@@ -568,12 +676,12 @@ void PowderTransport::on_md_portTimeout()
     emit md_port_error("Error: Time out");
 }
 
-void PowderTransport::on_lg_port_error(QSerialPort::SerialPortError portError)
+void PowderTransport::on_galvo_port_error(QSerialPort::SerialPortError portError)
 {
     if(portError != QSerialPort::SerialPortError::NoError){
         // decode error type
         QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
-        emit lg_port_error(metaEnum.valueToKey(portError));
+        emit galvo_port_error(metaEnum.valueToKey(portError));
     }
 }
 
@@ -597,22 +705,33 @@ void PowderTransport::on_generateProcessQueueFromBlock()
     qDebug()<<"entered generateProcessQueueFromBlock_state";
 
     bool empty = true;
-    m_lg_commandStr.clear();
+    m_galvo_commandStr.clear();
     m_md_commandStr.clear();
 
     m_pendingTasks = m_part.get()->getBlock(m_currentBlockNumber).blockTask();
 
     // Find tasks
     if(m_pendingTasks != 0){
-        m_lg_commandStr = m_part.get()->getBlock(m_currentBlockNumber).lg_string();
-        m_md_commandStr =  m_part.get()->getBlock(m_currentBlockNumber).md_string();
-        if(!m_lg_commandStr.contains("EMPTY"))
+        m_laser_commandStr = m_part.get()->getBlock(m_currentBlockNumber).laser_string();
+        m_galvo_commandStr = m_part.get()->getBlock(m_currentBlockNumber).galvo_string();
+        m_md_commandStr =  m_part.get()->getBlock(m_currentBlockNumber).materialDelivery_string();
+        if(!m_laser_commandStr.at(0).contains("EMPTY"))
+            empty = false;
+        if(!m_laser_commandStr.at(1).contains("EMPTY"))
+            empty = false;
+        if(!m_laser_commandStr.at(2).contains("EMPTY"))
+            empty = false;
+        if(!m_md_commandStr.at(3).contains("EMPTY"))
+            empty = false;
+        if(!m_galvo_commandStr.contains("EMPTY"))
             empty = false;
         if(!m_md_commandStr.at(0).contains("EMPTY"))
             empty = false;
         if(!m_md_commandStr.at(1).contains("EMPTY"))
             empty = false;
         if(!m_md_commandStr.at(2).contains("EMPTY"))
+            empty = false;
+        if(!m_md_commandStr.at(3).contains("EMPTY"))
             empty = false;
     }
 
@@ -624,6 +743,11 @@ void PowderTransport::on_generateProcessQueueFromBlock()
     }
 }
 
+
+// Block tasks are evaluated in the order given
+// by the series of if statements.
+// after the active task has been evaluated, it is cleared
+// from the pending tasks.
 void PowderTransport::on_selectProcessFromQueue()
 {
     qDebug()<<"entered selectProcessFromQueue_state";
@@ -632,33 +756,63 @@ void PowderTransport::on_selectProcessFromQueue()
 
     // set activeTask to a remaining pending task
 
-    if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
-        m_activeTask |= PowderBlock::BlockTask::SET_HOME_AXIS;
-
-    if(m_pendingTasks & (PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION)){
+    if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_ARM_STATE){
+        m_activeTask = PowderBlock::BlockTask::SET_LASER_ARM_STATE;
+        emit laser_commandPending();
+    }
+    else if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_INTENSITY){
+        m_activeTask = PowderBlock::BlockTask::SET_LASER_INTENSITY;
+        emit laser_commandPending();
+    }
+    else if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_MODE){
+        m_activeTask = PowderBlock::BlockTask::SET_LASER_MODE;
+        emit laser_commandPending();
+    }
+    else if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_PULSE_FREQ){
+        m_activeTask = PowderBlock::BlockTask::SET_LASER_PULSE_FREQ;
+        emit laser_commandPending();
+    }
+    else if(m_pendingTasks & (PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION)){
+        if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
+            m_activeTask |= PowderBlock::BlockTask::SET_HOME_AXIS;
         if(m_pendingTasks & PowderBlock::BlockTask::SET_X_POSITION)
             m_activeTask |= PowderBlock::BlockTask::SET_X_POSITION;
         if(m_pendingTasks & PowderBlock::BlockTask::SET_Y_POSITION)
             m_activeTask |= PowderBlock::BlockTask::SET_Y_POSITION;
         if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_ENABLE_STATE)
             m_activeTask |= PowderBlock::BlockTask::SET_LASER_ENABLE_STATE;
-        if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_ARM_STATE)
-            m_activeTask |= PowderBlock::BlockTask::SET_LASER_ARM_STATE;
         if(m_pendingTasks & PowderBlock::BlockTask::SET_XY_SPEED)
             m_activeTask |= PowderBlock::BlockTask::SET_XY_SPEED;
-        if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_POWER)
-            m_activeTask |= PowderBlock::BlockTask::SET_LASER_POWER;
-        emit lg_commandPending();   // found lg command
+
+        emit galvo_commandPending();   // found galvo command
+    }
+    else if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED)){
+        m_activeTask = PowderBlock::BlockTask::SET_Z_SPEED;
+        emit md_commandPending();
+    }
+    else if(m_activeTask & (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
+        m_activeTask = PowderBlock::BlockTask::SET_HOPPER_SPEED;
+        emit md_commandPending();
+    }
+    else if(m_activeTask & (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+        m_activeTask = PowderBlock::BlockTask::SET_SPREADER_SPEED;
+        emit md_commandPending();
     }
     else if(m_pendingTasks & PowderBlock::BlockTask::SET_Z_POSITION){
+        if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
+            m_activeTask = PowderBlock::BlockTask::SET_HOME_AXIS;
         m_activeTask |= PowderBlock::BlockTask::SET_Z_POSITION;
         emit md_commandPending(); // found md command
     }
     else if(m_pendingTasks & PowderBlock::BlockTask::SET_HOPPER_POSITION){
+        if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
+            m_activeTask = PowderBlock::BlockTask::SET_HOME_AXIS;
         m_activeTask |= PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending(); // found md command
     }
     else if(m_pendingTasks & PowderBlock::BlockTask::SET_SPREADER_POSITION){
+        if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
+            m_activeTask = PowderBlock::BlockTask::SET_HOME_AXIS;
         m_activeTask |= PowderBlock::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending(); // found md command
     }
@@ -666,27 +820,142 @@ void PowderTransport::on_selectProcessFromQueue()
         emit blockComplete(); // block contains no tasks
 }
 
-void PowderTransport::on_send_lgCommand()
+void PowderTransport::on_send_laserCommand()
 {
-    qDebug()<<"entered send_lgCommand_state";
+    qDebug()<<"entered on_send_laserCommand_state";
 
-    if(m_activeTask & (PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION)){
-        emit galvoBusy();   // tells UI galvo is executing a task
-        write_to_lg_port(m_lg_commandStr);
+    // select and send relevant command string from list
+    if(m_pendingTasks & PowderBlock::BlockTask::SET_LASER_ARM_STATE){
+        emit laserBusy();
+        write_to_laser_port(m_laser_commandStr.at(0));
+    }
+    else if(m_activeTask & PowderBlock::BlockTask::SET_LASER_INTENSITY){
+        emit laserBusy();
+        write_to_laser_port(m_laser_commandStr.at(1));
+    }
+    else if(m_activeTask & PowderBlock::BlockTask::SET_LASER_MODE){
+        emit laserBusy();
+        write_to_laser_port(m_laser_commandStr.at(2));
+    }
+    else if(m_activeTask & PowderBlock::BlockTask::SET_LASER_PULSE_FREQ){
+        emit laserBusy();
+        write_to_laser_port(m_laser_commandStr.at(3));
     }
 }
 
-void PowderTransport::on_receive_lgReply()
+void PowderTransport::on_receive_laserReply()
 {
-    qDebug()<<"entered receive_lgReply_state";
-    lg_port_timer->start(1000); // timeout in 1000ms if no reply
+    qDebug()<<"receive_laserReply_state";
+    laserPort_timer->start(1000); // timeout in 1000ms if no reply
 }
 
-void PowderTransport::on_lg_transactionFinished()
+void PowderTransport::on_laser_transactionFinished()
 {
-    qDebug()<<"entered lg_transactionFinished_state";
+    m_pendingTasks &= (m_activeTask^0xFFFF); // remove active task from pending tasks
+    if(m_pendingTasks != 0){
+        emit tasksRemaining();
+    }
+    else
+        emit blockComplete();
+}
 
-   // if a print is underway update state with block data
+void PowderTransport::on_laser_port_bytesRead()
+{
+    laser_port_rxBytes +=  m_laser_port->readAll();
+
+    if(laser_port_rxBytes.length() > 2){
+        laserPort_timer->stop();
+        QString reply = QString::fromUtf8(laser_port_rxBytes);
+
+        if(reply.contains("err", Qt::CaseInsensitive)){
+            emit laser_port_error(reply);
+        }
+        else if(reply.contains("EGM")){
+            setLaserMode(PowderBlock::LaserMode::LASER_PULSED);
+            emit laser_port_deviceReply("Pulsed Mode");
+            emit laser_port_rxFinished();
+        }
+        else if(reply.contains("DGM")){
+            setLaserMode(PowderBlock::LaserMode::LASER_CONTINUOUS);
+            emit laser_port_deviceReply("Continuous Mode");
+            emit laser_port_rxFinished();
+        }
+        else if(reply.contains("EMOD")){
+            setLaserArmState(true);
+            emit laser_port_deviceReply("Armed");
+            emit laser_port_rxFinished();
+        }
+        else if(reply.contains("DMOD")){
+            setLaserArmState(false);
+            emit laser_port_deviceReply("Disarmed");
+            emit laser_port_rxFinished();
+        }
+        else if(reply.contains("SDC")){
+            float replyData = 0; // holds value of the received data
+
+            // find the data in the reply
+            int posIndex = reply.lastIndexOf(": ");
+            if(posIndex != -1){
+                posIndex += 2;
+                replyData = reply.mid(posIndex, reply.length() - posIndex).toFloat();
+                setLaserIntensity(replyData);
+                reply = reply.replace("SDC","Intensity");
+                emit laser_port_deviceReply(reply);
+                emit laser_port_rxFinished();
+            }
+            else
+            { // received unknown message
+                emit laser_port_error(reply);
+            }
+        }
+        else if(reply.contains("SPRR")){
+            int replyData = 0; // holds value of the received data
+
+            // find the data in the reply
+            int posIndex = reply.lastIndexOf(": ");
+            if(posIndex != -1){
+                posIndex += 2;
+                replyData = reply.mid(posIndex, reply.length() - posIndex).toInt();
+                setLaserPulseFreq(replyData);
+                reply = reply.replace("SPRR","Frequency");
+                emit laser_port_deviceReply(reply);
+                emit laser_port_rxFinished();
+            }
+            else
+            { // received unknown message
+                emit laser_port_error(reply);
+            }
+        }
+        else    // received unknown message
+        {
+            emit laser_port_error(reply);
+        }
+
+        galvo_port_rxBytes.clear();
+    }
+}
+
+void PowderTransport::on_send_galvoCommand()
+{
+    qDebug()<<"entered send_galvoCommand_state";
+
+    if(m_activeTask & (PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION)){
+        emit galvoBusy();   // tells UI galvo is executing a task
+        write_to_galvo_port(m_galvo_commandStr);
+    }
+}
+
+void PowderTransport::on_receive_galvoReply()
+{
+    qDebug()<<"entered receive_galvoReply_state";
+    galvoPort_timer->start(1000); // timeout in 1000ms if no reply
+}
+
+void PowderTransport::on_galvo_transactionFinished()
+{
+    qDebug()<<"entered galvo_transactionFinished_state";
+
+    // if a print is underway update state with block data
     if(m_printModeEnabled){
         if(m_activeTask & PowderBlock::BlockTask::SET_X_POSITION){
             setXPosition(m_part.get()->getBlock(m_currentBlockNumber).x_position());
@@ -705,10 +974,10 @@ void PowderTransport::on_lg_transactionFinished()
             setLaserEnableState(m_part.get()->getBlock(m_currentBlockNumber).laser_enabled());
         if(m_activeTask & PowderBlock::BlockTask::SET_LASER_ARM_STATE)
             setLaserArmState(m_part.get()->getBlock(m_currentBlockNumber).laser_armed());
-        if(m_activeTask & PowderBlock::BlockTask::SET_LASER_POWER)
-            setLaserPower(m_part.get()->getBlock(m_currentBlockNumber).laser_power());
+        if(m_activeTask & PowderBlock::BlockTask::SET_LASER_INTENSITY)
+            setLaserIntensity(m_part.get()->getBlock(m_currentBlockNumber).laser_intensity());
 
-        m_pendingTasks &= (m_activeTask^0xFFFF);
+        m_pendingTasks &= (m_activeTask^0xFFFF); // remove active task from pending tasks
 
         if(m_pendingTasks != 0){
             if(m_activeTask & PowderBlock::BlockTask::SET_HOME_AXIS)
@@ -750,8 +1019,13 @@ void PowderTransport::on_send_mdCommand()
 {
     qDebug()<<"entered send_mdCommand_state";
 
-    // select and send relevant command string
-    if(m_activeTask & PowderBlock::BlockTask::SET_Z_POSITION){
+    // select and send relevant command string from list
+    if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED
+                         |PowderBlock::BlockTask::SET_HOPPER_SPEED
+                         |PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+        write_to_md_port(m_md_commandStr.at(3));
+    }
+    else if(m_activeTask & PowderBlock::BlockTask::SET_Z_POSITION){
         emit buildPlateBusy();
         write_to_md_port(m_md_commandStr.at(0));
     }
@@ -768,12 +1042,12 @@ void PowderTransport::on_send_mdCommand()
 void PowderTransport::on_receive_mdReply()
 {
     qDebug()<<"entered receive_mdReply_state";
-    md_port_timer->start(1000); // timeout in 1000ms if no reply
+    materialDeliveryPort_timer->start(1000); // timeout in 1000ms if no reply
 }
 
 void PowderTransport::on_md_transactionFinished()
 {
-    qDebug()<<"entered transactionFinished_state";
+    qDebug()<<"entered md_transactionFinished_state";
 
     // if a print is underway. positions are updated in bytesRead function
     if(m_printModeEnabled){
@@ -792,8 +1066,11 @@ void PowderTransport::on_md_transactionFinished()
             if(m_activeTask & PowderBlock::BlockTask::SET_HOME_AXIS)
                 setSHomed(true);
         }
+        // remove active task from pending tasks
         m_pendingTasks &= (m_activeTask^0xFFFF);
         if(m_pendingTasks != 0){
+            // if tasks remain, and we were previously executing a homing command,
+            // clear the active task, but reinstate the home request.
             if(m_activeTask & PowderBlock::BlockTask::SET_HOME_AXIS)
                 m_pendingTasks |= PowderBlock::BlockTask::SET_HOME_AXIS;
             emit tasksRemaining();
@@ -864,12 +1141,62 @@ void PowderTransport::on_printRoutine_finished()
 void PowderTransport::on_printRoutine_error()
 {
     qDebug()<<"entered printRoutine_error_state";
-    if(m_lg_port->error() != QSerialPort::SerialPortError::NoError)
-        m_lg_port->clearError();    // clear port errors
+    if(m_galvo_port->error() != QSerialPort::SerialPortError::NoError)
+        m_galvo_port->clearError();    // clear port errors
     if(m_md_port->error() != QSerialPort::SerialPortError::NoError)
         m_md_port->clearError();  // clear port errors
     m_activeTask = 0;
     m_pendingTasks = 0;
+}
+
+PowderBlock::LaserMode PowderTransport::laserMode() const
+{
+    return m_laserMode;
+}
+
+void PowderTransport::setLaserMode(const PowderBlock::LaserMode &laserMode)
+{
+    m_laserMode = laserMode;
+}
+
+int PowderTransport::laserPulseFreq() const
+{
+    return m_laserPulseFreq;
+}
+
+void PowderTransport::setLaserPulseFreq(int laserPulseFreq)
+{
+    m_laserPulseFreq = laserPulseFreq;
+}
+
+float PowderTransport::sSpeed() const
+{
+    return m_sSpeed;
+}
+
+void PowderTransport::setSSpeed(float sSpeed)
+{
+    m_sSpeed = sSpeed;
+}
+
+float PowderTransport::hSpeed() const
+{
+    return m_hSpeed;
+}
+
+void PowderTransport::setHSpeed(float hSpeed)
+{
+    m_hSpeed = hSpeed;
+}
+
+float PowderTransport::zSpeed() const
+{
+    return m_zSpeed;
+}
+
+void PowderTransport::setZSpeed(float zSpeed)
+{
+    m_zSpeed = zSpeed;
 }
 
 
@@ -888,11 +1215,18 @@ void PowderTransport::on_manualControl_enabled(bool enabled)
         m_printModeEnabled = false;
 }
 
-void PowderTransport::on_lgPortName_changed(const QString &name)
+void PowderTransport::on_laserPortName_changed(const QString &name)
 {
-    if(m_lg_port->isOpen())
-        m_lg_port->close();
-    m_lg_port->setPortName(name);
+    if(m_laser_port->isOpen())
+        m_laser_port->close();
+    m_laser_port->setPortName(name);
+}
+
+void PowderTransport::on_galvoPortName_changed(const QString &name)
+{
+    if(m_galvo_port->isOpen())
+        m_galvo_port->close();
+    m_galvo_port->setPortName(name);
 }
 
 void PowderTransport::on_mdPortName_changed(const QString &name)
@@ -902,18 +1236,33 @@ void PowderTransport::on_mdPortName_changed(const QString &name)
     m_md_port->setPortName(name);
 }
 
-void PowderTransport::on_lg_port_connectionRequested(bool open)
+void PowderTransport::on_laser_port_connectionRequested(bool open)
 {
-    if(open && !m_lg_port->isOpen()){
-        m_lg_port->open(QIODevice::ReadWrite);
-        if(m_lg_port->isOpen())
-            emit lg_port_connectionChanged(true);
+    if(open && !m_laser_port->isOpen()){
+        m_laser_port->open(QIODevice::ReadWrite);
+        if(m_laser_port->isOpen())
+            emit laser_port_connectionChanged(true);
         else
-            emit lg_port_error("Could not open LG port");
+            emit laser_port_error("Could not open laser port");
     }
-    else if(!open && m_lg_port->isOpen()){
-        m_lg_port->close();
-        emit lg_port_connectionChanged(false);
+    else if(!open && m_laser_port->isOpen()){
+        m_laser_port->close();
+        emit laser_port_connectionChanged(false);
+    }
+}
+
+void PowderTransport::on_galvo_port_connectionRequested(bool open)
+{
+    if(open && !m_galvo_port->isOpen()){
+        m_galvo_port->open(QIODevice::ReadWrite);
+        if(m_galvo_port->isOpen())
+            emit galvo_port_connectionChanged(true);
+        else
+            emit galvo_port_error("Could not open galvo port");
+    }
+    else if(!open && m_galvo_port->isOpen()){
+        m_galvo_port->close();
+        emit galvo_port_connectionChanged(false);
     }
 }
 
@@ -924,7 +1273,7 @@ void PowderTransport::on_md_port_connectionRequested(bool open)
         if(m_md_port->isOpen())
             emit md_port_connectionChanged(true);
         else
-            emit lg_port_error("Could not open MD port");
+            emit galvo_port_error("Could not open MD port");
     }
     else if(!open && m_md_port->isOpen()){
         m_md_port->close();
@@ -950,16 +1299,17 @@ void PowderTransport::on_home_request()
     case 0:
     {
         m_activeTask = (PowderBlock::BlockTask::SET_HOME_AXIS|PowderBlock::BlockTask::SET_X_POSITION);
-        if(m_lg_port->isOpen())
-            emit lg_commandPending();
+        m_galvo_commandStr = "$(g=4,X=100)";
+        if(m_galvo_port->isOpen())
+            emit galvo_commandPending();
         break;
     }
     case 1:
     {
         m_activeTask = (PowderBlock::BlockTask::SET_HOME_AXIS|PowderBlock::BlockTask::SET_Y_POSITION);
-
-        if(m_lg_port->isOpen())
-            emit lg_commandPending();
+        m_galvo_commandStr = "$(g=4,Y=0)";
+        if(m_galvo_port->isOpen())
+            emit galvo_commandPending();
         break;
     }
     case 2:
@@ -1004,9 +1354,9 @@ void PowderTransport::on_increment_xPosition_request()
     if(((m_xPosition + jogIncrement())) < m_config.get()->x_position_max()){
         m_jogSign = 1.0;
         const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->x_position_resolution());
-        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(PowderBlock::BlockTask::SET_X_POSITION, steps);
+        m_galvo_commandStr = GalvoUtility::composeJogCommandString(PowderBlock::BlockTask::SET_X_POSITION, steps);
         m_activeTask = PowderBlock::BlockTask::SET_X_POSITION;
-        emit lg_commandPending();
+        emit galvo_commandPending();
     }
 }
 
@@ -1015,9 +1365,9 @@ void PowderTransport::on_decrement_xPosition_request()
     if(((m_xPosition - jogIncrement())) > m_config.get()->x_position_min()){
         m_jogSign = -1.0;
         const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->x_position_resolution());
-        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(PowderBlock::BlockTask::SET_X_POSITION, steps);
+        m_galvo_commandStr = GalvoUtility::composeJogCommandString(PowderBlock::BlockTask::SET_X_POSITION, steps);
         m_activeTask = PowderBlock::BlockTask::SET_X_POSITION;
-        emit lg_commandPending();
+        emit galvo_commandPending();
     }
 }
 
@@ -1026,9 +1376,9 @@ void PowderTransport::on_increment_yPosition_request()
     if(((m_yPosition + jogIncrement())) < m_config.get()->y_position_max()){
         m_jogSign = 1.0;
         const int32_t steps = static_cast<int32_t>(jogIncrement()*m_config.get()->y_position_resolution());
-        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(PowderBlock::BlockTask::SET_Y_POSITION, steps);
+        m_galvo_commandStr = GalvoUtility::composeJogCommandString(PowderBlock::BlockTask::SET_Y_POSITION, steps);
         m_activeTask = PowderBlock::BlockTask::SET_Y_POSITION;
-        emit lg_commandPending();
+        emit galvo_commandPending();
     }
 }
 
@@ -1037,9 +1387,9 @@ void PowderTransport::on_decrement_yPosition_request()
     if(((m_yPosition - jogIncrement())) > m_config.get()->y_position_min()){
         m_jogSign = -1.0;
         const int32_t steps = static_cast<int32_t>(-1*jogIncrement()*m_config.get()->y_position_resolution());
-        m_lg_commandStr = LaserGalvo_Utility::composeJogCommandString(PowderBlock::BlockTask::SET_Y_POSITION, steps);
+        m_galvo_commandStr = GalvoUtility::composeJogCommandString(PowderBlock::BlockTask::SET_Y_POSITION, steps);
         m_activeTask = PowderBlock::BlockTask::SET_Y_POSITION;
-        emit lg_commandPending();
+        emit galvo_commandPending();
     }
 }
 
@@ -1052,6 +1402,7 @@ void PowderTransport::on_increment_zPosition_request()
         QString z ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
         z += " move rel " + QString::number(steps) + "\r";
         m_md_commandStr.append(z);
+        m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_Z_POSITION;
@@ -1070,6 +1421,7 @@ void PowderTransport::on_decrement_zPosition_request()
         m_md_commandStr.append(z);
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_Z_POSITION;
         emit md_commandPending();
     }
@@ -1085,6 +1437,7 @@ void PowderTransport::on_increment_hPosition_request()
         h += " move rel " + QString::number(steps) + "\r";
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(h);
+        m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending();
@@ -1102,6 +1455,7 @@ void PowderTransport::on_decrement_hPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(h);
         m_md_commandStr.append("EMPTY");
+        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending();
     }
@@ -1118,6 +1472,7 @@ void PowderTransport::on_increment_sPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(s);
+        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending();
     }
@@ -1134,6 +1489,7 @@ void PowderTransport::on_decrement_sPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(s);
+        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending();
     }
@@ -1145,12 +1501,12 @@ void PowderTransport::on_clearError_request()
 }
 
 
-void PowderTransport::ping_laserGalvo()
+void PowderTransport::ping_galvo()
 {
     // write an empty command
-    m_lg_commandStr = "$()";
+    m_galvo_commandStr = "$()";
     m_activeTask = PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION;
-    emit lg_commandPending();
+    emit galvo_commandPending();
 }
 
 void PowderTransport::ping_materialDelivery(int devNum, int axisNum)
@@ -1179,6 +1535,29 @@ void PowderTransport::ping_materialDelivery(int devNum, int axisNum)
         m_md_commandStr.insert(1, pingStr);
         m_activeTask = PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending();
+    }
+}
+
+void PowderTransport::on_laser_port_bytesWritten(qint64 bytes)
+{
+    laser_port_TxBytesRemaining -= bytes;
+    if(laser_port_TxBytesRemaining <= 0)
+        emit laser_port_txFinished();
+}
+
+
+
+void PowderTransport::on_laser_portTimeout()
+{
+    emit laser_port_error("Error: Time out");
+}
+
+void PowderTransport::on_laser_port_error(QSerialPort::SerialPortError portError)
+{
+    if(portError != QSerialPort::SerialPortError::NoError){
+        // decode error type
+        QMetaEnum metaEnum = QMetaEnum::fromType<QSerialPort::SerialPortError>();
+        emit laser_port_error(metaEnum.valueToKey(portError));
     }
 }
 
