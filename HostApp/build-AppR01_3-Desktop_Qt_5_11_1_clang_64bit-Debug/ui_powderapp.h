@@ -4362,8 +4362,9 @@ public:
 
         galvoOptions_box = new QComboBox(galvoDisplayInfo_frame);
         galvoOptions_box->addItem(QString());
+        galvoOptions_box->addItem(QString());
         galvoOptions_box->setObjectName(QStringLiteral("galvoOptions_box"));
-        galvoOptions_box->setStyleSheet(QLatin1String("background:rgba(212,215,217,10);\n"
+        galvoOptions_box->setStyleSheet(QLatin1String("background:rgba(55, 55, 58,180);\n"
 "color:rgba(212,215,217,200)"));
 
         verticalLayout_29->addWidget(galvoOptions_box);
@@ -5343,6 +5344,7 @@ public:
         galvoSpeed_field->setText(QString());
         galvoSpeed_units->setText(QApplication::translate("PowderApp", "[mm/s]", nullptr));
         galvoOptions_box->setItemText(0, QApplication::translate("PowderApp", "Options", nullptr));
+        galvoOptions_box->setItemText(1, QApplication::translate("PowderApp", "Reset Device", nullptr));
 
         xPosition_title->setText(QApplication::translate("PowderApp", "X", nullptr));
         xPositionDisplay_field->setText(QApplication::translate("PowderApp", "000.000", nullptr));

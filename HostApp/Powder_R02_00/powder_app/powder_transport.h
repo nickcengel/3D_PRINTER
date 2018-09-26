@@ -176,17 +176,20 @@ signals:
     void resetDaemon();
 
     // messaging signals
-    void laser_port_deviceReply(const QString &reply);
-    void laser_port_error(const QString &error);
+    void laser_deviceReply(const QString &reply);
+    void laser_error(const QString &error);
 
-    void md_port_deviceReply(const QString &reply);
+    void buildPlate_deviceReply(const QString &reply);
+    void hopper_deviceReply(const QString &reply);
+    void spreader_deviceReply(const QString &reply);
+
     void md_port_error(const QString &error);
 
-    void galvo_port_deviceReply(const QString &reply);
-    void galvo_port_error(const QString &error);
+    void galvo_deviceReply(const QString &reply);
+    void galvo_error(const QString &error);
 
 
-    void printRoutine_error(const QString &error);
+    void transport_error(const QString &error);
 
 
 public slots:
@@ -224,6 +227,9 @@ public slots:
     void on_increment_sPosition_request();
     void on_decrement_sPosition_request();
     void on_clearError_request();
+
+    void on_reset_galvo_request();
+
 
     // on enabled device from UI
     void ping_galvo();

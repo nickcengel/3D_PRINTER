@@ -101,7 +101,7 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
             case HCI_RX_LOOK_FOR_START:
             {
                 if (currentByte == '$') {
-                   // DRV_USART0_WriteByte(currentByte);
+                    // DRV_USART0_WriteByte(currentByte);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_JOB_TYPE);
                 }
                 break;
@@ -109,23 +109,23 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
             case HCI_RX_LOOK_FOR_JOB_TYPE:
             {
                 if ((currentByte == '(') || (currentByte == '/')) {
-                 //   DRV_USART0_WriteByte(currentByte);
+                    //   DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_ADD_JOB);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_REG_INDEX);
                 } else if (currentByte == '*') {
-                  //  DRV_USART0_WriteByte(currentByte);
+                    //  DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_LIST_JOBS);
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                 } else if (currentByte == '-') {
-                   // DRV_USART0_WriteByte(currentByte);
+                    // DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_CLEAR_JOBS);
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                 } else if (currentByte == '{') {
-                   // DRV_USART0_WriteByte(currentByte);
+                    // DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_RUN_JOB);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_DATA);
                 } else if (currentByte == 'E') {
-                  //  DRV_USART0_WriteByte(currentByte);
+                    //  DRV_USART0_WriteByte(currentByte);
                     DRV0_EN_PINOff();
                     DRV1_EN_PINOff();
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
@@ -135,7 +135,7 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     DRV1_EN_PINOn();
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                 } else if (currentByte == 'R') {
-                   // DRV_USART0_WriteByte(currentByte);
+                    // DRV_USART0_WriteByte(currentByte);
                     SYS_INT_StatusGetAndDisable();
                     SYS_RESET_SoftwareReset();
                 }
@@ -148,7 +148,7 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                     break;
                 } else if ((currentByte == ' ') || (currentByte == ',')) {
-                   // DRV_USART0_WriteByte(currentByte);
+                    // DRV_USART0_WriteByte(currentByte);
                     break;
                 }
                 switch (currentByte) {
@@ -302,8 +302,8 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
             case HCI_RX_COMPLETE:
             {
                 HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
-//                DRV_USART0_WriteByte('\r');
-//                DRV_USART0_WriteByte('\n');
+                //                DRV_USART0_WriteByte('\r');
+                //                DRV_USART0_WriteByte('\n');
                 break;
             }
             default:
@@ -677,149 +677,142 @@ void APP_Write_HCI_Packet(void) {
     switch (HCI_TX_Status()) {
         case HCI_TX_EMPTY:
         {
-            
-//            DRV_USART0_WriteByte('\r');
-//            DRV_USART0_WriteByte('\n');
-//            for (t_index = 0; t_index < (HCI_PACKET_SIZE - 1); t_index++) {
-//                if (HCI_REG_Action(t_index) != NO_REG_ACTION) {
-//                    switch (t_index) {
-//                        case JOB_NUMBER:
-//                        {
-//                            strcpy(tempTextBuf, "\r\nJob_#");
-//                            tempVal = HCI_REG_Value(JOB_NUMBER);
-//                            break;
-//                        }
-//                        case JOB_TYPE:
-//                        {
-//                            strcpy(tempTextBuf, "\r\nJob_t");
-//                            tempVal = HCI_REG_Value(JOB_TYPE);
-//
-//                            break;
-//                        }
-//                        case REPLY_TYPE:
-//                        {
-//                            strcpy(tempTextBuf, "Reply_t");
-//                            tempVal = HCI_REG_Value(REPLY_TYPE);
-//                            break;
-//                        }
-//                        case G_STATE:
-//                        {
-//                            strcpy(tempTextBuf, "GalvoState");
-//                            tempVal = HCI_REG_Value(G_STATE);
-//                            break;
-//                        }
-//                        case G_SPEED:
-//                        {
-//                            strcpy(tempTextBuf, "GalvoSpeed");
-//                            tempVal = HCI_REG_Value(G_SPEED);
-//                            break;
-//                        }
+            strcpy(USART0_TX_Buffer, "@ok ");
+
+            for (t_index = 0; t_index < (HCI_PACKET_SIZE - 1); t_index++) {
+                if (HCI_REG_Action(t_index) != NO_REG_ACTION) {
+                    switch (t_index) {
+                            //                        case JOB_NUMBER:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "\r\nJob_#");
+                            //                            tempVal = HCI_REG_Value(JOB_NUMBER);
+                            //                            break;
+                            //                        }
+                            //                        case JOB_TYPE:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "\r\nJob_t");
+                            //                            tempVal = HCI_REG_Value(JOB_TYPE);
+                            //
+                            //                            break;
+                            //                        }
+                            //                        case REPLY_TYPE:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "Reply_t");
+                            //                            tempVal = HCI_REG_Value(REPLY_TYPE);
+                            //                            break;
+                            //                        }
+                        case G_STATE:
+                        {
+                            strcpy(tempTextBuf, "G");
+                            tempVal = appData.Galvo.state;
+                            break;
+                        }
+                        case G_SPEED:
+                        {
+                            strcpy(tempTextBuf, "S");
+                            tempVal = appData.Galvo.speed;
+                            break;
+                        }
 //                        case X_START_POS:
 //                        {
-//                            strcpy(tempTextBuf, "X_start");
+//                            strcpy(tempTextBuf, "x");
 //                            tempVal = HCI_REG_Value(X_START_POS);
 //                            break;
 //                        }
-//                        case X_END_POS:
-//                        {
-//                            strcpy(tempTextBuf, "X_end");
-//                            tempVal = HCI_REG_Value(X_END_POS);
-//                            break;
-//                        }
+                        case X_END_POS:
+                        {
+                            strcpy(tempTextBuf, "X");
+                            tempVal = appData.Galvo.X.currentPosition - DAC0_OFFSET;
+                            break;
+                        }
 //                        case Y_START_POS:
 //                        {
-//                            strcpy(tempTextBuf, "Y_start");
+//                            strcpy(tempTextBuf, "y");
 //                            tempVal = HCI_REG_Value(Y_START_POS);
 //                            break;
 //                        }
-//                        case Y_END_POS:
-//                        {
-//                            strcpy(tempTextBuf, "Y_end");
-//                            tempVal = HCI_REG_Value(Y_END_POS);
-//                            break;
-//                        }
-//                        case X_MEASUREMENT:
-//                        {
-//                            strcpy(tempTextBuf, "X_reading");
-//                            tempVal = appData.Galvo.X.reading - ADC0_OFFSET;
-//                            break;
-//                        }
-//                        case Y_MEASUREMENT:
-//                        {
-//                            strcpy(tempTextBuf, "Y_reading");
-//                            tempVal = appData.Galvo.Y.reading - ADC1_OFFSET;
-//                            break;
-//                        }
-//                        case L_ARM:
-//                        {
-//                            strcpy(tempTextBuf, "LaserArmed");
-//                            tempVal = HCI_REG_Value(L_ARM);
-//                            break;
-//                        }
-//                        case L_STATE:
-//                        {
-//                            strcpy(tempTextBuf, "LaserState");
-//                            tempVal = HCI_REG_Value(L_STATE);
-//                            break;
-//                        }
-//                        case L_POWER:
-//                        {
-//                            strcpy(tempTextBuf, "LaserPower");
-//                            tempVal = HCI_REG_Value(L_POWER);
-//                            break;
-//                        }
-//                        case X_DAC_EN:
-//                        {
-//                            strcpy(tempTextBuf, "X_DacEnabled");
-//                            tempVal = HCI_REG_Value(X_DAC_EN);
-//                            break;
-//                        }
-//                        case Y_DAC_EN:
-//                        {
-//                            strcpy(tempTextBuf, "Y_DacEnabled");
-//                            tempVal = HCI_REG_Value(Y_DAC_EN);
-//                            break;
-//                        }
-//                        case X_ADC_EN:
-//                        {
-//                            strcpy(tempTextBuf, "X_AdcEnabled");
-//                            tempVal = HCI_REG_Value(X_ADC_EN);
-//                            break;
-//                        }
-//                        case Y_ADC_EN:
-//                        {
-//                            strcpy(tempTextBuf, "Y_AdcEnabled");
-//                            tempVal = HCI_REG_Value(Y_ADC_EN);
-//                            break;
-//                        }
-//                        default:
-//                        {
-//                            validIndex = 0;
-//                            break;
-//                        }
-//                    }
-//                    if (validIndex) {
-//                        if (HCI_REG_Action(t_index) == REG_READ_REQSTD)
-//                            strcat(tempTextBuf, " -> ");
-//                        else if (HCI_REG_Action(t_index) == REG_WRITE_REQSTD)
-//                            strcat(tempTextBuf, " <- ");
-//                        itoa(tempNumBuf, tempVal, 10);
-//                        strcat(tempTextBuf, tempNumBuf);
-//                        strcat(tempTextBuf, "\r\n");
-//                        tempLength = strlen(tempTextBuf) + client_replyLength;
-//                        if (tempLength < USART0_TX_BUFF_SIZE) {
-//                            strcat(USART0_TX_Buffer, tempTextBuf);
-//                            client_replyLength = tempLength;
-//                            tempVal = 0;
-//                            tempLength = 0;
-//                            memset(tempNumBuf, 0, 6);
-//                            memset(tempTextBuf, 0, 32);
-//                        }
-//                    }
-//                }
-//            }
-            
-            strcpy(USART0_TX_Buffer, "@ok");
+                        case Y_END_POS:
+                        {
+                            strcpy(tempTextBuf, "Y");
+                            tempVal = appData.Galvo.Y.currentPosition - DAC1_OFFSET;
+                            break;
+                        }
+                        case X_MEASUREMENT:
+                        {
+                            strcpy(tempTextBuf, "rX");
+                            tempVal = appData.Galvo.X.reading - ADC0_OFFSET;
+                            break;
+                        }
+                        case Y_MEASUREMENT:
+                        {
+                            strcpy(tempTextBuf, "rY");
+                            tempVal = appData.Galvo.Y.reading - ADC1_OFFSET;
+                            break;
+                        }
+
+                        case L_STATE:
+                        {
+                            strcpy(tempTextBuf, "L");
+                            tempVal = HCI_REG_Value(L_STATE);
+                            break;
+                        }
+                            //                        case L_POWER:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "LaserPower");
+                            //                            tempVal = HCI_REG_Value(L_POWER);
+                            //                            break;
+                            //                        }
+                            //                        case X_DAC_EN:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "X_DacEnabled");
+                            //                            tempVal = HCI_REG_Value(X_DAC_EN);
+                            //                            break;
+                            //                        }
+                            //                        case Y_DAC_EN:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "Y_DacEnabled");
+                            //                            tempVal = HCI_REG_Value(Y_DAC_EN);
+                            //                            break;
+                            //                        }
+                            //                        case X_ADC_EN:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "X_AdcEnabled");
+                            //                            tempVal = HCI_REG_Value(X_ADC_EN);
+                            //                            break;
+                            //                        }
+                            //                        case Y_ADC_EN:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "Y_AdcEnabled");
+                            //                            tempVal = HCI_REG_Value(Y_ADC_EN);
+                            //                            break;
+                            //                        }
+                        default:
+                        {
+                            validIndex = 0;
+                            break;
+                        }
+                    }
+                    if (validIndex) {
+                        //                        if (HCI_REG_Action(t_index) == REG_READ_REQSTD)
+                        //                            strcat(tempTextBuf, ":");
+                        //                        else if (HCI_REG_Action(t_index) == REG_WRITE_REQSTD)
+                        //                            strcat(tempTextBuf, "=");
+                        itoa(tempNumBuf, tempVal, 10);
+                        strcat(tempTextBuf, tempNumBuf);
+                        strcat(tempTextBuf, " ");
+                        tempLength = strlen(tempTextBuf) + client_replyLength;
+                        if (tempLength < USART0_TX_BUFF_SIZE) {
+                            strcat(USART0_TX_Buffer, tempTextBuf);
+                            client_replyLength = tempLength;
+                            tempVal = 0;
+                            tempLength = 0;
+                            memset(tempNumBuf, 0, 6);
+                            memset(tempTextBuf, 0, 32);
+                        }
+                    }
+                }
+            }
+            strcat(USART0_TX_Buffer, "\r\n");
             client_replyLength = strlen(USART0_TX_Buffer);
             HCI_Set_TX_Status(HCI_TX_PENDING);
             break;

@@ -106,7 +106,12 @@ private slots:
     void on_galvo_portError(const QString &Error);
     void on_galvo_portReply(const QString &reply);
     void on_md_portError(const QString &Error);
-    void on_md_portReply(const QString &reply);
+
+    void on_buildPlate_deviceReply(const QString &reply);
+    void on_hopper_deviceReply(const QString &reply);
+    void on_spreader_deviceReply(const QString &reply);
+
+
     void on_transportError(const QString &Error);
 
     // Handle print routine user actions
@@ -131,6 +136,8 @@ private slots:
 
     void on_emergency_stop_button_clicked();
 
+    void on_galvoOptions_box_currentIndexChanged(const QString &arg1);
+
 signals:
     void newPartAvailable(QSharedPointer<PowderPart> part);
 
@@ -145,6 +152,8 @@ signals:
     void mdPort_connectionRequested(bool open);
 
     void reset_printManger();
+
+    void reset_galvoDevice();
 
     void cleaDeviceErrors();
 

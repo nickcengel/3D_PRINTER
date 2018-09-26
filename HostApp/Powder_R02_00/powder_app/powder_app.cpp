@@ -134,26 +134,36 @@ PowderApp::PowderApp(QWidget *parent) :
     QObject::connect(deviceTransport, SIGNAL(md_port_connectionChanged(bool)),
                      this, SLOT(on_md_port_connectionChanged(bool)));
 
-    QObject::connect(deviceTransport, SIGNAL(printRoutine_error(const QString&)),
+    QObject::connect(deviceTransport, SIGNAL(transport_error(const QString&)),
                      this, SLOT(on_transportError(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(laser_port_error(const QString&)),
+    QObject::connect(deviceTransport, SIGNAL(laser_error(const QString&)),
                      this, SLOT(on_laser_portError(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(galvo_port_error(const QString&)),
+    QObject::connect(deviceTransport, SIGNAL(galvo_error(const QString&)),
                      this, SLOT(on_galvo_portError(const QString&)));
 
     QObject::connect(deviceTransport, SIGNAL(md_port_error(const QString&)),
                      this, SLOT(on_md_portError(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(laser_port_deviceReply(const QString&)),
+    QObject::connect(deviceTransport, SIGNAL(laser_deviceReply(const QString&)),
                      this, SLOT(on_laser_portReply(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(galvo_port_deviceReply(const QString&)),
+    QObject::connect(deviceTransport, SIGNAL(galvo_deviceReply(const QString&)),
                      this, SLOT(on_galvo_portReply(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(md_port_deviceReply(const QString&)),
-                     this, SLOT(on_md_portReply(const QString&)));
+
+
+    QObject::connect(deviceTransport, SIGNAL(buildPlate_deviceReply(const QString&)),
+                     this, SLOT(on_buildPlate_deviceReply(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(hopper_deviceReply(const QString&)),
+                     this, SLOT(on_hopper_deviceReply(const QString&)));
+
+    QObject::connect(deviceTransport, SIGNAL(spreader_deviceReply(const QString&)),
+                     this, SLOT(on_spreader_deviceReply(const QString&)));
+
+
 
     QObject::connect(deviceTransport, SIGNAL(currentBlockNumber_changed(int)),
                      ui->currentBlock_field, SLOT(setNum(int)));
@@ -269,6 +279,12 @@ PowderApp::PowderApp(QWidget *parent) :
     QObject::connect(this, SIGNAL(cleaDeviceErrors()),
                      deviceTransport, SLOT(on_clearError_request()));
 
+
+
+    QObject::connect(this, SIGNAL(reset_galvoDevice()),
+                     deviceTransport, SLOT(on_reset_galvo_request()));
+
+
     viewDefaultSettings(); // populate settings UI
     this->applySettings(); // apply default settings
 
@@ -373,23 +389,24 @@ void PowderApp::applySettings()
             emit galvoPort_name_changed(m_serialPortNames.at(i));
             ui->galvoPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->galvoPortStatus_field->setText("Closed");
-            const QString log = "galvanometer port assigned to " + m_serialPortNames.at(i);
-            qCWarning(powder_app, log.toLocal8Bit());
+            const char *c_str =  m_serialPortNames.at(i).toLocal8Bit().constData();
+            qCWarning(powder_app,  "galvanometer port assigned to %s", c_str);
         }
         else if (i == m_myConfiguration.get()->materialDelivery_portNumber()){
             emit mdPort_name_changed(m_serialPortNames.at(i));
             ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->MaterialDeliveryPortStatus_field->setText("Closed");
             ui->galvoPortStatus_field->setText("Closed");
-            const QString log = "material delivery port assigned to " + m_serialPortNames.at(i);
-            qCWarning(powder_app, log.toLocal8Bit());
+
+            const char *c_str =  m_serialPortNames.at(i).toLocal8Bit().constData();
+            qCWarning(powder_app,  "material delivery port assigned to %s", c_str);
         }
         else if (i == m_myConfiguration.get()->laser_portNumber()){
             emit laserPort_name_changed(m_serialPortNames.at(i));
             ui->laserPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
             ui->laserPortStatus_field->setText("Closed");
-            const QString log = "laser port assigned to " + m_serialPortNames.at(i);
-            qCWarning(powder_app, log.toLocal8Bit());
+            const char *c_str =  m_serialPortNames.at(i).toLocal8Bit().constData();
+            qCWarning(powder_app,  "laser port assigned to %s", c_str);
         }
     }
     emit newConfigAvailable(m_myConfiguration);
@@ -475,12 +492,12 @@ void PowderApp::saveDefaultSettings()
 
     defaultConfig.beginGroup("material_delivery");
     defaultConfig.setValue("port_number", ui->md_portnum_field->text());
-    defaultConfig.setValue("baud_rate", ui->md_baudrate_field->text());
+    defaultConfig.setValue("", ui->md_baudrate_field->text());
     defaultConfig.endGroup();
 
     defaultConfig.beginGroup("environment_controller");
     defaultConfig.setValue("port_number", ui->env_portnum_field->text());
-    defaultConfig.setValue("baud_rate", ui->env_baud_field->text());
+    defaultConfig.setValue("", ui->env_baud_field->text());
     defaultConfig.endGroup();
 
     defaultConfig.endGroup();
@@ -592,22 +609,22 @@ void PowderApp::saveUserSettings()
 
     userConfig.beginGroup("laser");
     userConfig.setValue("port_number", ui->laser_portnum_field->text());
-    userConfig.setValue("baud_rate", ui->laser_baudrate_field->text());
+    userConfig.setValue("", ui->laser_baudrate_field->text());
     userConfig.endGroup();
 
     userConfig.beginGroup("galvanometer");
     userConfig.setValue("port_number", ui->galvo_portnum_field->text());
-    userConfig.setValue("baud_rate", ui->galvo_baudrate_field->text());
+    userConfig.setValue("", ui->galvo_baudrate_field->text());
     userConfig.endGroup();
 
     userConfig.beginGroup("material_delivery");
     userConfig.setValue("port_number", ui->md_portnum_field->text());
-    userConfig.setValue("baud_rate", ui->md_baudrate_field->text());
+    userConfig.setValue("", ui->md_baudrate_field->text());
     userConfig.endGroup();
 
     userConfig.beginGroup("environment_controller");
     userConfig.setValue("port_number", ui->env_portnum_field->text());
-    userConfig.setValue("baud_rate", ui->env_baud_field->text());
+    userConfig.setValue("", ui->env_baud_field->text());
     userConfig.endGroup();
 
     userConfig.endGroup();
@@ -718,7 +735,7 @@ void PowderApp::viewDefaultSettings()
     ui->env_baud_field->setText(defaultConfig.value("port_settings/environment_controller/baud_rate").toString());
     ui->env_portnum_field->setText(defaultConfig.value("port_settings/environment_controller/port_number").toString());
 
-    ui->laser_baudrate_field->setText(defaultConfig.value("port_settings/laser/port_number").toString());
+    ui->laser_baudrate_field->setText(defaultConfig.value("port_settings/laser/baud_rate").toString());
     ui->laser_portnum_field->setText(defaultConfig.value("port_settings/laser/port_number").toString());
 
     ui->galvo_baudrate_field->setText(defaultConfig.value("port_settings/galvanometer/baud_rate").toString());
@@ -795,7 +812,7 @@ void PowderApp::viewUserSettings()
     ui->env_baud_field->setText(userConfig.value("port_settings/environment_controller/baud_rate").toString());
     ui->env_portnum_field->setText(userConfig.value("port_settings/environment_controller/port_number").toString());
 
-    ui->laser_baudrate_field->setText(userConfig.value("port_settings/laser/port_number").toString());
+    ui->laser_baudrate_field->setText(userConfig.value("port_settings/laser/baud_rateQQ").toString());
     ui->laser_portnum_field->setText(userConfig.value("port_settings/laser/port_number").toString());
 
     ui->galvo_baudrate_field->setText(userConfig.value("port_settings/galvanometer/baud_rate").toString());
@@ -1145,7 +1162,7 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
         commandOut += "\n";
         ui->printTools_outputBrowser->append(commandOut);
 
-        uint16_t task = m_myPart.get()->getBlock(blockCount).blockTask();
+        uint32_t task = m_myPart.get()->getBlock(blockCount).blockTask();
 
         QVector3D current(previousPosition);
         if(task & (PowderBlock::BlockTask::SET_X_POSITION)){
@@ -1340,7 +1357,7 @@ void PowderApp::on_materialDeliveryDisplayEnable_button_toggled(bool checked)
         ui->jogHplus_button->setEnabled(true);
         ui->jogSminus_button->setEnabled(true);
         ui->jogSplus_button->setEnabled(true);
-        deviceTransport->ping_materialDelivery(2,0);
+        deviceTransport->ping_materialDelivery(2, 1);
         ui->emergency_stop_button->setStyleSheet("background:rgba(252, 33, 37,200); color:rgba(255,255,255,200);");
     }
     else
@@ -1377,7 +1394,7 @@ void PowderApp::on_galvo_port_connectionChanged(bool open)
         ui->PortManagerInfo_browser->setText("Port Opened For Galvanometer!");
         ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->galvo_portNumber()));
         ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->galvo_portNumber()));
-        ui->PortManager_options_box->setItemText(1,"Close Galvanometer Port");
+        ui->PortManager_options_box->setItemText(2,"Close Galvanometer Port");
     }
     else{
         ui->galvoDisplayEnable_button->setChecked(false);
@@ -1388,7 +1405,7 @@ void PowderApp::on_galvo_port_connectionChanged(bool open)
         ui->PortManagerInfo_browser->setText("Port Closed For Galvanometer!");
         ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->galvo_portNumber()));
         ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->galvo_portNumber()));
-        ui->PortManager_options_box->setItemText(1,"Open Galvanometer Port");
+        ui->PortManager_options_box->setItemText(2,"Open Galvanometer Port");
     }
 }
 
@@ -1405,7 +1422,7 @@ void PowderApp::on_md_port_connectionChanged(bool open)
         ui->PortManagerInfo_browser->setText("Port Opened For Build Plate & Material Delivery!");
         ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->materialDelivery_portNumber()));
         ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->materialDelivery_portNumber()));
-        ui->PortManager_options_box->setItemText(2,"Close Build Plate & Material Delivery Port");
+        ui->PortManager_options_box->setItemText(3,"Close Build Plate & Material Delivery Port");
     }
     else{
         ui->MaterialDeliveryPortStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
@@ -1416,7 +1433,7 @@ void PowderApp::on_md_port_connectionChanged(bool open)
         ui->PortManagerInfo_browser->setText("Port Closed For Build Plate & Material Delivery!");
         ui->PortManagerInfo_browser->append("Port # " + QString::number(m_myConfiguration.get()->materialDelivery_portNumber()));
         ui->PortManagerInfo_browser->append(m_serialPortNames.at(m_myConfiguration.get()->materialDelivery_portNumber()));
-        ui->PortManager_options_box->setItemText(2,"Open Build Plate & Material Delivery Port");
+        ui->PortManager_options_box->setItemText(3,"Open Build Plate & Material Delivery Port");
     }
 }
 
@@ -1473,41 +1490,59 @@ void PowderApp::on_md_portError(const QString &Error)
         ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/redbutton.png"));
         ui->materialDeliveryDisplayStatus_field->setText("Error");
     }
-
-
+    else {
+        ui->buildPlateDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/redbutton.png"));
+        ui->buildPlateDisplayStatus_field->setText("Error!");
+        ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/redbutton.png"));
+        ui->materialDeliveryDisplayStatus_field->setText("Error");
+    }
 }
 
-void PowderApp::on_md_portReply(const QString &reply)
+void PowderApp::on_buildPlate_deviceReply(const QString &reply)
 {
     ui->PortManagerInfo_browser->setStyleSheet("color:rgb(29,155,246)");
     ui->PortManagerInfo_browser->append(reply);
 
-    const QString z = "0"+QString::number(m_myConfiguration.get()->z_deviceNumber())
-            +" " + QString::number(m_myConfiguration.get()->z_axisNumber());
-
-    const QString hs = "/0"+QString::number(m_myConfiguration.get()->hopper_deviceNumber());
-
     if(reply.contains("IDLE")){
-        if(reply.contains(z)){
-            ui->buildPlateDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
-            ui->buildPlateDisplayStatus_field->setText("Idle");
-        }
-        else if(reply.contains(hs)){
-            ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
-            ui->materialDeliveryDisplayStatus_field->setText("Idle");
-        }
+        ui->buildPlateDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->buildPlateDisplayStatus_field->setText("Idle");
     }
     else if(reply.contains("BUSY")){
-        if(reply.contains(z)){
-            ui->buildPlateDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-            ui->buildPlateDisplayStatus_field->setText("Busy");
-        }
-        else if(reply.contains(hs)){
-            ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
-            ui->materialDeliveryDisplayStatus_field->setText("Busym");
-        }
+        ui->buildPlateDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->buildPlateDisplayStatus_field->setText("Busy");
     }
 }
+
+void PowderApp::on_hopper_deviceReply(const QString &reply)
+{
+    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(29,155,246)");
+    ui->PortManagerInfo_browser->append(reply);
+
+    if(reply.contains("IDLE")){
+        ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->materialDeliveryDisplayStatus_field->setText("Idle");
+    }
+    else if(reply.contains("BUSY")){
+        ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->materialDeliveryDisplayStatus_field->setText("Busy");
+    }
+}
+
+void PowderApp::on_spreader_deviceReply(const QString &reply)
+{
+    ui->PortManagerInfo_browser->setStyleSheet("color:rgb(29,155,246)");
+    ui->PortManagerInfo_browser->append(reply);
+
+    if(reply.contains("IDLE")){
+        ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/greenbut.png"));
+        ui->materialDeliveryDisplayStatus_field->setText("Idle");
+    }
+    else if(reply.contains("BUSY")){
+        ui->materialDeliveryDisplayStatus_indicator->setIcon(QIcon(":/icons/icons/orangebut.png"));
+        ui->materialDeliveryDisplayStatus_field->setText("Busy");
+    }
+}
+
 
 void PowderApp::on_transportError(const QString &Error)
 {
@@ -1562,4 +1597,11 @@ void PowderApp::on_laserDisplayEnable_button_toggled(bool checked)
 void PowderApp::on_emergency_stop_button_clicked()
 {
     deviceTransport->on_emergency_stop_request();
+}
+
+void PowderApp::on_galvoOptions_box_currentIndexChanged(const QString &arg1)
+{
+    if(arg1 == "Reset Device"){
+        emit reset_galvoDevice();
+    }
 }

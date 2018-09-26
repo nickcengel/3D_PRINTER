@@ -8486,12 +8486,17 @@ color: rgba(212,215,217,200)</string>
                 <item>
                  <widget class="QComboBox" name="galvoOptions_box">
                   <property name="styleSheet">
-                   <string notr="true">background:rgba(212,215,217,10);
+                   <string notr="true">background:rgba(55, 55, 58,180);
 color:rgba(212,215,217,200)</string>
                   </property>
                   <item>
                    <property name="text">
                     <string>Options</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Reset Device</string>
                    </property>
                   </item>
                  </widget>
