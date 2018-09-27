@@ -98,17 +98,17 @@ QStringList ZaberUtility::composeCommandString(PowderBlock *block, PowderSetting
         speedString += (QString::number(res) + "\r");
         outputList.append(speedString);
     }
-    else if(task == (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
-        int devNum = config->spreader_deviceNumber();
-        int axisNum = config->spreader_axisNumber();
-        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
-        speedString += " set maxspeed ";
-        double res = 1.6384*static_cast<double>(config->spreader_position_resolution()*block->spreader_speed());
-        speedString += (QString::number(res) + "\r");
-        outputList.append(speedString);
-    }
-    else
-        outputList.append("EMPTY");
+//    else if(task == (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+//        int devNum = config->spreader_deviceNumber();
+//        int axisNum = config->spreader_axisNumber();
+//        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+//        speedString += " set maxspeed ";
+//        double res = 1.6384*static_cast<double>(config->spreader_position_resolution()*block->spreader_speed());
+//        speedString += (QString::number(res) + "\r");
+//        outputList.append(speedString);
+//    }
+//    else
+//        outputList.append("EMPTY");
 
     return outputList;
 }

@@ -278,7 +278,6 @@ PowderTransport::PowderTransport(QObject *parent) : QObject(parent)
     m_md_commandStr.append("EMPTY");
     m_md_commandStr.append("EMPTY");
     m_md_commandStr.append("EMPTY");
-    m_md_commandStr.append("EMPTY");
 }
 
 
@@ -759,8 +758,8 @@ void PowderTransport::on_generateProcessQueueFromBlock()
             empty = false;
         if(!m_laser_commandStr.at(2).contains("EMPTY"))
             empty = false;
-        if(!m_md_commandStr.at(3).contains("EMPTY"))
-            empty = false;
+//        if(!m_md_commandStr.at(3).contains("EMPTY"))
+//            empty = false;
         if(!m_galvo_commandStr.contains("EMPTY"))
             empty = false;
         if(!m_md_commandStr.at(0).contains("EMPTY"))
@@ -769,8 +768,8 @@ void PowderTransport::on_generateProcessQueueFromBlock()
             empty = false;
         if(!m_md_commandStr.at(2).contains("EMPTY"))
             empty = false;
-        if(!m_md_commandStr.at(3).contains("EMPTY"))
-            empty = false;
+//        if(!m_md_commandStr.at(3).contains("EMPTY"))
+//            empty = false;
     }
 
     if(!empty){
@@ -824,18 +823,18 @@ void PowderTransport::on_selectProcessFromQueue()
 
         emit galvo_commandPending();   // found galvo command
     }
-    else if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED)){
-        m_activeTask = PowderBlock::BlockTask::SET_Z_SPEED;
-        emit md_commandPending();
-    }
-    else if(m_activeTask & (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
-        m_activeTask = PowderBlock::BlockTask::SET_HOPPER_SPEED;
-        emit md_commandPending();
-    }
-    else if(m_activeTask & (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
-        m_activeTask = PowderBlock::BlockTask::SET_SPREADER_SPEED;
-        emit md_commandPending();
-    }
+//    else if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED)){
+//        m_activeTask = PowderBlock::BlockTask::SET_Z_SPEED;
+//        emit md_commandPending();
+//    }
+//    else if(m_activeTask & (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
+//        m_activeTask = PowderBlock::BlockTask::SET_HOPPER_SPEED;
+//        emit md_commandPending();
+//    }
+//    else if(m_activeTask & (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+//        m_activeTask = PowderBlock::BlockTask::SET_SPREADER_SPEED;
+//        emit md_commandPending();
+//    }
     else if(m_pendingTasks & PowderBlock::BlockTask::SET_Z_POSITION){
         if(m_pendingTasks & PowderBlock::BlockTask::SET_HOME_AXIS)
             m_activeTask = PowderBlock::BlockTask::SET_HOME_AXIS;
@@ -1059,12 +1058,12 @@ void PowderTransport::on_send_mdCommand()
     qDebug()<<"entered send_mdCommand_state";
 
     // select and send relevant command string from list
-    if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED
-                         |PowderBlock::BlockTask::SET_HOPPER_SPEED
-                         |PowderBlock::BlockTask::SET_SPREADER_SPEED)){
-        write_to_md_port(m_md_commandStr.at(3));
-    }
-    else if(m_activeTask & PowderBlock::BlockTask::SET_Z_POSITION){
+//    if(m_pendingTasks & (PowderBlock::BlockTask::SET_Z_SPEED
+//                         |PowderBlock::BlockTask::SET_HOPPER_SPEED
+//                         |PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+//        write_to_md_port(m_md_commandStr.at(3));
+//    }
+    if(m_activeTask & PowderBlock::BlockTask::SET_Z_POSITION){
         emit buildPlateBusy();
         write_to_md_port(m_md_commandStr.at(0));
     }
@@ -1443,7 +1442,6 @@ void PowderTransport::on_increment_zPosition_request()
         m_md_commandStr.append(z);
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
-        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_Z_POSITION;
         emit md_commandPending();
     }
@@ -1458,7 +1456,6 @@ void PowderTransport::on_decrement_zPosition_request()
         QString z ="/" + QString::number(m_config.get()->z_deviceNumber()) + " " + QString::number(m_config.get()->z_axisNumber());
         z += " move rel " + QString::number(steps) + "\r";
         m_md_commandStr.append(z);
-        m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_Z_POSITION;
@@ -1477,7 +1474,6 @@ void PowderTransport::on_increment_hPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(h);
         m_md_commandStr.append("EMPTY");
-        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending();
     }
@@ -1493,7 +1489,6 @@ void PowderTransport::on_decrement_hPosition_request()
         h += " move rel " + QString::number(steps) + "\r";
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(h);
-        m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_HOPPER_POSITION;
         emit md_commandPending();
@@ -1511,7 +1506,6 @@ void PowderTransport::on_increment_sPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(s);
-        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending();
     }
@@ -1528,7 +1522,6 @@ void PowderTransport::on_decrement_sPosition_request()
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append("EMPTY");
         m_md_commandStr.append(s);
-        m_md_commandStr.append("EMPTY");
         m_activeTask = PowderBlock::BlockTask::SET_SPREADER_POSITION;
         emit md_commandPending();
     }

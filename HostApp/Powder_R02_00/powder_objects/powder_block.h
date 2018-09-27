@@ -59,7 +59,7 @@ public:
         SET_SPREADER_SPEED = (1<<15),
         SET_HOME_AXIS = (1<<16),
         SET_DWELL_TIME  = (1<<17),
-        BLOCK_ERROR  =(1<<18)
+        BLOCK_ERROR  = (1<<18)
     };
 
 
