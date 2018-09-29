@@ -134,8 +134,8 @@ public:
     QString galvo_string() const;
     void setGalvo_string(const QString &galvo_string);
 
-    QStringList materialDelivery_string() const;
-    void setMaterialDelivery_string(const QStringList &materialDelivery_string);
+    QStringList materialDeliveryPosition_string() const;
+    void setmaterialDeliveryPosition_string(const QStringList &materialDeliveryPosition_string);
 
     CommandType commandType() const;
     void setCommandType(const CommandType &commandType);
@@ -149,6 +149,9 @@ public:
 
     QStringList laser_string() const;
     void setLaser_string(const QStringList &laser_string);
+
+    QStringList materialDeliverySpeed_string() const;
+    void setMaterialDeliverySpeed_string(const QStringList &materialDeliverySpeed_string);
 
 private:
     int m_blockNumber;
@@ -184,7 +187,8 @@ private:
 
     QStringList m_laser_string;
     QString m_galvo_string;
-    QStringList m_materialDelivery_string;
+    QStringList m_materialDeliverySpeed_string;
+    QStringList m_materialDeliveryPosition_string;
 
 };
 

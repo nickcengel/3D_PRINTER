@@ -5,15 +5,13 @@ ZaberUtility::ZaberUtility()
 
 }
 
-QStringList ZaberUtility::composeCommandString(PowderBlock *block, PowderSettings *config)
+QStringList ZaberUtility::composePositionCommand_String(PowderBlock *block, PowderSettings *config)
 {
     uint32_t task = block->blockTask();
 
     QStringList outputList;
 
     QString modeString;
-
-
 
     if(task & PowderBlock::BlockTask::SET_HOME_AXIS){
         modeString = " home\r";
@@ -80,35 +78,59 @@ QStringList ZaberUtility::composeCommandString(PowderBlock *block, PowderSetting
     else
         outputList.append("EMPTY");
 
-    if(task == (PowderBlock::BlockTask::SET_Z_SPEED)){
+    return outputList;
+}
+
+QStringList ZaberUtility::composeSpeedCommand_String(PowderBlock *block, PowderSettings *config)
+{
+    uint32_t task = block->blockTask();
+
+    QStringList outputList;
+
+    QString modeString = " set maxspeed ";
+
+    if(task & (PowderBlock::BlockTask::SET_Z_SPEED)){
         int devNum = config->z_deviceNumber();
         int axisNum = config->z_axisNumber();
-        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
-        speedString += " set maxspeed ";
-        double res = 1.6384*static_cast<double>(config->z_position_resolution()*block->z_speed());
-        speedString += (QString::number(res) + "\r");
-        outputList.append(speedString);
+        float res = config->z_position_resolution();
+        QString Zoutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+
+        int speed = static_cast<int>(1.6384f*(block->z_speed()/res));
+        Zoutput += (modeString + QString::number(speed) + "\r");
+
+        outputList.append(Zoutput);
     }
-    else if(task == (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
+    else
+        outputList.append("EMPTY");
+
+
+    if(task & (PowderBlock::BlockTask::SET_HOPPER_SPEED)){
         int devNum = config->hopper_deviceNumber();
         int axisNum = config->hopper_axisNumber();
-        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
-        speedString += " set maxspeed ";
-        double res = 1.6384*static_cast<double>(config->hopper_position_resolution()*block->hopper_speed());
-        speedString += (QString::number(res) + "\r");
-        outputList.append(speedString);
+        float res = config->hopper_position_resolution();
+        QString Houtput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+
+        int speed = static_cast<int>(1.6384f*(block->hopper_speed()/res));
+        Houtput += (modeString + QString::number(speed) + "\r");
+
+        outputList.append(Houtput);
     }
-//    else if(task == (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
-//        int devNum = config->spreader_deviceNumber();
-//        int axisNum = config->spreader_axisNumber();
-//        QString speedString = "/" + QString::number(devNum) + " " + QString::number(axisNum);
-//        speedString += " set maxspeed ";
-//        double res = 1.6384*static_cast<double>(config->spreader_position_resolution()*block->spreader_speed());
-//        speedString += (QString::number(res) + "\r");
-//        outputList.append(speedString);
-//    }
-//    else
-//        outputList.append("EMPTY");
+    else
+        outputList.append("EMPTY");
+
+    if(task & (PowderBlock::BlockTask::SET_SPREADER_SPEED)){
+        int devNum = config->spreader_deviceNumber();
+        int axisNum = config->spreader_axisNumber();
+        float res = config->spreader_position_resolution();
+        QString Soutput = "/" + QString::number(devNum) + " " + QString::number(axisNum);
+
+        int speed = static_cast<int>(1.6384f*(block->spreader_speed()/res));
+        Soutput += (modeString + QString::number(speed) + "\r");
+
+        outputList.append(Soutput);
+    }
+    else
+        outputList.append("EMPTY");
 
     return outputList;
 }

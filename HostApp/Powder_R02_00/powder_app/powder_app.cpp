@@ -256,7 +256,7 @@ PowderApp::PowderApp(QWidget *parent) :
                      ui->sPositionDisplay_field, SLOT(setNum(double)));
 
     QObject::connect(deviceTransport, SIGNAL(laserIntensity_changed(double)),
-                     ui->LaserDisplayPower_field, SLOT(setNum(double)));
+                     ui->laserDisplayIntensity_field, SLOT(setNum(double)));
 
     QObject::connect(deviceTransport, SIGNAL(xySpeed_changed(double)),
                      ui->galvoSpeed_field, SLOT(setNum(double)));
@@ -338,8 +338,8 @@ void PowderApp::applySettings()
     m_myConfiguration->setZ_deviceNumber(ui->buildplate_devicenum_field->text().toInt());
     m_myConfiguration->setZ_axisNumber(ui->buildplate_axisnum_field->text().toInt());
     m_myConfiguration->setZ_position_resolution(ui->buildplate_steps_field->text().toFloat());
-    m_myConfiguration->setZ_position_max(ui->buildplate_speedmax_field->text().toFloat());
-    m_myConfiguration->setZ_position_min(ui->buildplate_speedmin_field->text().toFloat());
+    m_myConfiguration->setZ_position_max(ui->buildplate_positionmax_field->text().toFloat());
+    m_myConfiguration->setZ_position_min(ui->buildplate_positionmin_field->text().toFloat());
     m_myConfiguration->setZ_speed_default(ui->buildplate_speeddef_field->text().toFloat());
     m_myConfiguration->setZ_speed_max(ui->buildplate_speedmax_field->text().toFloat());
     m_myConfiguration->setZ_speed_min(ui->buildplate_speedmin_field->text().toFloat());
@@ -1156,9 +1156,9 @@ void PowderApp::on_gcode_tool_button_openFile_clicked()
         commandOut += " Laser/Galvo:\n";
         commandOut += "   " + m_myPart.get()->getBlock(blockCount).galvo_string();
         commandOut += "\n Material Delivery:";
-        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(0);
-        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(1);
-        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(blockCount).materialDelivery_string().at(2);
+        commandOut += "\n Build Plate: " + m_myPart.get()->getBlock(blockCount).materialDeliveryPosition_string().at(0);
+        commandOut += "\n Hoppper: " + m_myPart.get()->getBlock(blockCount).materialDeliveryPosition_string().at(1);
+        commandOut += "\n Spreader: " + m_myPart.get()->getBlock(blockCount).materialDeliveryPosition_string().at(2);
         commandOut += "\n";
         ui->printTools_outputBrowser->append(commandOut);
 

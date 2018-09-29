@@ -235,7 +235,7 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
         while(line_iterator != m_gcode.end()){
 
             // feedrate set by current line
-
+            float fSpeed = 0;
             // Create a new block for this line
             PowderBlock *block = new PowderBlock(blockNum, layerNum);
             block->clearTask();
@@ -372,8 +372,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         }
                         else
                         {
-                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                           + ", Layer: " + QString::number(layerNum,10)
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
                                            + " Error: Invalid Laser intensity!");
                             this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                             block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
@@ -395,8 +395,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         }
                         else
                         {
-                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                           + ", Layer: " + QString::number(layerNum,10)
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
                                            + " Error: Invalid Laser Pulse Frequency!");
                             this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                             block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
@@ -429,8 +429,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         }
                         else
                         {
-                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                           + ", Layer: " + QString::number(layerNum,10)
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
                                            + " Error: Invalid Laser Mode!");
                             this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                             block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
@@ -448,8 +448,8 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                         }
                         else
                         {
-                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                           + ", Layer: " + QString::number(layerNum,10)
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
                                            + " Error: Invalid Dwell Time!");
                             this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                             block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
@@ -458,94 +458,84 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                     }
 
 
-//                    // Find F commands (for feed rates)
-//                    else if(QRegExp("[Ff]"+regEx_float).exactMatch(*data_iterator)){
-//                        (*data_iterator).remove(0,1);
+                    // Find F commands (for feed rates)
+                    else if(QRegExp("[F]"+regEx_float).exactMatch(*data_iterator)){
+                        (*data_iterator).remove(0,1);
 
-//                        // Set XY Speed iff x and y
-//                        if((block->blockTask() == PowderBlock::BlockTask::SET_X_POSITION)
-//                                ||(block->blockTask() == PowderBlock::BlockTask::SET_Y_POSITION)
-//                                ||(block->blockTask() == (PowderBlock::BlockTask::SET_X_POSITION
-//                                                          |PowderBlock::BlockTask::SET_Y_POSITION))){
-//                            bool valid;
-//                            const float value = (*data_iterator).toFloat(&valid);
-//                            if(valid && (value < config->xy_speed_max()) && (value > config->xy_speed_min())){
-//                                block->setXY_speed(value);
-//                            }
-//                            else
-//                            {
-//                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-//                                               + ", Layer: " + QString::number(layerNum,10)
-//                                               + " Error: Invalid Galvanometer Speed!");
-//                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-//                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-//                                m_parserStatus= PARSER_FAILED_INVALID_PART;
-//                            }
-//                        }
-//                        // Set Z Speed iff h&s&x&y are NOT moving
-//                        else if(block->blockTask() == PowderBlock::BlockTask::SET_Z_POSITION){
-//                            bool valid;
-//                            const float value = (*data_iterator).toFloat(&valid);
-//                            if(valid && (value < config->z_speed_max()) && (value > config->z_speed_min())){
-//                                block->setZ_speed(value);
-//                            }
-//                            else
-//                            {
-//                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-//                                               + ", Layer: " + QString::number(layerNum,10)
-//                                               + " Error: Invalid Z Speed!");
-//                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-//                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-//                                m_parserStatus= PARSER_FAILED_INVALID_PART;
-//                            }
-//                        }
-//                        // Set H Speed iff Z&S&X&Y are NOT moving
-//                        else if(block->blockTask() == PowderBlock::BlockTask::SET_HOPPER_POSITION){
-//                            bool valid;
-//                            const float value = (*data_iterator).toFloat(&valid);
-//                            if(valid && (value < config->hopper_speed_max()) && (value > config->hopper_speed_min())){
-//                                block->setHopper_speed(value);
-//                            }
-//                            else
-//                            {
-//                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-//                                               + ", Layer: " + QString::number(layerNum,10)
-//                                               + " Error: Invalid Hopper Speed!");
-//                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-//                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-//                                m_parserStatus= PARSER_FAILED_INVALID_PART;
-//                            }
-//                        }
-//                        // Set S Speed iff H&S&X&Y are NOT moving
-//                        else if(block->blockTask() == PowderBlock::BlockTask::SET_SPREADER_POSITION){
-//                            bool valid;
-//                            const float value = (*data_iterator).toFloat(&valid);
-//                            if(valid && (value < config->spreader_speed_max()) && (value > config->spreader_speed_min())){
-//                                block->setSpreader_speed(value);
-//                            }
-//                            else
-//                            {
-//                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-//                                               + ", Layer: " + QString::number(layerNum,10)
-//                                               + " Error: Invalid Spreader Speed!");
-//                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-//                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-//                                m_parserStatus= PARSER_FAILED_INVALID_PART;
-//                            }
-//                        }
-//                        else {
-//                            m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-//                                           + ", Layer: " + QString::number(layerNum,10)
-//                                           + " Error: Cannot set speed for active axis group");
-//                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
-//                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
-//                            m_parserStatus= PARSER_FAILED_INVALID_PART;
-//                        }
-//                    }
+                        bool valid;
+                        fSpeed = (*data_iterator).toFloat(&valid);
+                        if(!valid)
+                            fSpeed = 0;
+                        // Set XY Speed iff x and y
+                        if(block->blockTask() & (PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION)){
+
+                            if((fSpeed < config->xy_speed_max()) && (fSpeed > config->xy_speed_min())){
+                                block->setXY_speed(fSpeed);
+                            }
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
+                                               + " Error: Invalid Galvanometer Speed!");
+                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                                m_parserStatus= PARSER_FAILED_INVALID_PART;
+                            }
+                        }
+
+                        else if(block->blockTask() & PowderBlock::BlockTask::SET_Z_POSITION){
+                            if((fSpeed < config->z_speed_max()) && (fSpeed > config->z_speed_min())){
+                                block->setZ_speed(fSpeed);
+                            }
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
+                                               + " Error: Invalid Z Speed!");
+                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                                m_parserStatus= PARSER_FAILED_INVALID_PART;
+                            }
+                        }
+
+                        else if(block->blockTask() & PowderBlock::BlockTask::SET_HOPPER_POSITION){
+                            if((fSpeed < config->hopper_speed_max()) && (fSpeed > config->hopper_speed_min())){
+                                block->setHopper_speed(fSpeed);
+                            }
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
+                                               + " Error: Invalid Hopper Speed!");
+                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                                m_parserStatus= PARSER_FAILED_INVALID_PART;
+                            }
+                        }
+
+                        else if(block->blockTask() & PowderBlock::BlockTask::SET_SPREADER_POSITION){
+                            if((fSpeed < config->spreader_speed_max()) && (fSpeed > config->spreader_speed_min())){
+                                block->setSpreader_speed(fSpeed);
+                            }
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
+                                               + " Error: Invalid Spreader Speed!");
+                                this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                                block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                                m_parserStatus= PARSER_FAILED_INVALID_PART;
+                            }
+                        }
+                    }
 
                     // Find X Moves
                     else if(QRegExp("[Xx]"+regEx_float).exactMatch(*data_iterator)){
-                        if(!(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS)){
+                        if(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS){
+                            block->setX_position(0);
+                        }
+                        else
+                        {
                             (*data_iterator).remove(0,1);
                             bool valid;
                             const float val = (*data_iterator).toFloat(&valid);
@@ -553,24 +543,38 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setX_position(val);
                                 block->setPositionMode(prevailPosMode);
                             }
-                            else{
-                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                               + ", Layer: " + QString::number(layerNum,10)
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
                                                + " Error: Invalid X Position!");
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-                        else
+
+                        if((fSpeed < config->xy_speed_max()) && (fSpeed > config->xy_speed_min())){
+                            block->setXY_speed(fSpeed);
+                        }
+                        else if(fSpeed > 0)
                         {
-                            block->setX_position(0);
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
+                                           + " Error: Invalid Galvanometer Speed!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
                     // Find Y Moves
                     else if(QRegExp("[Yy]"+regEx_float).exactMatch(*data_iterator)){
-                        if(!(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS)){
+                        if(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS){
+                            block->setY_position(0);
+                        }
+                        else
+                        {
                             (*data_iterator).remove(0,1);
                             bool valid;
                             const float val = (*data_iterator).toFloat(&valid);
@@ -578,23 +582,38 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setY_position(val);
                                 block->setPositionMode(prevailPosMode);
                             }
-                            else{
-                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                               + ", Layer: " + QString::number(layerNum,10)
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
                                                + " Error: Invalid Y Position!");
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-                        else{ // home
-                            block->setY_position(0);
+
+                        if((fSpeed < config->xy_speed_max()) && (fSpeed > config->xy_speed_min())){
+                            block->setXY_speed(fSpeed);
+                        }
+                        else if(fSpeed > 0)
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
+                                           + " Error: Invalid Galvanometer Speed!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
                     // Find Z Moves
                     else if(QRegExp("[Zz]"+regEx_float).exactMatch(*data_iterator)){
-                        if(!(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS)){
+                        if(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS){
+                            block->setZ_position(0);
+                        }
+                        else
+                        {
                             (*data_iterator).remove(0,1);
                             bool valid;
                             const float val = (*data_iterator).toFloat(&valid);
@@ -602,23 +621,38 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setZ_position(val);
                                 block->setPositionMode(prevailPosMode);
                             }
-                            else{
-                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                               + ", Layer: " + QString::number(layerNum,10)
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
                                                + " Error: Invalid Z Position!");
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-                        else{ // home
-                            block->setZ_position(0);
+
+                        if((fSpeed < config->z_speed_max()) && (fSpeed > config->z_speed_min())){
+                            block->setZ_speed(fSpeed);
+                        }
+                        else if(fSpeed > 0)
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
+                                           + " Error: Invalid Z Speed!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
                     // Find A Moves. (The A axis maps to the hopper)
                     else if(QRegExp("[Aa]"+regEx_float).exactMatch(*data_iterator)){
-                        if(!(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS)){
+                        if(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS){
+                            block->setHopper_position(0);
+                        }
+                        else
+                        {
                             (*data_iterator).remove(0,1);
                             bool valid;
                             const float val = (*data_iterator).toFloat(&valid);
@@ -626,23 +660,38 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setHopper_position(val);
                                 block->setPositionMode(prevailPosMode);
                             }
-                            else{
-                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                               + ", Layer: " + QString::number(layerNum,10)
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
                                                + " Error: Invalid Hopper Position!");
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-                        else{ // home
-                            block->setHopper_position(0);
+
+                        if((fSpeed < config->hopper_speed_max()) && (fSpeed > config->hopper_speed_min())){
+                            block->setHopper_speed(fSpeed);
+                        }
+                        else if(fSpeed > 0)
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
+                                           + " Error: Invalid Hopper Speed!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
                     // Find B Moves. (The B axis maps to the spreader)
                     else if(QRegExp("[Bb]"+regEx_float).exactMatch(*data_iterator)){
-                        if(!(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS)){
+                        if(block->blockTask() & PowderBlock::BlockTask::SET_HOME_AXIS){
+                            block->setSpreader_position(0);
+                        }
+                        else
+                        {
                             (*data_iterator).remove(0,1);
                             bool valid;
                             const float val = (*data_iterator).toFloat(&valid);
@@ -650,31 +699,39 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
                                 block->setSpreader_position(val);
                                 block->setPositionMode(prevailPosMode);
                             }
-                            else{
-                                m_errorStr += ("\nBlock: " + QString::number(blockNum,10)
-                                               + ", Layer: " + QString::number(layerNum,10)
+                            else
+                            {
+                                m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                               + ", Layer: " + QString::number(layerNum)
                                                + " Error: Invalid Spreader Position!");
                                 this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
                                 block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
                                 m_parserStatus= PARSER_FAILED_INVALID_PART;
                             }
                         }
-                        else { // home
-                            block->setSpreader_position(0);
+
+                        if((fSpeed < config->spreader_speed_max()) && (fSpeed > config->spreader_speed_min())){
+                            block->setSpreader_speed(fSpeed);
+                        }
+                        else if(fSpeed > 0)
+                        {
+                            m_errorStr += ("\nBlock: " + QString::number(blockNum)
+                                           + ", Layer: " + QString::number(layerNum)
+                                           + " Error: Invalid Spreader Speed!");
+                            this->setPartStatus(PowderPart::PartStatus::PART_IS_INVALID);
+                            block->setBlockTask(PowderBlock::BlockTask::BLOCK_ERROR);
+                            m_parserStatus= PARSER_FAILED_INVALID_PART;
                         }
                     }
 
                     // Use the extrusion data to signal moves where the laser is to be enabled
                     else if(QRegExp("[Ee]" + regEx_float).exactMatch(*data_iterator)){
                         // only allows the laser to be enabled when the x or y move
-                        if(!(block->blockTask()&PowderBlock::BlockTask::SET_Z_POSITION)
-                                &&!(block->blockTask()&PowderBlock::BlockTask::SET_HOPPER_POSITION)
-                                &&!(block->blockTask()&PowderBlock::BlockTask::SET_SPREADER_POSITION)){
-                            QString extruderStr = *data_iterator;
-                            // ignore (negative) filament retraction and rapid moves
-                            if(!extruderStr.contains("-")
-                                    && (block->commandType() == PowderBlock::CommandType::G1_LINEAR_MOVE))
-                                block->setLaser_enabled(true);
+                         QString extruderStr = *data_iterator;
+                        if(!(block->blockTask()&PowderBlock::BlockTask::SET_SPREADER_POSITION)
+                                && !extruderStr.contains("-")
+                                && (block->commandType() == PowderBlock::CommandType::G1_LINEAR_MOVE)){
+                            block->setLaser_enabled(true);
                         }
                     }
                     ++data_iterator;
@@ -684,9 +741,14 @@ PowderPart::PowderPart(const QString &filePath, QSharedPointer<PowderSettings> c
             // generate command strings
             const QStringList laser_strings = LaserUtility::composeCommandString(block);
             block->setLaser_string(laser_strings);
+
             block->setGalvo_string(GalvoUtility::composeCommandString(block, config.get()));
-            const QStringList materialDelivery_strings = ZaberUtility::composeCommandString(block, config.get());
-            block->setMaterialDelivery_string(materialDelivery_strings);
+
+            const QStringList materialDeliverySpeed_strings = ZaberUtility::composeSpeedCommand_String(block, config.get());
+            block->setMaterialDeliverySpeed_string(materialDeliverySpeed_strings);
+
+            const QStringList materialDeliveryPosition_strings = ZaberUtility::composePositionCommand_String(block, config.get());
+            block->setmaterialDeliveryPosition_string(materialDeliveryPosition_strings);
 
             // add block to the part
             m_blocks->append(*block);

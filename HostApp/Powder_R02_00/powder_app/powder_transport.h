@@ -318,7 +318,8 @@ private:
 
     QStringList m_laser_commandStr;
     QString m_galvo_commandStr;
-    QStringList m_md_commandStr;
+    QStringList m_md_PositionCommandStr;
+    QStringList m_md_SpeedCommandStr;
 
     QByteArray laser_port_rxBytes;
     QByteArray galvo_port_rxBytes;

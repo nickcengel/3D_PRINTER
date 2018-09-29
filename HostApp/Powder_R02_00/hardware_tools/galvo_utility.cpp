@@ -27,7 +27,11 @@ QString GalvoUtility::composeCommandString(PowderBlock *block, PowderSettings *c
             output += ",";
         else
             delim = true;
-        output += ("s=" + QString::number(static_cast<double>(block->xy_speed())));
+
+        float avg_res_steps_mm = (config->x_position_resolution() + config->y_position_resolution())/2.0f;
+        const int speed = static_cast<int>(block->xy_speed()*avg_res_steps_mm*0.001024f); // units: (steps/usecond)*1024
+
+        output += ("s=" + QString::number(speed));
     }
 
     if(task & PowderBlock::BlockTask::SET_X_POSITION){

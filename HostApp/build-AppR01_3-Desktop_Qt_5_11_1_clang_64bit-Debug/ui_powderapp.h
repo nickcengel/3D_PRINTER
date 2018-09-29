@@ -477,10 +477,10 @@ public:
     QPushButton *LaserDisplayStatus_indicator;
     QLabel *LaserDisplayStatus_title;
     QLabel *LaserDisplayStatus_field;
-    QHBoxLayout *horizontalLayout_8;
-    QLabel *LaserDisplayPower_title;
-    QLabel *LaserDisplayPower_field;
-    QLabel *LaserDisplayPower_units;
+    QHBoxLayout *laserDisplayIntensity_layout;
+    QLabel *laserDisplayIntensity_title;
+    QLabel *laserDisplayIntensity_field;
+    QLabel *laserDisplayIntensity_units;
     QComboBox *Laser_options_box;
     QFrame *LaserDisplayField_frame;
     QVBoxLayout *verticalLayout_11;
@@ -4147,40 +4147,40 @@ public:
 
         verticalLayout_4->addLayout(LaserDisplayStatus_layout);
 
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        LaserDisplayPower_title = new QLabel(LaserDisplayInfo_frame);
-        LaserDisplayPower_title->setObjectName(QStringLiteral("LaserDisplayPower_title"));
-        LaserDisplayPower_title->setMinimumSize(QSize(0, 24));
-        LaserDisplayPower_title->setMaximumSize(QSize(16777215, 24));
+        laserDisplayIntensity_layout = new QHBoxLayout();
+        laserDisplayIntensity_layout->setSpacing(6);
+        laserDisplayIntensity_layout->setObjectName(QStringLiteral("laserDisplayIntensity_layout"));
+        laserDisplayIntensity_title = new QLabel(LaserDisplayInfo_frame);
+        laserDisplayIntensity_title->setObjectName(QStringLiteral("laserDisplayIntensity_title"));
+        laserDisplayIntensity_title->setMinimumSize(QSize(0, 24));
+        laserDisplayIntensity_title->setMaximumSize(QSize(16777215, 24));
         QFont font13;
         font13.setPointSize(13);
-        LaserDisplayPower_title->setFont(font13);
-        LaserDisplayPower_title->setStyleSheet(QLatin1String("background: none;\n"
+        laserDisplayIntensity_title->setFont(font13);
+        laserDisplayIntensity_title->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
 
-        horizontalLayout_8->addWidget(LaserDisplayPower_title);
+        laserDisplayIntensity_layout->addWidget(laserDisplayIntensity_title);
 
-        LaserDisplayPower_field = new QLabel(LaserDisplayInfo_frame);
-        LaserDisplayPower_field->setObjectName(QStringLiteral("LaserDisplayPower_field"));
-        LaserDisplayPower_field->setStyleSheet(QStringLiteral("color: rgba(212,215,217,200)"));
+        laserDisplayIntensity_field = new QLabel(LaserDisplayInfo_frame);
+        laserDisplayIntensity_field->setObjectName(QStringLiteral("laserDisplayIntensity_field"));
+        laserDisplayIntensity_field->setStyleSheet(QStringLiteral("color: rgba(212,215,217,200)"));
 
-        horizontalLayout_8->addWidget(LaserDisplayPower_field);
+        laserDisplayIntensity_layout->addWidget(laserDisplayIntensity_field);
 
-        LaserDisplayPower_units = new QLabel(LaserDisplayInfo_frame);
-        LaserDisplayPower_units->setObjectName(QStringLiteral("LaserDisplayPower_units"));
-        LaserDisplayPower_units->setMinimumSize(QSize(40, 24));
-        LaserDisplayPower_units->setMaximumSize(QSize(16777215, 24));
-        LaserDisplayPower_units->setFont(font9);
-        LaserDisplayPower_units->setStyleSheet(QLatin1String("background: none;\n"
+        laserDisplayIntensity_units = new QLabel(LaserDisplayInfo_frame);
+        laserDisplayIntensity_units->setObjectName(QStringLiteral("laserDisplayIntensity_units"));
+        laserDisplayIntensity_units->setMinimumSize(QSize(40, 24));
+        laserDisplayIntensity_units->setMaximumSize(QSize(16777215, 24));
+        laserDisplayIntensity_units->setFont(font9);
+        laserDisplayIntensity_units->setStyleSheet(QLatin1String("background: none;\n"
 "color: rgba(212,215,217,200)"));
-        LaserDisplayPower_units->setAlignment(Qt::AlignCenter);
+        laserDisplayIntensity_units->setAlignment(Qt::AlignCenter);
 
-        horizontalLayout_8->addWidget(LaserDisplayPower_units);
+        laserDisplayIntensity_layout->addWidget(laserDisplayIntensity_units);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_8);
+        verticalLayout_4->addLayout(laserDisplayIntensity_layout);
 
         Laser_options_box = new QComboBox(LaserDisplayInfo_frame);
         Laser_options_box->addItem(QString());
@@ -5138,7 +5138,7 @@ public:
 
         retranslateUi(PowderApp);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(4);
         jogXminus_button->setDefault(false);
         jogYplus_button->setDefault(false);
         jogYminus_button->setDefault(false);
@@ -5328,9 +5328,9 @@ public:
         LaserDisplayStatus_indicator->setText(QString());
         LaserDisplayStatus_title->setText(QApplication::translate("PowderApp", "  Status:", nullptr));
         LaserDisplayStatus_field->setText(QApplication::translate("PowderApp", " Disabled", nullptr));
-        LaserDisplayPower_title->setText(QApplication::translate("PowderApp", "Power:", nullptr));
-        LaserDisplayPower_field->setText(QString());
-        LaserDisplayPower_units->setText(QApplication::translate("PowderApp", "[W]", nullptr));
+        laserDisplayIntensity_title->setText(QApplication::translate("PowderApp", "Intensity", nullptr));
+        laserDisplayIntensity_field->setText(QString());
+        laserDisplayIntensity_units->setText(QApplication::translate("PowderApp", "%", nullptr));
         Laser_options_box->setItemText(0, QApplication::translate("PowderApp", "Options", nullptr));
 
         laserDisplay_EnableState_field->setText(QApplication::translate("PowderApp", "Laser\n"

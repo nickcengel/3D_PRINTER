@@ -13,6 +13,8 @@ public:
     static QString composeCommandString(PowderBlock *block, PowderSettings *config);
     static QString composeJogCommandString(PowderBlock::BlockTask axisTask, int32_t steps);
 
+
+
 };
 
 #endif // GALVO_UTILITY_H

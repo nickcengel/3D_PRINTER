@@ -11,7 +11,8 @@ class ZaberUtility
 public:
     ZaberUtility();
 
-    static QStringList composeCommandString(PowderBlock *block, PowderSettings *config);
+    static QStringList composePositionCommand_String(PowderBlock *block, PowderSettings *config);
+    static QStringList composeSpeedCommand_String(PowderBlock *block, PowderSettings *config);
 
 };
 

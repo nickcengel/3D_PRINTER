@@ -40,7 +40,7 @@ PowderBlock::PowderBlock(const PowderBlock &otherBlock){
     m_spreader_speed = otherBlock.spreader_speed();
     m_laser_string = otherBlock.laser_string();
     m_galvo_string = otherBlock.galvo_string();
-    m_materialDelivery_string = otherBlock.materialDelivery_string();
+    m_materialDeliveryPosition_string = otherBlock.materialDeliveryPosition_string();
 }
 
 PowderBlock::~PowderBlock()
@@ -265,16 +265,16 @@ void PowderBlock::setGalvo_string(const QString &lg_string)
     m_galvo_string = lg_string;
 }
 
-QStringList PowderBlock::materialDelivery_string() const
+QStringList PowderBlock::materialDeliveryPosition_string() const
 {
-    return m_materialDelivery_string;
+    return m_materialDeliveryPosition_string;
 }
 
-void PowderBlock::setMaterialDelivery_string(const QStringList &md_string)
+void PowderBlock::setmaterialDeliveryPosition_string(const QStringList &md_string)
 {
-    m_materialDelivery_string.append(md_string.at(0));
-    m_materialDelivery_string.append(md_string.at(1));
-    m_materialDelivery_string.append(md_string.at(2));
+    m_materialDeliveryPosition_string.append(md_string.at(0));
+    m_materialDeliveryPosition_string.append(md_string.at(1));
+    m_materialDeliveryPosition_string.append(md_string.at(2));
 }
 
 PowderBlock::CommandType PowderBlock::commandType() const
@@ -320,6 +320,17 @@ void PowderBlock::setLaser_string(const QStringList &laser_string)
     m_laser_string = laser_string;
 }
 
+QStringList PowderBlock::materialDeliverySpeed_string() const
+{
+    return m_materialDeliverySpeed_string;
+}
+
+void PowderBlock::setMaterialDeliverySpeed_string(const QStringList &materialDeliverySpeed_string)
+{
+    m_materialDeliverySpeed_string.append(materialDeliverySpeed_string.at(0));
+    m_materialDeliverySpeed_string.append(materialDeliverySpeed_string.at(1));
+    m_materialDeliverySpeed_string.append(materialDeliverySpeed_string.at(2));
+}
 
 
 

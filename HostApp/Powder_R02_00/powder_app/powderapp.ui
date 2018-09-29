@@ -1509,7 +1509,7 @@ color: rgb(212,215,217);</string>
               <string notr="true">background:rgb(22,22,22);</string>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="port_settings_tab">
               <attribute name="title">
@@ -7977,9 +7977,9 @@ color: rgba(212,215,217,200)</string>
                  </layout>
                 </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <layout class="QHBoxLayout" name="laserDisplayIntensity_layout">
                   <item>
-                   <widget class="QLabel" name="LaserDisplayPower_title">
+                   <widget class="QLabel" name="laserDisplayIntensity_title">
                     <property name="minimumSize">
                      <size>
                       <width>0</width>
@@ -8002,12 +8002,12 @@ color: rgba(212,215,217,200)</string>
 color: rgba(212,215,217,200)</string>
                     </property>
                     <property name="text">
-                     <string>Power:</string>
+                     <string>Intensity</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="LaserDisplayPower_field">
+                   <widget class="QLabel" name="laserDisplayIntensity_field">
                     <property name="styleSheet">
                      <string notr="true">color: rgba(212,215,217,200)</string>
                     </property>
@@ -8017,7 +8017,7 @@ color: rgba(212,215,217,200)</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="LaserDisplayPower_units">
+                   <widget class="QLabel" name="laserDisplayIntensity_units">
                     <property name="minimumSize">
                      <size>
                       <width>40</width>
@@ -8040,7 +8040,7 @@ color: rgba(212,215,217,200)</string>
 color: rgba(212,215,217,200)</string>
                     </property>
                     <property name="text">
-                     <string>[W]</string>
+                     <string>%</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
