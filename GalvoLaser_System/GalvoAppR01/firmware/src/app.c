@@ -400,14 +400,18 @@ void APP_Compute_StepSize(void) {
     else
         deltaY = appData.Galvo.Y.currentPosition - appData.Galvo.Y.finalPosition;
 
+        // appData.Galvo.speed units: (counts per microsecond)*1024
+
+    // distance units: counts * 1024
     uint32_t distance = ((uint32_t) sqrt((float) deltaX * (float) deltaX + (float) deltaY * (float) deltaY)) << 10;
     if (distance > 0) {
-        if ((appData.Galvo.speed >> 10) < 0x400)
-            appData.Galvo.speed = 0x400;
+        // duration units: microseconds * 1024
         uint32_t duration = ((distance / appData.Galvo.speed) << 10);
+        // numIncrements units: increments * 1024
         uint32_t numIncrements = (uint32_t) (((float) duration) / DAC_UPDATE_PERIOD_uS);
         if (numIncrements < 1)
             numIncrements = 1;
+        // stepSize units: counts per increment
         appData.Galvo.X.stepSize = ((deltaX << 10) / numIncrements);
         appData.Galvo.Y.stepSize = ((deltaY << 10) / numIncrements);
     } else {
@@ -415,6 +419,8 @@ void APP_Compute_StepSize(void) {
         appData.Galvo.Y.stepSize = 0;
     }
 }
+
+//379624448
 
 // *****************************************************************************
 // *****************************************************************************
@@ -713,24 +719,24 @@ void APP_Write_HCI_Packet(void) {
                             tempVal = appData.Galvo.speed;
                             break;
                         }
-//                        case X_START_POS:
-//                        {
-//                            strcpy(tempTextBuf, "x");
-//                            tempVal = HCI_REG_Value(X_START_POS);
-//                            break;
-//                        }
+                            //                        case X_START_POS:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "x");
+                            //                            tempVal = HCI_REG_Value(X_START_POS);
+                            //                            break;
+                            //                        }
                         case X_END_POS:
                         {
                             strcpy(tempTextBuf, "X");
                             tempVal = appData.Galvo.X.currentPosition - DAC0_OFFSET;
                             break;
                         }
-//                        case Y_START_POS:
-//                        {
-//                            strcpy(tempTextBuf, "y");
-//                            tempVal = HCI_REG_Value(Y_START_POS);
-//                            break;
-//                        }
+                            //                        case Y_START_POS:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "y");
+                            //                            tempVal = HCI_REG_Value(Y_START_POS);
+                            //                            break;
+                            //                        }
                         case Y_END_POS:
                         {
                             strcpy(tempTextBuf, "Y");
