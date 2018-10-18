@@ -315,7 +315,8 @@ float PowderTransport::xPosition() const
 void PowderTransport::setXPosition(float xPosition)
 {
     m_xPosition = xPosition;
-    emit xPosition_changed(static_cast<double>(m_xPosition));
+    const QString pos = QString::number(static_cast<double>(m_xPosition), 'f', 3);
+    emit xPosition_changed(pos);
 }
 
 float PowderTransport::yPosition() const
@@ -326,8 +327,8 @@ float PowderTransport::yPosition() const
 void PowderTransport::setYPosition(float yPosition)
 {
     m_yPosition = yPosition;
-    emit yPosition_changed(static_cast<double>(m_yPosition));
-
+    const QString pos = QString::number(static_cast<double>(m_yPosition), 'f', 3);
+    emit yPosition_changed(pos);
 }
 
 float PowderTransport::xySpeed() const
@@ -338,7 +339,8 @@ float PowderTransport::xySpeed() const
 void PowderTransport::setXYSpeed(float xySpeed)
 {
     m_xySpeed = xySpeed;
-    emit xySpeed_changed(static_cast<double>(m_xySpeed));
+    const QString spd = QString::number(static_cast<double>(m_xySpeed), 'f', 3);
+    emit xySpeed_changed(spd);
 }
 
 float PowderTransport::zPosition() const
@@ -349,7 +351,8 @@ float PowderTransport::zPosition() const
 void PowderTransport::setZPosition(float zPosition)
 {
     m_zPosition = zPosition;
-    emit zPosition_changed(static_cast<double>(m_zPosition));
+    const QString pos = QString::number(static_cast<double>(m_zPosition), 'f', 3);
+    emit zPosition_changed(pos);
 }
 
 float PowderTransport::sPosition() const
@@ -360,7 +363,8 @@ float PowderTransport::sPosition() const
 void PowderTransport::setSPosition(float sPosition)
 {
     m_sPosition = sPosition;
-    emit sPosition_changed(static_cast<double>(m_sPosition));
+    const QString pos = QString::number(static_cast<double>(m_sPosition), 'f', 3);
+    emit sPosition_changed(pos);
 }
 
 float PowderTransport::hPosition() const
@@ -371,7 +375,8 @@ float PowderTransport::hPosition() const
 void PowderTransport::setHPosition(float hPosition)
 {
     m_hPosition = hPosition;
-    emit hPosition_changed(static_cast<double>(m_hPosition));
+    const QString pos = QString::number(static_cast<double>(m_hPosition), 'f', 3);
+    emit hPosition_changed(pos);
 }
 
 float PowderTransport::laserIntensity() const
@@ -489,7 +494,7 @@ void PowderTransport::write_to_laser_port(const QString &txString)
 void PowderTransport::write_to_galvo_port(const QString &txString)
 {
     if(m_galvo_port->isOpen()){
-        galvo_port_rxBytes.clear();
+//        m_galvo_port->clear();
         const QByteArray txBytes = txString.toUtf8();
         galvo_port_TxBytesRemaining = txBytes.length();
         galvoPort_timer->start(1000); // timeout in 1000ms
@@ -516,19 +521,19 @@ void PowderTransport::write_to_md_port(const QString &txString)
 void PowderTransport::on_galvo_port_bytesWritten(qint64 bytes)
 {
     galvo_port_TxBytesRemaining -= bytes;
-    if(galvo_port_TxBytesRemaining <= 0)
+    if(galvo_port_TxBytesRemaining <= 0){
+        galvoPort_timer->stop();
         emit galvo_port_txFinished();
+    }
 }
 
 void PowderTransport::on_galvo_port_bytesRead()
 {
+
     if(m_galvo_port->canReadLine()){
         galvoPort_timer->stop();
-
         galvo_port_rxBytes =  m_galvo_port->readLine();
         QString reply = QString::fromUtf8(galvo_port_rxBytes);
-
-
 
         bool numValid = true;
         if(reply.contains("ok", Qt::CaseInsensitive)){
@@ -568,8 +573,6 @@ void PowderTransport::on_galvo_port_bytesRead()
             emit galvo_deviceReply(reply);
             emit galvo_port_rxFinished();
         }
-
-
         else{
             emit galvo_error(reply);
         }
@@ -685,16 +688,52 @@ void PowderTransport::on_partFile_available(QSharedPointer<PowderPart> part)
 
 void PowderTransport::on_startPrint_request()
 {
+    if(m_laser_port->isOpen()){
+        m_laser_port->flush();
+        m_laser_port->clear();
+    }
+    if(m_galvo_port->isOpen()){
+        m_galvo_port->flush();
+        m_galvo_port->clear();
+    }
+    if(m_md_port->isOpen()){
+        m_md_port->flush();
+        m_md_port->clear();
+    }
     emit startPrint();
 }
 
 void PowderTransport::on_stopPrint_request()
 {
+    if(m_laser_port->isOpen()){
+        m_laser_port->flush();
+        m_laser_port->clear();
+    }
+    if(m_galvo_port->isOpen()){
+        m_galvo_port->flush();
+        m_galvo_port->clear();
+    }
+    if(m_md_port->isOpen()){
+        m_md_port->flush();
+        m_md_port->clear();
+    }
     emit stopPrint();
 }
 
 void PowderTransport::on_reset_request()
 {
+    if(m_laser_port->isOpen()){
+        m_laser_port->flush();
+        m_laser_port->clear();
+    }
+    if(m_galvo_port->isOpen()){
+        m_galvo_port->flush();
+        m_galvo_port->clear();
+    }
+    if(m_md_port->isOpen()){
+        m_md_port->flush();
+        m_md_port->clear();
+    }
     m_currentBlockNumber = 0;
     m_currentLayerNumber = 0;
     m_pendingTasks = 0;
@@ -716,7 +755,12 @@ void PowderTransport::on_emergency_stop_request()
 
 void PowderTransport::on_galvo_portTimeout()
 {
-    emit galvo_error("Error: Time out");
+//    qDebug()<<m_galvo_commandStr;
+    m_galvo_port->flush();
+    m_galvo_port->clear();
+    write_to_galvo_port("$(X:,Y:)");
+//    emit(galvo_commandPending());
+//    emit galvo_error("Error: Time out");
 }
 
 void PowderTransport::on_md_portTimeout()
@@ -957,8 +1001,6 @@ void PowderTransport::on_laser_port_bytesRead()
         {
             emit laser_error(reply);
         }
-
-        galvo_port_rxBytes.clear();
     }
 }
 
@@ -1004,7 +1046,7 @@ void PowderTransport::on_galvo_transactionFinished()
         }
 
         if(m_activeTask & PowderBlock::BlockTask::SET_Y_POSITION){
-                m_activeTask = 0;
+            m_activeTask = 0;
             emit jogComplete();
         }
     }
@@ -1175,6 +1217,9 @@ void PowderTransport::setZSpeed(float zSpeed)
 
 void PowderTransport::on_printManager_enabled(bool enabled)
 {
+    m_galvo_port->clear();
+    galvo_port_rxBytes.clear();
+
     m_printModeEnabled = enabled;
     if(enabled)
         m_manualModeEnabled = false;
@@ -1212,12 +1257,17 @@ void PowderTransport::on_laser_port_connectionRequested(bool open)
 {
     if(open && !m_laser_port->isOpen()){
         m_laser_port->open(QIODevice::ReadWrite);
-        if(m_laser_port->isOpen())
+        if(m_laser_port->isOpen()){
+            m_laser_port->flush();
+            m_laser_port->clear();
             emit laser_port_connectionChanged(true);
+        }
         else
             emit laser_error("Could not open laser port");
     }
     else if(!open && m_laser_port->isOpen()){
+        m_laser_port->flush();
+        m_laser_port->clear();
         m_laser_port->close();
         emit laser_port_connectionChanged(false);
     }
@@ -1227,12 +1277,17 @@ void PowderTransport::on_galvo_port_connectionRequested(bool open)
 {
     if(open && !m_galvo_port->isOpen()){
         m_galvo_port->open(QIODevice::ReadWrite);
-        if(m_galvo_port->isOpen())
+        if(m_galvo_port->isOpen()){
+            m_galvo_port->flush();
+            m_galvo_port->clear();
             emit galvo_port_connectionChanged(true);
+        }
         else
             emit galvo_error("Could not open galvo port");
     }
     else if(!open && m_galvo_port->isOpen()){
+        m_galvo_port->flush();
+        m_galvo_port->clear();
         m_galvo_port->close();
         emit galvo_port_connectionChanged(false);
     }
@@ -1242,12 +1297,17 @@ void PowderTransport::on_md_port_connectionRequested(bool open)
 {
     if(open && !m_md_port->isOpen()){
         m_md_port->open(QIODevice::ReadWrite);
-        if(m_md_port->isOpen())
+        if(m_md_port->isOpen()){
+            m_md_port->flush();
+            m_md_port->clear();
             emit md_port_connectionChanged(true);
+        }
         else
             emit galvo_error("Could not open MD port");
     }
     else if(!open && m_md_port->isOpen()){
+        m_md_port->flush();
+        m_md_port->clear();
         m_md_port->close();
         emit md_port_connectionChanged(false);
     }
@@ -1463,11 +1523,25 @@ void PowderTransport::on_decrement_sPosition_request()
 
 void PowderTransport::on_clearError_request()
 {
+    if(m_laser_port->isOpen()){
+        m_laser_port->flush();
+        m_laser_port->clear();
+    }
+    if(m_galvo_port->isOpen()){
+        m_galvo_port->flush();
+        m_galvo_port->clear();
+    }
+    if(m_md_port->isOpen()){
+        m_md_port->flush();
+        m_md_port->clear();
+    }
     emit resetDaemon();
 }
 
 void PowderTransport::on_reset_galvo_request()
 {
+    m_galvo_port->flush();
+    m_galvo_port->clear();
     // write an empty command
     m_galvo_commandStr = "$R";
     m_activeTask = PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION;
@@ -1480,8 +1554,10 @@ void PowderTransport::on_reset_galvo_request()
 
 void PowderTransport::ping_galvo()
 {
+    m_galvo_port->flush();
+    m_galvo_port->clear();
     // write an empty command
-    m_galvo_commandStr = "$()";
+    m_galvo_commandStr = "$(X:,Y:)";
     m_activeTask = PowderBlock::BlockTask::SET_X_POSITION|PowderBlock::BlockTask::SET_Y_POSITION;
     emit galvo_commandPending();
 }

@@ -240,26 +240,26 @@ PowderApp::PowderApp(QWidget *parent) :
     QObject::connect(deviceTransport, SIGNAL(laserEnableState_changed(const QString&)),
                      ui->laserDisplay_EnableState_field, SLOT(setText(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(xPosition_changed(double)),
-                     ui->xPositionDisplay_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(xPosition_changed(const QString&)),
+                     ui->xPositionDisplay_field, SLOT(setText(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(yPosition_changed(double)),
-                     ui->yPositionDisplay_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(yPosition_changed(const QString&)),
+                     ui->yPositionDisplay_field, SLOT(setText(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(zPosition_changed(double)),
-                     ui->zPositionDisplay_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(zPosition_changed(const QString&)),
+                     ui->zPositionDisplay_field, SLOT(setText(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(hPosition_changed(double)),
-                     ui->hPositionDisplay_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(hPosition_changed(const QString&)),
+                     ui->hPositionDisplay_field, SLOT(setText(const QString&)));
 
-    QObject::connect(deviceTransport, SIGNAL(sPosition_changed(double)),
-                     ui->sPositionDisplay_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(sPosition_changed(const QString&)),
+                     ui->sPositionDisplay_field, SLOT(setText(const QString&)));
 
     QObject::connect(deviceTransport, SIGNAL(laserIntensity_changed(double)),
                      ui->laserDisplayIntensity_field, SLOT(setNum(double)));
 
-    QObject::connect(deviceTransport, SIGNAL(xySpeed_changed(double)),
-                     ui->galvoSpeed_field, SLOT(setNum(double)));
+    QObject::connect(deviceTransport, SIGNAL(xySpeed_changed(const QString&)),
+                     ui->galvoSpeed_field, SLOT(setText(const QString&)));
 
     QObject::connect(deviceTransport, SIGNAL(laserBusy()),
                      this, SLOT(on_laserBusy()));

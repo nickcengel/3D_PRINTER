@@ -103,12 +103,16 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                 if (currentByte == '$') {
                     // DRV_USART0_WriteByte(currentByte);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_JOB_TYPE);
+                } else if ((currentByte != '\n')&&(currentByte != '\r')) {
+                    DRV_USART0_WriteByte('!');
+                    DRV_USART0_WriteByte('\r');
+                    DRV_USART0_WriteByte('\n');
                 }
                 break;
             }
             case HCI_RX_LOOK_FOR_JOB_TYPE:
             {
-                if ((currentByte == '(') || (currentByte == '/')) {
+                if ((currentByte == '(')) {
                     //   DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Set_Value(JOB_TYPE, HCI_ADD_JOB);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_REG_INDEX);
@@ -138,132 +142,153 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     // DRV_USART0_WriteByte(currentByte);
                     SYS_INT_StatusGetAndDisable();
                     SYS_RESET_SoftwareReset();
+                } else {
+                    DRV_USART0_WriteByte('!');
+                    DRV_USART0_WriteByte('\r');
+                    DRV_USART0_WriteByte('\n');
+                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
                 }
                 break;
             }
             case HCI_RX_LOOK_FOR_REG_INDEX:
             {
-                if ((currentByte == ')') || (currentByte == ';')) {
+                if (currentByte == ')') {
                     //DRV_USART0_WriteByte(currentByte);
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                     break;
-                } else if ((currentByte == ' ') || (currentByte == ',')) {
+                } else if (currentByte == ',') {
                     // DRV_USART0_WriteByte(currentByte);
                     break;
                 }
-                switch (currentByte) {
-                    case 'n':
-                    {
-                        regIndex = JOB_NUMBER;
-                        break;
-                    }
-                    case '~':
-                    {
-                        regIndex = JOB_TYPE;
-                        break;
-                    }
-                    case 'r':
-                    {
-                        regIndex = REPLY_TYPE;
-                        break;
-                    }
-                    case 'g':
-                    {
-                        regIndex = G_STATE;
-                        break;
-                    }
-                    case 's':
-                    {
-                        regIndex = G_SPEED;
-                        break;
-                    }
+                else {
+                    switch (currentByte) {
+                        case 'n':
+                        {
+                            regIndex = JOB_NUMBER;
+                            break;
+                        }
+                        case '~':
+                        {
+                            regIndex = JOB_TYPE;
+                            break;
+                        }
+                        case 'r':
+                        {
+                            regIndex = REPLY_TYPE;
+                            break;
+                        }
+                        case 'g':
+                        {
+                            regIndex = G_STATE;
+                            break;
+                        }
+                        case 's':
+                        {
+                            regIndex = G_SPEED;
+                            break;
+                        }
 
-                    case 'x':
-                    {
-                        regIndex = X_START_POS;
+                        case 'x':
+                        {
+                            regIndex = X_START_POS;
+                            break;
+                        }
+                        case 'X':
+                        {
+                            regIndex = X_END_POS;
+                            break;
+                        }
+                        case 'y':
+                        {
+                            regIndex = Y_START_POS;
+                            break;
+                        }
+                        case 'Y':
+                        {
+                            regIndex = Y_END_POS;
+                            break;
+                        }
+                        case 'i':
+                        {
+                            regIndex = X_MEASUREMENT;
+                            break;
+                        }
+                        case 'j':
+                        {
+                            regIndex = Y_MEASUREMENT;
+                            break;
+                        }
+                        case 'L':
+                        {
+                            regIndex = L_ARM;
+                            break;
+                        }
+                        case 'l':
+                        {
+                            regIndex = L_STATE;
+                            break;
+                        }
+                        case 'p':
+                        {
+                            regIndex = L_POWER;
+                            break;
+                        }
+                        case 'Q':
+                        {
+                            regIndex = X_DAC_EN;
+                            break;
+                        }
+                        case 'W':
+                        {
+                            regIndex = Y_DAC_EN;
+                            break;
+                        }
+                        case 'T':
+                        {
+                            regIndex = X_ADC_EN;
+                            break;
+                        }
+                        case 'V':
+                        {
+                            regIndex = Y_ADC_EN;
+                            break;
+                        }
+                        default:
+                        {
+                            regIndex = HCI_INVALID_REG_INDEX;
+                            break;
+                        }
+                    }
+                    if (regIndex != HCI_INVALID_REG_INDEX) {
+                        //DRV_USART0_WriteByte(currentByte);
+                        HCI_Set_RX_Status(HCI_RX_LOOK_FOR_CMD_TYPE);
                         break;
                     }
-                    case 'X':
-                    {
-                        regIndex = X_END_POS;
-                        break;
-                    }
-                    case 'y':
-                    {
-                        regIndex = Y_START_POS;
-                        break;
-                    }
-                    case 'Y':
-                    {
-                        regIndex = Y_END_POS;
-                        break;
-                    }
-                    case 'i':
-                    {
-                        regIndex = X_MEASUREMENT;
-                        break;
-                    }
-                    case 'j':
-                    {
-                        regIndex = Y_MEASUREMENT;
-                        break;
-                    }
-                    case 'L':
-                    {
-                        regIndex = L_ARM;
-                        break;
-                    }
-                    case 'l':
-                    {
-                        regIndex = L_STATE;
-                        break;
-                    }
-                    case 'p':
-                    {
-                        regIndex = L_POWER;
-                        break;
-                    }
-                    case 'Q':
-                    {
-                        regIndex = X_DAC_EN;
-                        break;
-                    }
-                    case 'W':
-                    {
-                        regIndex = Y_DAC_EN;
-                        break;
-                    }
-                    case 'T':
-                    {
-                        regIndex = X_ADC_EN;
-                        break;
-                    }
-                    case 'V':
-                    {
-                        regIndex = Y_ADC_EN;
-                        break;
-                    }
-                    default:
-                    {
-                        regIndex = HCI_INVALID_REG_INDEX;
+                    else {
+                        DRV_USART0_WriteByte('!');
+                        DRV_USART0_WriteByte('\r');
+                        DRV_USART0_WriteByte('\n');
+                        HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
                         break;
                     }
                 }
-                if (regIndex != HCI_INVALID_REG_INDEX) {
-                    //DRV_USART0_WriteByte(currentByte);
-                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_CMD_TYPE);
-                }
-                break;
+
+
             }
             case HCI_RX_LOOK_FOR_CMD_TYPE:
             {
-                if (currentByte == ':') {
+                if (currentByte == '=') {
+                    //DRV_USART0_WriteByte(currentByte);
+                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_DATA);
+                } else if (currentByte == ':') {
                     //DRV_USART0_WriteByte(currentByte);
                     HCI_REG_Host_Add_Read(regIndex);
                     HCI_Set_RX_Status(HCI_RX_LOOK_FOR_REG_INDEX);
-                } else if (currentByte == '=') {
-                    //DRV_USART0_WriteByte(currentByte);
-                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_DATA);
+                } else {
+                    DRV_USART0_WriteByte('!');
+                    DRV_USART0_WriteByte('\r');
+                    DRV_USART0_WriteByte('\n');
+                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
                 }
                 break;
             }
@@ -274,16 +299,15 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     //DRV_USART0_WriteByte(currentByte);
                     USART0_RX_Buffer[USART0_RX_Count] = currentByte;
                     USART0_RX_Count++;
-                } else if (((currentByte == ' ') || (currentByte == ';')
-                        || (currentByte == ')') || (currentByte == ','))
-                        & (USART0_RX_Count > 0)) {
+                } else if (((currentByte == ')') || (currentByte == ','))
+                        && (USART0_RX_Count > 0)) {
                     //DRV_USART0_WriteByte(currentByte);
 
                     int currentVal = APP_Convert_String_To_Int(USART0_RX_Buffer);
                     HCI_REG_Host_Add_Write(regIndex, currentVal);
                     memset(USART0_RX_Buffer, 0, USART0_RX_Count);
                     USART0_RX_Count = 0;
-                    if ((currentByte == ' ') || (currentByte == ',')) {
+                    if (currentByte == ',') {
                         HCI_Set_RX_Status(HCI_RX_LOOK_FOR_REG_INDEX);
                     } else {
                         HCI_Set_RX_Status(HCI_RX_COMPLETE);
@@ -297,13 +321,21 @@ void APP_USARTReceiveEventHandler(const SYS_MODULE_INDEX index) {
                     USART0_RX_Count = 0;
                     HCI_Set_RX_Status(HCI_RX_COMPLETE);
                 }
+                else {
+                    DRV_USART0_WriteByte('!');
+                    DRV_USART0_WriteByte('\r');
+                    DRV_USART0_WriteByte('\n');
+                    HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
+                }
                 break;
             }
             case HCI_RX_COMPLETE:
             {
+
                 HCI_Set_RX_Status(HCI_RX_LOOK_FOR_START);
                 //                DRV_USART0_WriteByte('\r');
                 //                DRV_USART0_WriteByte('\n');
+
                 break;
             }
             default:
@@ -400,7 +432,7 @@ void APP_Compute_StepSize(void) {
     else
         deltaY = appData.Galvo.Y.currentPosition - appData.Galvo.Y.finalPosition;
 
-        // appData.Galvo.speed units: (counts per microsecond)*1024
+    // appData.Galvo.speed units: (counts per microsecond)*1024
 
     // distance units: counts * 1024
     uint32_t distance = ((uint32_t) sqrt((float) deltaX * (float) deltaX + (float) deltaY * (float) deltaY)) << 10;
@@ -414,6 +446,10 @@ void APP_Compute_StepSize(void) {
         // stepSize units: counts per increment
         appData.Galvo.X.stepSize = ((deltaX << 10) / numIncrements);
         appData.Galvo.Y.stepSize = ((deltaY << 10) / numIncrements);
+        if (appData.Galvo.X.stepSize < 1)
+            appData.Galvo.X.stepSize = 1;
+        if (appData.Galvo.Y.stepSize < 1)
+            appData.Galvo.Y.stepSize = 1;
     } else {
         appData.Galvo.X.stepSize = 0;
         appData.Galvo.Y.stepSize = 0;
@@ -677,7 +713,7 @@ void APP_Write_HCI_Packet(void) {
     int32_t tempVal;
     uint8_t tempLength = 0;
     bool validIndex = 1;
-    uint8_t tempNumBuf[6];
+    uint8_t tempNumBuf[10];
     uint8_t tempTextBuf[32];
 
     switch (HCI_TX_Status()) {
@@ -743,18 +779,18 @@ void APP_Write_HCI_Packet(void) {
                             tempVal = appData.Galvo.Y.currentPosition - DAC1_OFFSET;
                             break;
                         }
-                        case X_MEASUREMENT:
-                        {
-                            strcpy(tempTextBuf, "rX");
-                            tempVal = appData.Galvo.X.reading - ADC0_OFFSET;
-                            break;
-                        }
-                        case Y_MEASUREMENT:
-                        {
-                            strcpy(tempTextBuf, "rY");
-                            tempVal = appData.Galvo.Y.reading - ADC1_OFFSET;
-                            break;
-                        }
+                            //                        case X_MEASUREMENT:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "rX");
+                            //                            tempVal = appData.Galvo.X.reading - ADC0_OFFSET;
+                            //                            break;
+                            //                        }
+                            //                        case Y_MEASUREMENT:
+                            //                        {
+                            //                            strcpy(tempTextBuf, "rY");
+                            //                            tempVal = appData.Galvo.Y.reading - ADC1_OFFSET;
+                            //                            break;
+                            //                        }
 
                         case L_STATE:
                         {
@@ -837,7 +873,7 @@ void APP_Write_HCI_Packet(void) {
         }
         case HCI_TX_COMPLETE:
         {
-            memset(USART0_TX_Buffer, 0, client_replyLength);
+            memset(USART0_TX_Buffer, 0, USART0_TX_BUFF_SIZE);
             USART0_TX_Count = 0;
             client_replyLength = 0;
             HCI_Set_TX_Status(HCI_TX_EMPTY);

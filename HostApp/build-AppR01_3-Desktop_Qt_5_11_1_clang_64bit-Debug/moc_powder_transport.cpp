@@ -366,15 +366,15 @@ static const uint qt_meta_data_PowderTransport[] = {
      131,    0,  747,    2, 0x08 /* Private */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    6,
-    QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    6,
-    QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    6,
-    QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    6,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    6,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    6,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    6,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    6,
     QMetaType::Void, QMetaType::Double,   14,
     QMetaType::Void, QMetaType::QString,   16,
     QMetaType::Void, QMetaType::Bool,   18,
@@ -485,15 +485,15 @@ void PowderTransport::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         PowderTransport *_t = static_cast<PowderTransport *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->xPosition_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 1: _t->yPosition_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 2: _t->xySpeed_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 3: _t->zPosition_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 4: _t->zSpeed_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 5: _t->hPosition_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 6: _t->hSpeed_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 7: _t->sPosition_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 8: _t->sSpeed_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 0: _t->xPosition_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 1: _t->yPosition_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 2: _t->xySpeed_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 3: _t->zPosition_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 4: _t->zSpeed_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 5: _t->hPosition_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 6: _t->hSpeed_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 7: _t->sPosition_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 8: _t->sSpeed_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 9: _t->laserIntensity_changed((*reinterpret_cast< double(*)>(_a[1]))); break;
         case 10: _t->laserEnableState_changed((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 11: _t->laserArmState_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
@@ -597,63 +597,63 @@ void PowderTransport::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::xPosition_changed)) {
                 *result = 0;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::yPosition_changed)) {
                 *result = 1;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::xySpeed_changed)) {
                 *result = 2;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::zPosition_changed)) {
                 *result = 3;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::zSpeed_changed)) {
                 *result = 4;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::hPosition_changed)) {
                 *result = 5;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::hSpeed_changed)) {
                 *result = 6;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::sPosition_changed)) {
                 *result = 7;
                 return;
             }
         }
         {
-            using _t = void (PowderTransport::*)(double );
+            using _t = void (PowderTransport::*)(const QString & );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&PowderTransport::sSpeed_changed)) {
                 *result = 8;
                 return;
@@ -972,63 +972,63 @@ int PowderTransport::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void PowderTransport::xPosition_changed(double _t1)
+void PowderTransport::xPosition_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1
-void PowderTransport::yPosition_changed(double _t1)
+void PowderTransport::yPosition_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 
 // SIGNAL 2
-void PowderTransport::xySpeed_changed(double _t1)
+void PowderTransport::xySpeed_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 
 // SIGNAL 3
-void PowderTransport::zPosition_changed(double _t1)
+void PowderTransport::zPosition_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 
 // SIGNAL 4
-void PowderTransport::zSpeed_changed(double _t1)
+void PowderTransport::zSpeed_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 
 // SIGNAL 5
-void PowderTransport::hPosition_changed(double _t1)
+void PowderTransport::hPosition_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 
 // SIGNAL 6
-void PowderTransport::hSpeed_changed(double _t1)
+void PowderTransport::hSpeed_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 
 // SIGNAL 7
-void PowderTransport::sPosition_changed(double _t1)
+void PowderTransport::sPosition_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
 }
 
 // SIGNAL 8
-void PowderTransport::sSpeed_changed(double _t1)
+void PowderTransport::sSpeed_changed(const QString & _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 8, _a);

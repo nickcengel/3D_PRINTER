@@ -76,7 +76,7 @@ extern "C" {
     // *****************************************************************************
     // *****************************************************************************
 #define USART0_RX_BUFF_SIZE 16
-#define USART0_TX_BUFF_SIZE 255
+#define USART0_TX_BUFF_SIZE 48
 
 #define SPI_TX_BUFF_SIZE 3
 #define SPI_RX_BUFF_SIZE 3

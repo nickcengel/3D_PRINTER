@@ -122,15 +122,25 @@ public:
 
 signals:
     // received by UI to update displays
-    void xPosition_changed(double position);
-    void yPosition_changed(double position);
-    void xySpeed_changed(double speed);
-    void zPosition_changed(double position);
-    void zSpeed_changed(double speed);
-    void hPosition_changed(double position);
-    void hSpeed_changed(double speed);
-    void sPosition_changed(double position);
-    void sSpeed_changed(double speed);
+//    void xPosition_changed(double position);
+//    void yPosition_changed(double position);
+//    void xySpeed_changed(double speed);
+//    void zPosition_changed(double position);
+//    void zSpeed_changed(double speed);
+//    void hPosition_changed(double position);
+//    void hSpeed_changed(double speed);
+//    void sPosition_changed(double position);
+//    void sSpeed_changed(double speed);
+
+    void xPosition_changed(const QString &position);
+    void yPosition_changed(const QString &position);
+    void xySpeed_changed(const QString &speed);
+    void zPosition_changed(const QString &position);
+    void zSpeed_changed(const QString &speed);
+    void hPosition_changed(const QString &position);
+    void hSpeed_changed(const QString &speed);
+    void sPosition_changed(const QString &position);
+    void sSpeed_changed(const QString &speed);
 
 
     void laserIntensity_changed(double intensity);
